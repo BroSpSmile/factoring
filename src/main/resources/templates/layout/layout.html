@@ -5,14 +5,20 @@
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
 		<link rel="stylesheet" href="css/iview.css"></link>
+		<link rel="stylesheet" href="css/layout.css"></link>
 		<script src="js/vue.min.js"></script>
 		<script src="js/iview.min.js"></script>
 	</head>
 	<body>
 		<div th:fragment="navbar"  class="wrapper"  role="navigation">
-			<div th:include="/layout/header :: header">footer</div>
-			<div layout:fragment="content"  id="content" ></div>
-    		<div th:include="/layout/footer :: footer">footer</div>
+			<div th:include="/layout/header :: header" class="header">header</div>
+			<div class="container">
+				<div th:include="/layout/side :: side" class="menu">header</div>
+				<div layout:fragment="content"  id="content"  class="content"></div>
+			</div>
+			<div >
+				<div th:include="/layout/footer :: footer"  class="footer">footer</div>
+			</div>
 		</div>
 	</body>
 </html>

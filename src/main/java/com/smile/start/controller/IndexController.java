@@ -1,7 +1,3 @@
-/**
- * LY.com Inc.
- * Copyright (c) 2004-2018 All Rights Reserved.
- */
 package com.smile.start.controller;
 
 import org.springframework.stereotype.Controller;
