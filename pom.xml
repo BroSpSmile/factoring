@@ -123,12 +123,6 @@
 	</profiles>
 	
 <!-- 	<distributionManagement>
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<name>nexus-snapshots</name>
-			<url>http://nexus.17usoft.com/repository/mvn-flight-snapshot/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
 		<repository>
 			<id>nexus-releases</id>
 			<name>nexus-releases</name>
