@@ -1,4 +1,29 @@
-/target/
+# IntelliJ
+*.ipr
+*.iml
+*.iws
+.idea/
+
+#
+# Eclipse metadata.
+#
+.mymetadata
 .project
-.setting*
 .classpath
+.settings/
+.myeclipse/
+rebel.xml
+
+#
+# Eclipse and Maven idea output folders.
+#
+bin/
+target/
+out/
+*.class
+.svn/
+build/
+
+static.bat
+*.versionsBackup
+.DS_Store
