@@ -1,5 +1,5 @@
 /**
- * 
+ * 菜单信息
  */
 common.pageName="approval";
 common.openName=['1'];
