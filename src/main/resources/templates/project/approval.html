@@ -17,14 +17,13 @@
 							 <i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.projectOwner"></i-input>
 						</form-item>
 						<form-item label="当前进度">
-							<i-select class="inputw" v-model="formInline.status">
-								<i-option value="">全部</i-option>
-                        		<i-option v-for="item in statusItems"  :value="item">{{item}}</i-option>
+							<i-select class="inputw" v-model="formInline.status" clearable>
+                        		<i-option v-for="item in statusItems"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
 							
 						</form-item>
 						<row type="flex">
-	                    <i-col span="8" offset="8">
+	                    <i-col span="12" offset="4">
 	                        	<i-button type="primary"  icon="ios-search">查询</i-button>
 	                            <i-button type="success"  icon="ios-add" style="margin-left: 8px">创建</i-button>
 	                            <i-button type="info"  icon="ios-arrow-dropdown" style="margin:0 8px">项目信息视图</i-button>

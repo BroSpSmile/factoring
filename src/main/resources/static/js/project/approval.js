@@ -1,34 +1,32 @@
 /**
  * 菜单信息
  */
-common.pageName="approval";
-common.openName=['1'];
+common.pageName = "approval";
+common.openName = [ '1' ];
 
 var vue = new Vue({
-	el: '#approval',
-	data:{
-		formInline:{
-			projectId:"",
-			projectName:"",
-			projectOwner:"",
-			status:""
+	el : '#approval',
+	data : {
+		formInline : {
+			projectId : "",
+			projectName : "",
+			projectOwner : "",
+			status : ""
 		},
-		statusItems:[
-			"apply",
-			"examine",
-			"pastmeeting",
-			"drawup",
-			"contractaudit",
-			"sign",
-			"loan",
-			"loanaudit",
-			"file"
-		],
+		statusItems : [],
 	},
-	created:function(){
-		
+	created : function() {
+		this.initDate();
 	},
-	methods:{
-		
+	methods : {
+		initDate : function() {
+			var _self = this;
+			this.$http.get("/combo/progress").then(function(response) {
+				console.log(response.data);
+				_self.statusItems = response.data;
+			}, function(error) {
+				console.error(error);
+			})
+		}
 	}
 });
