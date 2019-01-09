@@ -27,3 +27,8 @@ build/
 static.bat
 *.versionsBackup
 .DS_Store
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+.vscode/launch.json
+.project
