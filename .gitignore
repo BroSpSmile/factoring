@@ -32,3 +32,4 @@ static.bat
 .settings/org.eclipse.jdt.core.prefs
 .vscode/launch.json
 .project
+.vscode/launch.test.json
