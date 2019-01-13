@@ -14,15 +14,16 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ProjectKind {
 	/**  */
-	FACTORING("FACTORING", "保理"),
+	FACTORING("FACTORING", "保理", "FCT"),
 	/**  */
-	FUND("FUND", "母基金"),
+	FUND("FUND", "母基金", "FND"),
 	/**  */
-	INVESTMENT("INVESTMENT", "直投");
+	INVESTMENT("INVESTMENT", "直投", "INV");
 
-	ProjectKind(String code, String desc) {
+	ProjectKind(String code, String desc, String scode) {
 		this.code = code;
 		this.desc = desc;
+		this.scode = scode;
 	}
 
 	/**
@@ -31,7 +32,7 @@ public enum ProjectKind {
 	 * @param code
 	 * @return
 	 */
-	public ProjectKind getByCode(String code) {
+	public static ProjectKind getByCode(String code) {
 		ProjectKind[] values = ProjectKind.values();
 		for (ProjectKind value : values) {
 			if (StringUtils.equals(code, value.code)) {
@@ -46,6 +47,9 @@ public enum ProjectKind {
 
 	/** 状态描述 */
 	private String desc;
+
+	/** 简码 */
+	private String scode;
 
 	/**
 	 * Getter method for property <tt>code</tt>.
@@ -64,4 +68,14 @@ public enum ProjectKind {
 	public String getDesc() {
 		return desc;
 	}
+
+	/**
+	 * Getter method for property <tt>scode</tt>.
+	 * 
+	 * @return property value of scode
+	 */
+	public String getScode() {
+		return scode;
+	}
+
 }

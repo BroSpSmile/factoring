@@ -39,7 +39,7 @@ public class IdGenServiceImpl extends AbstractService implements IdGenService {
 	@Override
 	@Transactional
 	public String genId(ProjectKind kind) {
-		GenId genId = genIdDao.getIdNoByKind(kind.getCode());
+		GenId genId = genIdDao.getIdNoByKind(kind.getScode());
 		if (DateUtil.isSameDay(new Date(), genId.getUpdateTime())) {
 			genId.setGenIdNo(genId.getGenIdNo() + 1);
 		} else {
@@ -48,7 +48,7 @@ public class IdGenServiceImpl extends AbstractService implements IdGenService {
 		genId.setUpdateTime(new Date());
 		int effect = genIdDao.updateIdNo(genId);
 		LoggerUtils.info(logger, "更新GenId影响行effect={}", effect);
-		String idString = kind.getCode() + formatTime() + String.format("%04d", genId.getGenIdNo());
+		String idString = kind.getScode() + formatTime() + String.format("%04d", genId.getGenIdNo());
 		LoggerUtils.info(logger, "生成ID={}", idString);
 		return idString;
 	}
