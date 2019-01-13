@@ -16,13 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class MysqlConnectTest {
 
-    /** projectDao */
-    @Resource
-    private ProjectDao projectDao;
+	/** projectDao */
+	@Resource
+	private ProjectDao projectDao;
 
-    @Test
-    public void testConnect() {
-        List<Project> projects = projectDao.findAll();
-        System.out.println(projects.toString());
-    }
+	@Test
+	public void testConnect() {
+		List<Project> projects = projectDao.findAll();
+		System.out.println(projects.toString());
+	}
 }

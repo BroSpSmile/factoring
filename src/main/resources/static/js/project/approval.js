@@ -13,6 +13,12 @@ var vue = new Vue({
 			projectOwner : "",
 			status : ""
 		},
+		addForm:{
+			projectId : "",
+			projectName : "",
+			projectOwner : ""
+		},
+		modal1:false,
 		statusItems : [],
 	},
 	created : function() {
@@ -27,6 +33,10 @@ var vue = new Vue({
 			}, function(error) {
 				console.error(error);
 			})
+		},
+		
+		addProject:function(){
+			this.modal1=true;
 		}
 	}
 });

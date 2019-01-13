@@ -18,6 +18,6 @@ public interface ProjectDao {
      * 
      * @return
      */
-    @Select("SELECT * FROM factoring_project")
+    @Select("select * from factoring_project")
     List<Project> findAll();
 }
