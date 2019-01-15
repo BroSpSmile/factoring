@@ -23,34 +23,33 @@ import com.smile.start.service.IdGenService;
  * 实现
  * 
  * @author smile.jing
- * @version $Id: IdGenServiceImpl.java, v 0.1 Jan 13, 2019 6:18:39 PM smile.jing
- *          Exp $
+ * @version $Id: IdGenServiceImpl.java, v 0.1 Jan 13, 2019 6:18:39 PM smile.jing Exp $
  */
 @Service
 public class IdGenServiceImpl extends AbstractService implements IdGenService {
 
-	/** genIdDao */
-	@Resource
-	private GenIdDao genIdDao;
+    /** genIdDao */
+    @Resource
+    private GenIdDao genIdDao;
 
-	/**
-	 * @see com.smile.start.service.IdGenService#genId(com.smile.start.model.enums.ProjectKind)
-	 */
-	@Override
-	@Transactional
-	public String genId(ProjectKind kind) {
-		GenId genId = genIdDao.getIdNoByKind(kind.getScode());
-		if (DateUtil.isSameDay(new Date(), genId.getUpdateTime())) {
-			genId.setGenIdNo(genId.getGenIdNo() + 1);
-		} else {
-			genId.setGenIdNo(1L);
-		}
-		genId.setUpdateTime(new Date());
-		int effect = genIdDao.updateIdNo(genId);
-		LoggerUtils.info(logger, "更新GenId影响行effect={}", effect);
-		String idString = kind.getScode() + formatTime() + String.format("%04d", genId.getGenIdNo());
-		LoggerUtils.info(logger, "生成ID={}", idString);
-		return idString;
-	}
+    /**
+     * @see com.smile.start.service.IdGenService#genId(com.smile.start.model.enums.ProjectKind)
+     */
+    @Override
+    @Transactional
+    public String genId(ProjectKind kind) {
+        GenId genId = genIdDao.getIdNoByKind(kind.getScode());
+        if (DateUtil.isSameDay(new Date(), genId.getUpdateTime())) {
+            genId.setGenIdNo(genId.getGenIdNo() + 1);
+        } else {
+            genId.setGenIdNo(1L);
+        }
+        genId.setUpdateTime(new Date());
+        int effect = genIdDao.updateIdNo(genId);
+        LoggerUtils.info(logger, "更新GenId影响行effect={}", effect);
+        String idString = kind.getScode() + formatTime() + String.format("%04d", genId.getGenIdNo());
+        LoggerUtils.info(logger, "生成ID={}", idString);
+        return idString;
+    }
 
 }

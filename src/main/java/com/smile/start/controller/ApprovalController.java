@@ -25,8 +25,7 @@ import com.smile.start.service.ProjectService;
 /**
  * 
  * @author smile.jing
- * @version $Id: ApprovalController.java, v 0.1 Jan 13, 2019 9:32:21 PM
- *          smile.jing Exp $
+ * @version $Id: ApprovalController.java, v 0.1 Jan 13, 2019 9:32:21 PM smile.jing Exp $
  */
 @Controller
 @RequestMapping("/approval")

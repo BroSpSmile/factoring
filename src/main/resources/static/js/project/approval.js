@@ -21,7 +21,7 @@ var vue = new Vue({
 		queryParam : {
 			condition : {},
 			pageNum : 1,
-			pageSize : 5
+			pageSize : 10
 		},
 		pageInfo:{},
 		modal1 : false,
@@ -41,6 +41,19 @@ var vue = new Vue({
 			}, function(error) {
 				console.error(error);
 			})
+		},
+		
+		/**
+		 * 状态翻译
+		 */
+		getProgress:function(value){
+			console.log(value);
+			for(var index in this.statusItems){
+				if(value==this.statusItems[index].value){
+					return this.statusItems[index].text;
+				}
+			}
+			return "";
 		},
 
 		/** 分页查询 */
@@ -65,6 +78,10 @@ var vue = new Vue({
 		pageChange:function(page){
 			this.queryParam.pageNum = page;
 			this.query();
+		},
+		
+		test:function(){
+			console.log("---------");
 		},
 		
 		/**
@@ -120,6 +137,46 @@ vue.tableColumns=[
     },{
         title: '当前进度',
         key: 'progress',
-        align: 'center'
+        align: 'center',
+        render:(h,param)=>{
+        	return h('span',vue.getProgress(param.row.progress));
+        }
+    },{
+    	title: '操作',
+    	align: 'center',
+        render:(h,param)=>{
+        	return h('div', [
+				h('Button', {
+					props: {
+						size: "small",
+						type: "warning"
+					},
+					style: {
+						marginRight: '5px'
+					},
+					on: {
+						click: () => {
+							//vue.edit(params.row);
+						}
+					}
+				}, '编辑'),
+				h('Button', {
+					props: {
+						size: "small",
+						type: "error"
+					},
+					style: {
+						marginRight: '5px'
+					},
+					on: {
+						click: () => {
+							vue.getProgress(param.row.progress);
+						}
+					}
+				}, '删除')
+			])
+        }
     }
 ];
+
+
