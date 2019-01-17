@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.service.IdGenService;
+import com.smile.start.service.project.IdGenService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

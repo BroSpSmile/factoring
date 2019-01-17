@@ -1,0 +1,27 @@
+@charset "UTF-8";
+html, body {
+    line-height: 1.5;
+    width: 100%;
+    height: 100%;
+    color: #515a6e;
+    background-color: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login {
+    width: 100%;
+    height: 100%;
+    background-image: url(../image/log_bg.jpg);
+    background-size: cover;
+    background-position: 50%;
+    position: relative;
+}
+
+.login-con {
+    position: absolute;
+    right: 160px;
+    top: 50%;
+    -webkit-transform: translateY(-60%);
+    transform: translateY(-60%);
+    width: 350px;
+}

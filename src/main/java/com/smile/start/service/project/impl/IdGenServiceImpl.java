@@ -2,7 +2,7 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.service.impl;
+package com.smile.start.service.project.impl;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import com.smile.start.dao.GenIdDao;
 import com.smile.start.model.common.GenId;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.IdGenService;
+import com.smile.start.service.project.IdGenService;
 
 /**
  * 实现
@@ -33,7 +33,7 @@ public class IdGenServiceImpl extends AbstractService implements IdGenService {
     private GenIdDao genIdDao;
 
     /**
-     * @see com.smile.start.service.IdGenService#genId(com.smile.start.model.enums.ProjectKind)
+     * @see com.smile.start.service.project.IdGenService#genId(com.smile.start.model.enums.ProjectKind)
      */
     @Override
     @Transactional

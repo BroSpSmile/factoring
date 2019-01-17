@@ -2,7 +2,7 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.service;
+package com.smile.start.service.project;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;

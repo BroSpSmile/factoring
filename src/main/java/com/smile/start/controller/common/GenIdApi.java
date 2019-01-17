@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.service.IdGenService;
+import com.smile.start.service.project.IdGenService;
 
 /**
  * genId

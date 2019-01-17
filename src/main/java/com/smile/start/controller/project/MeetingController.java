@@ -2,10 +2,12 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.controller;
+package com.smile.start.controller.project;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.smile.start.controller.BaseController;
 
 /**
  * 

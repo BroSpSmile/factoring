@@ -15,7 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.project.Project;
-import com.smile.start.service.ProjectService;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 项目服务测试桩

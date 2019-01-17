@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.smile.start.controller;
+package com.smile.start.controller.project;
 
 import javax.annotation.Resource;
 
@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.Project;
-import com.smile.start.service.ProjectService;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 

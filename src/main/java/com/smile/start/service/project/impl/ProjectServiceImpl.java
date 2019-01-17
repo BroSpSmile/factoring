@@ -2,7 +2,7 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.service.impl;
+package com.smile.start.service.project.impl;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.IdGenService;
-import com.smile.start.service.ProjectService;
+import com.smile.start.service.project.IdGenService;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 实现
@@ -41,7 +41,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     private IdGenService idGenService;
 
     /**
-     * @see com.smile.start.service.ProjectService#initProject(com.smile.start.model.project.Project)
+     * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
      */
     @Override
     @Transactional
@@ -60,7 +60,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.ProjectService#findAll()
+     * @see com.smile.start.service.project.ProjectService#findAll()
      */
     public List<Project> findAll() {
         PageHelper.offsetPage(0, 4, "id desc");
@@ -71,7 +71,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.ProjectService#queryPage(com.smile.start.model.base.PageRequest)
+     * @see com.smile.start.service.project.ProjectService#queryPage(com.smile.start.model.base.PageRequest)
      */
     @Override
     public PageInfo<Project> queryPage(PageRequest<Project> page) {
