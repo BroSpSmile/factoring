@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,6 +18,7 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.IdGenService;
@@ -53,8 +55,61 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         if (effect > 0) {
             result.setSuccess(true);
         } else {
-            result.setErrorCode("");
+            result.setErrorCode("VP00011001");
             result.setErrorMessage("新增项目失败,请重试!");
+        }
+        return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#updateProject(com.smile.start.model.project.Project)
+     */
+    @Override
+    public BaseResult updateProject(Project project) {
+        List<Project> projects = projectDao.findByProjectId(project.getProjectId());
+        if (!CollectionUtils.isEmpty(projects) && projects.size() > 1) {
+            throw new RuntimeException("当前项目ID重复,无法更新");
+        }
+        if (!CollectionUtils.isEmpty(projects)) {
+            for (Project old : projects) {
+                if (old.getId() != project.getId()) {
+                    throw new RuntimeException("当前项目ID重复,无法更新");
+                }
+            }
+        }
+        int effect = projectDao.update(project);
+        LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011002");
+            result.setErrorMessage("新增项目失败,请重试!");
+        }
+        return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#delete(java.lang.Long)
+     */
+    @Override
+    @Transactional
+    public BaseResult delete(Long id) {
+        Project project = projectDao.get(id);
+        if (project == null) {
+            throw new RuntimeException("删除项目失败,当前项目不存在");
+        }
+        if (!Progress.INIT.equals(project.getProgress())) {
+            throw new RuntimeException("删除项目失败,当前项目状态非法");
+        }
+        int effect = projectDao.delete(id);
+        LoggerUtils.info(logger, "删除项目影响行effect={}", effect);
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011003");
+            result.setErrorMessage("删除项目失败,请重试!");
         }
         return result;
     }
@@ -75,7 +130,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      */
     @Override
     public PageInfo<Project> queryPage(PageRequest<Project> page) {
-        PageHelper.startPage(page.getPageNum() , page.getPageSize(), "id desc");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
         List<Project> projects = projectDao.findByParam(page.getCondition());
         //4. 根据返回的集合，创建PageInfo对象
         PageInfo<Project> result = new PageInfo<>(projects);

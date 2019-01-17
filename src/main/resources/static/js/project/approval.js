@@ -47,7 +47,6 @@ var vue = new Vue({
 		 * 状态翻译
 		 */
 		getProgress:function(value){
-			console.log(value);
 			for(var index in this.statusItems){
 				if(value==this.statusItems[index].value){
 					return this.statusItems[index].text;
@@ -68,7 +67,7 @@ var vue = new Vue({
 					})
 		},
 
-		/**搜索 */
+		/** 搜索 */
 		search:function(){
 			this.queryParam.pageNum = 1;
 			this.query();
@@ -80,35 +79,102 @@ var vue = new Vue({
 			this.query();
 		},
 		
-		test:function(){
-			console.log("---------");
+		/**
+		 * 重置
+		 */
+		reset:function(){
+			this.$refs['searchForm'].resetFields();
 		},
 		
 		/**
 		 * 新增项目
 		 */
 		addProject : function() {
+			this.addForm = {
+				projectId:""
+			};
 			this.modal1 = true;
 		},
 
 		/** 保存项目 */
 		saveProject : function() {
 			let self = this;
-
-			this.$http.post("/approval", this.addForm).then(function(response) {
+			if(this.addForm.id==null||this.addForm.id==""){
+				this.$http.post("/approval", this.addForm).then(function(response) {
+					if (response.data.success) {
+						self.$Message.info({
+							content : "保存成功",
+							onClose : function() {
+								self.query();
+								self.cancel();
+							}
+						});
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				}, function(error) {
+					self.$Message.error(error.data.message);
+				});
+			}else{
+				this.$http.put("/approval", this.addForm).then(function(response) {
+					if (response.data.success) {
+						self.$Message.info({
+							content : "更新成功",
+							onClose : function() {
+								self.query();
+								self.cancel();
+							}
+						});
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				}, function(error) {
+					self.$Message.error(error.data.message);
+				});
+			}
+			
+		},
+		
+		/**
+		 * 更新项目
+		 */
+		updateProject:function(project){
+			this.addForm = project;
+			this.modal1 = true;
+		},
+		
+		/**
+		 * 删除警告
+		 */
+		deleteWarn:function(id){
+			this.$Modal.confirm({
+				title: '删除提示',
+				content: '<p>确认是否删除当前项目</p>',
+				onOk: () => {
+					this.deleteProject(id);
+				},
+				onCancel: () => {
+				}
+			})
+		},
+		
+		/** 删除项目 */
+		deleteProject:function(id){
+			let self = this;
+			this.$http.delete("/approval/"+id).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
-						content : "保存成功",
+						content : "删除成功",
 						onClose : function() {
-							self.cancel();
+							self.query();
 						}
 					});
 				} else {
 					self.$Message.error(response.data.errorMessage);
 				}
-			}, function(error) {
+			},function(error){
 				self.$Message.error(error.data.message);
-			});
+			})
 		},
 
 		/**
@@ -156,10 +222,26 @@ vue.tableColumns=[
 					},
 					on: {
 						click: () => {
-							//vue.edit(params.row);
+							 vue.updateProject(param.row);
 						}
 					}
-				}, '编辑'),param.row.progress=='INIT'?h('Button'):h('span')
+				}, '编辑'),
+				param.row.progress=='INIT'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "error"
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.deleteWarn(param.row.id);
+								}
+							}
+						}, '删除'):
+						h('span')
 				
 			])
         }

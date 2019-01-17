@@ -27,6 +27,20 @@ public interface ProjectService {
     BaseResult initProject(Project project);
 
     /**
+     * 更新项目
+     * @param project
+     * @return
+     */
+    BaseResult updateProject(Project project);
+
+    /**
+     * 删除项目
+     * @param id
+     * @return
+     */
+    BaseResult delete(Long id);
+
+    /**
      * 分页查询
      * @param page
      * @return
