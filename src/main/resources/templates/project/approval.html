@@ -36,7 +36,7 @@
 			</card>
 			<br>
 			<card dis-hover title="搜索结果">
-				<i-table   :columns="tableColumns" :data="pageInfo.list" ></i-table>
+				<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
 				<br/>
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 			</card>

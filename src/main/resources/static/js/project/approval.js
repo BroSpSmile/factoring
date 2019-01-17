@@ -167,6 +167,7 @@ var vue = new Vue({
 						content : "删除成功",
 						onClose : function() {
 							self.query();
+							self.cancel();
 						}
 					});
 				} else {

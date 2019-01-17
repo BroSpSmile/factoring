@@ -16,6 +16,8 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		pageInfo:{},
+		addMeeting:{},
+		modal1:false,
 		statusItems : []
 	},
 	created : function() {
@@ -47,6 +49,21 @@ var vue = new Vue({
 					}, function(error) {
 						self.$Message.error(error.data.message);
 					})
+		},
+		
+		/**
+		 * 新增会议
+		 */
+		add:function(){
+			this.modal1=true;
+		},
+		
+		/**
+		 * 取消保存
+		 */
+		cancel : function() {
+			this.modal1 = false;
+			this.$refs['entityDataForm'].resetFields();
 		}
 	}
 });
