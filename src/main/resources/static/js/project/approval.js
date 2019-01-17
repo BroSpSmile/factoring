@@ -159,21 +159,8 @@ vue.tableColumns=[
 							//vue.edit(params.row);
 						}
 					}
-				}, '编辑'),
-				h('Button', {
-					props: {
-						size: "small",
-						type: "error"
-					},
-					style: {
-						marginRight: '5px'
-					},
-					on: {
-						click: () => {
-							vue.getProgress(param.row.progress);
-						}
-					}
-				}, '删除')
+				}, '编辑'),param.row.progress=='INIT'?h('Button'):h('span')
+				
 			])
         }
     }
