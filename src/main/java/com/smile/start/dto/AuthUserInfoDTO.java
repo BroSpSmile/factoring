@@ -16,6 +16,8 @@ public class AuthUserInfoDTO implements Serializable {
 
     private String serialNo;
 
+    private String username;
+
     private String mobile;
 
     private String openid;
@@ -54,6 +56,14 @@ public class AuthUserInfoDTO implements Serializable {
 
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getMobile() {
@@ -157,6 +167,7 @@ public class AuthUserInfoDTO implements Serializable {
         return "AuthUserInfoDTO{" +
                 "id=" + id +
                 ", serialNo='" + serialNo + '\'' +
+                ", username='" + username + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", openid='" + openid + '\'' +
                 ", email='" + email + '\'' +

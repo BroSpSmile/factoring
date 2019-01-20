@@ -1,7 +1,9 @@
 package com.smile.start.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.ResponseResult;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.service.UserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -19,12 +22,17 @@ import javax.annotation.Resource;
  * @since 1.8
  */
 @Controller
-@RequestMapping(value = "/auth/user")
+@RequestMapping(value = "/user")
 public class UserInfoController {
     private Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
     @Resource
     private UserInfoService userInfoService;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
+        return "auth/user";
+    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ResponseResult<AuthUserInfoDTO>> get(@PathVariable Long id) {
@@ -37,6 +45,21 @@ public class UserInfoController {
             result.setSuccess(false);
             result.setMessage(e.getMessage());
             logger.error("查询用户信息失败", e);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<ResponseResult<PageInfo<AuthUserInfoDTO>>> list(@RequestBody UserSearchDTO userSearch) {
+        ResponseResult<PageInfo<AuthUserInfoDTO>> result = new ResponseResult<>();
+        try {
+            final PageInfo<AuthUserInfoDTO> userList = userInfoService.findAll(userSearch);
+            result.setSuccess(true);
+            result.setData(userList);
+        } catch (Exception e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            logger.error("查询用户信息列表失败", e);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

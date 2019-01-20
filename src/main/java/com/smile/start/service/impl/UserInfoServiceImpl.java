@@ -1,7 +1,9 @@
 package com.smile.start.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.entity.AuthUserInfoDO;
 import com.smile.start.enums.DeleteFlagEnum;
 import com.smile.start.mapper.UserInfoMapper;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,6 +53,20 @@ public class UserInfoServiceImpl implements UserInfoService {
         authUserInfoDTO.setRoleList(roleInfoService.findByUserSerialNo(authUserInfoDTO.getSerialNo()));
         authUserInfoDTO.setPermissionList(permissionInfoService.findByUserSerialNo(authUserInfoDTO.getSerialNo()));
         return authUserInfoDTO;
+    }
+
+    /**
+     * 查询所有用户信息
+     * @return
+     */
+    @Override
+    public PageInfo<AuthUserInfoDTO> findAll(UserSearchDTO userSearchDTO) {
+        final PageInfo<AuthUserInfoDTO> result = new PageInfo<>();
+        final List<AuthUserInfoDO> userList = userInfoRepository.findAll();
+        result.setTotal(userList.size());
+        result.setPageSize(10);
+        result.setList(userInfoMapper.doList2dtoList(userList));
+        return result;
     }
 
     /**
