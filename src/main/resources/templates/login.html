@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset=utf-8>
+	<meta http-equiv=X-UA-Compatible content="IE=edge">
+	<meta name=viewport content="width=device-width,initial-scale=1">
+	<link rel=icon href=>
+	<link rel="stylesheet" href="css/iview.css"></link>
+	<link rel="stylesheet" href="css/login.css"></link>
+	<script src="js/vue.min.js"></script>
+	<script src="js/iview.min.js"></script>
+	<script src="js/vue-resource.js"></script>
+	<script src="js/vue-validator.min.js"></script>
+	<title></title>
+</head>
+<body>
+	<div class="login">
+		<div id="app" class="login-con">
+			<card dis-hover title="欢迎登录">
+				<i-form ref="loginForm" :model="form" :rules="ruleValidate"  @keydown.enter.native="login">
+				   <form-item prop="userName">
+				     <i-input v-model="form.userName" placeholder="请输入用户名">
+				       <span slot="prepend">
+				         <Icon :size="16" type="ios-person"></Icon>
+				       </span>
+				     </i-input>
+				   </form-item>
+				   <form-item prop="password">
+				     <i-input type="password" v-model="form.password" placeholder="请输入密码">
+				       <span slot="prepend">
+				         <Icon :size="14" type="md-lock"></Icon>
+				       </span>
+				     </i-input>
+				   </form-item>
+				   <form-item>
+				     <i-button @click="login" type="primary" long>登录</i-button>
+				   </form-item>
+				</i-form>
+			</card>
+		</div>
+	</div>
+	
+		
+
+		
+	<script src="js/login.js"></script>
+</body>
+</html>

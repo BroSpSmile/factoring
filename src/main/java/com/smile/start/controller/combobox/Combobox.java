@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
 
 /**
@@ -22,15 +23,28 @@ import com.smile.start.model.enums.Progress;
 @RestController
 @RequestMapping("/combo")
 public class Combobox extends BaseController {
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/progress")
-	public List<Item> getProgress() {
-		Progress[] enums = Progress.values();
-		List<Item> items = Lists.newArrayListWithCapacity(enums.length);
-		Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
-		return items;
-	}
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/progress")
+    public List<Item> getProgress() {
+        Progress[] enums = Progress.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/meetingStatus")
+    public List<Item> getMeetingStatus() {
+        MeetingStatus[] enums = MeetingStatus.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
 }

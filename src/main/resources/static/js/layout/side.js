@@ -1,4 +1,4 @@
-var vue = new Vue({
+var side = new Vue({
 	el: '#side',
 	data:{
 		activeName:"",

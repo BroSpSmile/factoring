@@ -17,16 +17,15 @@
 	</head>
 	<body>
 		<div th:fragment="navbar"  class="wrapper"  role="navigation">
-			<div th:include="/layout/header :: header" class="header">header</div>
-			<div class="container">
+			<div class="wrapper-header">
+				<div th:include="/layout/header :: header" class="header">header</div>
+			</div>
+			<div class="wrapper-container">
 				<div th:include="/layout/side :: side" class="menu">header</div>
+				<div class="line"></div> 
 				<div layout:fragment="content"  id="content"  class="content"></div>
 			</div>
-			<div >
-				<div th:include="/layout/footer :: footer"  class="footer">footer</div>
-			</div>
 		</div>
-		
 		<script src="js/layout/side.js"></script>
 	</body>
 </html>
