@@ -3,6 +3,7 @@ package com.smile.start.service;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.base.PageRequest;
 
 /**
  * @author Joseph
@@ -22,7 +23,7 @@ public interface UserInfoService {
      * 查询所有用户信息
      * @return
      */
-    PageInfo<AuthUserInfoDTO> findAll(UserSearchDTO userSearchDTO);
+    PageInfo<AuthUserInfoDTO> findAll(PageRequest<UserSearchDTO> page);
 
     /**
      * 新增用户信息

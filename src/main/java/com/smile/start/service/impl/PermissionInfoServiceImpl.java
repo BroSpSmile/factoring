@@ -1,17 +1,17 @@
 package com.smile.start.service.impl;
 
+import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.PermissionDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.entity.AuthPermissionInfoDO;
 import com.smile.start.enums.DeleteFlagEnum;
 import com.smile.start.mapper.PermissionInfoMapper;
-import com.smile.start.repository.PermissionInfoRepository;
+import com.smile.start.model.auth.Permission;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Resource
-    private PermissionInfoRepository permissionInfoRepository;
+    private PermissionDao permissionDao;
 
     @Resource
     private PermissionInfoMapper permissionInfoMapper;
@@ -35,8 +35,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     @Override
     public AuthPermissionInfoDTO get(Long id) {
-        final Optional<AuthPermissionInfoDO> optional = permissionInfoRepository.findById(id);
-        return permissionInfoMapper.do2dto(optional.orElse(null));
+        return permissionInfoMapper.do2dto(permissionDao.get(id));
     }
 
     /**
@@ -47,12 +46,12 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     @Override
     public Long insert(AuthPermissionInfoDTO authPermissionInfoDTO) {
-        final AuthPermissionInfoDO authPermissionInfoDO = permissionInfoMapper.dto2do(authPermissionInfoDTO);
+        final Permission permission = permissionInfoMapper.dto2do(authPermissionInfoDTO);
         Date nowDate = new Date();
-        authPermissionInfoDO.setGmtCreate(nowDate);
-        authPermissionInfoDO.setGmtModify(nowDate);
-        final AuthPermissionInfoDO save = permissionInfoRepository.save(authPermissionInfoDO);
-        return save.getId();
+        permission.setGmtCreate(nowDate);
+        permission.setGmtModify(nowDate);
+        permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
+        return permissionDao.insert(permission);
     }
 
     /**
@@ -62,9 +61,9 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     @Override
     public void update(AuthPermissionInfoDTO authPermissionInfoDTO) {
-        final AuthPermissionInfoDO authPermissionInfoDO = permissionInfoMapper.dto2do(authPermissionInfoDTO);
-        authPermissionInfoDO.setGmtModify(new Date());
-        permissionInfoRepository.saveAndFlush(authPermissionInfoDO);
+        final Permission permission = permissionInfoMapper.dto2do(authPermissionInfoDTO);
+        permission.setGmtModify(new Date());
+        permissionDao.update(permission);
     }
 
     /**
@@ -74,9 +73,9 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     @Override
     public void delete(Long id) {
-        final AuthPermissionInfoDO authPermissionInfoDO = permissionInfoRepository.getOne(id);
-        authPermissionInfoDO.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
-        permissionInfoRepository.saveAndFlush(authPermissionInfoDO);
+        final Permission permission = permissionDao.get(id);
+        permission.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
+        permissionDao.update(permission);
     }
 
     /**
@@ -86,7 +85,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     @Override
     public List<AuthPermissionInfoDTO> findByUserSerialNo(String userSerialNo) {
-        final List<AuthPermissionInfoDO> permissionList = permissionInfoRepository.findByUserSerialNo(userSerialNo);
+        final List<Permission> permissionList = permissionDao.findByUserSerialNo(userSerialNo);
         return permissionInfoMapper.doList2dtoList(permissionList);
     }
 }

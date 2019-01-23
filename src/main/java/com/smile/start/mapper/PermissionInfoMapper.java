@@ -1,7 +1,7 @@
 package com.smile.start.mapper;
 
 import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.entity.AuthPermissionInfoDO;
+import com.smile.start.model.auth.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
 
@@ -14,8 +14,8 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
 public interface PermissionInfoMapper {
-    AuthPermissionInfoDTO do2dto(AuthPermissionInfoDO authPermissionInfoDO);
-    AuthPermissionInfoDO dto2do(AuthPermissionInfoDTO permissionInfoDTO);
+    AuthPermissionInfoDTO do2dto(Permission permission);
+    Permission dto2do(AuthPermissionInfoDTO permissionInfoDTO);
 
-    List<AuthPermissionInfoDTO> doList2dtoList(List<AuthPermissionInfoDO> doList);
+    List<AuthPermissionInfoDTO> doList2dtoList(List<Permission> doList);
 }
