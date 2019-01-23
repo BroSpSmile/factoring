@@ -4,9 +4,9 @@ import com.smile.start.commons.Asserts;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.enums.DeleteFlagEnum;
 import com.smile.start.mapper.RoleInfoMapper;
 import com.smile.start.model.auth.Role;
+import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Service;
 

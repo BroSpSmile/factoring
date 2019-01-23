@@ -1,4 +1,4 @@
-package com.smile.start.enums;
+package com.smile.start.model.enums;
 
 /**
  * @author Joseph

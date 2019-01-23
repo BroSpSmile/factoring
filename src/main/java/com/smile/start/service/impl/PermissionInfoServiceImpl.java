@@ -3,9 +3,9 @@ package com.smile.start.service.impl;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.enums.DeleteFlagEnum;
 import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
+import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Service;
 
