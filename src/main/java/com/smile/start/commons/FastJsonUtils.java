@@ -142,7 +142,7 @@ public class FastJsonUtils {
 	public static <T> T fromJSONString(String json, Class<T> clazz, String dateFormat) {
 		if (StringUtils.isNotBlank(dateFormat)) {
 			ParserConfig config = new ParserConfig();
-			config.putDeserializer(Date.class, new LYDateFormatDeserializer(dateFormat));
+			config.putDeserializer(Date.class, new DateFormatDeserializer(dateFormat));
 			return JSON.parseObject(json, clazz, config, JSON.DEFAULT_PARSER_FEATURE, deSerializerFeatures);
 		}
 		return JSON.parseObject(json, clazz, deSerializerFeatures);
@@ -170,7 +170,7 @@ public class FastJsonUtils {
 	public static <T> T fromJSONString(String json, TypeReference<T> ref, String dateFormat) {
 		if (StringUtils.isNotBlank(dateFormat)) {
 			ParserConfig config = new ParserConfig();
-			config.putDeserializer(Date.class, new LYDateFormatDeserializer(dateFormat));
+			config.putDeserializer(Date.class, new DateFormatDeserializer(dateFormat));
 			return JSON.parseObject(json, ref.getType(), config, JSON.DEFAULT_PARSER_FEATURE, deSerializerFeatures);
 		}
 		return JSON.parseObject(json, ref, deSerializerFeatures);

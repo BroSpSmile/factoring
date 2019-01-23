@@ -7,17 +7,17 @@ common.openName = [ '6' ];
 var vue = new Vue({
 	el : '#meeting',
 	data : {
-		formInline:{
-			type:[]
+		formInline : {
+			type : []
 		},
 		queryParam : {
 			condition : {},
 			pageNum : 1,
 			pageSize : 10
 		},
-		pageInfo:{},
-		addMeeting:{},
-		modal1:false,
+		pageInfo : {},
+		addMeeting : {},
+		modal1 : false,
 		statusItems : []
 	},
 	created : function() {
@@ -35,11 +35,11 @@ var vue = new Vue({
 				console.error(error);
 			})
 		},
-		
+
 		/**
 		 * 查询
 		 */
-		query:function(page){
+		query : function(page) {
 			this.queryParam.pageNum = page;
 			let self = this;
 			self.queryParam.condition = self.formInline;
@@ -50,14 +50,22 @@ var vue = new Vue({
 						self.$Message.error(error.data.message);
 					})
 		},
-		
+
 		/**
 		 * 新增会议
 		 */
-		add:function(){
-			this.modal1=true;
+		add : function() {
+			this.addMeeting = {}
+			this.modal1 = true;
 		},
-		
+
+		/**
+		 * 
+		 */
+		save : function() {
+			console.log(this.addMeeting);
+		},
+
 		/**
 		 * 取消保存
 		 */
