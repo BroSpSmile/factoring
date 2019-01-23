@@ -2,7 +2,6 @@ package com.smile.start.dao;
 
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
-import com.smile.start.model.project.Project;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

@@ -8,6 +8,9 @@ package com.smile.start.exception;
  */
 public class ValidateException extends RuntimeException {
 
+    /**  */
+    private static final long serialVersionUID = 4057845546665065297L;
+
     public ValidateException() {
         super();
     }
