@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.ResponseResult;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.service.UserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class UserInfoController {
     }
 
     @PostMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ResponseResult<PageInfo<AuthUserInfoDTO>>> list(@RequestBody UserSearchDTO userSearch) {
+    public ResponseEntity<ResponseResult<PageInfo<AuthUserInfoDTO>>> list(@RequestBody PageRequest<UserSearchDTO> userSearch) {
         ResponseResult<PageInfo<AuthUserInfoDTO>> result = new ResponseResult<>();
         try {
             final PageInfo<AuthUserInfoDTO> userList = userInfoService.findAll(userSearch);

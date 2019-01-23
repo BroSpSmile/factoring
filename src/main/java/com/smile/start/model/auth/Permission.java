@@ -1,55 +1,40 @@
-package com.smile.start.entity;
+package com.smile.start.model.auth;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author Joseph
- * @version v1.0 2019/1/6 14:38, AuthPermissionInfoDO.java
+ * @version v1.0 2019/1/23 19:16, Permission.java
  * @since 1.8
  */
-@Entity
-@Table(name = "auth_permission_info", catalog = "orange_factoring")
-public class AuthPermissionInfoDO {
+public class Permission implements Serializable {
+    private static final long serialVersionUID = -806519133463771285L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "serial_no", nullable = false, length = 64)
     private String serialNo;
 
-    @Column(name = "permission_code", nullable = false, length = 64)
     private String permissionCode;
 
-    @Column(name = "permission_name", nullable = false, length = 128)
     private String permissionName;
 
-    @Column(name = "permission_type", nullable = false)
     private Integer permissionType;
 
-    @Column(name = "remark", nullable = true, length = 512)
     private String remark;
 
-    @Column(name = "parent_serial_no", nullable = true, length = 64)
     private String parentSerialNo;
 
-    @Column(name = "url", nullable = true, length = 128)
     private String url;
 
-    @Column(name = "delete_flag", nullable = true)
     private Integer deleteFlag;
 
-    @Column(name = "create_user", nullable = true, length = 64)
     private String createUser;
 
-    @Column(name = "modify_user", nullable = true, length = 64)
     private String modifyUser;
 
-    @Column(name = "gmt_create", nullable = true)
     private Date gmtCreate;
 
-    @Column(name = "gmt_modify", nullable = true)
     private Date gmtModify;
 
     public Long getId() {

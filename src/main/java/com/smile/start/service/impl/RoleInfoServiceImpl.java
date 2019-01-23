@@ -1,18 +1,18 @@
 package com.smile.start.service.impl;
 
 import com.smile.start.commons.Asserts;
+import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.entity.AuthRoleInfoDO;
 import com.smile.start.enums.DeleteFlagEnum;
 import com.smile.start.mapper.RoleInfoMapper;
-import com.smile.start.repository.RoleInfoRepository;
+import com.smile.start.model.auth.Role;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class RoleInfoServiceImpl implements RoleInfoService {
 
     @Resource
-    private RoleInfoRepository roleInfoRepository;
+    private RoleDao roleDao;
 
     @Resource
     private RoleInfoMapper roleInfoMapper;
@@ -36,8 +36,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public AuthRoleInfoDTO get(Long id) {
-        final Optional<AuthRoleInfoDO> optional = roleInfoRepository.findById(id);
-        return roleInfoMapper.do2dto(optional.orElse(null));
+        return roleInfoMapper.do2dto(roleDao.get(id));
     }
 
     /**
@@ -49,14 +48,14 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     @Override
     public Long insert(AuthRoleInfoDTO authRoleInfoDTO) {
         Asserts.notEmpty(authRoleInfoDTO.getRoleCode(), "角色编号不能为空");
-        final AuthRoleInfoDO oldRole = roleInfoRepository.findByRoleCode(authRoleInfoDTO.getRoleCode());
+        final Role oldRole = roleDao.findByRoleCode(authRoleInfoDTO.getRoleCode());
         Asserts.notTrue((oldRole == null), "指定角色编号已经存在");
-        final AuthRoleInfoDO authRoleInfoDO = roleInfoMapper.dto2do(authRoleInfoDTO);
+        final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);
         Date nowDate = new Date();
-        authRoleInfoDO.setGmtCreate(nowDate);
-        authRoleInfoDO.setGmtModify(nowDate);
-        final AuthRoleInfoDO save = roleInfoRepository.save(authRoleInfoDO);
-        return save.getId();
+        role.setGmtCreate(nowDate);
+        role.setGmtModify(nowDate);
+        role.setSerialNo(SerialNoGenerator.generateSerialNo("R", 7));
+        return roleDao.insert(role);
     }
 
     /**
@@ -66,9 +65,9 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public void update(AuthRoleInfoDTO authRoleInfoDTO) {
-        final AuthRoleInfoDO authRoleInfoDO = roleInfoMapper.dto2do(authRoleInfoDTO);
-        authRoleInfoDO.setGmtModify(new Date());
-        roleInfoRepository.saveAndFlush(authRoleInfoDO);
+        final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);
+        role.setGmtModify(new Date());
+        roleDao.update(role);
     }
 
     /**
@@ -78,9 +77,9 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public void delete(Long id) {
-        final AuthRoleInfoDO authRoleInfoDO = roleInfoRepository.getOne(id);
-        authRoleInfoDO.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
-        roleInfoRepository.saveAndFlush(authRoleInfoDO);
+        final Role role = roleDao.get(id);
+        role.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
+        roleDao.update(role);
     }
 
     /**
@@ -90,7 +89,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public List<AuthRoleInfoDTO> findByUserSerialNo(String userSerialNo) {
-        final List<AuthRoleInfoDO> userRoleList = roleInfoRepository.findByUserSerialNo(userSerialNo);
+        final List<Role> userRoleList = roleDao.findByUserSerialNo(userSerialNo);
         return roleInfoMapper.doList2dtoList(userRoleList);
     }
 }
