@@ -20,7 +20,6 @@
 							<i-select class="inputw" v-model="formInline.progress" clearable>
                         		<i-option v-for="item in statusItems"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
-							
 						</form-item>
 						<row type="flex">
 	                    <i-col span="12" offset="6">
@@ -35,7 +34,7 @@
 				</p>
 			</card>
 			<br>
-			<card dis-hover title="搜索结果">
+			<card dis-hover title="搜索结果" >
 				<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
 				<br/>
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>

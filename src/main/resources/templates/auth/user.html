@@ -4,9 +4,9 @@
       layout:decorator="layout/layout">
 	<div layout:fragment="content">
 		<div id="user">
-			<card dis-hover title="搜索条件">
+			<card dis-hover title="搜索条件" style="width:100%">
 				<p>
-					<i-form :model="formInline" :label-width="80" inline>
+					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
 						<form-item label="用户名称">
 							<i-input placeholder="输入用户名称" class="inputw" v-model="formInline.username"></i-input>
 						</form-item>
@@ -14,7 +14,7 @@
 							<i-input placeholder="输入手机号码" class="inputw" v-model="formInline.mobile"></i-input>
 						</form-item>
 						<form-item label="用户状态">
-							<i-select class="select-width-180" v-model="formInline.status" clearable>
+							<i-select class="inputw" v-model="formInline.status" clearable>
 								<i-option :value="1">有效</i-option>
 								<i-option :value="0">无效</i-option>
 							</i-select>
@@ -29,7 +29,7 @@
 				</p>
 			</card>
 			<br>
-			<card dis-hover title="搜索结果">
+			<card dis-hover title="搜索结果" v-if="showResult">
 				<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
 				<br/>
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>

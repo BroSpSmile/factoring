@@ -15,30 +15,20 @@ var vue = new Vue({
 			pageNum : 1,
 			pageSize : 10
 		},
-		tableColumns:[],
 		pageInfo:{},
+		tableColumns:[],
+		showResult:false,
 		modal1:false
 	},
 	created : function() {
-		this.initDate();
 	},
 	methods : {
-		/**
-		 * 初始化数据
-		 */
-		initDate : function() {
-			var _self = this;
-			this.$http.get("/combo/meetingStatus").then(function(response) {
-				_self.statusItems = response.data;
-			}, function(error) {
-				console.error(error);
-			})
-		},
 		
 		/**
 		 * 查询
 		 */
 		query : function(page){
+			this.showResult=true;
 			this.queryParam.pageNum = page;
 			var _self = this;
             _self.queryParam = _self.formInline;
