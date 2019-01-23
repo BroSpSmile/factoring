@@ -183,7 +183,9 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-			this.$refs['entityDataForm'].resetFields();
+			if(this.addForm.projectId==''){
+				this.$refs['entityDataForm'].resetFields();
+			}
 		}
 	}
 });
@@ -213,6 +215,21 @@ vue.tableColumns=[
     	align: 'center',
         render:(h,param)=>{
         	return h('div', [
+        		param.row.progress=='INIT'?
+						h('Button', {
+							props: {
+								size: "small"
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.deleteWarn(param.row.id);
+								}
+							}
+						}, '立项申请'):
+						h('span'),
 				h('Button', {
 					props: {
 						size: "small",

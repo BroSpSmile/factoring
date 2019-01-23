@@ -4,8 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
 
-import java.util.List;
-
 /**
  * @author Joseph
  * @version v1.0 2019/1/6 14:40, UserInfoService.java

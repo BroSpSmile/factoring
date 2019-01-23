@@ -15,6 +15,7 @@ var vue = new Vue({
 			pageNum : 1,
 			pageSize : 10
 		},
+		tableColumns:[],
 		pageInfo:{},
 		modal1:false
 	},
