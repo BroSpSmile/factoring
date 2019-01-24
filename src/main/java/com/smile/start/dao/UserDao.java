@@ -1,5 +1,6 @@
 package com.smile.start.dao;
 
+import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import org.apache.ibatis.annotations.Insert;
@@ -67,4 +68,10 @@ public interface UserDao {
             + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>" + "<if test = 'email!=null'> and email = #{email}</if>"
             + "<if test = 'status!=null'> and status = #{status}</if>" + "<if test = 'deleteFlag!=null'> and delete_flag = #{deleteFlag}</if>" + "</script>")
     List<User> findByParam(UserSearchDTO userSearchDTO);
+
+    @Select("<script>" + "select * from auth_user_info where 1=1 "
+            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
+            + "<if test = 'passwd!=null'> and passwd = #{passwd}</if>"
+            + "</script>")
+    User login(LoginRequestDTO loginRequestDTO);
 }

@@ -16,14 +16,14 @@ import javax.annotation.Resource;
  * @since 1.8
  */
 @Controller
-@RequestMapping(value = "/auth/role")
+@RequestMapping(value = "/role")
 public class RoleInfoController extends BaseController {
 
     @Resource
     private RoleInfoService roleInfoService;
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -43,7 +43,7 @@ public class RoleInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authRoleInfoDTO
      * @return
      */
@@ -54,7 +54,7 @@ public class RoleInfoController extends BaseController {
             roleInfoService.insert(authRoleInfoDTO);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("新增成功");
+            result.setErrorMessage("新增角色成功");
             return result;
         } catch (Exception e) {
             logger.error("新增角色信息失败", e);
@@ -63,7 +63,7 @@ public class RoleInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authRoleInfoDTO
      * @return
      */
@@ -74,7 +74,7 @@ public class RoleInfoController extends BaseController {
             roleInfoService.update(authRoleInfoDTO);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("更新成功");
+            result.setErrorMessage("更新角色成功");
             return result;
         } catch (Exception e) {
             logger.error("更新角色信息失败", e);
@@ -94,7 +94,7 @@ public class RoleInfoController extends BaseController {
             roleInfoService.delete(id);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("删除成功");
+            result.setErrorMessage("删除角色成功");
             return result;
         } catch (Exception e) {
             logger.error("删除角色信息失败", e);

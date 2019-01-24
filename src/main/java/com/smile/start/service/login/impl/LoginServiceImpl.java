@@ -4,12 +4,30 @@
  */
 package com.smile.start.service.login.impl;
 
+import com.smile.start.commons.Asserts;
+import com.smile.start.commons.Constants;
+import com.smile.start.commons.DateUtil;
+import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.TokenDao;
+import com.smile.start.dao.UserDao;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.model.auth.Token;
+import com.smile.start.model.auth.User;
+import com.smile.start.service.UserInfoService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.model.organization.Employee;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.login.LoginService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * 实现
@@ -19,15 +37,39 @@ import com.smile.start.service.login.LoginService;
 @Service
 public class LoginServiceImpl extends AbstractService implements LoginService {
 
-    /** 
-     * @see com.smile.start.service.login.LoginService#login(com.smile.start.model.organization.Employee)
+    @Resource
+    private UserDao userDao;
+
+    @Resource
+    private TokenDao tokenDao;
+
+    @Resource
+    private UserInfoService userInfoService;
+
+    /**
+     * 登录
+     * @param loginRequestDTO
+     * @param response
+     * @return
      */
     @Override
-    public boolean login(Employee employee) {
-        if (StringUtils.equals(employee.getUserName(), "admin") && StringUtils.equals(employee.getPassword(), "123456")) {
-            return true;
-        }
-        return false;
+    public AuthUserInfoDTO login(LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+        //TODO 密码暂时用明文，等用户新增功能做好
+        //String md5Passwd = MD5Encoder.encode(loginRequestDTO.getPasswd().getBytes());
+        //loginRequestDTO.setPasswd(md5Passwd);
+        final User login = userDao.login(loginRequestDTO);
+        Asserts.notNull(login, "用户名或密码错误");
+        String tokenStr = UUID.randomUUID().toString();
+        Token token = new Token();
+        Date nowDate = new Date();
+        token.setToken(UUID.randomUUID().toString());
+        token.setSerialNo(SerialNoGenerator.generateSerialNo("T", 7));
+        token.setMobile(loginRequestDTO.getMobile());
+        token.setGmtCreate(nowDate);
+        token.setTokenExpire(DateUtil.addMinutes(nowDate, 30));
+        tokenDao.insert(token);
+        response.addCookie(new Cookie(Constants.TOKEN_COOKIE_KEY, tokenStr));
+        return userInfoService.get(login.getId());
     }
 
 }

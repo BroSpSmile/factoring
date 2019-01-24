@@ -16,14 +16,14 @@ import javax.annotation.Resource;
  * @since 1.8
  */
 @Controller
-@RequestMapping(value = "/auth/permission")
+@RequestMapping(value = "/permission")
 public class PermissionInfoController extends BaseController {
 
     @Resource
     private PermissionInfoService permissionInfoService;
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -43,7 +43,7 @@ public class PermissionInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authPermissionInfoDTO
      * @return
      */
@@ -54,7 +54,7 @@ public class PermissionInfoController extends BaseController {
             permissionInfoService.insert(authPermissionInfoDTO);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("新增成功");
+            result.setErrorMessage("新增权限成功");
             return result;
         } catch (Exception e) {
             logger.error("新增权限信息失败", e);
@@ -63,7 +63,7 @@ public class PermissionInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authPermissionInfoDTO
      * @return
      */
@@ -74,7 +74,7 @@ public class PermissionInfoController extends BaseController {
             permissionInfoService.update(authPermissionInfoDTO);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("更新成功");
+            result.setErrorMessage("更新权限成功");
             return result;
         } catch (Exception e) {
             logger.error("更新权限信息失败", e);
@@ -83,7 +83,7 @@ public class PermissionInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -94,7 +94,7 @@ public class PermissionInfoController extends BaseController {
             permissionInfoService.delete(id);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("删除成功");
+            result.setErrorMessage("删除权限成功");
             return result;
         } catch (Exception e) {
             logger.error("删除权限信息失败", e);

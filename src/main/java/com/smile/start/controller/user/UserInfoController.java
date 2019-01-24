@@ -1,7 +1,14 @@
 package com.smile.start.controller.user;
 
-import javax.annotation.Resource;
-
+import com.github.pagehelper.PageInfo;
+import com.smile.start.controller.BaseController;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.service.UserInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.pagehelper.PageInfo;
-import com.smile.start.controller.BaseController;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.UserSearchDTO;
-import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.base.SingleResult;
-import com.smile.start.service.UserInfoService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Joseph
@@ -40,7 +41,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -60,7 +61,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param userSearch
      * @return
      */
@@ -72,7 +73,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authUserInfoDTO
      * @return
      */
@@ -83,7 +84,7 @@ public class UserInfoController extends BaseController {
             userInfoService.insert(authUserInfoDTO);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("新增成功");
+            result.setErrorMessage("新增用户成功");
             return result;
         } catch (Exception e) {
             logger.error("新增用户信息失败", e);
@@ -92,7 +93,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authUserInfoDTO
      * @return
      */
@@ -103,7 +104,7 @@ public class UserInfoController extends BaseController {
             BaseResult result = new BaseResult();
             userInfoService.update(authUserInfoDTO);
             result.setSuccess(true);
-            result.setErrorMessage("更新成功");
+            result.setErrorMessage("更新用户成功");
             return result;
         } catch (Exception e) {
             logger.error("更新用户信息失败", e);
@@ -112,7 +113,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -123,11 +124,12 @@ public class UserInfoController extends BaseController {
             userInfoService.delete(id);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
-            result.setErrorMessage("删除成功");
+            result.setErrorMessage("删除用户成功");
             return result;
         } catch (Exception e) {
             logger.error("删除用户信息失败", e);
             return toResult(e);
         }
     }
+
 }

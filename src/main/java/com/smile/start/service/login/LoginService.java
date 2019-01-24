@@ -4,7 +4,10 @@
  */
 package com.smile.start.service.login;
 
-import com.smile.start.model.organization.Employee;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录服务
@@ -12,10 +15,12 @@ import com.smile.start.model.organization.Employee;
  * @version $Id: LoginService.java, v 0.1 Jan 17, 2019 4:43:23 PM smile.jing Exp $
  */
 public interface LoginService {
+
     /**
-     * 用户登录
-     * @param employee
+     * 登录
+     * @param loginRequestDTO
+     * @param response
      * @return
      */
-    boolean login(Employee employee);
+    AuthUserInfoDTO login(LoginRequestDTO loginRequestDTO, HttpServletResponse response);
 }

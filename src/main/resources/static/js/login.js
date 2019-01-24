@@ -3,14 +3,14 @@ var app = new Vue({
 	el : '#app',
 	data : {
 		form: {
-	        userName: '',
-	        password: ''
+            mobile: '',
+            passwd: ''
 	      },
 	    ruleValidate:{
-	    	userName: [
+	    	mobile: [
                 {required: true, message: '用户名不能为空', trigger: 'blur'}
             ],
-            password:[
+            passwd:[
             	{required: true, message: '密码不能为空', trigger: 'blur'}
             ]
 	    }

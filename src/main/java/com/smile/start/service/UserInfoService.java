@@ -2,8 +2,11 @@ package com.smile.start.service;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.PageRequest;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Joseph
@@ -43,4 +46,11 @@ public interface UserInfoService {
      * @param id
      */
     void delete(Long id);
+
+    /**
+     * 验证token是否有效
+     * @param token
+     * @return
+     */
+    boolean validateToken(String token);
 }

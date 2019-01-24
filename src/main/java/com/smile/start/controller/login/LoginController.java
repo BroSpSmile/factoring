@@ -5,7 +5,11 @@
 package com.smile.start.controller.login;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.model.base.SingleResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.smile.start.controller.BaseController;
-import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.organization.Employee;
 import com.smile.start.service.login.LoginService;
 
 /**
@@ -41,18 +43,15 @@ public class LoginController extends BaseController {
 
     /**
      * 登录
-     * @param employee
+     * @param loginRequestDTO
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public BaseResult login(@RequestBody Employee employee) {
-        BaseResult result = new BaseResult();
-        boolean success = loginService.login(employee);
-        result.setSuccess(success);
-        if (!success) {
-            result.setErrorMessage("登录认证失败!");
-        }
+    public SingleResult<AuthUserInfoDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+        SingleResult<AuthUserInfoDTO> result = new SingleResult<>();
+        AuthUserInfoDTO authUserInfoDTO = loginService.login(loginRequestDTO, response);
+        result.setData(authUserInfoDTO);
         return result;
     }
 }
