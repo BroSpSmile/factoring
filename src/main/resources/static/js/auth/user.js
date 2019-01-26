@@ -147,7 +147,9 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-			this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id == '') {
+                this.$refs['entityDataForm'].resetFields();
+            }
 		},
 
         /** 分页 */
