@@ -7,9 +7,6 @@ package com.smile.start.controller.login;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
-import com.smile.start.model.base.SingleResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.smile.start.controller.BaseController;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.login.LoginService;
 
 /**
