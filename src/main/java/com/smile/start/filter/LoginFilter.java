@@ -48,7 +48,6 @@ public class LoginFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String token = getToken(request);
-            System.out.println(token);
             if(token != null && userInfoService.validateToken(token)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {

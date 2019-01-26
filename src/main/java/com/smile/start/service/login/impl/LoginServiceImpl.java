@@ -62,7 +62,7 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
         String tokenStr = UUID.randomUUID().toString();
         Token token = new Token();
         Date nowDate = new Date();
-        token.setToken(UUID.randomUUID().toString());
+        token.setToken(tokenStr);
         token.setSerialNo(SerialNoGenerator.generateSerialNo("T", 7));
         token.setMobile(loginRequestDTO.getMobile());
         token.setGmtCreate(nowDate);
