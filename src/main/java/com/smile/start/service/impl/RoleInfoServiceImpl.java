@@ -1,11 +1,17 @@
 package com.smile.start.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.mapper.RoleInfoMapper;
 import com.smile.start.model.auth.Role;
+import com.smile.start.model.auth.User;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Service;
@@ -40,6 +46,20 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     /**
+     * 查询所有角色信息
+     * @return
+     */
+    @Override
+    public PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> page) {
+        final PageInfo<AuthRoleInfoDTO> result = new PageInfo<>();
+        final List<Role> roleList = roleDao.findByParam(page.getCondition());
+        result.setTotal(roleList.size());
+        result.setPageSize(10);
+        result.setList(roleInfoMapper.doList2dtoList(roleList));
+        return result;
+    }
+
+    /**
      * 新增角色信息
      *
      * @param authRoleInfoDTO
@@ -55,6 +75,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         role.setGmtCreate(nowDate);
         role.setGmtModify(nowDate);
         role.setSerialNo(SerialNoGenerator.generateSerialNo("R", 7));
+        role.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         return roleDao.insert(role);
     }
 

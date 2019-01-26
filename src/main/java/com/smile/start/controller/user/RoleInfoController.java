@@ -1,8 +1,13 @@
 package com.smile.start.controller.user;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Controller;
@@ -22,6 +27,11 @@ public class RoleInfoController extends BaseController {
     @Resource
     private RoleInfoService roleInfoService;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
+        return "auth/role";
+    }
+
     /**
      *
      * @param id
@@ -40,6 +50,18 @@ public class RoleInfoController extends BaseController {
             logger.error("查询角色信息失败", e);
             return toResult(e, AuthRoleInfoDTO.class);
         }
+    }
+
+    /**
+     *
+     * @param userSearch
+     * @return
+     */
+    @PostMapping(value = "/list")
+    @ResponseBody
+    public PageInfo<AuthRoleInfoDTO> list(@RequestBody PageRequest<RoleSearchDTO> userSearch) {
+        PageInfo<AuthRoleInfoDTO> roleList = roleInfoService.findAll(userSearch);
+        return roleList;
     }
 
     /**

@@ -1,11 +1,11 @@
 /**
- * 用户信息
+ * 角色信息
  */
-common.pageName = "user";
-common.openName = [ '8' ];
+common.pageName = "role";
+common.openName = [ '9' ];
 
 var vue = new Vue({
-	el : '#user',
+	el : '#role',
 	data : {
 		formInline:{
 			type:[]
@@ -16,10 +16,9 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		addForm : {
-			username : "",
-			mobile : "",
-			email : "",
-			passwd : ""
+			roleCode : "",
+			roleName : "",
+			roleDesc : ""
 		},
 		pageInfo:{},
 		tableColumns:[],
@@ -38,39 +37,28 @@ var vue = new Vue({
 			this.queryParam.pageNum = page;
 			var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/user/list", _self.queryParam).then(
+			this.$http.post("/role/list", _self.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
 					}, function(error) {
                     	_self.$Message.error(error.data.message);
 					})
 		},
-        /**
-         * 状态翻译
-         */
-        getStatusDesc : function(value){
-            if(value === 0) {
-            	return "无效";
-			} else if(value === 1) {
-            	return "有效";
-			}
-            return "";
-        },
 		/**
-		 * 新增用户
+		 * 新增角色
 		 */
-		addUser : function() {
+		addRole : function() {
 			this.modal1 = true;
             this.addForm = {
             };
 		},
         /**
-		 * 保存用户信息
+		 * 保存角色信息
          */
-		saveUser : function() {
+		saveRole : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/user", this.addForm).then(function(response) {
+                this.$http.post("/role", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -86,7 +74,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/user", this.addForm).then(function(response) {
+                this.$http.put("/role", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -109,17 +97,17 @@ var vue = new Vue({
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前用户</p>',
+                content: '<p>确认是否删除当前角色</p>',
                 onOk: () => {
-                    this.deleteUser(id);
+                    this.deleteRole(id);
                 },
                 onCancel: () => {}
             })
         },
-        /** 删除用户 */
-        deleteUser:function(id){
+        /** 删除角色 */
+        deleteRole:function(id){
             let self = this;
-            this.$http.delete("/user/" + id).then(function(response){
+            this.$http.delete("/role/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -136,9 +124,9 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新用户
+         * 更新角色
          */
-        updateUser : function(user){
+        updateRole : function(user){
             this.addForm = user;
             this.modal1 = true;
         },
@@ -161,25 +149,18 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '用户名称',
-        key: 'username',
+        title: '角色编号',
+        key: 'roleCode',
         align: 'left'
     },{
-        title: '手机号',
-        key: 'mobile',
+        title: '角色名称',
+        key: 'roleName',
         align: 'center'
     },{
-        title: '邮箱',
-        key: 'email',
+        title: '描述',
+        key: 'roleDesc',
         align: 'left'
     },{
-        title: '状态',
-        key: 'status',
-        align: 'center',
-        render:(h,param)=> {
-        	return h('span', vue.getStatusDesc(param.row.status));
-		}
-	},{
         title: '操作',
         align: 'center',
         render:(h,param)=>{
@@ -195,7 +176,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateUser(param.row);
+                            vue.updateRole(param.row);
                         }
                     }
                 }, '编辑'),
