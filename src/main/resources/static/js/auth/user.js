@@ -15,6 +15,12 @@ var vue = new Vue({
 			pageNum : 1,
 			pageSize : 10
 		},
+		addForm : {
+			username : "",
+			mobile : "",
+			email : "",
+			passwd : ""
+		},
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
@@ -53,10 +59,89 @@ var vue = new Vue({
 		/**
 		 * 新增用户
 		 */
-		add : function(){
-			this.modal1=true;
+		addUser : function() {
+			this.modal1 = true;
+            this.addForm = {
+            };
 		},
-		
+        /**
+		 * 保存用户信息
+         */
+		saveUser : function() {
+            let self = this;
+            if(this.addForm.id == null || this.addForm.id == ""){
+                this.$http.post("/user", this.addForm).then(function(response) {
+                    if (response.data.success) {
+                        self.$Message.info({
+                            content : "保存成功",
+                            onClose : function() {
+                                self.query();
+                                self.cancel();
+                            }
+                        });
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function(error) {
+                    self.$Message.error(error.data.message);
+                });
+            }else{
+                this.$http.put("/user", this.addForm).then(function(response) {
+                    if (response.data.success) {
+                        self.$Message.info({
+                            content : "更新成功",
+                            onClose : function() {
+                                self.query();
+                                self.cancel();
+                            }
+                        });
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function(error) {
+                    self.$Message.error(error.data.message);
+                });
+            }
+		},
+        /**
+         * 删除警告
+         */
+        deleteWarn:function(id){
+            this.$Modal.confirm({
+                title: '删除提示',
+                content: '<p>确认是否删除当前用户</p>',
+                onOk: () => {
+                    this.deleteUser(id);
+                },
+                onCancel: () => {}
+            })
+        },
+        /** 删除用户 */
+        deleteUser:function(id){
+            let self = this;
+            this.$http.delete("/user/" + id).then(function(response){
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "删除成功",
+                        onClose : function() {
+                            self.query();
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
+        /**
+         * 更新用户
+         */
+        updateUser : function(user){
+            this.addForm = user;
+            this.modal1 = true;
+        },
 		/**
 		 * 取消保存
 		 */
@@ -92,5 +177,42 @@ vue.tableColumns=[
         render:(h,param)=> {
         	return h('span', vue.getStatusDesc(param.row.status));
 		}
-	}
+	},{
+        title: '操作',
+        align: 'center',
+        render:(h,param)=>{
+        return h('div', [
+            h('span'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "warning"
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            vue.updateUser(param.row);
+                        }
+                    }
+                }, '编辑'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "error"
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            vue.deleteWarn(param.row.id);
+                        }
+                    }
+                }, '删除')
+                ]
+            )
+        }
+    }
 ];

@@ -15,11 +15,13 @@ import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.service.PermissionInfoService;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.UserInfoService;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -94,6 +96,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         user.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
         user.setGmtCreate(nowDate);
         user.setGmtModify(nowDate);
+        user.setStatus(StatusEnum.VALID.getValue());
+        user.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         //TODO
         //String md5Passwd = MD5Encoder.encode(authUserInfoDTO.getPasswd().getBytes());
         //user.setPasswd(md5Passwd);
