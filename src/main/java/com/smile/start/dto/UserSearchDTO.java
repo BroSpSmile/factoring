@@ -12,7 +12,7 @@ public class UserSearchDTO implements Serializable {
 
     private String username;
     private String mobile;
-    private int status;
+    private Integer status;
 
     public String getUsername() {
         return username;
@@ -30,11 +30,11 @@ public class UserSearchDTO implements Serializable {
         this.mobile = mobile;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

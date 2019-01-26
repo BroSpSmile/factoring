@@ -37,7 +37,7 @@ var vue = new Vue({
 			this.showResult=true;
 			this.queryParam.pageNum = page;
 			var _self = this;
-            _self.queryParam = _self.formInline;
+            _self.queryParam.condition = _self.formInline;
 			this.$http.post("/user/list", _self.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
