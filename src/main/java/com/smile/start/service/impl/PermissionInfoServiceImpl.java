@@ -1,10 +1,15 @@
 package com.smile.start.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
+import com.smile.start.model.auth.Role;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Service;
@@ -39,6 +44,20 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     /**
+     * 查询所有权限信息
+     * @return
+     */
+    @Override
+    public PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> page) {
+        final PageInfo<AuthPermissionInfoDTO> result = new PageInfo<>();
+        final List<Permission> permissionList = permissionDao.findByParam(page.getCondition());
+        result.setTotal(permissionList.size());
+        result.setPageSize(10);
+        result.setList(permissionInfoMapper.doList2dtoList(permissionList));
+        return result;
+    }
+
+    /**
      * 新增权限信息
      *
      * @param authPermissionInfoDTO
@@ -51,6 +70,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         permission.setGmtCreate(nowDate);
         permission.setGmtModify(nowDate);
         permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
+        permission.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         return permissionDao.insert(permission);
     }
 

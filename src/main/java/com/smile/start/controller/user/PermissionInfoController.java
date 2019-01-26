@@ -1,8 +1,13 @@
 package com.smile.start.controller.user;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.PermissionSearchDTO;
+import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Controller;
@@ -22,6 +27,11 @@ public class PermissionInfoController extends BaseController {
     @Resource
     private PermissionInfoService permissionInfoService;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
+        return "auth/permission";
+    }
+
     /**
      *
      * @param id
@@ -40,6 +50,18 @@ public class PermissionInfoController extends BaseController {
             logger.error("查询权限信息失败", e);
             return toResult(e, AuthPermissionInfoDTO.class);
         }
+    }
+
+    /**
+     *
+     * @param permissionSearch
+     * @return
+     */
+    @PostMapping(value = "/list")
+    @ResponseBody
+    public PageInfo<AuthPermissionInfoDTO> list(@RequestBody PageRequest<PermissionSearchDTO> permissionSearch) {
+        PageInfo<AuthPermissionInfoDTO> permissionList = permissionInfoService.findAll(permissionSearch);
+        return permissionList;
     }
 
     /**

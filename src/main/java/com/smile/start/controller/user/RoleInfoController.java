@@ -54,13 +54,13 @@ public class RoleInfoController extends BaseController {
 
     /**
      *
-     * @param userSearch
+     * @param roleSearch
      * @return
      */
     @PostMapping(value = "/list")
     @ResponseBody
-    public PageInfo<AuthRoleInfoDTO> list(@RequestBody PageRequest<RoleSearchDTO> userSearch) {
-        PageInfo<AuthRoleInfoDTO> roleList = roleInfoService.findAll(userSearch);
+    public PageInfo<AuthRoleInfoDTO> list(@RequestBody PageRequest<RoleSearchDTO> roleSearch) {
+        PageInfo<AuthRoleInfoDTO> roleList = roleInfoService.findAll(roleSearch);
         return roleList;
     }
 

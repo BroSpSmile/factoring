@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @since 1.8
  */
 public class RoleSearchDTO implements Serializable {
-    private static final long serialVersionUID = -2314194234025826739L;
+    private static final long serialVersionUID = -7459399400894164972L;
 
     private String roleCode;
     private String roleName;

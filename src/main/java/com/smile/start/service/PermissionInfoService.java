@@ -1,6 +1,11 @@
 package com.smile.start.service;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.PermissionSearchDTO;
+import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.model.base.PageRequest;
 
 import java.util.List;
 
@@ -18,6 +23,12 @@ public interface PermissionInfoService {
      * @return
      */
     AuthPermissionInfoDTO get(Long id);
+
+    /**
+     * 查询所有权限信息
+     * @return
+     */
+    PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> page);
 
     /**
      * 新增权限信息

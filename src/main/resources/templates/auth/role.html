@@ -29,7 +29,7 @@
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 			</card>
 
-			<!-- 新增用户 -->
+			<!-- 新增角色 -->
 			<modal v-model="modal1" title="新增角色"  mask-closable="false">
 				<div id="modalForm">
 					<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
@@ -37,7 +37,7 @@
 							<i-input placeholder="输入角色编号"  v-model="addForm.roleCode"></i-input>
 						</form-item>
 						<form-item label="用户名称" prop="roleName">
-							<i-input placeholder="输入用户名称"  v-model="addForm.roleName"></i-input>
+							<i-input placeholder="输入角色名称"  v-model="addForm.roleName"></i-input>
 						</form-item>
 						<form-item label="描述" prop="roleDesc">
 							<i-input placeholder="输入描述"  v-model="addForm.roleDesc"></i-input>
