@@ -2,13 +2,10 @@ package com.smile.start.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
-import com.smile.start.commons.Constants;
-import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.TokenDao;
 import com.smile.start.dao.UserDao;
 import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
@@ -19,16 +16,10 @@ import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.service.PermissionInfoService;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.UserInfoService;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Joseph
