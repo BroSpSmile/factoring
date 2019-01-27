@@ -42,6 +42,8 @@ public class AuthUserInfoDTO implements Serializable {
 
     private List<AuthPermissionInfoDTO> permissionList;
 
+    private List<String> checkedRoleList;
+
     public Long getId() {
         return id;
     }
@@ -160,6 +162,14 @@ public class AuthUserInfoDTO implements Serializable {
 
     public void setPermissionList(List<AuthPermissionInfoDTO> permissionList) {
         this.permissionList = permissionList;
+    }
+
+    public List<String> getCheckedRoleList() {
+        return checkedRoleList;
+    }
+
+    public void setCheckedRoleList(List<String> checkedRoleList) {
+        this.checkedRoleList = checkedRoleList;
     }
 
     @Override

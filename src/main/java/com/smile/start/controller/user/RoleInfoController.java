@@ -3,10 +3,9 @@ package com.smile.start.controller.user;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
-import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.RoleInfoService;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -121,6 +121,22 @@ public class RoleInfoController extends BaseController {
         } catch (Exception e) {
             logger.error("删除角色信息失败", e);
             return toResult(e);
+        }
+    }
+
+    @GetMapping(value = "/all")
+    @ResponseBody
+    public ListResult<AuthRoleInfoDTO> all() {
+        try {
+            final List<AuthRoleInfoDTO> all = roleInfoService.findAll();
+            ListResult<AuthRoleInfoDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取所有角色成功");
+            result.setValues(all);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取所有角色失败", e);
+            return toListResult(e, AuthRoleInfoDTO.class);
         }
     }
 }

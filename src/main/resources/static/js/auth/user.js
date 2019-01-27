@@ -19,17 +19,34 @@ var vue = new Vue({
 			username : "",
 			mobile : "",
 			email : "",
-			passwd : ""
-		},
+			passwd : "",
+            checkAllGroup:['R20190127154107XVQRJWC']
+        },
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
-		modal1:false
+		modal1:false,
+        roleList:[]
 	},
 	created : function() {
+        this.initDate();
 	},
 	methods : {
-		
+        /**
+         * 初始化数据
+         */
+        initDate : function() {
+            let self = this;
+            this.$http.get("/role/all").then(function(response){
+                if (response.data.success) {
+                    self.roleList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
 		/**
 		 * 查询
 		 */
@@ -140,7 +157,19 @@ var vue = new Vue({
          */
         updateUser : function(user){
             this.addForm = user;
+            this.addForm.checkAllGroup = ['R20190127154107XVQRJWC']
             this.modal1 = true;
+            console.log(user.roleList)
+            for(var i = 0; i < this.roleList.length; i++) {
+                var role = this.roleList[i];
+                for(var k = 0; k < user.roleList.length; k++) {
+                    if(role.serialNo === user.roleList[k].serialNo) {
+                        console.log("----------------------")
+                        role.checked = true;
+                        break;
+                    }
+                }
+            }
         },
 		/**
 		 * 取消保存

@@ -32,6 +32,12 @@ public interface RoleInfoService {
     PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> page);
 
     /**
+     * 查询所有角色信息
+     * @return
+     */
+    List<AuthRoleInfoDTO> findAll();
+
+    /**
      * 新增角色信息
      *
      * @param authRoleInfoDTO

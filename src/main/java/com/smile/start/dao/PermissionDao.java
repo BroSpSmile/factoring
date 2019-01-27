@@ -86,4 +86,12 @@ public interface PermissionDao {
         "and ur.user_serial_no = u.serial_no " +
         "and u.serial_no = #{serialNo}")
     List<Permission> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 根据父级权限编号查询权限
+     * @param parentSerialNo
+     * @return
+     */
+    @Select("select * from auth_permission_info where parent_serial_no=#{parentSerialNo}")
+    List<Permission> findByParentSerialNo(String parentSerialNo);
 }

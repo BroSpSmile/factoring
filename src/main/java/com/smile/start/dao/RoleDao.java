@@ -63,7 +63,7 @@ public interface RoleDao {
      *
      * @return
      */
-    @Select("select * from auth_role_info")
+    @Select("select * from auth_role_info where delete_flag = 0")
     List<Role> findAll();
 
     /**

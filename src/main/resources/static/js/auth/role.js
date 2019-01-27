@@ -20,10 +20,12 @@ var vue = new Vue({
 			roleName : "",
 			roleDesc : ""
 		},
+        permissionList : [],
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
-		modal1:false
+		modal1:false,
+        modal2:false
 	},
 	created : function() {
 	},
@@ -130,6 +132,46 @@ var vue = new Vue({
             this.addForm = user;
             this.modal1 = true;
         },
+        /**
+         * 权限配置
+         */
+        settingPermission : function () {
+            let self = this;
+            this.$http.get("/permission/tree").then(function(response){
+                if (response.data.success) {
+                    self.permissionList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+
+            // this.permissionList = [{
+            //     expand: true,
+            //     title: 'parent 1',
+            //     children: [{
+            //         title: 'parent 1-0',
+            //         expand: true,
+            //         disabled: true,
+            //         children: [{
+            //             title: 'leaf',
+            //             disableCheckbox: true
+            //         }, {
+            //             title: 'leaf',
+            //         }]
+            //     }, {
+            //         title: 'parent 1-1',
+            //         expand: true,
+            //         checked: true,
+            //         children: [{
+            //             title: '<span style="color: red">leaf</span>',
+            //         }]
+            //     }]
+            // }]
+
+            this.modal2 = true;
+        },
 		/**
 		 * 取消保存
 		 */
@@ -139,7 +181,20 @@ var vue = new Vue({
                 this.$refs['entityDataForm'].resetFields();
             }
 		},
-
+        /**
+         * 取消权限设置页面
+         */
+        cancelPermission : function() {
+            this.modal2 = false;
+        },
+        /**
+         * 保存权限信息
+         */
+        savePermission : function() {
+            let checkedNodes = this.$refs.permissionTree.getSelectedNodes;
+            console.log(checkedNodes.length)
+            console.log(checkedNodes)
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -180,6 +235,20 @@ vue.tableColumns=[
                         }
                     }
                 }, '编辑'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "warning"
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            vue.settingPermission();
+                        }
+                    }
+                }, '权限设置'),
                 h('Button', {
                     props: {
                         size: "small",

@@ -6,6 +6,7 @@ import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.common.Tree;
 
 import java.util.List;
 
@@ -58,4 +59,10 @@ public interface PermissionInfoService {
      * @return
      */
     List<AuthPermissionInfoDTO> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 获取权限树
+     * @return
+     */
+    List<Tree> getTree();
 }

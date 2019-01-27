@@ -1,19 +1,21 @@
 package com.smile.start.controller.user;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
-import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.common.Tree;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -121,6 +123,25 @@ public class PermissionInfoController extends BaseController {
         } catch (Exception e) {
             logger.error("删除权限信息失败", e);
             return toResult(e);
+        }
+    }
+
+
+
+    @GetMapping(value = "/tree")
+    @ResponseBody
+    public ListResult<Tree> tree() {
+        try {
+            ListResult<Tree> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取权限树成功");
+            List<Tree> treeList = permissionInfoService.getTree();
+            result.setValues(treeList);
+            System.out.println(JSON.toJSONString(treeList));
+            return result;
+        } catch (Exception e) {
+            logger.error("获取权限树失败", e);
+            return toListResult(e, Tree.class);
         }
     }
 }

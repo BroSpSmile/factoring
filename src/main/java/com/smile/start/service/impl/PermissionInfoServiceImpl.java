@@ -1,6 +1,7 @@
 package com.smile.start.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
@@ -10,9 +11,11 @@ import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
 import com.smile.start.model.auth.Role;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.common.Tree;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -107,5 +110,39 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     public List<AuthPermissionInfoDTO> findByUserSerialNo(String userSerialNo) {
         final List<Permission> permissionList = permissionDao.findByUserSerialNo(userSerialNo);
         return permissionInfoMapper.doList2dtoList(permissionList);
+    }
+
+    /**
+     * 获取权限树
+     * @return
+     */
+    @Override
+    public List<Tree> getTree() {
+        Tree root = new Tree();
+        root.setTitle("权限树");
+        root.setSerialNo("");
+        List<Tree> treeList = Lists.newArrayList();
+        treeList.add(getTree(root));
+        return treeList;
+    }
+
+    /**
+     * 递归获取组装树信息
+     * @param parentTree
+     * @return
+     */
+    private Tree getTree(Tree parentTree) {
+        final List<Permission> permissionList = permissionDao.findByParentSerialNo(parentTree.getSerialNo());
+        if(!CollectionUtils.isEmpty(permissionList)) {
+            List<Tree> children = Lists.newArrayList();
+            permissionList.forEach(e -> {
+                Tree tree = new Tree();
+                tree.setTitle(e.getPermissionName());
+                tree.setSerialNo(e.getSerialNo());
+                children.add(getTree(tree));
+            });
+            parentTree.setChildren(children);
+        }
+        return parentTree;
     }
 }

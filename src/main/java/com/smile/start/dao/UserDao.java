@@ -3,6 +3,7 @@ package com.smile.start.dao;
 import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.auth.UserRole;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -26,6 +27,14 @@ public interface UserDao {
      */
     @Insert("insert into auth_user_info (serial_no,username,mobile,openid,email,status,delete_flag,passwd,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{username},#{mobile},#{openid},#{email},#{status},#{deleteFlag},#{passwd},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(User user);
+
+    /**
+     * 新增用户角色关联信息
+     * @param userRole
+     * @return
+     */
+    @Insert("insert into auth_user_role_info (serial_no,user_serial_no,role_serial_no) values (#{serialNo},#{userSerialNo},#{roleSerialNo})")
+    long insertRole(UserRole userRole);
 
     /**
      * 更新用户

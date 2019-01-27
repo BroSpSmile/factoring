@@ -60,6 +60,15 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     /**
+     * 查询所有角色信息
+     * @return
+     */
+    @Override
+    public List<AuthRoleInfoDTO> findAll() {
+        return roleInfoMapper.doList2dtoList(roleDao.findAll());
+    }
+
+    /**
      * 新增角色信息
      *
      * @param authRoleInfoDTO
