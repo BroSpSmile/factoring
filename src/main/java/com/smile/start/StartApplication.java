@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 public class StartApplication {
 
-	/**
-	 * 启动文件
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(StartApplication.class, args);
-	}
+    /**
+     * 启动文件
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(StartApplication.class, args);
+    }
 }

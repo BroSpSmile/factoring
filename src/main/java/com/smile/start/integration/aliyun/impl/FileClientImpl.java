@@ -46,6 +46,15 @@ public class FileClientImpl extends AbstractService implements FileClient {
     }
 
     /** 
+     * @see com.smile.start.integration.aliyun.FileClient#delete(java.lang.String)
+     */
+    @Override
+    public boolean delete(String fileId) {
+        ossClient.deleteObject(bucket, fileId);
+        return true;
+    }
+
+    /** 
      * @see com.smile.start.integration.aliyun.FileClient#download(java.lang.String)
      */
     @Override
