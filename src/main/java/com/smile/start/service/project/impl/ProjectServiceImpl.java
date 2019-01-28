@@ -16,10 +16,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.ProjectDao;
+import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.IdGenService;
 import com.smile.start.service.project.ProjectService;
@@ -36,11 +38,15 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** 项目DAO */
     @Resource
-    private ProjectDao   projectDao;
+    private ProjectDao     projectDao;
+
+    /** 项目附件DAO */
+    @Resource
+    private ProjectItemDao projectItemDao;
 
     /** Id生成服务 */
     @Resource
-    private IdGenService idGenService;
+    private IdGenService   idGenService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -85,6 +91,27 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         } else {
             result.setErrorCode("VP00011002");
             result.setErrorMessage("新增项目失败,请重试!");
+        }
+        return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#apply(com.smile.start.model.project.Project)
+     */
+    @Override
+    @Transactional
+    public BaseResult apply(Project project) {
+        int effect = projectDao.update(project);
+        LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
+        for (ProjectItem item : project.getItems()) {
+            projectItemDao.insert(item);
+        }
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011004");
+            result.setErrorMessage("项目立项申请失败,请重试!");
         }
         return result;
     }

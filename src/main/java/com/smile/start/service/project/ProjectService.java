@@ -34,6 +34,13 @@ public interface ProjectService {
     BaseResult updateProject(Project project);
 
     /**
+     * 项目申请
+     * @param project
+     * @return
+     */
+    BaseResult apply(Project project);
+
+    /**
      * 删除项目
      * @param id
      * @return

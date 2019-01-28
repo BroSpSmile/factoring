@@ -30,7 +30,9 @@ public interface ProjectDao {
      * @param project
      * @return
      */
-    @Update("update factoring_project set project_id = #{projectId},project_name=#{projectName},person=#{person} where id=#{id}")
+    @Update("<script>" + "update factoring_project" + " set id=#{id}" + "<if test = 'projectId!=null'>,project_id = #{projectId}</if>"
+            + "<if test = 'projectName!=null'>,project_name = #{projectName}</if>" + "<if test = 'person!=null'> , person = #{person}</if>"
+            + "<if test = 'progress!=null'> , progress = #{progress}</if>" + "<if test = 'model!=null'> , model = #{model}</if>" + " where id=#{id} " + "</script>")
     int update(Project project);
 
     /**

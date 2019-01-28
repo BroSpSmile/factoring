@@ -4,6 +4,7 @@
  */
 package com.smile.start.controller.project;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,9 @@ import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 立项申请
@@ -28,6 +31,10 @@ import com.smile.start.model.project.Project;
 @Controller
 @RequestMapping("/apply")
 public class ApplyController extends BaseController {
+
+    /** 项目服务 */
+    @Resource
+    private ProjectService projectService;
 
     /**
      * 页面跳转
@@ -51,6 +58,7 @@ public class ApplyController extends BaseController {
     @ResponseBody
     public BaseResult apply(@RequestBody Project project) {
         LoggerUtils.info(logger, "立项申请project={}", FastJsonUtils.toJSONString(project));
-        return new BaseResult();
+        project.setProgress(Progress.APPLY);
+        return projectService.apply(project);
     }
 }
