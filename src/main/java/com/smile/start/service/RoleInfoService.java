@@ -1,6 +1,12 @@
 package com.smile.start.service;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.auth.User;
+import com.smile.start.model.base.PageRequest;
 
 import java.util.List;
 
@@ -18,6 +24,18 @@ public interface RoleInfoService {
      * @return
      */
     AuthRoleInfoDTO get(Long id);
+
+    /**
+     * 查询所有角色信息
+     * @return
+     */
+    PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> page);
+
+    /**
+     * 查询所有角色信息
+     * @return
+     */
+    List<AuthRoleInfoDTO> findAll();
 
     /**
      * 新增角色信息

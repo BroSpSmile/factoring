@@ -3,6 +3,7 @@
  */
 package com.smile.start.controller;
 
+import com.smile.start.model.base.ListResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,14 @@ public class BaseController {
      */
     protected <T> SingleResult<T> toResult(Exception e, Class<T> clazz) {
         SingleResult<T> result = new SingleResult<T>();
+        result.setSuccess(false);
+        result.setErrorCode("VP00001001");
+        result.setErrorMessage(e.getMessage());
+        return result;
+    }
+
+    protected <T> ListResult<T> toListResult(Exception e, Class<T> clazz) {
+        ListResult<T> result = new ListResult<T>();
         result.setSuccess(false);
         result.setErrorCode("VP00001001");
         result.setErrorMessage(e.getMessage());

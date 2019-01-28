@@ -1,11 +1,11 @@
 /**
- * 用户信息
+ * 权限信息
  */
-common.pageName = "user";
-common.openName = [ '8' ];
+common.pageName = "permission";
+common.openName = [ '10' ];
 
 var vue = new Vue({
-	el : '#user',
+	el : '#permission',
 	data : {
 		formInline:{
 			type:[]
@@ -16,37 +16,21 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		addForm : {
-			username : "",
-			mobile : "",
-			email : "",
-			passwd : "",
-            checkAllGroup:['R20190127154107XVQRJWC']
-        },
+            permissionCode : "",
+            permissionName : "",
+            permissionType : "",
+            url : "",
+            remark : ""
+		},
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
-		modal1:false,
-        roleList:[]
+		modal1:false
 	},
 	created : function() {
-        this.initDate();
 	},
 	methods : {
-        /**
-         * 初始化数据
-         */
-        initDate : function() {
-            let self = this;
-            this.$http.get("/role/all").then(function(response){
-                if (response.data.success) {
-                    self.roleList = response.data.values;
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.message);
-            })
-        },
+		
 		/**
 		 * 查询
 		 */
@@ -55,7 +39,7 @@ var vue = new Vue({
 			this.queryParam.pageNum = page;
 			var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/user/list", _self.queryParam).then(
+			this.$http.post("/permission/list", _self.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
 					}, function(error) {
@@ -63,31 +47,31 @@ var vue = new Vue({
 					})
 		},
         /**
-         * 状态翻译
+         * 类型翻译
          */
-        getStatusDesc : function(value){
-            if(value === 0) {
-            	return "无效";
-			} else if(value === 1) {
-            	return "有效";
-			}
+        getTypeDesc : function(value){
+            if(value === 1) {
+                return "菜单";
+            } else if(value === 2) {
+                return "按钮";
+            }
             return "";
         },
 		/**
-		 * 新增用户
+		 * 新增权限
 		 */
-		addUser : function() {
+		addPermission : function() {
 			this.modal1 = true;
             this.addForm = {
             };
 		},
         /**
-		 * 保存用户信息
+		 * 保存权限信息
          */
-		saveUser : function() {
+		savePermission : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/user", this.addForm).then(function(response) {
+                this.$http.post("/permission", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -103,7 +87,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/user", this.addForm).then(function(response) {
+                this.$http.put("/permission", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -126,17 +110,17 @@ var vue = new Vue({
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前用户</p>',
+                content: '<p>确认是否删除当前权限</p>',
                 onOk: () => {
-                    this.deleteUser(id);
+                    this.deletePermission(id);
                 },
                 onCancel: () => {}
             })
         },
-        /** 删除用户 */
-        deleteUser:function(id){
+        /** 删除权限 */
+        deletePermission:function(id){
             let self = this;
-            this.$http.delete("/user/" + id).then(function(response){
+            this.$http.delete("/permission/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -153,23 +137,11 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新用户
+         * 更新权限
          */
-        updateUser : function(user){
+        updatePermission : function(user){
             this.addForm = user;
-            this.addForm.checkAllGroup = ['R20190127154107XVQRJWC']
             this.modal1 = true;
-            console.log(user.roleList)
-            for(var i = 0; i < this.roleList.length; i++) {
-                var role = this.roleList[i];
-                for(var k = 0; k < user.roleList.length; k++) {
-                    if(role.serialNo === user.roleList[k].serialNo) {
-                        console.log("----------------------")
-                        role.checked = true;
-                        break;
-                    }
-                }
-            }
         },
 		/**
 		 * 取消保存
@@ -190,25 +162,25 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '用户名称',
-        key: 'username',
+        title: '权限编号',
+        key: 'permissionCode',
         align: 'left'
     },{
-        title: '手机号',
-        key: 'mobile',
+        title: '权限名称',
+        key: 'permissionName',
         align: 'center'
     },{
-        title: '邮箱',
-        key: 'email',
+        title: '权限类型',
+        key: 'permissionType',
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getTypeDesc(param.row.permissionType));
+        }
+    },{
+        title: '菜单路径',
+        key: 'url',
         align: 'left'
     },{
-        title: '状态',
-        key: 'status',
-        align: 'center',
-        render:(h,param)=> {
-        	return h('span', vue.getStatusDesc(param.row.status));
-		}
-	},{
         title: '操作',
         align: 'center',
         render:(h,param)=>{
@@ -224,7 +196,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateUser(param.row);
+                            vue.updatePermission(param.row);
                         }
                     }
                 }, '编辑'),

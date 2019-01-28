@@ -1,5 +1,13 @@
 package com.smile.start.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.SerialNoGenerator;
@@ -10,16 +18,13 @@ import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.auth.UserRole;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.service.PermissionInfoService;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.UserInfoService;
-import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -71,7 +76,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         final List<User> userList = userDao.findByParam(page.getCondition());
         result.setTotal(userList.size());
         result.setPageSize(10);
-        result.setList(userInfoMapper.doList2dtoList(userList));
+        List<AuthUserInfoDTO> authUserInfoDTOS = userInfoMapper.doList2dtoList(userList);
+        authUserInfoDTOS.forEach(e -> e.setRoleList(roleInfoService.findByUserSerialNo(e.getSerialNo())));
+        result.setList(authUserInfoDTOS);
         return result;
     }
 
@@ -84,7 +91,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
         Date nowDate = new Date();
-        user.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
+        String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
+        user.setSerialNo(serialNo);
         user.setGmtCreate(nowDate);
         user.setGmtModify(nowDate);
         user.setStatus(StatusEnum.VALID.getValue());
@@ -92,6 +100,17 @@ public class UserInfoServiceImpl implements UserInfoService {
         //TODO
         //String md5Passwd = MD5Encoder.encode(authUserInfoDTO.getPasswd().getBytes());
         //user.setPasswd(md5Passwd);
+
+        //处理角色信息
+        if (!CollectionUtils.isEmpty(authUserInfoDTO.getCheckedRoleList())) {
+            authUserInfoDTO.getCheckedRoleList().forEach(e -> {
+                UserRole userRole = new UserRole();
+                userRole.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
+                userRole.setUserSerialNo(serialNo);
+                userRole.setRoleSerialNo(e);
+                userDao.insertRole(userRole);
+            });
+        }
         return userDao.insert(user);
     }
 

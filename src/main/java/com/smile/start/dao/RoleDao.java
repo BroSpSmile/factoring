@@ -1,5 +1,6 @@
 package com.smile.start.dao;
 
+import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.auth.Role;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,7 +23,7 @@ public interface RoleDao {
      * @param role
      * @return
      */
-    @Insert("insert into auth_role_info (insert into auth_role_info (serial_no,role_code,role_name,role_desc,delete_flag,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{roleCode},#{roleName},#{roleDesc},#{deleteFlag},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into auth_role_info (serial_no,role_code,role_name,role_desc,delete_flag,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{roleCode},#{roleName},#{roleDesc},#{deleteFlag},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(Role role);
 
     /**
@@ -62,20 +63,19 @@ public interface RoleDao {
      *
      * @return
      */
-    @Select("select * from auth_role_info")
+    @Select("select * from auth_role_info where delete_flag = 0")
     List<Role> findAll();
 
     /**
      * 分页查询
-     * @param role
+     * @param roleSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from auth_role_info where 1=1 "
+    @Select("<script>" + "select * from auth_role_info where 1=1 and delete_flag = 0"
         + "<if test = 'roleCode!=null'> and role_code = #{roleCode}</if>"
         + "<if test = 'roleName!=null'> and role_name = #{roleName}</if>"
-        + "<if test = 'deleteFlag!=null'> and delete_flag = #{deleteFlag}</if>"
         + "</script>")
-    List<Role> findByParam(Role role);
+    List<Role> findByParam(RoleSearchDTO roleSearchDTO);
 
     /**
      * 根据用户编号查询角色

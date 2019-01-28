@@ -1,5 +1,6 @@
 package com.smile.start.dao;
 
+import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.model.auth.Permission;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -59,16 +60,15 @@ public interface PermissionDao {
 
     /**
      * 分页查询
-     * @param permission
+     * @param permissionSearchDTO
      * @return
      */
     @Select("<script>"
-        + "select * from auth_permission_info where 1=1 "
+        + "select * from auth_permission_info where 1=1 and delete_flag = 0"
+        + "<if test = 'permissionCode!=null'> and permission_code = #{permissionCode}</if>"
         + "<if test = 'permissionName!=null'> and permission_name = #{permissionName}</if>"
-        + "<if test = 'permissionType!=null'> and permission_type = #{permissionType}</if>"
-        + "<if test = 'deleteFlag!=null'> and delete_flag = #{deleteFlag}</if>"
         + "</script>")
-    List<Permission> findByParam(Permission permission);
+    List<Permission> findByParam(PermissionSearchDTO permissionSearchDTO);
 
     /**
      * 根据权限编号查询权限
@@ -86,4 +86,12 @@ public interface PermissionDao {
         "and ur.user_serial_no = u.serial_no " +
         "and u.serial_no = #{serialNo}")
     List<Permission> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 根据父级权限编号查询权限
+     * @param parentSerialNo
+     * @return
+     */
+    @Select("select * from auth_permission_info where parent_serial_no=#{parentSerialNo}")
+    List<Permission> findByParentSerialNo(String parentSerialNo);
 }

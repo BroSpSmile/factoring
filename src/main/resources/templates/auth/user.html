@@ -49,13 +49,18 @@
 							<i-input placeholder="输入用户邮箱"  v-model="addForm.email"></i-input>
 						</form-item>
 						<form-item label="密码" prop="passwd">
-							<i-input placeholder="输入用户登录密码"  v-model="addForm.passwd"></i-input>
+							<i-input placeholder="输入用户登录密码" v-model="addForm.passwd"></i-input>
+						</form-item>
+						<form-item label="选择角色">
+							<checkbox-group v-model="addForm.checkedRoleList" :model.sync="addForm.checkAllGroup">
+								<checkbox v-for="item in roleList" :label="item.serialNo"><span>{{item.roleName}}</span></checkbox>
+							</checkbox-group>
 						</form-item>
 					</i-form>
 				</div>
 				<div slot="footer">
 					<i-button type="primary"  @click="saveUser" style="margin-left: 8px">确定</i-button>
-					<i-button  @click="cancel" style="margin-left: 8px">取消</i-button>
+					<i-button @click="cancel" style="margin-left: 8px">取消</i-button>
 				</div>
 			</modal>
 		</div>
