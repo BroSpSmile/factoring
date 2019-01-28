@@ -8,9 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.MinutesKind;
-import com.smile.start.model.organization.Employee;
 import com.smile.start.model.project.Project;
 
 /**
@@ -54,10 +54,13 @@ public class Meeting implements Serializable {
     private String            minutes;
 
     /** 发起人 */
-    private Employee          originator;
+    private User              originator;
 
     /** 参与人员 */
-    private List<Employee>    participant;
+    private List<User>        participant;
+
+    /** 参与人员工号 */
+    private List<String>      participantNo;
 
     /** 会议纪要模板 */
     private MinutesKind       minutesKind;
@@ -257,7 +260,7 @@ public class Meeting implements Serializable {
      * 
      * @return property value of originator
      */
-    public Employee getOriginator() {
+    public User getOriginator() {
         return originator;
     }
 
@@ -266,7 +269,7 @@ public class Meeting implements Serializable {
      * 
      * @param originator value to be assigned to property originator
      */
-    public void setOriginator(Employee originator) {
+    public void setOriginator(User originator) {
         this.originator = originator;
     }
 
@@ -275,7 +278,7 @@ public class Meeting implements Serializable {
      * 
      * @return property value of participant
      */
-    public List<Employee> getParticipant() {
+    public List<User> getParticipant() {
         return participant;
     }
 
@@ -284,8 +287,26 @@ public class Meeting implements Serializable {
      * 
      * @param participant value to be assigned to property participant
      */
-    public void setParticipant(List<Employee> participant) {
+    public void setParticipant(List<User> participant) {
         this.participant = participant;
+    }
+
+    /**
+     * Getter method for property <tt>participantNo</tt>.
+     * 
+     * @return property value of participantNo
+     */
+    public List<String> getParticipantNo() {
+        return participantNo;
+    }
+
+    /**
+     * Setter method for property <tt>participantNo</tt>.
+     * 
+     * @param participantNo value to be assigned to property participantNo
+     */
+    public void setParticipantNo(List<String> participantNo) {
+        this.participantNo = participantNo;
     }
 
     /**

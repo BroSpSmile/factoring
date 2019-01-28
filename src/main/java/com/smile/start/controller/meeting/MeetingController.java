@@ -2,7 +2,7 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.controller.project;
+package com.smile.start.controller.meeting;
 
 import javax.annotation.Resource;
 
@@ -14,19 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.commons.FastJsonUtils;
+import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.service.meeting.MeetingService;
 
-/**
- * 
- * @author smile.jing
- * @version $Id: MeetingController.java, v 0.1 Jan 9, 2019 5:15:06 PM smile.jing
- *          Exp $
- */
 /**
  * 
  * @author smile.jing
@@ -58,7 +54,19 @@ public class MeetingController extends BaseController {
     @PostMapping(value = "/query")
     @ResponseBody
     public PageInfo<Meeting> query(@RequestBody PageRequest<MeetingSearch> search) {
-        System.out.println(FastJsonUtils.toJSONString(search));
         return meetingService.search(search);
+    }
+
+    /**
+     * 创建会议
+     * @param meeting
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public BaseResult create(@RequestBody Meeting meeting) {
+        LoggerUtils.info(logger, "创建会议={}", meeting);
+        meeting.setStatus(MeetingStatus.PLAN);
+        return meetingService.createMeeting(meeting);
     }
 }

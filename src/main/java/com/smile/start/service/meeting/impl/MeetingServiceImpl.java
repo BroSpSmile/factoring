@@ -7,11 +7,14 @@ package com.smile.start.service.meeting.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
+import com.smile.start.dao.MeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingStatus;
@@ -30,6 +33,10 @@ import com.smile.start.service.meeting.MeetingService;
  */
 @Service
 public class MeetingServiceImpl extends AbstractService implements MeetingService {
+
+    /** 会议dao */
+    @Resource
+    private MeetingDao meetingDao;
 
     /** 
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
@@ -51,11 +58,9 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         Person person = new Person();
         person.setName("景勇翔");
         one.setPerson(person);
-        meeting.setOriginator(one);
         List<Employee> allEmployees = Lists.newArrayList();
         allEmployees.add(one);
         allEmployees.add(one);
-        meeting.setParticipant(allEmployees);
         List<Meeting> meetings = Lists.newArrayList();
         meetings.add(meeting);
         resultInfo.setList(meetings);
@@ -67,7 +72,15 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      */
     @Override
     public BaseResult createMeeting(Meeting meeting) {
-        return null;
+        long effect = meetingDao.insert(meeting);
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011002");
+            result.setErrorMessage("新增会议失败,请重试!");
+        }
+        return result;
     }
 
 }

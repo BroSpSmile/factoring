@@ -90,9 +90,9 @@
 						<form-item label="会议内容" prop="content">
 							 <i-input placeholder="输入会议内容" type="textarea" :rows="4" style="width:480px" v-model="addMeeting.content"></i-input>
 						</form-item>
-						<form-item label="参会人员" prop="participant">
-							<i-select class="inputw" v-model="addMeeting.participant" multiple style="width:480px">
-		                      		<i-option v-for="item in statusItems"  :value="item.value">{{item.text}}</i-option>
+						<form-item label="参会人员" prop="participantNo">
+							<i-select class="inputw" v-model="addMeeting.participantNo" multiple style="width:480px">
+		                      		<i-option v-for="item in users"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
 						</form-item>
 						<form-item label="到点提醒" prop="remind">

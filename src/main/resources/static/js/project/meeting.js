@@ -18,7 +18,8 @@ var vue = new Vue({
 		pageInfo : {},
 		addMeeting : {},
 		modal1 : false,
-		statusItems : []
+		statusItems : [],
+		users:[]
 	},
 	created : function() {
 		this.initDate();
@@ -31,6 +32,11 @@ var vue = new Vue({
 			var _self = this;
 			this.$http.get("/combo/meetingStatus").then(function(response) {
 				_self.statusItems = response.data;
+			}, function(error) {
+				console.error(error);
+			})
+			this.$http.get("/combo/users").then(function(response) {
+				_self.users = response.data;
 			}, function(error) {
 				console.error(error);
 			})
@@ -63,7 +69,22 @@ var vue = new Vue({
 		 * 
 		 */
 		save : function() {
-			console.log(this.addMeeting);
+			let self = this;
+			this.$http.post("/meeting",this.addMeeting).then(function(response){
+				if (response.data.success) {
+					self.$Message.info({
+						content : "更新成功",
+						onClose : function() {
+							self.query();
+							self.cancel();
+						}
+					});
+				} else {
+					self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				self.$Message.error(error.data.message);
+			})
 		},
 
 		/**
