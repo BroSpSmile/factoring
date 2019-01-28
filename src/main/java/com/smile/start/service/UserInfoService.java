@@ -2,11 +2,8 @@ package com.smile.start.service;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.PageRequest;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Joseph

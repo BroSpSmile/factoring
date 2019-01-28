@@ -3,7 +3,6 @@ package com.smile.start.controller.user;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Joseph

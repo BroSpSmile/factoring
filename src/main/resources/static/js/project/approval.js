@@ -174,8 +174,15 @@ var vue = new Vue({
 					self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
-				self.$Message.error(error.data.message);
+				self.$Message.error(error.data.errorMessage);
 			})
+		},
+		
+		/**
+		 * 立项申请
+		 */
+		apply:function(projectId){
+			window.open("apply?id="+projectId,"_blank"); 
 		},
 
 		/**
@@ -225,7 +232,7 @@ vue.tableColumns=[
 							},
 							on: {
 								click: () => {
-									 vue.deleteWarn(param.row.id);
+									 vue.apply(param.row.id);
 								}
 							}
 						}, '立项申请'):

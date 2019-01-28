@@ -38,7 +38,7 @@ var app = new Vue({
         					self.$Message.error(response.data.errorMessage);
         				}
             		},function(error){
-            			self.$Message.error(response.data.errorMessage);
+            			self.$Message.error(error.data.message);
             		})
             	}
             })

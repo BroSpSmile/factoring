@@ -15,11 +15,8 @@ import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
 import com.smile.start.service.UserInfoService;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.stereotype.Service;
 
-import com.smile.start.model.organization.Employee;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.login.LoginService;
 
@@ -38,10 +35,10 @@ import java.util.UUID;
 public class LoginServiceImpl extends AbstractService implements LoginService {
 
     @Resource
-    private UserDao userDao;
+    private UserDao         userDao;
 
     @Resource
-    private TokenDao tokenDao;
+    private TokenDao        tokenDao;
 
     @Resource
     private UserInfoService userInfoService;

@@ -19,6 +19,13 @@ public interface FileClient {
      * @return 文件ID
      */
     String upload(InputStream inputStream);
+    
+    /**
+     * 删除文件
+     * @param fileId
+     * @return
+     */
+    boolean delete(String fileId);
 
     /**
      * 下载文件

@@ -2,7 +2,6 @@ package com.smile.start.service;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.PermissionSetting;
