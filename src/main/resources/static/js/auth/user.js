@@ -158,16 +158,6 @@ var vue = new Vue({
         updateUser : function(user){
             this.addForm = user;
             this.modal1 = true;
-            console.log(user)
-            for(var i = 0; i < this.roleList.length; i++) {
-                var role = this.roleList[i];
-                for(var k = 0; k < user.roleList.length; k++) {
-                    if(role.serialNo === user.roleList[k].serialNo) {
-                        role.checked = true;
-                        break;
-                    }
-                }
-            }
         },
 		/**
 		 * 取消保存

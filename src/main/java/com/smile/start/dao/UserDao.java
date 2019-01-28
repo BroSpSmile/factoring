@@ -4,10 +4,7 @@ import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.auth.UserRole;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -85,4 +82,7 @@ public interface UserDao {
             + "<if test = 'passwd!=null'> and passwd = #{passwd}</if>"
             + "</script>")
     User login(LoginRequestDTO loginRequestDTO);
+
+    @Delete("delete from auth_user_role_info where user_serial_no = #{userSerialNo}")
+    void deleteRole(String userSerialNo);
 }

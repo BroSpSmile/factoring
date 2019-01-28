@@ -103,10 +103,10 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
+        String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
+        authUserInfoDTO.setSerialNo(serialNo);
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
         Date nowDate = new Date();
-        String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
-        user.setSerialNo(serialNo);
         user.setGmtCreate(nowDate);
         user.setGmtModify(nowDate);
         user.setStatus(StatusEnum.VALID.getValue());
@@ -115,16 +115,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //String md5Passwd = MD5Encoder.encode(authUserInfoDTO.getPasswd().getBytes());
         //user.setPasswd(md5Passwd);
 
-        //处理角色信息
-        if (!CollectionUtils.isEmpty(authUserInfoDTO.getCheckedRoleList())) {
-            authUserInfoDTO.getCheckedRoleList().forEach(e -> {
-                UserRole userRole = new UserRole();
-                userRole.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
-                userRole.setUserSerialNo(serialNo);
-                userRole.setRoleSerialNo(e);
-                userDao.insertRole(userRole);
-            });
-        }
+        insertRole(authUserInfoDTO);
         return userDao.insert(user);
     }
 
@@ -137,6 +128,23 @@ public class UserInfoServiceImpl implements UserInfoService {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
         user.setGmtModify(new Date());
         userDao.update(user);
+
+        //处理角色信息
+        userDao.deleteRole(authUserInfoDTO.getSerialNo());
+        insertRole(authUserInfoDTO);
+    }
+
+    private void insertRole(AuthUserInfoDTO authUserInfoDTO) {
+        //处理角色信息
+        if (!CollectionUtils.isEmpty(authUserInfoDTO.getCheckedRoleList())) {
+            authUserInfoDTO.getCheckedRoleList().forEach(e -> {
+                UserRole userRole = new UserRole();
+                userRole.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
+                userRole.setUserSerialNo(authUserInfoDTO.getSerialNo());
+                userRole.setRoleSerialNo(e);
+                userDao.insertRole(userRole);
+            });
+        }
     }
 
     /**
