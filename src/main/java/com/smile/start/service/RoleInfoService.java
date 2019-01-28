@@ -5,6 +5,7 @@ import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.auth.PermissionSetting;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 
@@ -65,4 +66,10 @@ public interface RoleInfoService {
      * @return
      */
     List<AuthRoleInfoDTO> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 保存权限信息
+     * @param permissionSetting
+     */
+    void savePermission(PermissionSetting permissionSetting);
 }

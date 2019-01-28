@@ -128,14 +128,14 @@ public class PermissionInfoController extends BaseController {
 
 
 
-    @GetMapping(value = "/tree")
+    @GetMapping(value = "/tree/{roleSerialNo}")
     @ResponseBody
-    public ListResult<Tree> tree() {
+    public ListResult<Tree> tree(@PathVariable String roleSerialNo) {
         try {
             ListResult<Tree> result = new ListResult<>();
             result.setSuccess(true);
             result.setErrorMessage("获取权限树成功");
-            List<Tree> treeList = permissionInfoService.getTree();
+            List<Tree> treeList = permissionInfoService.getTree(roleSerialNo);
             result.setValues(treeList);
             System.out.println(JSON.toJSONString(treeList));
             return result;

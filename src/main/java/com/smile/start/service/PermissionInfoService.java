@@ -62,7 +62,8 @@ public interface PermissionInfoService {
 
     /**
      * 获取权限树
+     * @param roleSerialNo
      * @return
      */
-    List<Tree> getTree();
+    List<Tree> getTree(String roleSerialNo);
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
+import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
@@ -31,6 +32,9 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Resource
     private PermissionDao permissionDao;
+
+    @Resource
+    private RoleDao roleDao;
 
     @Resource
     private PermissionInfoMapper permissionInfoMapper;
@@ -114,15 +118,17 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     /**
      * 获取权限树
+     * @param roleSerialNo
      * @return
      */
     @Override
-    public List<Tree> getTree() {
+    public List<Tree> getTree(String roleSerialNo) {
+        final List<String> checkedPermission = roleDao.findPermission(roleSerialNo);
         Tree root = new Tree();
         root.setTitle("权限树");
         root.setSerialNo("");
         List<Tree> treeList = Lists.newArrayList();
-        treeList.add(getTree(root));
+        treeList.add(getTree(root, checkedPermission));
         return treeList;
     }
 
@@ -131,7 +137,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      * @param parentTree
      * @return
      */
-    private Tree getTree(Tree parentTree) {
+    private Tree getTree(Tree parentTree, List<String> checkedPermission) {
         final List<Permission> permissionList = permissionDao.findByParentSerialNo(parentTree.getSerialNo());
         if(!CollectionUtils.isEmpty(permissionList)) {
             List<Tree> children = Lists.newArrayList();
@@ -139,7 +145,10 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
                 Tree tree = new Tree();
                 tree.setTitle(e.getPermissionName());
                 tree.setSerialNo(e.getSerialNo());
-                children.add(getTree(tree));
+                if(checkedPermission.contains(e.getSerialNo())) {
+                    tree.setChecked(true);
+                }
+                children.add(getTree(tree, checkedPermission));
             });
             parentTree.setChildren(children);
         }

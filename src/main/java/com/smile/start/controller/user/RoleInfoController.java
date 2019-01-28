@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.model.auth.PermissionSetting;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
@@ -137,6 +138,21 @@ public class RoleInfoController extends BaseController {
         } catch (Exception e) {
             logger.error("获取所有角色失败", e);
             return toListResult(e, AuthRoleInfoDTO.class);
+        }
+    }
+
+    @PostMapping(value = "/permission")
+    @ResponseBody
+    public BaseResult savePersmission(@RequestBody PermissionSetting permissionSetting) {
+        try {
+            roleInfoService.savePermission(permissionSetting);
+            BaseResult result = new BaseResult();
+            result.setSuccess(true);
+            result.setErrorMessage("保存角色权限成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("存角色权限信息失败", e);
+            return toResult(e);
         }
     }
 }
