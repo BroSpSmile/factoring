@@ -64,4 +64,11 @@ public interface PermissionInfoService {
      * @return
      */
     List<Tree> getTree(String roleSerialNo);
+
+    /**
+     * 指定参数查询权限信息
+     * @param permissionSearchDTO
+     * @return
+     */
+    List<AuthPermissionInfoDTO> findByParam(PermissionSearchDTO permissionSearchDTO);
 }

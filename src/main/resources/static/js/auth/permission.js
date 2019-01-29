@@ -19,13 +19,16 @@ var vue = new Vue({
             permissionCode : "",
             permissionName : "",
             permissionType : "",
+            parentSerialNo : "",
             url : "",
             remark : ""
 		},
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
-		modal1:false
+		modal1:false,
+        permissionList:[],
+        model11: ''
 	},
 	created : function() {
 	},
@@ -64,7 +67,21 @@ var vue = new Vue({
 			this.modal1 = true;
             this.addForm = {
             };
+            this.getMenuList();
 		},
+        getMenuList() {
+            let self = this;
+            this.$http.get("/permission/list/1").then(function(response) {
+                    if (response.data.success) {
+                        self.permissionList = response.data.values;
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function(error) {
+                    self.$Message.error(error.data.message);
+                }
+            )
+        },
         /**
 		 * 保存权限信息
          */
@@ -142,6 +159,7 @@ var vue = new Vue({
         updatePermission : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.getMenuList();
         },
 		/**
 		 * 取消保存

@@ -10,6 +10,7 @@ import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.common.Tree;
+import com.smile.start.model.enums.PermissionTypeEnum;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -137,11 +138,28 @@ public class PermissionInfoController extends BaseController {
             result.setErrorMessage("获取权限树成功");
             List<Tree> treeList = permissionInfoService.getTree(roleSerialNo);
             result.setValues(treeList);
-            System.out.println(JSON.toJSONString(treeList));
             return result;
         } catch (Exception e) {
             logger.error("获取权限树失败", e);
             return toListResult(e, Tree.class);
+        }
+    }
+
+    @GetMapping(value = "/list/{permissionType}")
+    @ResponseBody
+    public ListResult<AuthPermissionInfoDTO> list(@PathVariable Integer permissionType) {
+        try {
+            PermissionSearchDTO permissionSearchDTO = new PermissionSearchDTO();
+            permissionSearchDTO.setPermissionType(permissionType);
+            List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByParam(permissionSearchDTO);
+            ListResult<AuthPermissionInfoDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取权限列表成功");
+            result.setValues(permissionList);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取权限列表失败", e);
+            return toListResult(e, AuthPermissionInfoDTO.class);
         }
     }
 }

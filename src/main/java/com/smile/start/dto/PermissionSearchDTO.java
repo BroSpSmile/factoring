@@ -12,6 +12,7 @@ public class PermissionSearchDTO implements Serializable {
 
     private String permissionCode;
     private String permissionName;
+    private Integer permissionType;
 
     public String getPermissionCode() {
         return permissionCode;
@@ -29,11 +30,20 @@ public class PermissionSearchDTO implements Serializable {
         this.permissionName = permissionName;
     }
 
+    public Integer getPermissionType() {
+        return permissionType;
+    }
+
+    public void setPermissionType(Integer permissionType) {
+        this.permissionType = permissionType;
+    }
+
     @Override
     public String toString() {
         return "PermissionSearchDTO{" +
                 "permissionCode='" + permissionCode + '\'' +
                 ", permissionName='" + permissionName + '\'' +
+                ", permissionType='" + permissionType + '\'' +
                 '}';
     }
 }

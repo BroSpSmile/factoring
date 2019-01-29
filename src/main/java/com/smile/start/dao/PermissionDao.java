@@ -48,7 +48,7 @@ public interface PermissionDao {
      * @return
      */
     @Select("select * from auth_permission_info where serial_no=#{serialNo}")
-    List<Permission> findBySerialNo(String serialNo);
+    Permission findBySerialNo(String serialNo);
 
     /**
      * 查询全部权限
@@ -67,6 +67,7 @@ public interface PermissionDao {
         + "select * from auth_permission_info where 1=1 and delete_flag = 0"
         + "<if test = 'permissionCode!=null'> and permission_code = #{permissionCode}</if>"
         + "<if test = 'permissionName!=null'> and permission_name = #{permissionName}</if>"
+        + "<if test = 'permissionType!=null'> and permission_type = #{permissionType}</if>"
         + "</script>")
     List<Permission> findByParam(PermissionSearchDTO permissionSearchDTO);
 

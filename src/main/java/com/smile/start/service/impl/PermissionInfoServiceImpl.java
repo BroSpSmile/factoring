@@ -76,6 +76,9 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         permission.setGmtModify(nowDate);
         permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
         permission.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
+        if(permission.getParentSerialNo() == null) {
+            permission.setParentSerialNo("");
+        }
         return permissionDao.insert(permission);
     }
 
@@ -128,6 +131,16 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<Tree> treeList = Lists.newArrayList();
         treeList.add(getTree(root, checkedPermission));
         return treeList;
+    }
+
+    /**
+     * 指定参数查询权限信息
+     * @param permissionSearchDTO
+     * @return
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findByParam(PermissionSearchDTO permissionSearchDTO) {
+        return permissionInfoMapper.doList2dtoList(permissionDao.findByParam(permissionSearchDTO));
     }
 
     /**
