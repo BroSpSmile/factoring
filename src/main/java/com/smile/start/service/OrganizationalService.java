@@ -5,6 +5,8 @@ import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.model.base.PageRequest;
 
+import java.util.List;
+
 /**
  * @author Joseph
  * @version v1.0 2019/1/29 16:52, OrganizationalService.java
@@ -43,5 +45,19 @@ public interface OrganizationalService {
      * @param id
      */
     void delete(Long id);
+
+    /**
+     * 按条件查询
+     * @param organizationalSearchDTO
+     * @return
+     */
+    List<OrganizationalDTO> findByParam(OrganizationalSearchDTO organizationalSearchDTO);
+
+    /**
+     * 根据用户编号查询组织
+     * @param userSerialNo
+     * @return
+     */
+    List<OrganizationalDTO> findByUserSerialNo(String userSerialNo);
 
 }

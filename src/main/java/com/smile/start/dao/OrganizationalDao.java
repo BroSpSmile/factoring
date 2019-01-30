@@ -68,4 +68,12 @@ public interface OrganizationalDao {
             + "</script>")
     List<Organizational> findByParam(OrganizationalSearchDTO organizationalSearchDTO);
 
+    /**
+     * 根据用户编号查询组织
+     * @param userSerialNo
+     * @return
+     */
+    @Select("select * from auth_organizational o, auth_user_organizational uo where o.serial_no = uo.organizational_serial_no and uo.user_serial_no=#{userSerialNo}")
+    List<Organizational> findByUserSerialNo(String userSerialNo);
+
 }

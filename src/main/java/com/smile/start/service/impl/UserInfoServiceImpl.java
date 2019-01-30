@@ -1,13 +1,5 @@
 package com.smile.start.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.Asserts;
@@ -16,17 +8,27 @@ import com.smile.start.dao.TokenDao;
 import com.smile.start.dao.UserDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.auth.UserOrganizational;
 import com.smile.start.model.auth.UserRole;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.enums.StatusEnum;
+import com.smile.start.service.OrganizationalService;
 import com.smile.start.service.PermissionInfoService;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.UserInfoService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Date;
+import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -47,6 +49,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Resource
     private PermissionInfoService permissionInfoService;
+
+    @Resource
+    private OrganizationalService organizationalService;
 
     @Resource
     private UserInfoMapper        userInfoMapper;
@@ -79,7 +84,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         result.setTotal(userList.size());
         result.setPageSize(10);
         List<AuthUserInfoDTO> authUserInfoDTOS = userInfoMapper.doList2dtoList(userList);
-        authUserInfoDTOS.forEach(e -> loadRoles(e));
+        authUserInfoDTOS.forEach(e -> {
+            loadRoles(e);
+            loadOrganizational(e);
+        });
         result.setList(authUserInfoDTOS);
         return result;
     }
@@ -97,11 +105,22 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
+     * 加载组织
+     */
+    private void loadOrganizational(AuthUserInfoDTO user) {
+        List<OrganizationalDTO> organizationals = organizationalService.findByUserSerialNo(user.getSerialNo());
+        List<String> organizationalStrings = Lists.newArrayList();
+        organizationals.forEach(e -> organizationalStrings.add(e.getSerialNo()));
+        user.setCheckedOrganizationalList(organizationalStrings);
+    }
+
+    /**
      * 新增用户信息
      * @param authUserInfoDTO
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
         String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
         authUserInfoDTO.setSerialNo(serialNo);
@@ -116,6 +135,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //user.setPasswd(md5Passwd);
 
         insertRole(authUserInfoDTO);
+        insertOrganizational(authUserInfoDTO);
         return userDao.insert(user);
     }
 
@@ -124,6 +144,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param authUserInfoDTO
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(AuthUserInfoDTO authUserInfoDTO) {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
         user.setGmtModify(new Date());
@@ -132,6 +153,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         //处理角色信息
         userDao.deleteRole(authUserInfoDTO.getSerialNo());
         insertRole(authUserInfoDTO);
+
+        //处理组织信息
+        userDao.deleteOrganizational(authUserInfoDTO.getSerialNo());
+        insertOrganizational(authUserInfoDTO);
     }
 
     private void insertRole(AuthUserInfoDTO authUserInfoDTO) {
@@ -143,6 +168,19 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userRole.setUserSerialNo(authUserInfoDTO.getSerialNo());
                 userRole.setRoleSerialNo(e);
                 userDao.insertRole(userRole);
+            });
+        }
+    }
+
+    private void insertOrganizational(AuthUserInfoDTO authUserInfoDTO) {
+        //处理组织信息
+        if (!CollectionUtils.isEmpty(authUserInfoDTO.getCheckedOrganizationalList())) {
+            authUserInfoDTO.getCheckedOrganizationalList().forEach(e -> {
+                UserOrganizational userOrganizational = new UserOrganizational();
+                userOrganizational.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
+                userOrganizational.setUserSerialNo(authUserInfoDTO.getSerialNo());
+                userOrganizational.setOrganizationalSerialNo(e);
+                userDao.insertOrganizational(userOrganizational);
             });
         }
     }

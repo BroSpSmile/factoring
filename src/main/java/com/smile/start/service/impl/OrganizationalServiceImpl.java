@@ -4,21 +4,18 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.OrganizationalDao;
-import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.mapper.OrganizationalMapper;
 import com.smile.start.model.auth.Organizational;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
-import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.service.OrganizationalService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -76,6 +73,9 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         organizational.setGmtCreate(nowDate);
         organizational.setGmtModify(nowDate);
         organizational.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
+        if(organizational.getParentSerialNo() == null) {
+            organizational.setParentSerialNo("");
+        }
         return organizationalDao.insert(organizational);
     }
 
@@ -99,5 +99,25 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         final Organizational organizational = organizationalDao.get(id);
         organizational.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
         organizationalDao.update(organizational);
+    }
+
+    /**
+     * 按条件查询
+     * @param organizationalSearchDTO
+     * @return
+     */
+    @Override
+    public List<OrganizationalDTO> findByParam(OrganizationalSearchDTO organizationalSearchDTO) {
+        return organizationalMapper.doList2dtoList(organizationalDao.findByParam(organizationalSearchDTO));
+    }
+
+    /**
+     * 根据用户编号查询组织
+     * @param userSerialNo
+     * @return
+     */
+    @Override
+    public List<OrganizationalDTO> findByUserSerialNo(String userSerialNo) {
+        return organizationalMapper.doList2dtoList(organizationalDao.findByUserSerialNo(userSerialNo));
     }
 }

@@ -44,6 +44,8 @@ public class AuthUserInfoDTO implements Serializable {
 
     private List<String> checkedRoleList;
 
+    private List<String> checkedOrganizationalList;
+
     public Long getId() {
         return id;
     }
@@ -172,6 +174,14 @@ public class AuthUserInfoDTO implements Serializable {
         this.checkedRoleList = checkedRoleList;
     }
 
+    public List<String> getCheckedOrganizationalList() {
+        return checkedOrganizationalList;
+    }
+
+    public void setCheckedOrganizationalList(List<String> checkedOrganizationalList) {
+        this.checkedOrganizationalList = checkedOrganizationalList;
+    }
+
     @Override
     public String toString() {
         return "AuthUserInfoDTO{" +
@@ -190,6 +200,8 @@ public class AuthUserInfoDTO implements Serializable {
                 ", gmtModify=" + gmtModify +
                 ", roleList=" + roleList +
                 ", permissionList=" + permissionList +
+                ", checkedRoleList=" + checkedRoleList +
+                ", checkedOrganizationalList=" + checkedOrganizationalList +
                 '}';
     }
 }

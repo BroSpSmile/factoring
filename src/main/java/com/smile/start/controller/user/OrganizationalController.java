@@ -5,12 +5,22 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.OrganizationalService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import javax.annotation.Resource;
 
 /**
@@ -118,6 +128,22 @@ public class OrganizationalController extends BaseController {
         } catch (Exception e) {
             logger.error("删除组织架构失败", e);
             return toResult(e);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ResponseBody
+    public ListResult<OrganizationalDTO> list() {
+        try {
+            List<OrganizationalDTO> organizationalList = organizationalService.findByParam(null);
+            ListResult<OrganizationalDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取组织列表成功");
+            result.setValues(organizationalList);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取组织列表失败", e);
+            return toListResult(e, OrganizationalDTO.class);
         }
     }
 }
