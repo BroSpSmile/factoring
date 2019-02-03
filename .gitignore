@@ -3,6 +3,7 @@
 *.iml
 *.iws
 .idea/
+.idea1/
 
 #
 # Eclipse metadata.
