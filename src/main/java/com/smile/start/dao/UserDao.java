@@ -3,11 +3,9 @@ package com.smile.start.dao;
 import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.auth.UserOrganizational;
 import com.smile.start.model.auth.UserRole;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -35,6 +33,14 @@ public interface UserDao {
      */
     @Insert("insert into auth_user_role_info (serial_no,user_serial_no,role_serial_no) values (#{serialNo},#{userSerialNo},#{roleSerialNo})")
     long insertRole(UserRole userRole);
+
+    /**
+     * 新增用户组织关联信息
+     * @param userOrganizational
+     * @return
+     */
+    @Insert("insert into auth_user_organizational (serial_no,user_serial_no,organizational_serial_no) values (#{serialNo},#{userSerialNo},#{organizationalSerialNo})")
+    long insertOrganizational(UserOrganizational userOrganizational);
 
     /**
      * 更新用户
@@ -85,7 +91,27 @@ public interface UserDao {
             + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>" + "<if test = 'status!=null'> and status = #{status}</if>" + "</script>")
     List<User> findByParam(UserSearchDTO userSearchDTO);
 
+    /**
+     * 登录信息验证
+     * @param loginRequestDTO
+     * @return
+     */
     @Select("<script>" + "select * from auth_user_info where 1=1 " + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
             + "<if test = 'passwd!=null'> and passwd = #{passwd}</if>" + "</script>")
     User login(LoginRequestDTO loginRequestDTO);
+
+    /**
+     * 删除用户角色关联信息
+     * @param userSerialNo
+     */
+    @Delete("delete from auth_user_role_info where user_serial_no = #{userSerialNo}")
+    void deleteRole(String userSerialNo);
+
+    /**
+     * 删除用户组织关联信息
+     * @param userSerialNo
+     */
+    @Delete("delete from auth_user_organizational where user_serial_no = #{userSerialNo}")
+    void deleteOrganizational(String userSerialNo);
+
 }

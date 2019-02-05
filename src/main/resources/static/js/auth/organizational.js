@@ -1,11 +1,11 @@
 /**
- * 用户信息
+ * 组织架构信息
  */
-common.pageName = "user";
-common.openName = [ '8' ];
+common.pageName = "organizational";
+common.openName = [ '7' ];
 
 var vue = new Vue({
-    el : '#user',
+    el : '#organizational',
     data : {
         formInline:{
             type:[]
@@ -16,40 +16,49 @@ var vue = new Vue({
             pageSize : 10
         },
         addForm : {
-            username : "",
-            mobile : "",
-            email : "",
-            passwd : "",
-            checkedRoleList:[],
-            checkedOrganizationalList:[]
+            organizationalName : "",
+            remark : ""
         },
         pageInfo:{},
         tableColumns:[],
         showResult:false,
         modal1:false,
-        roleList:[],
         organizationalList:[],
-        model10: []
+        model11: ''
     },
     created : function() {
-        this.initDate();
     },
     methods : {
-        /**
-         * 初始化数据
-         */
-        initDate : function() {
-            let self = this;
-            this.$http.get("/role/all").then(function(response){
-                if (response.data.success) {
-                    self.roleList = response.data.values;
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.message);
-            })
 
+        /**
+         * 查询
+         */
+        query : function(page){
+            this.showResult=true;
+            this.queryParam.pageNum = page;
+            var _self = this;
+            _self.queryParam.condition = _self.formInline;
+            this.$http.post("/organizational/list", _self.queryParam).then(
+                function(response) {
+                    _self.pageInfo = response.data;
+                }, function(error) {
+                    _self.$Message.error(error.data.message);
+                })
+        },
+        /**
+         * 新增组织架构
+         */
+        addOrganizational : function() {
+            this.modal1 = true;
+            this.addForm = {
+            };
+            this.getOrganizationalList();
+        },
+        /**
+         * 获取组织列表
+         */
+        getOrganizationalList() {
+            let self = this;
             this.$http.get("/organizational/list").then(function(response) {
                     if (response.data.success) {
                         self.organizationalList = response.data.values;
@@ -62,46 +71,12 @@ var vue = new Vue({
             )
         },
         /**
-         * 查询
+         * 保存组织架构
          */
-        query : function(page){
-            this.showResult=true;
-            this.queryParam.pageNum = page;
-            var _self = this;
-            _self.queryParam.condition = _self.formInline;
-            this.$http.post("/user/list", _self.queryParam).then(
-                function(response) {
-                    _self.pageInfo = response.data;
-                }, function(error) {
-                    _self.$Message.error(error.data.message);
-                })
-        },
-        /**
-         * 状态翻译
-         */
-        getStatusDesc : function(value){
-            if(value === 0) {
-                return "无效";
-            } else if(value === 1) {
-                return "有效";
-            }
-            return "";
-        },
-        /**
-         * 新增用户
-         */
-        addUser : function() {
-            this.modal1 = true;
-            this.addForm = {
-            };
-        },
-        /**
-         * 保存用户信息
-         */
-        saveUser : function() {
+        saveOrganizational : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/user", this.addForm).then(function(response) {
+                this.$http.post("/organizational", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -117,7 +92,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/user", this.addForm).then(function(response) {
+                this.$http.put("/organizational", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -140,17 +115,17 @@ var vue = new Vue({
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前用户</p>',
+                content: '<p>确认是否删除当前组织架构</p>',
                 onOk: () => {
-                this.deleteUser(id);
+                this.deleteOrganizational(id);
         },
             onCancel: () => {}
         })
         },
-        /** 删除用户 */
-        deleteUser:function(id){
+        /** 删除组织架构 */
+        deleteOrganizational:function(id){
             let self = this;
-            this.$http.delete("/user/" + id).then(function(response){
+            this.$http.delete("/organizational/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -167,11 +142,12 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新用户
+         * 更新角色
          */
-        updateUser : function(user){
-            this.addForm = user;
+        updateOrganizational : function(organizational){
+            this.addForm = organizational;
             this.modal1 = true;
+            this.getOrganizationalList();
         },
         /**
          * 取消保存
@@ -182,7 +158,6 @@ var vue = new Vue({
                 this.$refs['entityDataForm'].resetFields();
             }
         },
-
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -192,26 +167,15 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '用户名称',
-        key: 'username',
+        title: '组织名称',
+        key: 'organizationalName',
         align: 'left'
     },{
-        title: '手机号',
-        key: 'mobile',
-        align: 'center'
-    },{
-        title: '邮箱',
-        key: 'email',
+        title: '描述',
+        key: 'remark',
         align: 'left'
     },{
-        title: '状态',
-        key: 'status',
-        align: 'center',
-        render:(h,param)=> {
-        return h('span', vue.getStatusDesc(param.row.status));
-}
-},{
-    title: '操作',
+        title: '操作',
         align: 'center',
         render:(h,param)=>{
         return h('div', [
@@ -226,26 +190,26 @@ vue.tableColumns=[
                 },
                 on: {
                     click: () => {
-                    vue.updateUser(param.row);
-    }
-    }
-    }, '编辑'),
-        h('Button', {
-            props: {
-                size: "small",
-                type: "error"
-            },
-            style: {
-                marginRight: '5px'
-            },
-            on: {
-                click: () => {
-                vue.deleteWarn(param.row.id);
-    }
-    }
-    }, '删除')
-    ]
-    )
-    }
+                    vue.updateOrganizational(param.row);
+}
+}
+}, '编辑'),
+h('Button', {
+    props: {
+        size: "small",
+        type: "error"
+    },
+    style: {
+        marginRight: '5px'
+    },
+    on: {
+        click: () => {
+        vue.deleteWarn(param.row.id);
+}
+}
+}, '删除')
+]
+)
+}
 }
 ];

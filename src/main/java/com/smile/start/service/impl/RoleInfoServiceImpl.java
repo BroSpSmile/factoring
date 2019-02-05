@@ -7,11 +7,13 @@ import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.mapper.RoleInfoMapper;
+import com.smile.start.model.auth.*;
 import com.smile.start.model.auth.Role;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -118,5 +120,24 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     public List<AuthRoleInfoDTO> findByUserSerialNo(String userSerialNo) {
         final List<Role> userRoleList = roleDao.findByUserSerialNo(userSerialNo);
         return roleInfoMapper.doList2dtoList(userRoleList);
+    }
+
+    /**
+     * 保存权限信息
+     * @param permissionSetting
+     */
+    @Override
+    public void savePermission(PermissionSetting permissionSetting) {
+        roleDao.deletePermission(permissionSetting.getRoleSerialNo());
+        //处理权限信息
+        if(!CollectionUtils.isEmpty(permissionSetting.getCheckedPermissionList())) {
+            permissionSetting.getCheckedPermissionList().forEach(e -> {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));
+                rolePermission.setRoleSerialNo(permissionSetting.getRoleSerialNo());
+                rolePermission.setPermissionSerialNo(e);
+                roleDao.insertPermission(rolePermission);
+            });
+        }
     }
 }

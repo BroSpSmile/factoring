@@ -2,10 +2,8 @@ package com.smile.start.dao;
 
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.auth.Role;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.smile.start.model.auth.RolePermission;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -25,6 +23,14 @@ public interface RoleDao {
      */
     @Insert("insert into auth_role_info (serial_no,role_code,role_name,role_desc,delete_flag,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{roleCode},#{roleName},#{roleDesc},#{deleteFlag},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(Role role);
+
+    /**
+     * 新增角色权限关联信息
+     * @param rolePermission
+     * @return
+     */
+    @Insert("insert into auth_role_permission_info (serial_no,role_serial_no,permission_serial_no) values (#{serialNo},#{roleSerialNo},#{permissionSerialNo})")
+    long insertPermission(RolePermission rolePermission);
 
     /**
      * 更新角色
@@ -84,4 +90,15 @@ public interface RoleDao {
      */
     @Select("select * from auth_role_info r, auth_user_role_info ri where r.serial_no = ri.role_serial_no and ri.user_serial_no=#{userSerialNo}")
     List<Role> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 新增角色权限关联信息
+     * @param roleSerialNo
+     * @return
+     */
+    @Delete("delete from auth_role_permission_info where role_serial_no = #{roleSerialNo}")
+    void deletePermission(String roleSerialNo);
+
+    @Select("select permission_serial_no from auth_role_permission_info where role_serial_no = #{roleSerialNo}")
+    List<String> findPermission(String roleSerialNo);
 }

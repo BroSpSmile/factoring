@@ -3,6 +3,7 @@ package com.smile.start.service;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.model.auth.PermissionSetting;
 import com.smile.start.model.base.PageRequest;
 
 import java.util.List;
@@ -62,4 +63,10 @@ public interface RoleInfoService {
      * @return
      */
     List<AuthRoleInfoDTO> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 保存权限信息
+     * @param permissionSetting
+     */
+    void savePermission(PermissionSetting permissionSetting);
 }

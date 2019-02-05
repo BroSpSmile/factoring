@@ -1,6 +1,5 @@
 package com.smile.start.controller.user;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthPermissionInfoDTO;
@@ -126,22 +125,37 @@ public class PermissionInfoController extends BaseController {
         }
     }
 
-
-
-    @GetMapping(value = "/tree")
+    @GetMapping(value = "/tree/{roleSerialNo}")
     @ResponseBody
-    public ListResult<Tree> tree() {
+    public ListResult<Tree> tree(@PathVariable String roleSerialNo) {
         try {
             ListResult<Tree> result = new ListResult<>();
             result.setSuccess(true);
             result.setErrorMessage("获取权限树成功");
-            List<Tree> treeList = permissionInfoService.getTree();
+            List<Tree> treeList = permissionInfoService.getTree(roleSerialNo);
             result.setValues(treeList);
-            System.out.println(JSON.toJSONString(treeList));
             return result;
         } catch (Exception e) {
             logger.error("获取权限树失败", e);
             return toListResult(e, Tree.class);
+        }
+    }
+
+    @GetMapping(value = "/list/{permissionType}")
+    @ResponseBody
+    public ListResult<AuthPermissionInfoDTO> list(@PathVariable Integer permissionType) {
+        try {
+            PermissionSearchDTO permissionSearchDTO = new PermissionSearchDTO();
+            permissionSearchDTO.setPermissionType(permissionType);
+            List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByParam(permissionSearchDTO);
+            ListResult<AuthPermissionInfoDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取权限列表成功");
+            result.setValues(permissionList);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取权限列表失败", e);
+            return toListResult(e, AuthPermissionInfoDTO.class);
         }
     }
 }

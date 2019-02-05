@@ -5,47 +5,50 @@ common.pageName = "permission";
 common.openName = [ '10' ];
 
 var vue = new Vue({
-	el : '#permission',
-	data : {
-		formInline:{
-			type:[]
-		},
-		queryParam : {
-			condition : {},
-			pageNum : 1,
-			pageSize : 10
-		},
-		addForm : {
+    el : '#permission',
+    data : {
+        formInline:{
+            type:[]
+        },
+        queryParam : {
+            condition : {},
+            pageNum : 1,
+            pageSize : 10
+        },
+        addForm : {
             permissionCode : "",
             permissionName : "",
             permissionType : "",
+            parentSerialNo : "",
             url : "",
             remark : ""
-		},
-		pageInfo:{},
-		tableColumns:[],
-		showResult:false,
-		modal1:false
-	},
-	created : function() {
-	},
-	methods : {
-		
-		/**
-		 * 查询
-		 */
-		query : function(page){
-			this.showResult=true;
-			this.queryParam.pageNum = page;
-			var _self = this;
+        },
+        pageInfo:{},
+        tableColumns:[],
+        showResult:false,
+        modal1:false,
+        permissionList:[],
+        model11: ''
+    },
+    created : function() {
+    },
+    methods : {
+
+        /**
+         * 查询
+         */
+        query : function(page){
+            this.showResult=true;
+            this.queryParam.pageNum = page;
+            var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/permission/list", _self.queryParam).then(
-					function(response) {
-                        _self.pageInfo = response.data;
-					}, function(error) {
-                    	_self.$Message.error(error.data.message);
-					})
-		},
+            this.$http.post("/permission/list", _self.queryParam).then(
+                function(response) {
+                    _self.pageInfo = response.data;
+                }, function(error) {
+                    _self.$Message.error(error.data.message);
+                })
+        },
         /**
          * 类型翻译
          */
@@ -57,18 +60,35 @@ var vue = new Vue({
             }
             return "";
         },
-		/**
-		 * 新增权限
-		 */
-		addPermission : function() {
-			this.modal1 = true;
+        /**
+         * 新增权限
+         */
+        addPermission : function() {
+            this.modal1 = true;
             this.addForm = {
             };
-		},
+            this.getMenuList();
+        },
         /**
-		 * 保存权限信息
+         * 获取权限列表
          */
-		savePermission : function() {
+        getMenuList() {
+            let self = this;
+            this.$http.get("/permission/list/1").then(function(response) {
+                    if (response.data.success) {
+                        self.permissionList = response.data.values;
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function(error) {
+                    self.$Message.error(error.data.message);
+                }
+            )
+        },
+        /**
+         * 保存权限信息
+         */
+        savePermission : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
                 this.$http.post("/permission", this.addForm).then(function(response) {
@@ -103,7 +123,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }
-		},
+        },
         /**
          * 删除警告
          */
@@ -112,10 +132,10 @@ var vue = new Vue({
                 title: '删除提示',
                 content: '<p>确认是否删除当前权限</p>',
                 onOk: () => {
-                    this.deletePermission(id);
-                },
-                onCancel: () => {}
-            })
+                this.deletePermission(id);
+        },
+            onCancel: () => {}
+        })
         },
         /** 删除权限 */
         deletePermission:function(id){
@@ -142,22 +162,23 @@ var vue = new Vue({
         updatePermission : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.getMenuList();
         },
-		/**
-		 * 取消保存
-		 */
-		cancel : function() {
-			this.modal1 = false;
+        /**
+         * 取消保存
+         */
+        cancel : function() {
+            this.modal1 = false;
             if(this.addForm.id == '') {
                 this.$refs['entityDataForm'].resetFields();
             }
-		},
+        },
 
         /** 分页 */
         pageChange : function(page){
             this.query();
         }
-	}
+    }
 });
 
 vue.tableColumns=[
@@ -174,48 +195,48 @@ vue.tableColumns=[
         key: 'permissionType',
         align: 'left',
         render:(h,param)=> {
-            return h('span', vue.getTypeDesc(param.row.permissionType));
-        }
-    },{
-        title: '菜单路径',
+        return h('span', vue.getTypeDesc(param.row.permissionType));
+}
+},{
+    title: '菜单路径',
         key: 'url',
         align: 'left'
-    },{
-        title: '操作',
+},{
+    title: '操作',
         align: 'center',
         render:(h,param)=>{
         return h('div', [
             h('span'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "warning"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.updatePermission(param.row);
-                        }
-                    }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "error"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.deleteWarn(param.row.id);
-                        }
-                    }
-                }, '删除')
-                ]
-            )
-        }
+            h('Button', {
+                props: {
+                    size: "small",
+                    type: "warning"
+                },
+                style: {
+                    marginRight: '5px'
+                },
+                on: {
+                    click: () => {
+                    vue.updatePermission(param.row);
     }
+    }
+    }, '编辑'),
+        h('Button', {
+            props: {
+                size: "small",
+                type: "error"
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                vue.deleteWarn(param.row.id);
+    }
+    }
+    }, '删除')
+    ]
+    )
+    }
+}
 ];
