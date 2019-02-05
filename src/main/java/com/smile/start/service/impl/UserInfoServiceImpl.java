@@ -218,4 +218,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         return user;
     }
 
+    /** 
+     * @see com.smile.start.service.UserInfoService#getUserById(java.lang.Long)
+     */
+    @Override
+    public User getUserById(Long id) {
+        return userDao.get(id);
+    }
+
 }

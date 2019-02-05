@@ -58,4 +58,11 @@ public interface UserInfoService {
      * @return
      */
     User getUserByToken(String token);
+
+    /**
+     * 根据ID获取用户信息
+     * @param id
+     * @return
+     */
+    User getUserById(Long id);
 }

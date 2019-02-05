@@ -7,6 +7,7 @@ package com.smile.start.model.meeting;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 会议扩展对象
@@ -37,11 +38,14 @@ public class MeetingExt extends Meeting {
      * 转换数组集合
      */
     public void toParticipantNoList() {
-        participantNoList = StringUtils.EMPTY;
-        participantNo.forEach(e -> participantNoList += e + ",");
-        if (participantNoList.endsWith(",")) {
-            participantNoList = participantNoList.substring(0, participantNoList.length() - 1);
+        if (!CollectionUtils.isEmpty(participantNo)) {
+            participantNoList = StringUtils.EMPTY;
+            participantNo.forEach(e -> participantNoList += e + ",");
+            if (participantNoList.endsWith(",")) {
+                participantNoList = participantNoList.substring(0, participantNoList.length() - 1);
+            }
         }
+
     }
 
     /**

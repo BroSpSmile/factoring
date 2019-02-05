@@ -4,11 +4,15 @@
  */
 package com.smile.start.controller.meeting;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +60,16 @@ public class MeetingController extends BaseController {
     */
     @PostMapping(value = "/query")
     @ResponseBody
-    public PageInfo<Meeting> query(@RequestBody PageRequest<MeetingSearch> search) {
+    public PageInfo<Meeting> query(HttpServletRequest request, @RequestBody PageRequest<MeetingSearch> search) {
+        List<String> types = search.getCondition().getType();
+        for (String type : types) {
+            if (StringUtils.equals(type, "launch")) {
+                search.getCondition().setLaunchId(getUserByToken(request).getId());
+            }
+            if (StringUtils.equals(type, "partake")) {
+                search.getCondition().setPartakeId(getUserByToken(request).getId());
+            }
+        }
         return meetingService.search(search);
     }
 
@@ -75,5 +88,22 @@ public class MeetingController extends BaseController {
         }
         meeting.setStatus(MeetingStatus.PLAN);
         return meetingService.createMeeting(meeting);
+    }
+
+    /**
+     * 更新会议
+     * @param request
+     * @param meeting
+     * @return
+     */
+    @PutMapping
+    @ResponseBody
+    public BaseResult update(HttpServletRequest request, @RequestBody MeetingExt meeting) {
+        LoggerUtils.info(logger, "更新会议={}", meeting);
+        User user = getUserByToken(request);
+        if (null != user) {
+            meeting.setOriginator(user);
+        }
+        return meetingService.updateMeeting(meeting);
     }
 }

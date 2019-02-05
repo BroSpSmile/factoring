@@ -24,6 +24,19 @@ var vue = new Vue({
 	created : function() {
 		this.initDate();
 	},
+	filters:{
+		timeFilter:function(value){
+			return moment(value).format('YYYY-MM-DD HH:mm');
+		},
+		statusFilter:function(value){
+			for(var index in vue.statusItems){
+				if(value == vue.statusItems[index].value){
+					return vue.statusItems[index].text;
+				}
+			}
+			return "";
+		}
+	},
 	methods : {
 		/**
 		 * 初始化数据
@@ -64,19 +77,67 @@ var vue = new Vue({
 			this.addMeeting = {}
 			this.modal1 = true;
 		},
+		
+		edit:function(meeting){
+			this.addMeeting = JSON.parse(JSON.stringify(meeting));
+			this.addMeeting.participantNo=[];
+			for(let index in this.addMeeting.participant){
+				this.addMeeting.participantNo.push(''+this.addMeeting.participant[index].id);
+			}
+			console.log(this.addMeeting);
+			this.modal1 = true;
+		},
 
 		/**
 		 * 
 		 */
 		save : function() {
 			let self = this;
-			this.$http.post("/meeting",this.addMeeting).then(function(response){
+			if(this.addMeeting.id==null||this.addMeeting.id==''){
+				this.$http.post("/meeting",this.addMeeting).then(function(response){
+					if (response.data.success) {
+						self.$Message.info({
+							content : "创建会议成功",
+							onClose : function() {
+								self.query();
+								self.cancel();
+							}
+						});
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				},function(error){
+					self.$Message.error(error.data.message);
+				})	
+			}else{
+				this.$http.put("/meeting",this.addMeeting).then(function(response){
+					if (response.data.success) {
+						self.$Message.info({
+							content : "更新会议成功",
+							onClose : function() {
+								self.query();
+								self.cancel();
+							}
+						});
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				},function(error){
+					self.$Message.error(error.data.message);
+				})	
+			}
+			
+		},
+		
+		cancelMeeting:function(meeting){
+			let self = this;
+			meeting.status='CANCELLED';
+			this.$http.put("/meeting",meeting).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
-						content : "更新成功",
+						content : "取消会议成功",
 						onClose : function() {
-							self.query();
-							self.cancel();
+							//self.query();
 						}
 					});
 				} else {

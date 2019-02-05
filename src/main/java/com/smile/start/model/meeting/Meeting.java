@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.MinutesKind;
@@ -70,6 +71,18 @@ public class Meeting implements Serializable {
         return "{\"id\":\"" + id + "\", \"status\":\"" + status + "\", \"theme\":\"" + theme + "\", \"beginTime\":\"" + beginTime + "\", \"endTime\":\"" + endTime
                + "\", \"place\":\"" + place + "\", \"content\":\"" + content + "\", \"remind\":\"" + remind + "\", \"projects\":\"" + projects + "\", \"minutes\":\"" + minutes
                + "\", \"originator\":\"" + originator + "\", \"participant\":\"" + participant + "\", \"minutesKind\":\"" + minutesKind + "\"}  ";
+    }
+
+    /**
+     * 增加参会人员
+     * @param user
+     * @return
+     */
+    public boolean addParticipant(User user) {
+        if (participant == null) {
+            participant = Lists.newArrayList();
+        }
+        return participant.add(user);
     }
 
     /**

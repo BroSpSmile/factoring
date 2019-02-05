@@ -30,4 +30,11 @@ public interface MeetingService {
      * @return
      */
     BaseResult createMeeting(MeetingExt meeting);
+
+    /**
+     * 更新会议
+     * @param meeting
+     * @return
+     */
+    BaseResult updateMeeting(MeetingExt meeting);
 }

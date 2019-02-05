@@ -35,13 +35,13 @@ public class MeetingSearch implements Serializable {
     /** 会议类别 */
     private List<String>      type;
 
-    /** 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "{\"status\":\"" + status + "\", \"theme\":\"" + theme + "\", \"beginTime\":\"" + beginTime + "\", \"endTime\":\"" + endTime + "\", \"type\":\"" + type + "\"}  ";
-    }
+    /** 发起者ID */
+    private Long              launchId;
+
+    /** 参与者ID */
+    private Long              partakeId;
+
+    
 
     /**
      * Getter method for property <tt>status</tt>.
@@ -131,6 +131,42 @@ public class MeetingSearch implements Serializable {
      */
     public void setType(List<String> type) {
         this.type = type;
+    }
+
+    /**
+     * Getter method for property <tt>launchId</tt>.
+     * 
+     * @return property value of launchId
+     */
+    public Long getLaunchId() {
+        return launchId;
+    }
+
+    /**
+     * Setter method for property <tt>launchId</tt>.
+     * 
+     * @param launchId value to be assigned to property launchId
+     */
+    public void setLaunchId(Long launchId) {
+        this.launchId = launchId;
+    }
+
+    /**
+     * Getter method for property <tt>partakeId</tt>.
+     * 
+     * @return property value of partakeId
+     */
+    public Long getPartakeId() {
+        return partakeId;
+    }
+
+    /**
+     * Setter method for property <tt>partakeId</tt>.
+     * 
+     * @param partakeId value to be assigned to property partakeId
+     */
+    public void setPartakeId(Long partakeId) {
+        this.partakeId = partakeId;
     }
 
 }
