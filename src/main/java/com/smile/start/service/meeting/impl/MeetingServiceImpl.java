@@ -20,6 +20,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.MinutesKind;
 import com.smile.start.model.meeting.Meeting;
+import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.organization.Employee;
 import com.smile.start.model.organization.Person;
@@ -71,7 +72,8 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      * @see com.smile.start.service.meeting.MeetingService#createMeeting(com.smile.start.model.meeting.Meeting)
      */
     @Override
-    public BaseResult createMeeting(Meeting meeting) {
+    public BaseResult createMeeting(MeetingExt meeting) {
+        meeting.toParticipantNoList();
         long effect = meetingDao.insert(meeting);
         BaseResult result = new BaseResult();
         if (effect > 0) {

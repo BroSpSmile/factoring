@@ -161,4 +161,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         final Token byToken = tokenDao.findByToken(token);
         return byToken.getTokenExpire().getTime() > System.currentTimeMillis();
     }
+
+    /** 
+     * @see com.smile.start.service.UserInfoService#getUserByToken(java.lang.String)
+     */
+    @Override
+    public User getUserByToken(String token) {
+        Token tokenDo = tokenDao.findByToken(token);
+        User user = userDao.getByMobile(tokenDo.getMobile());
+        return user;
+    }
+
 }

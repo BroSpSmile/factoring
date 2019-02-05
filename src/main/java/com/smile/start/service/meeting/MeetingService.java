@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.meeting.Meeting;
+import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
 
 /**
@@ -28,5 +29,5 @@ public interface MeetingService {
      * @param meeting
      * @return
      */
-    BaseResult createMeeting(Meeting meeting);
+    BaseResult createMeeting(MeetingExt meeting);
 }

@@ -59,9 +59,6 @@ public class Meeting implements Serializable {
     /** 参与人员 */
     private List<User>        participant;
 
-    /** 参与人员工号 */
-    private List<String>      participantNo;
-
     /** 会议纪要模板 */
     private MinutesKind       minutesKind;
 
@@ -289,24 +286,6 @@ public class Meeting implements Serializable {
      */
     public void setParticipant(List<User> participant) {
         this.participant = participant;
-    }
-
-    /**
-     * Getter method for property <tt>participantNo</tt>.
-     * 
-     * @return property value of participantNo
-     */
-    public List<String> getParticipantNo() {
-        return participantNo;
-    }
-
-    /**
-     * Setter method for property <tt>participantNo</tt>.
-     * 
-     * @param participantNo value to be assigned to property participantNo
-     */
-    public void setParticipantNo(List<String> participantNo) {
-        this.participantNo = participantNo;
     }
 
     /**

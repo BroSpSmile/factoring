@@ -3,6 +3,7 @@ package com.smile.start.service;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 
 /**
@@ -50,4 +51,11 @@ public interface UserInfoService {
      * @return
      */
     boolean validateToken(String token);
+
+    /**
+     * 根据token获取用户信息
+     * @param token
+     * @return
+     */
+    User getUserByToken(String token);
 }

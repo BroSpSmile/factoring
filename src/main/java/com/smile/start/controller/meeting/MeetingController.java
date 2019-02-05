@@ -5,6 +5,7 @@
 package com.smile.start.controller.meeting;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.meeting.Meeting;
+import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.service.meeting.MeetingService;
 
@@ -64,8 +67,12 @@ public class MeetingController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult create(@RequestBody Meeting meeting) {
+    public BaseResult create(HttpServletRequest request, @RequestBody MeetingExt meeting) {
         LoggerUtils.info(logger, "创建会议={}", meeting);
+        User user = getUserByToken(request);
+        if (null != user) {
+            meeting.setOriginator(user);
+        }
         meeting.setStatus(MeetingStatus.PLAN);
         return meetingService.createMeeting(meeting);
     }

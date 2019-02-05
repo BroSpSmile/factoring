@@ -53,6 +53,14 @@ public interface UserDao {
     User get(Long id);
 
     /**
+     * 根据手机号获取用户
+     * @param mobile
+     * @return
+     */
+    @Select("select * from auth_user_info where mobile = #{mobile} limit 1")
+    User getByMobile(String mobile);
+
+    /**
      * 根据用户编号查询用户
      * @param serialNo
      * @return
@@ -73,16 +81,11 @@ public interface UserDao {
      * @param userSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0"
-            + "<if test = 'username!=null'> and username = #{username}</if>"
-            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
-            + "<if test = 'status!=null'> and status = #{status}</if>"
-            + "</script>")
+    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0" + "<if test = 'username!=null'> and username = #{username}</if>"
+            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>" + "<if test = 'status!=null'> and status = #{status}</if>" + "</script>")
     List<User> findByParam(UserSearchDTO userSearchDTO);
 
-    @Select("<script>" + "select * from auth_user_info where 1=1 "
-            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
-            + "<if test = 'passwd!=null'> and passwd = #{passwd}</if>"
-            + "</script>")
+    @Select("<script>" + "select * from auth_user_info where 1=1 " + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
+            + "<if test = 'passwd!=null'> and passwd = #{passwd}</if>" + "</script>")
     User login(LoginRequestDTO loginRequestDTO);
 }
