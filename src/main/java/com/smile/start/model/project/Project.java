@@ -46,13 +46,16 @@ public class Project implements Serializable {
     /** 项目附件 */
     private List<ProjectItem> items;
 
+    /** all进度 */
+    private List<String>  progresses;
+
     /**
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "{\"id\":\"" + id + "\", \"projectId\":\"" + projectId + "\", \"kind\":\"" + kind + "\", \"projectName\":\"" + projectName + "\", \"person\":\"" + person
-               + "\", \"progress\":\"" + progress + "\", \"model\":\"" + model + "\"}  ";
+               + "\", \"progress\":\"" + progress + "\", \"model\":\"" + model + "\", \"progresses\":\"" + progresses.toString() + "\"}  ";
     }
 
     /**
@@ -197,6 +200,14 @@ public class Project implements Serializable {
      */
     public void setItems(List<ProjectItem> items) {
         this.items = items;
+    }
+
+    public List<String> getProgresses() {
+        return progresses;
+    }
+
+    public void setProgresses(List<String> progresses) {
+        this.progresses = progresses;
     }
 
 }

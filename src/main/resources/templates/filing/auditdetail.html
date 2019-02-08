@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<div layout:fragment="content">
+    <div id="auditDetail">
+        </br>
+        <h2>审核进度</h2>
+        </br>
+        <Steps :current="1">
+            <Step title="提出申请" content="这里是该步骤的描述信息"></Step>
+            <Step title="法务分控审核" content="这里是该步骤的描述信息"></Step>
+            <Step title="办公室专员" content="这里是该步骤的描述信息"></Step>
+            <Step title="完成" content="这里是该步骤的描述信息"></Step>
+        </Steps>
+        </br>
+        <h2>申请详情</h2>
+        </br>
+        <div id="filingApplyDetail">
+            <i-form ref="entityDataForm" :model="filingInfo" :label-width="100">
+                <row>
+                    <i-col span="8">
+                        <form-item label="申请类型">
+                            <span>{{filingInfo.applyType}}</span>
+                        </form-item>
+                    </i-col>
+                    <i-col span="8">
+                        <form-item label="申请时间">
+                            <span>{{filingInfo.applyTime}}</span>
+                        </form-item>
+                    </i-col>
+                    <i-col span="8">
+                        <form-item label="申请人">
+                            <span>{{filingInfo.applicant}}</span>
+                        </form-item>
+                    </i-col>
+                </row>
+                <row>
+                    <i-col span="8">
+                        <form-item label="项目编号">
+                            <span>abcd-2018-004</span>
+                        </form-item>
+                    </i-col>
+                    <i-col span="16">
+                        <form-item label="项目名称">
+                            <span>aaabcd公司保理项目</span>
+                        </form-item>
+                    </i-col>
+                </row>
+                <row>
+                    <i-col>
+                        <form-item label="归档清单">
+                            <div v-if="isItemExist('1')"><span>股东会决议</span></br></div>
+                            <div v-if="isItemExist('2')"><span>尽调报告之红杉资本创始人</span></br></div>
+                            <div v-if="isItemExist('3')"><span>尽职调查报告</span></br></div>
+                            <div v-if="isItemExist('4')"><span>党总支（扩大）会议纪要</span></br></div>
+                            <div v-if="isItemExist('5')"><span>董事会会议纪要</span></br></div>
+                            <div v-if="isItemExist('6')"><span>内部风控防控报告</span></br></div>
+                            <div v-if="isItemExist('7')"><span>外部风控防控报告</span></br></div>
+                            <div v-if="isItemExist('8')"><span>保理合同</span></br></div>
+                        </form-item>
+                    </i-col>
+                </row>
+                <row type="flex">
+                    <i-col span="6" offset="1">
+                        <i-button type="success" @click="auditPass">审核通过</i-button>
+                        <i-button type="" @click="auditReject" style="margin:0 8px">审核驳回</i-button>
+                    </i-col>
+                    <i-col span="6" offset="6">
+                        <i-button type="success" @click="filingComplete">归档完成</i-button>
+                    </i-col>
+                </row>
+            </i-form>
+        </div>
+        </br>
+        <h2>申请详情</h2>
+        </br>
+        <script src="js/filing/auditdetail.js"></script>
+    </div>
+    <input th:value="${id}" id="projectId" style="display:none"></input>
+</div>
+</html>
