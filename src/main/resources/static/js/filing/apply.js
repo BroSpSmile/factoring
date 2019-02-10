@@ -13,15 +13,15 @@ var vue = new Vue({
 		filingInfo: {
 			applyType:'归档申请',
 			applicant:'陈杰',
-			applyTime:'2018-10-23 17:44:00',
+			applyTime:null,
 			projectId: 0,
-			filingList: [1,2,3,4,5,8],
+			filingList: [],
 			items:[]
 		},
 
 	},
 	created : function() {
-		this.project.id = document.getElementById("projectId").value;
+		this.filingInfo.projectId = document.getElementById("projectId").value;
 	},
 	methods : {
 		/**
@@ -69,23 +69,25 @@ var vue = new Vue({
 			}
 			for(let index in this.fileList){
 				let item={
-						projectId:this.project.id,
+						projectId:this.filingInfo.projectId,
 						itemType:"DUE_DILIGENCE",
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
 				}
-				this.project.items.push(item);
+				this.filingInfo.items.push(item);
 			}
+
 			console.log(this.project);
 			let self = this;
-			this.$http.post("/filingApply",this.project).then(function(response){
+			this.$http.post("/filingApply",this.filingInfo).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
 						content : "立项申请成功",
 						onClose : function() {
 							window.close();
-						}
+						},
 					});
+                    window.open("filingProject","_self");
 				} else {
 					self.$Message.error(response.data.errorMessage);
 				}

@@ -1,5 +1,24 @@
 package com.smile.start.service.filing.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.LoggerUtils;
+import com.smile.start.dao.FilingDao;
+import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.Progress;
+import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.model.filing.FilingFileItem;
+import com.smile.start.model.project.Project;
+import com.smile.start.service.AbstractService;
+import com.smile.start.service.filing.FilingService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * @author ：xioutman
  * @date ：Created in 2019/2/4 11:10
@@ -7,5 +26,87 @@ package com.smile.start.service.filing.impl;
  * @modified By：
  * @version: $
  */
-public class FilingServiceImpl {
+@Service
+public class FilingServiceImpl extends AbstractService implements FilingService {
+
+    /**
+     * 项目DAO
+     */
+    @Resource
+    private FilingDao filingDao;
+
+    @Override
+    @Transactional
+    public BaseResult addFilingApply(FilingApplyInfo filingApplyInfo) {
+        long effect = filingDao.insert(filingApplyInfo);
+        LoggerUtils.info(logger, "新增归档申请，影响行effect={}", effect);
+        for (FilingFileItem item : filingApplyInfo.getItems()) {
+            filingDao.insertFileItem(item);
+        }
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011001");
+            result.setErrorMessage("新增归档申请失败,请重试!");
+        }
+        return result;
+    }
+
+    @Override
+    public BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo) {
+        List<FilingApplyInfo> filingApplyInfos = filingDao.findByProjectId(filingApplyInfo.getProjectId());
+        if (!CollectionUtils.isEmpty(filingApplyInfos) && filingApplyInfos.size() > 1) {
+            throw new RuntimeException("当前项目ID重复,无法更新");
+        }
+        if (!CollectionUtils.isEmpty(filingApplyInfos)) {
+            for (FilingApplyInfo old : filingApplyInfos) {
+                if (old.getId() != filingApplyInfo.getId()) {
+                    throw new RuntimeException("当前归档申请ID重复,无法更新");
+                }
+            }
+        }
+        int effect = filingDao.update(filingApplyInfo);
+        LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011002");
+            result.setErrorMessage("新增归档申请失败,请重试!");
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public BaseResult delete(Long id) {
+        Project project = filingDao.get(id);
+        if (project == null) {
+            throw new RuntimeException("删除项归档申请失败,当前项目不存在");
+        }
+        if (!Progress.INIT.equals(project.getProgress())) {
+            throw new RuntimeException("删除归档申请失败,当前项目状态非法");
+        }
+        int effect = filingDao.delete(id);
+        LoggerUtils.info(logger, "删除项归档申请影响行effect={}", effect);
+        BaseResult result = new BaseResult();
+        if (effect > 0) {
+            result.setSuccess(true);
+        } else {
+            result.setErrorCode("VP00011003");
+            result.setErrorMessage("删除归档申请失败,请重试!");
+        }
+        return result;
+    }
+
+    @Override
+    public PageInfo<FilingApplyInfo> queryPage(PageRequest<FilingApplyInfo> page) {
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
+        List<FilingApplyInfo> filingApplyInfoList = filingDao.findByParam(page.getCondition());
+        //4. 根据返回的集合，创建PageInfo对象
+        PageInfo<FilingApplyInfo> result = new PageInfo<FilingApplyInfo>(filingApplyInfoList);
+        return result;
+    }
+
 }

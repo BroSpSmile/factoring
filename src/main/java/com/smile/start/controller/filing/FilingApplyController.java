@@ -1,15 +1,19 @@
 package com.smile.start.controller.filing;
 
+import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
-import com.smile.start.service.project.ProjectService;
+import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.FilingProgress;
+import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.service.filing.FilingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @description：归档申请
@@ -22,6 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/filingApply")
 public class FilingApplyController  extends BaseController {
 
+    /** 项目服务 */
+    @Resource
+    private FilingService filingService;
+
     /**
      * 归档申请页面
      * @return
@@ -33,5 +41,20 @@ public class FilingApplyController  extends BaseController {
         model.addAttribute("id", id);
         return "filing/apply";
     }
+
+    /**
+     * 归档申请
+     * @param filingApplyInfo
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public BaseResult filingApply(@RequestBody FilingApplyInfo filingApplyInfo) {
+        filingApplyInfo.setApplyTime(new Date());
+        LoggerUtils.info(logger, "立项归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+        return filingService.addFilingApply(filingApplyInfo);
+    }
+
 
 }
