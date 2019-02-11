@@ -4,14 +4,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.FilingDao;
+import com.smile.start.dao.ProjectDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.filing.FilingService;
+import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -30,10 +33,17 @@ import java.util.List;
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
     /**
-     * 项目DAO
+     * 归档DAO
      */
     @Resource
     private FilingDao filingDao;
+
+    /**
+     * 项目DAO
+     */
+    @Resource
+    private ProjectDao projectDao;
+
 
     @Override
     @Transactional
@@ -43,12 +53,16 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         for (FilingFileItem item : filingApplyInfo.getItems()) {
             filingDao.insertFileItem(item);
         }
+
+        //更新项目状态为归档审核状态
+        long updateProgressEffect = projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
+        LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProgressEffect);
         BaseResult result = new BaseResult();
-        if (effect > 0) {
+        if (effect > 0 && updateProgressEffect > 0) {
             result.setSuccess(true);
         } else {
             result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增归档申请失败,请重试!");
+            result.setErrorMessage("归档申请失败,请重试!");
         }
         return result;
     }
@@ -68,12 +82,17 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         }
         int effect = filingDao.update(filingApplyInfo);
         LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
+
+        //更新项目状态为归档审核状态
+        long updateProgressEffect = projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
+        LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProgressEffect);
+
         BaseResult result = new BaseResult();
-        if (effect > 0) {
+        if (effect > 0 && updateProgressEffect > 0) {
             result.setSuccess(true);
         } else {
             result.setErrorCode("VP00011002");
-            result.setErrorMessage("新增归档申请失败,请重试!");
+            result.setErrorMessage("归档审批失败,请重试!");
         }
         return result;
     }
@@ -81,17 +100,23 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
     @Override
     @Transactional
     public BaseResult delete(Long id) {
-        Project project = filingDao.get(id);
-        if (project == null) {
-            throw new RuntimeException("删除项归档申请失败,当前项目不存在");
+        FilingApplyInfo filingApplyInfo = filingDao.get(id);
+        if (filingApplyInfo == null) {
+            throw new RuntimeException("删除项归档申请失败,当前归档申请不存在");
         }
-        if (!Progress.INIT.equals(project.getProgress())) {
-            throw new RuntimeException("删除归档申请失败,当前项目状态非法");
+        if (!FilingProgress.TOBEFILED.equals(filingApplyInfo.getProgress())) {
+            throw new RuntimeException("删除归档申请失败,当前归档申请状态非法");
         }
         int effect = filingDao.delete(id);
         LoggerUtils.info(logger, "删除项归档申请影响行effect={}", effect);
+
+        //删除归档文件 in db
+        long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProjectId());
+
+        //TODO 删除文件
+
         BaseResult result = new BaseResult();
-        if (effect > 0) {
+        if (effect > 0 && effectDelItem > 0) {
             result.setSuccess(true);
         } else {
             result.setErrorCode("VP00011003");
@@ -108,5 +133,4 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         PageInfo<FilingApplyInfo> result = new PageInfo<FilingApplyInfo>(filingApplyInfoList);
         return result;
     }
-
 }

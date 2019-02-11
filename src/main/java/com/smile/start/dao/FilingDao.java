@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * @description：归档申请Dao
  * @author ：xioutman
+ * @description：归档申请Dao
  * @date ：Created in 2019/2/4 11:10
  * @modified By：
  * @version: $
@@ -34,11 +34,11 @@ public interface FilingDao {
      * @return
      */
     @Update("<script>" + "update filing_apply_info" + " set id=#{id}" +
-        "<if test = 'projectId!=null'>,project_id = #{projectId}</if>"
-        + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" +
-        "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
-        + "<if test = 'filingListStr!=null'> , filing_list = #{filingListStr}</if>" +
-        "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where id=#{id} " + "</script>")
+            "<if test = 'projectId!=null'>,project_id = #{projectId}</if>"
+            + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" +
+            "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
+            + "<if test = 'filingListStr!=null'> , filing_list = #{filingListStr}</if>" +
+            "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where id=#{id} " + "</script>")
     int update(FilingApplyInfo filingApplyInfo);
 
     /**
@@ -57,7 +57,7 @@ public interface FilingDao {
      * @return
      */
     @Select("select * from filing_apply_info where id = #{id}")
-    Project get(Long id);
+    FilingApplyInfo get(Long id);
 
     /**
      * 根据项目ID获取归档申请信息
@@ -83,19 +83,29 @@ public interface FilingDao {
      * @return
      */
     @Select("<script>" + "select * from filing_apply_info where 1=1 " +
-        "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
-        + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" +
-        "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
-        + "<if test = 'filingListStr!=null'> and filing_list = #{filingListStr}</if>" +
-        "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
+            "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
+            + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" +
+            "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
+            + "<if test = 'filingListStr!=null'> and filing_list = #{filingListStr}</if>" +
+            "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
     List<FilingApplyInfo> findByParam(FilingApplyInfo filingApplyInfo);
 
     /**
      * 插入
+     *
      * @param item
      * @return
      */
     @Insert("insert filing_file_item (project_id,item_type,item_name,item_value) values(#{projectId},#{itemType},#{itemName},#{itemValue})")
     long insertFileItem(FilingFileItem item);
+
+    /**
+     * 删除归档申请文件
+     *
+     * @param projectId
+     * @return
+     */
+    @Insert("delete filing_file_item  where project_id = #{projectId})")
+    long delFileItemByProjectId(String projectId);
 
 }

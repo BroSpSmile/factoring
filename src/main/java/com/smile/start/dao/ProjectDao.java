@@ -36,6 +36,16 @@ public interface ProjectDao {
     int update(Project project);
 
     /**
+     * 更新
+     *
+     * @param projectId
+     * @param progress
+     * @return
+     */
+    @Update("update factoring_project  set  progress = #{progress}  where project_id=#{projectId}")
+    int updateProjectProgress(String projectId, String progress);
+
+    /**
      * 删除
      * @param id
      * @return

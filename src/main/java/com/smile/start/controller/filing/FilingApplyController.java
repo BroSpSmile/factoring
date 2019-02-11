@@ -16,22 +16,25 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
- * @description：归档申请
  * @author ：xioutman
+ * @description：归档申请
  * @date ：Created in 2019/2/4 11:10
  * @modified By：
  * @version: $
  */
 @Controller
 @RequestMapping("/filingApply")
-public class FilingApplyController  extends BaseController {
+public class FilingApplyController extends BaseController {
 
-    /** 项目服务 */
+    /**
+     * 项目服务
+     */
     @Resource
     private FilingService filingService;
 
     /**
      * 归档申请页面
+     *
      * @return
      */
     @GetMapping
@@ -43,18 +46,93 @@ public class FilingApplyController  extends BaseController {
     }
 
     /**
-     * 归档申请
+     * 归档申请保存
+     *
      * @param filingApplyInfo
      * @return
      */
-    @PostMapping
+    @PostMapping("/save")
     @ResponseBody
-    public BaseResult filingApply(@RequestBody FilingApplyInfo filingApplyInfo) {
+    public BaseResult save(@RequestBody FilingApplyInfo filingApplyInfo) {
         filingApplyInfo.setApplyTime(new Date());
-        LoggerUtils.info(logger, "立项归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+        filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
     }
 
+    /**
+     * 归档申请保存
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PostMapping("/commit")
+    @ResponseBody
+    public BaseResult commit(@RequestBody FilingApplyInfo filingApplyInfo) {
+        filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        return filingService.addFilingApply(filingApplyInfo);
+    }
 
+    /**
+     * 归档申请审核
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PutMapping("/audit")
+    @ResponseBody
+    public BaseResult audit(@RequestBody FilingApplyInfo filingApplyInfo) {
+        //filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setProgress(FilingProgress.FILEAUDIT.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        return filingService.updateFilingApply(filingApplyInfo);
+    }
+
+    /**
+     * 归档申请打回
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PutMapping("/reject")
+    @ResponseBody
+    public BaseResult reject(@RequestBody FilingApplyInfo filingApplyInfo) {
+        //filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        return filingService.updateFilingApply(filingApplyInfo);
+    }
+
+    /**
+     * 归档申请打回保存
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PutMapping("/rejectAndSave")
+    @ResponseBody
+    public BaseResult rejectAndSave(@RequestBody FilingApplyInfo filingApplyInfo) {
+        filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        return filingService.updateFilingApply(filingApplyInfo);
+    }
+
+
+    /**
+     * 归档申请完成
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PutMapping("/complete")
+    @ResponseBody
+    public BaseResult complete(@RequestBody FilingApplyInfo filingApplyInfo) {
+        //filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setProgress(FilingProgress.FILECOMPLETE.getCode());
+        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        return filingService.updateFilingApply(filingApplyInfo);
+    }
 }
