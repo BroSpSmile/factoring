@@ -36,6 +36,16 @@ public interface ProjectDao {
     int update(Project project);
 
     /**
+     * 更新
+     *
+     * @param projectId
+     * @param progress
+     * @return
+     */
+    @Update("update factoring_project  set  progress = #{progress}  where project_id=#{projectId}")
+    int updateProjectProgress(String projectId, String progress);
+
+    /**
      * 删除
      * @param id
      * @return
@@ -74,6 +84,11 @@ public interface ProjectDao {
      */
     @Select("<script>" + "select * from factoring_project where 1=1 " + "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
             + "<if test = 'kind!=null'> and kind = #{kind}</if>" + "<if test = 'projectName!=null'> and project_name = #{projectName}</if>"
-            + "<if test = 'person!=null'> and person = #{person}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if>" + "</script>")
+            + "<if test = 'person!=null'> and person = #{person}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if>"
+            + "<if test = 'progresses!=null'> and progress in  "
+            + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>"
+            +  "#{item} "
+            +  "</foreach>"
+            +  "</if></script>")
     List<Project> findByParam(Project project);
 }
