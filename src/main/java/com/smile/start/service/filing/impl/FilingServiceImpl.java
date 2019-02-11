@@ -8,13 +8,10 @@ import com.smile.start.dao.ProjectDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FilingProgress;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
-import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.filing.FilingService;
-import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -36,14 +33,13 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
      * 归档DAO
      */
     @Resource
-    private FilingDao filingDao;
+    private FilingDao  filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
     private ProjectDao projectDao;
-
 
     @Override
     @Transactional

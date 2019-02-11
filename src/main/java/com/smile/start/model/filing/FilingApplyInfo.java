@@ -1,6 +1,5 @@
 package com.smile.start.model.filing;
 
-import com.smile.start.model.project.ProjectItem;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
