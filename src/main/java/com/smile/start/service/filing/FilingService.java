@@ -37,4 +37,11 @@ public interface FilingService {
      * @return
      */
     PageInfo<FilingApplyInfo> queryPage(PageRequest<FilingApplyInfo> page);
+
+    /**
+     *
+     * @param projectId
+     * @return
+     */
+    FilingApplyInfo findByProjectId(String projectId);
 }

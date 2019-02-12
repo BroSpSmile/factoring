@@ -18,8 +18,22 @@ var vue = new Vue({
     },
     created: function () {
         this.filingInfo.project.id = document.getElementById("projectId").value;
+        this.initDate();
     },
     methods: {
+        /**
+         * 初始化数据
+         */
+        initDate: function () {
+            var _self = this;
+            this.$http.get("/filingApply/"+ this.filingInfo.projectId).then(function (response) {
+                _self.filingInfo = response.data;
+            }, function (error) {
+                console.error(error);
+            })
+        },
+
+
         /**
          * 判断数组是否包含元素
          */

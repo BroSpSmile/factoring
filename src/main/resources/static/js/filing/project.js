@@ -156,7 +156,7 @@ vue.tableColumns = [
                         },
                         on: {
                             click: () => {
-                                vue.apply(param.row.id);
+                                vue.apply(param.row.projectId);
                             }
                         }
                     }, '归档申请') :
@@ -172,7 +172,7 @@ vue.tableColumns = [
                                 },
                                 on: {
                                     click: () => {
-                                        vue.audit(param.row.id);
+                                        vue.audit(param.row.projectId);
                                     }
                                 }
                             }, '归档审核') : h('span')

@@ -116,6 +116,9 @@ public class FilingApplyInfo implements Serializable {
 
     public void setFilingListStr(String filingListStr) {
         this.filingListStr = filingListStr;
+        if (StringUtils.isNotBlank(filingListStr)) {
+            this.filingList = filingListStr.split(",");
+        }
     }
 
     /**
@@ -124,9 +127,9 @@ public class FilingApplyInfo implements Serializable {
     @Override
     public String toString() {
         return "{\"id\":\"" + id + "\", \"applyType\":\"" + applyType + "\", \"applicant\":\"" + applicant +
-            "\", \"applyTime\":\"" + applyTime + "\", \"projectId\":\"" + projectId + "\", \"filingList\":\"" +
-            filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
-            "\", \"items\":\"" + items
-            + "\"}  ";
+                "\", \"applyTime\":\"" + applyTime + "\", \"projectId\":\"" + projectId + "\", \"filingList\":\"" +
+                filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
+                "\", \"items\":\"" + items
+                + "\"}  ";
     }
 }

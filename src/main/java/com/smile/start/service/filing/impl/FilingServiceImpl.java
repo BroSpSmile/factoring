@@ -100,7 +100,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (filingApplyInfo == null) {
             throw new RuntimeException("删除项归档申请失败,当前归档申请不存在");
         }
-        if (!FilingProgress.TOBEFILED.equals(filingApplyInfo.getProgress())) {
+        if (!FilingProgress.TOBEFILED.getCode().equals(filingApplyInfo.getProgress())) {
             throw new RuntimeException("删除归档申请失败,当前归档申请状态非法");
         }
         int effect = filingDao.delete(id);
@@ -128,5 +128,14 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         //4. 根据返回的集合，创建PageInfo对象
         PageInfo<FilingApplyInfo> result = new PageInfo<FilingApplyInfo>(filingApplyInfoList);
         return result;
+    }
+
+    @Override
+    public FilingApplyInfo findByProjectId(String projectId) {
+        List<FilingApplyInfo> filingApplyInfos = filingDao.findByProjectId(projectId);
+        if (null != filingApplyInfos && !filingApplyInfos.isEmpty()) {
+            return filingApplyInfos.get(0);
+        }
+        return null;
     }
 }

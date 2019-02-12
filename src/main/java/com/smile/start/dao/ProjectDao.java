@@ -42,7 +42,7 @@ public interface ProjectDao {
      * @param progress
      * @return
      */
-    @Update("update factoring_project  set  progress = #{progress}  where project_id=#{projectId}")
+    @Update("update factoring_project set progress = #{progress} where project_id = #{projectId}")
     int updateProjectProgress(String projectId, String progress);
 
     /**

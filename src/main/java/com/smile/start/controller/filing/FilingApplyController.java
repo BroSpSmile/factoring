@@ -1,11 +1,17 @@
 package com.smile.start.controller.filing;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.model.project.Project;
 import com.smile.start.service.filing.FilingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,12 +54,32 @@ public class FilingApplyController extends BaseController {
     /**
      * 归档申请保存
      *
+     * @param projectId
+     * @return
+     */
+    @GetMapping(value = "/{projectId}")
+    @ResponseBody
+    public SingleResult<FilingApplyInfo> findByProjectId(@PathVariable String projectId) {
+        LoggerUtils.info(logger, "查询请求参数 projectId ={}", projectId);
+        SingleResult<FilingApplyInfo> result = new SingleResult<FilingApplyInfo>();
+        result.setSuccess(true);
+        result.setData(filingService.findByProjectId(projectId));
+        return result;
+    }
+
+    /**
+     * 归档申请保存
+     *
      * @param filingApplyInfo
      * @return
      */
     @PostMapping("/save")
     @ResponseBody
-    public BaseResult save(@RequestBody FilingApplyInfo filingApplyInfo) {
+    public BaseResult save(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
+        User user = getUserByToken(request);
+        if (null != user) {
+            filingApplyInfo.setApplicant(user.getUsername());
+        }
         filingApplyInfo.setApplyTime(new Date());
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
@@ -68,7 +94,11 @@ public class FilingApplyController extends BaseController {
      */
     @PostMapping("/commit")
     @ResponseBody
-    public BaseResult commit(@RequestBody FilingApplyInfo filingApplyInfo) {
+    public BaseResult commit(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
+        User user = getUserByToken(request);
+        if (null != user) {
+            filingApplyInfo.setApplicant(user.getUsername());
+        }
         filingApplyInfo.setApplyTime(new Date());
         filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
@@ -113,7 +143,11 @@ public class FilingApplyController extends BaseController {
      */
     @PutMapping("/rejectAndSave")
     @ResponseBody
-    public BaseResult rejectAndSave(@RequestBody FilingApplyInfo filingApplyInfo) {
+    public BaseResult rejectAndSave(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
+        User user = getUserByToken(request);
+        if (null != user) {
+            filingApplyInfo.setApplicant(user.getUsername());
+        }
         filingApplyInfo.setApplyTime(new Date());
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));

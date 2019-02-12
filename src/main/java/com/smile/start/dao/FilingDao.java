@@ -80,7 +80,7 @@ public interface FilingDao {
      */
     @Select("<script>" + "select * from filing_apply_info where 1=1 " + "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
             + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
-            + "<if test = 'filingListStr!=null'> and filing_list = #{filingListStr}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
+            + "<if test = 'filingListStr!=null'> and filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
     List<FilingApplyInfo> findByParam(FilingApplyInfo filingApplyInfo);
 
     /**
