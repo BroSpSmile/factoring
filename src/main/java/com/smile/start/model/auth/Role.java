@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 角色信息实体
  * @author Joseph
  * @version v1.0 2019/1/23 19:15, Role.java
  * @since 1.8

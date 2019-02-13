@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 组织架构实体
  * @author Joseph
  * @version v1.0 2019/1/29 16:43, Organizational.java
  * @since 1.8

@@ -2,7 +2,7 @@
  * 权限信息
  */
 common.pageName = "permission";
-common.openName = [ '10' ];
+common.openName = [ '8' ];
 
 var vue = new Vue({
     el : '#permission',

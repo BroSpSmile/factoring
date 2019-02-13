@@ -1,11 +1,11 @@
 /**
- * 角色信息
+ * 签署清单信息
  */
 common.pageName = "role";
-common.openName = [ '8' ];
+common.openName = [ '3' ];
 
 var vue = new Vue({
-	el : '#role',
+	el : '#signListTemplate',
 	data : {
 		formInline:{
 			type:[]
@@ -16,20 +16,13 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		addForm : {
-			roleCode : "",
-			roleName : "",
-			roleDesc : ""
+			signListName : "",
+			sort : ""
 		},
-        permissionList : [],
 		pageInfo:{},
 		tableColumns:[],
 		showResult:false,
-		modal1:false,
-        modal2:false,
-        permissionForm : {
-            checkedPermissionList:[],
-            roleSerialNo:""
-        }
+		modal1:false
 	},
 	created : function() {
 	},
@@ -43,7 +36,7 @@ var vue = new Vue({
 			this.queryParam.pageNum = page;
 			var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/role/list", _self.queryParam).then(
+			this.$http.post("/signListTemplate/list", _self.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
 					}, function(error) {
@@ -51,20 +44,20 @@ var vue = new Vue({
 					})
 		},
 		/**
-		 * 新增角色
+		 * 新增签署清单
 		 */
-		addRole : function() {
+		addSign : function() {
 			this.modal1 = true;
             this.addForm = {
             };
 		},
         /**
-		 * 保存角色信息
+		 * 保存签署清单
          */
-		saveRole : function() {
+        saveSign : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/role", this.addForm).then(function(response) {
+                this.$http.post("/signListTemplate", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -80,7 +73,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/role", this.addForm).then(function(response) {
+                this.$http.put("/signListTemplate", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -103,17 +96,17 @@ var vue = new Vue({
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前角色</p>',
+                content: '<p>确认是否删除当前签署清单</p>',
                 onOk: () => {
-                    this.deleteRole(id);
+                    this.deleteSign(id);
                 },
                 onCancel: () => {}
             })
         },
-        /** 删除角色 */
-        deleteRole:function(id){
+        /** 删除签署清单 */
+        deleteSign:function(id){
             let self = this;
-            this.$http.delete("/role/" + id).then(function(response){
+            this.$http.delete("/signListTemplate/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -132,26 +125,9 @@ var vue = new Vue({
         /**
          * 更新角色
          */
-        updateRole : function(user){
+        updateSign : function(user){
             this.addForm = user;
             this.modal1 = true;
-        },
-        /**
-         * 权限配置
-         */
-        settingPermission : function (serialNo) {
-            this.permissionForm.roleSerialNo = serialNo;
-            let self = this;
-            this.$http.get("/permission/tree/" + serialNo).then(function(response){
-                if (response.data.success) {
-                    self.permissionList = response.data.values;
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.message);
-            })
-            this.modal2 = true;
         },
 		/**
 		 * 取消保存
@@ -162,41 +138,6 @@ var vue = new Vue({
                 this.$refs['entityDataForm'].resetFields();
             }
 		},
-        /**
-         * 取消权限设置页面
-         */
-        cancelPermission : function() {
-            this.modal2 = false;
-        },
-        /**
-         * 保存权限信息
-         */
-        savePermission : function() {
-            let self = this;
-            this.$http.post("/role/permission", this.permissionForm).then(function(response){
-                if (response.data.success) {
-                    self.$Message.info({
-                        content : "保存成功",
-                        onClose : function() {
-                            self.query();
-                            self.cancelPermission();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.message);
-            })
-        },
-        choiceAll:function(data){
-            this.permissionForm.checkedPermissionList = [];
-            for(var i = 0; i < data.length; i++) {
-                this.permissionForm.checkedPermissionList.push(data[i].serialNo)
-            }
-            //let choicesAll=this.$refs.permissionTree.getCheckedNodes; //方法的运用 getSelectedNodes也是如此用法
-            //console.log(choicesAll);
-        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -206,17 +147,13 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '角色编号',
-        key: 'roleCode',
+        title: '签署清单名称',
+        key: 'signListName',
         align: 'left'
     },{
-        title: '角色名称',
-        key: 'roleName',
-        align: 'center'
-    },{
-        title: '描述',
-        key: 'roleDesc',
-        align: 'left'
+        title: '排序值',
+        key: 'sort',
+        align: 'right'
     },{
         title: '操作',
         align: 'center',
@@ -233,24 +170,10 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateRole(param.row);
+                            vue.updateSign(param.row);
                         }
                     }
                 }, '编辑'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "warning"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.settingPermission(param.row.serialNo);
-                        }
-                    }
-                }, '权限设置'),
                 h('Button', {
                     props: {
                         size: "small",

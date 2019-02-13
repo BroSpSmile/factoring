@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 用户登录token实体
  * @author Joseph
  * @version v1.0 2019/1/24 21:59, Token.java
  * @since 1.8
