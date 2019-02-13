@@ -4,6 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.model.filing.FilingFileItem;
+
+import java.util.List;
 
 public interface FilingService {
 
@@ -44,4 +47,5 @@ public interface FilingService {
      * @return
      */
     FilingApplyInfo findByProjectId(String projectId);
+
 }

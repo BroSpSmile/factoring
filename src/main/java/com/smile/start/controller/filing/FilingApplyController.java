@@ -63,7 +63,8 @@ public class FilingApplyController extends BaseController {
         LoggerUtils.info(logger, "查询请求参数 projectId ={}", projectId);
         SingleResult<FilingApplyInfo> result = new SingleResult<FilingApplyInfo>();
         result.setSuccess(true);
-        result.setData(filingService.findByProjectId(projectId));
+        FilingApplyInfo filingApplyInfo = filingService.findByProjectId(projectId);;
+        result.setData(filingApplyInfo);
         return result;
     }
 

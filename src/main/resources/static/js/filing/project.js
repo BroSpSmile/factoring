@@ -39,6 +39,7 @@ var vue = new Vue({
             var _self = this;
             this.$http.get("/combo/filingProgress").then(function (response) {
                 _self.statusItems = response.data;
+                this.search();
             }, function (error) {
                 console.error(error);
             })

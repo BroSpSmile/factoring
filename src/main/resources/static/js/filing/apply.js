@@ -31,9 +31,14 @@ var vue = new Vue({
         initDate: function () {
             var _self = this;
             this.$http.get("/filingApply/"+ this.filingInfo.projectId).then(function (response) {
-                if (null != response.data && 'null' != response.data) {
-                    _self.filingInfo = response.data;
+                if (response.data.success) {
+                    if (null != response.data.data && 'null' != response.data.data) {
+                        _self.filingInfo = response.data.data;
+                    }
+                } else {
+                    self.$Message.error(response.data.errorMessage);
                 }
+
             }, function (error) {
                 console.error(error);
             })
@@ -123,7 +128,7 @@ var vue = new Vue({
         },
         genFilingInfo: function () {
             if (this.fileList === undefined || this.fileList.length == 0) {
-                this.$Message.error("请上传尽调文件");
+                this.$Message.error("请上传归档文件");
                 return false;
             }
             for (let index in this.fileList) {

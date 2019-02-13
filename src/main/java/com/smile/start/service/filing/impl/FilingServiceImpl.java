@@ -11,6 +11,7 @@ import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.common.FileService;
 import com.smile.start.service.filing.FilingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +34,19 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
      * 归档DAO
      */
     @Resource
-    private FilingDao  filingDao;
+    private FilingDao filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
     private ProjectDao projectDao;
+
+    /**
+     * 文件服务
+     */
+    @Resource
+    private FileService fileService;
 
     @Override
     @Transactional
@@ -79,6 +86,11 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         int effect = filingDao.update(filingApplyInfo);
         LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
 
+        filingDao.delFileItemByProjectId(filingApplyInfo.getProjectId());
+        for (FilingFileItem item : filingApplyInfo.getItems()) {
+            filingDao.insertFileItem(item);
+        }
+
         //更新项目状态为归档审核状态
         long updateProgressEffect = projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProgressEffect);
@@ -106,10 +118,15 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         int effect = filingDao.delete(id);
         LoggerUtils.info(logger, "删除项归档申请影响行effect={}", effect);
 
+        //删除文件
+        List<FilingFileItem> items = filingDao.findItemByProjectId(filingApplyInfo.getProjectId());
+        for (FilingFileItem item : items) {
+            LoggerUtils.info(logger, "删除文件ID={}", item.getItemValue());
+            fileService.delete(item.getItemValue());
+        }
+
         //删除归档文件 in db
         long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProjectId());
-
-        //TODO 删除文件
 
         BaseResult result = new BaseResult();
         if (effect > 0 && effectDelItem > 0) {
@@ -132,10 +149,13 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
     @Override
     public FilingApplyInfo findByProjectId(String projectId) {
+        FilingApplyInfo filingApplyInfo = null;
         List<FilingApplyInfo> filingApplyInfos = filingDao.findByProjectId(projectId);
         if (null != filingApplyInfos && !filingApplyInfos.isEmpty()) {
-            return filingApplyInfos.get(0);
+            filingApplyInfo = filingApplyInfos.get(0);
+            List<FilingFileItem> items = filingDao.findItemByProjectId(projectId);
+            filingApplyInfo.setItems(items);
         }
-        return null;
+        return filingApplyInfo;
     }
 }
