@@ -1,6 +1,5 @@
-package com.smile.start.controller.user;
+package com.smile.start.controller.auth;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthPermissionInfoDTO;
@@ -10,7 +9,6 @@ import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.common.Tree;
-import com.smile.start.model.enums.PermissionTypeEnum;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
