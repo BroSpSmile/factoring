@@ -31,9 +31,9 @@ public interface FilingDao {
      * @param filingApplyInfo
      * @return
      */
-    @Update("<script>" + "update filing_apply_info" + " set id=#{id}" + "<if test = 'projectId!=null'>,project_id = #{projectId}</if>"
+    @Update("<script>" + "update filing_apply_info" + " set id=#{id}"
             + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
-            + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where id=#{id} "
+            + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where project_id=#{projectId} "
             + "</script>")
     int update(FilingApplyInfo filingApplyInfo);
 
@@ -107,7 +107,7 @@ public interface FilingDao {
      * @param projectId
      * @return
      */
-    @Insert("delete filing_file_item  where project_id = #{projectId})")
-    long delFileItemByProjectId(String projectId);
+    @Delete("delete from filing_file_item  where project_id = #{projectId}")
+    int delFileItemByProjectId(String projectId);
 
 }

@@ -36,7 +36,7 @@ public enum Progress {
                       TOBEFILED("TOBEFILED", "待归档"),
                       FILE("FILE", "归档申请"),
                       FILEAUDIT("FILEAUDIT", "归档审核"),
-                      FILECOMPLETE("FILEAUDIT", "归档完成");
+                      FILECOMPLETE("FILECOMPLETE", "归档完成");
 
     Progress(String code, String desc) {
         this.code = code;

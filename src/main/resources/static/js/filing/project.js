@@ -118,6 +118,12 @@ var vue = new Vue({
          */
         audit: function (projectId) {
             window.open("filingAudit?id=" + projectId, "_self");
+        },
+        /**
+         * 归档审批查看
+         */
+        view: function (projectId) {
+            window.open("filingAudit?view=true&id=" + projectId, "_self");
         }
     }
 });
@@ -146,11 +152,12 @@ vue.tableColumns = [
         title: '操作',
         align: 'center',
         render: (h, param) => {
-            return h('div', [
-                param.row.progress == 'TOBEFILED' ?
+            if (param.row.progress == 'TOBEFILED') {
+                return h('div', [
                     h('Button', {
                         props: {
-                            size: "small"
+                            size: "small",
+                            type: "success"
                         },
                         style: {
                             marginRight: '5px'
@@ -160,25 +167,60 @@ vue.tableColumns = [
                                 vue.apply(param.row.projectId);
                             }
                         }
-                    }, '归档申请') :
-                    (
-                        param.row.progress == 'FILE' ?
-                            h('Button', {
-                                props: {
-                                    size: "small",
-                                    type: "warning"
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        vue.audit(param.row.projectId);
-                                    }
-                                }
-                            }, '归档审核') : h('span')
-                    ),
-            ])
+                    }, '归档申请')
+                ])
+            } else if (param.row.progress == 'FILE') {
+                return h('div', [
+                    h('Button', {
+                        props: {
+                            size: "small",
+                            type: "warning"
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                vue.audit(param.row.projectId);
+                            }
+                        }
+                    }, '归档审核')]);
+            } else if (param.row.progress == 'FILEAUDIT') {
+                return h('div', [
+                    h('Button', {
+                        props: {
+                            size: "small",
+                            type: "error"
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                vue.audit(param.row.projectId);
+                            }
+                        }
+                    }, '归档审核')]);
+            } else if (param.row.progress == 'FILECOMPLETE') {
+                return h('div', [
+                    h('Button', {
+                        props: {
+                            size: "small",
+                            type: "info"
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                vue.view(param.row.projectId);
+                            }
+                        }
+                    }, '审核详情')]);
+            } else {
+                return h('div', [
+                    h('span')]);
+            }
         }
     }
 ];

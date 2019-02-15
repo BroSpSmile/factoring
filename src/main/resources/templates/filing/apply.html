@@ -33,6 +33,15 @@
                     </form-item>
                 </i-col>
             </row>
+            <row v-if="isInitFileRow">
+                <i-col offset="1">
+                    <form-item label="已添加归档文件" >
+                        <Tag v-for="item in filingInfo.items"  closable  @on-close="deleteFile(item.itemValue)">
+                            {{item.itemName}}
+                        </Tag>
+                    </form-item>
+                </i-col>
+            </row>
             <row>
                 <i-col span="8" offset="1">
                     <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"

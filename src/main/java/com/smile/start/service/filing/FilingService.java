@@ -23,7 +23,7 @@ public interface FilingService {
      * @param filingApplyInfo
      * @return
      */
-    BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo);
+    BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo, boolean isUpdateItem);
 
 
     /**
