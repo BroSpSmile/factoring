@@ -9,10 +9,10 @@ var vue = new Vue({
     data: {
         filingInfo: {
             applyType: '归档申请',
-            applicant: '陈杰',
-            applyTime: '2018-10-23 17:44:00',
+            applicant: '',
+            applyTime: '',
             projectId: 0,
-            filingList: [1, 2, 3, 4, 5, 8],
+            filingList: [],
             progress: '',
             items: []
         },
@@ -34,7 +34,8 @@ var vue = new Vue({
         isLastAuditStep: false,
         isView: false,
         step: 1,
-        model11: ''
+        model11: '',
+        content: ['','','','']
     },
     created: function () {
         this.filingInfo.projectId = document.getElementById("projectId").value;
@@ -56,6 +57,7 @@ var vue = new Vue({
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.filingInfo = response.data.data;
                         _self.filingInfo.applyType = '归档申请';
+                        _self.content[0]= _self.filingInfo.applicant + '</br>' + _self.filingInfo.applyTime;
                         if (_self.filingInfo.progress == 'FILE') {
                             this.progresses = [
                                 {
@@ -64,12 +66,15 @@ var vue = new Vue({
                                 }
                             ];
                             this.step = 1;
-                        }
-                        else if (_self.filingInfo.progress == 'FILEAUDIT') {
+                            _self.content[1]= '高育良';
+                        } else if (_self.filingInfo.progress == 'FILEAUDIT') {
                             this.step = 2;
+                            _self.content[1]= '高育良';
+                            _self.content[2]= '丁义珍';
                             this.isLastAuditStep = true;
-                        }
-                        else if (_self.filingInfo.progress == 'FILECOMPLETE') {
+                        } else if (_self.filingInfo.progress == 'FILECOMPLETE') {
+                            _self.content[1]= '高育良';
+                            _self.content[2]= '丁义珍';
                             this.step = 3;
                         }
                     }

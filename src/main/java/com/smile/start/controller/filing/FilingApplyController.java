@@ -1,5 +1,6 @@
 package com.smile.start.controller.filing;
 
+import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
@@ -62,6 +63,9 @@ public class FilingApplyController extends BaseController {
         SingleResult<FilingApplyInfo> result = new SingleResult<FilingApplyInfo>();
         result.setSuccess(true);
         FilingApplyInfo filingApplyInfo = filingService.findByProjectId(projectId);
+        if (StringUtils.isNotBlank(filingApplyInfo.getFilingListStr())) {
+            filingApplyInfo.setFilingList(filingApplyInfo.getFilingListStr().split(","));
+        }
         //filingApplyInfo.setApplyTime(filingApplyInfo.getApplyTime());
         result.setData(filingApplyInfo);
         return result;
@@ -80,7 +84,7 @@ public class FilingApplyController extends BaseController {
         if (null != user) {
             filingApplyInfo.setApplicant(user.getUsername());
         }
-        filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
@@ -99,7 +103,7 @@ public class FilingApplyController extends BaseController {
         if (null != user) {
             filingApplyInfo.setApplicant(user.getUsername());
         }
-        filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
@@ -114,7 +118,7 @@ public class FilingApplyController extends BaseController {
     @PostMapping("/audit")
     @ResponseBody
     public BaseResult audit(@RequestBody FilingApplyInfo filingApplyInfo) {
-        //filingApplyInfo.setApplyTime(new Date());
+        //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.FILEAUDIT.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.updateFilingApply(filingApplyInfo, false);
@@ -150,7 +154,7 @@ public class FilingApplyController extends BaseController {
         if (null != user) {
             filingApplyInfo.setApplicant(user.getUsername());
         }
-        filingApplyInfo.setApplyTime(new Date());
+        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
@@ -165,7 +169,7 @@ public class FilingApplyController extends BaseController {
     @PostMapping("/complete")
     @ResponseBody
     public BaseResult complete(@RequestBody FilingApplyInfo filingApplyInfo) {
-        //filingApplyInfo.setApplyTime(new Date());
+        //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.FILECOMPLETE.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.updateFilingApply(filingApplyInfo, false);

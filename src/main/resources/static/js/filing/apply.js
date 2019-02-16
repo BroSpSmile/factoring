@@ -12,8 +12,8 @@ var vue = new Vue({
         },
         filingInfo: {
             applyType: '归档申请',
-            applicant: '陈杰',
-            applyTime: null,
+            applicant: '',
+            applyTime: '',
             projectId: 0,
             filingList: [],
             progress: '',

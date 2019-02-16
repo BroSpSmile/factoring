@@ -10,6 +10,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
+import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.common.FileService;
 import com.smile.start.service.filing.FilingService;
@@ -57,7 +58,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         long effect = 0l;
         if (!CollectionUtils.isEmpty(filingApplyInfos) && filingApplyInfos.size() > 0) {
             //保存过，需要更新
-            effect = update(filingApplyInfo,true);
+            effect = update(filingApplyInfo, true);
         } else {
             effect = add(filingApplyInfo);
         }
@@ -83,7 +84,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (CollectionUtils.isEmpty(filingApplyInfos)) {
             throw new RuntimeException("当前归档申请不存在");
         }
-        int effect = update(filingApplyInfo,isUpdateItem);
+        int effect = update(filingApplyInfo, isUpdateItem);
 
         //更新项目状态为归档审核状态
         long updateProjectEffect = updateProject(filingApplyInfo);
@@ -122,7 +123,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
         long updateProjectEffect =
-            projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
+                projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
         return updateProjectEffect;
     }
@@ -179,6 +180,10 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             filingApplyInfo = filingApplyInfos.get(0);
             List<FilingFileItem> items = filingDao.findItemByProjectId(projectId);
             filingApplyInfo.setItems(items);
+        }
+        List<Project> projectList = projectDao.findByProjectId(projectId);
+        if (!CollectionUtils.isEmpty(projectList) && null != projectList.get(0)) {
+            filingApplyInfo.setProjectName(projectList.get(0).getProjectName());
         }
         return filingApplyInfo;
     }

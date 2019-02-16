@@ -190,7 +190,7 @@ vue.tableColumns = [
                     h('Button', {
                         props: {
                             size: "small",
-                            type: "error"
+                            type: "warning"
                         },
                         style: {
                             marginRight: '5px'

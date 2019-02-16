@@ -14,8 +14,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum FilingProgress {
     TOBEFILED("TOBEFILED", "待归档"),
-    FILE("FILE", "归档申请"),
-    FILEAUDIT("FILEAUDIT", "归档审核"),
+    FILE("FILE", "法务分控审核"),
+    FILEAUDIT("FILEAUDIT", "办公室专员归档"),
     FILECOMPLETE("FILECOMPLETE", "归档完成");
 
     FilingProgress(String code, String desc) {
