@@ -93,6 +93,15 @@ var vue = new Vue({
         query: function () {
             this.setProgresses();
             let self = this;
+            if (self.formInline.projectId == '') {
+                self.formInline.projectId = null;
+            }
+            if (self.formInline.projectName == '') {
+                self.formInline.projectName = null;
+            }
+            if (self.formInline.person == '') {
+                self.formInline.person = null;
+            }
             self.queryParam.condition = self.formInline;
             this.$http.post("/approval/query", self.queryParam).then(
                 function (response) {
