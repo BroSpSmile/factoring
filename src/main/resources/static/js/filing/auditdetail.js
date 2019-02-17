@@ -21,21 +21,14 @@ var vue = new Vue({
             progress: '',
             reason: '',
         },
-        progresses: [
-            {
-                value: 'FILEAUDIT',
-                label: '法务风控'
-            },
-            {
-                value: 'TOBEFILED',
-                label: '归档申请人'
-            }
-        ],
+        allProgresses: [],
+        progresses: [],
         isLastAuditStep: false,
         isView: false,
         step: 1,
         model11: '',
-        content: ['','','','']
+        content: ['', '', '', ''],
+        steps: [],
     },
     created: function () {
         this.filingInfo.projectId = document.getElementById("projectId").value;
@@ -57,26 +50,8 @@ var vue = new Vue({
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.filingInfo = response.data.data;
                         _self.filingInfo.applyType = '归档申请';
-                        _self.content[0]= _self.filingInfo.applicant + '</br>' + _self.filingInfo.applyTime;
-                        if (_self.filingInfo.progress == 'FILE') {
-                            this.progresses = [
-                                {
-                                    value: 'TOBEFILED',
-                                    label: '归档申请人'
-                                }
-                            ];
-                            this.step = 1;
-                            _self.content[1]= '高育良';
-                        } else if (_self.filingInfo.progress == 'FILEAUDIT') {
-                            this.step = 2;
-                            _self.content[1]= '高育良';
-                            _self.content[2]= '丁义珍';
-                            this.isLastAuditStep = true;
-                        } else if (_self.filingInfo.progress == 'FILECOMPLETE') {
-                            _self.content[1]= '高育良';
-                            _self.content[2]= '丁义珍';
-                            this.step = 3;
-                        }
+                        _self.setAllProgresses();
+
                     }
                 } else {
                     self.$Message.error(response.data.errorMessage);
@@ -85,6 +60,65 @@ var vue = new Vue({
                 console.error(error);
             })
         },
+        /**
+         * 设置步骤
+         */
+        setAllProgresses: function () {
+            let _self = this;
+            let progresses = [];
+            this.$http.get("/combo/filingProgress").then(function (response) {
+                _self.allProgresses = response.data;
+                for (let i = 0; i < this.allProgresses.length; i++) {
+                    let stepObj = new Object();
+                    if (i == 0) {
+                        stepObj.content = _self.filingInfo.applicant + ' ' + _self.filingInfo.applyTime;
+                    } else {
+                        stepObj.content = '';
+                    }
+                    stepObj.title = this.allProgresses[i].text;
+                    _self.steps.push(stepObj);
+                }
+                _self.setProgresses();
+                if (_self.filingInfo.progress == 'FILE') {
+                    this.step = 1;
+                    _self.steps[1].content = '高育良';
+                } else if (_self.filingInfo.progress == 'FILEAUDIT') {
+                    this.step = 2;
+                    _self.steps[1].content = '高育良';
+                    _self.steps[2].content = '丁义珍';
+                    this.isLastAuditStep = true;
+                } else if (_self.filingInfo.progress == 'FILECOMPLETE') {
+                    _self.steps[1].content = '高育良';
+                    _self.steps[2].content = '丁义珍';
+                    this.step = 3;
+                }
+            }, function (error) {
+                console.error(error);
+            })
+        },
+
+        /**
+         * 设置步骤
+         */
+        setProgresses: function () {
+            let index = 0;
+            //this.progresses.concat(this.allProgresses);
+            for (let k in this.allProgresses) {
+                this.progresses.push(this.allProgresses[k]);
+            }
+            for (let j in this.progresses) {
+                if (this.progresses[j].value == this.filingInfo.progress) {
+                    index = j;
+                    break;
+                }
+            }
+            let length = this.progresses.length
+            for (let i = length; i > index; i--) {
+                this.progresses.pop();
+            }
+            this.progresses.reverse();
+        },
+
         download: function (fileId) {
             //TODO
             console.debug(fileId);
