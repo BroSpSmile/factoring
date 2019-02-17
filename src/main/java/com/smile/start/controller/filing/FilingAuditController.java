@@ -34,6 +34,7 @@ public class FilingAuditController extends BaseController {
         if (StringUtils.isNotBlank(request.getParameter("view"))) {
             model.addAttribute("view", request.getParameter("view"));
         }
+        model.addAttribute("type", request.getParameter("type"));
         return "filing/auditdetail";
     }
 

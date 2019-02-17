@@ -29,9 +29,12 @@ var vue = new Vue({
         model11: '',
         content: ['', '', '', ''],
         steps: [],
+        projectUrl: 'filingProject',
     },
     created: function () {
         this.filingInfo.projectId = document.getElementById("projectId").value;
+        this.projectUrl = this.projectUrl + '?type=' + document.getElementById("type").value;
+
         let isView = document.getElementById("isView").value;
         if (isView && isView == 'true') {
             this.isView = true;
@@ -143,7 +146,7 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open("filingProject", "_self");
+                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
@@ -187,7 +190,7 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open("filingProject", "_self");
+                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
@@ -208,7 +211,7 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open("filingProject", "_self");
+                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
@@ -218,7 +221,7 @@ var vue = new Vue({
         },
 
         cancel: function () {
-            window.open("filingProject", "_self");
+            window.open(this.projectUrl, "_self");
         },
         commit: function () {
             if (this.fileList === undefined || this.fileList.length == 0) {

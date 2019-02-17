@@ -1,7 +1,7 @@
 /**
  * 菜单信息
  */
-common.pageName = "filingProject";
+common.pageName = ("0" == document.getElementById("type").value ? 'filingProject' : "filingProjectAudit");
 common.openName = ['5'];
 
 var vue = new Vue({
@@ -26,9 +26,11 @@ var vue = new Vue({
         },
         pageInfo: {},
         modal1: false,
-        statusItems: []
+        statusItems: [],
+        queryType: '',
     },
     created: function () {
+        this.queryType = document.getElementById("type").value;
         this.initDate();
     },
     methods: {
@@ -36,9 +38,22 @@ var vue = new Vue({
          * 初始化数据
          */
         initDate: function () {
-            var _self = this;
+            let _self = this;
             this.$http.get("/combo/filingProgress").then(function (response) {
                 _self.statusItems = response.data;
+                if ('0' == _self.queryType) {
+                    // for (let index in this.statusItems) {
+                    //     if (index != 0 ) {
+                    //         this.statusItems.pop();
+                    //     }
+                    // }
+                } else {
+                    for (let index in this.statusItems) {
+                        if (index == 0) {
+                            this.statusItems.shift();
+                        }
+                    }
+                }
                 this.search();
             }, function (error) {
                 console.error(error);
@@ -49,7 +64,7 @@ var vue = new Vue({
          * 状态翻译
          */
         getProgress: function (value) {
-            for (var index in this.statusItems) {
+            for (let index in this.statusItems) {
                 if (value == this.statusItems[index].value) {
                     return this.statusItems[index].text;
                 }
@@ -65,7 +80,7 @@ var vue = new Vue({
             var progresses = [];
 
             if (!_self.formInline.progress) {
-                for (var index in this.statusItems) {
+                for (let index in this.statusItems) {
                     if (this.statusItems[index].value) {
                         progresses.push(this.statusItems[index].value)
                     }
@@ -117,13 +132,13 @@ var vue = new Vue({
          * 归档审批
          */
         audit: function (projectId) {
-            window.open("filingAudit?id=" + projectId, "_self");
+            window.open("filingAudit?type=" + this.queryType + "&id=" + projectId, "_self");
         },
         /**
          * 归档审批查看
          */
         view: function (projectId) {
-            window.open("filingAudit?view=true&id=" + projectId, "_self");
+            window.open("filingAudit?type=" + this.queryType + "&view=true&id=" + projectId, "_self");
         }
     }
 });
@@ -154,7 +169,7 @@ vue.tableColumns = [
         render: (h, param) => {
             if (param.row.progress == 'TOBEFILED') {
                 return h('div', [
-                    h('Button', {
+                    "1" == document.getElementById("type").value ? h('span') : h('Button', {
                         props: {
                             size: "small",
                             type: "success"
@@ -171,7 +186,7 @@ vue.tableColumns = [
                 ])
             } else if (param.row.progress == 'FILE') {
                 return h('div', [
-                    h('Button', {
+                    "1" == document.getElementById("type").value ? h('Button', {
                         props: {
                             size: "small",
                             type: "warning"
@@ -184,10 +199,23 @@ vue.tableColumns = [
                                 vue.audit(param.row.projectId);
                             }
                         }
-                    }, '归档审核')]);
+                    }, '归档审核') : h('span'), h('Button', {
+                        props: {
+                            size: "small",
+                            type: "info"
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                vue.view(param.row.projectId);
+                            }
+                        }
+                    }, '审核详情')]);
             } else if (param.row.progress == 'FILEAUDIT') {
                 return h('div', [
-                    h('Button', {
+                    "1" == document.getElementById("type").value ? h('Button', {
                         props: {
                             size: "small",
                             type: "warning"
@@ -200,7 +228,20 @@ vue.tableColumns = [
                                 vue.audit(param.row.projectId);
                             }
                         }
-                    }, '归档审核')]);
+                    }, '归档审核') : h('span'), h('Button', {
+                        props: {
+                            size: "small",
+                            type: "info"
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                vue.view(param.row.projectId);
+                            }
+                        }
+                    }, '审核详情')]);
             } else if (param.row.progress == 'FILECOMPLETE') {
                 return h('div', [
                     h('Button', {

@@ -21,6 +21,7 @@ var vue = new Vue({
         },
         fileList: [],
         isInitFileRow: false,
+        projectUrl: 'filingProject?type=0'
     },
     created: function () {
         this.filingInfo.projectId = document.getElementById("projectId").value;
@@ -127,7 +128,7 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open("filingProject", "_self");
+                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
@@ -149,7 +150,7 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open("filingProject", "_self");
+                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
@@ -179,7 +180,7 @@ var vue = new Vue({
         },
         cancel: function () {
             this.removeAllFile();
-            window.open("filingProject", "_self");
+            window.open(this.projectUrl, "_self");
         },
         indexOf: function (array, val) {
             for (let i = 0; i < array.length; i++) {
