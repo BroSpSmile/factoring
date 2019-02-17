@@ -1,7 +1,7 @@
 /**
  * 菜单信息
  */
-common.pageName = "auditDetail";
+common.pageName = ("0" == document.getElementById("type").value ? 'filingProject' : "filingProjectAudit");
 common.openName = ['5'];
 
 var vue = new Vue({

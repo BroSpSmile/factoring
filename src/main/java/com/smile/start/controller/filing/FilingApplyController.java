@@ -46,6 +46,7 @@ public class FilingApplyController extends BaseController {
         String id = request.getParameter("id");
         LoggerUtils.info(logger, "归档申请项目ID={}", id);
         model.addAttribute("id", id);
+        model.addAttribute("type", request.getParameter("type"));
 
         return "filing/apply";
     }

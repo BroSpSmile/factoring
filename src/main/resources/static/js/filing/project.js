@@ -134,7 +134,7 @@ var vue = new Vue({
          * 归档申请
          */
         apply: function (projectId) {
-            window.open("filingApply?id=" + projectId, "_self");
+            window.open("filingApply?type=" + this.queryType + "&id=" + projectId, "_self");
         },
 
         /**
