@@ -13,10 +13,10 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id: Progress.java, v 0.1 Jan 8, 2019 9:10:26 PM smile.jing Exp $
  */
 public enum FilingProgress {
-    TOBEFILED("TOBEFILED", "待归档"),
-    FILE("FILE", "归档申请"),
-    FILEAUDIT("FILEAUDIT", "归档审核"),
-    FILECOMPLETE("FILEAUDIT", "归档完成");
+    TOBEFILED("TOBEFILED", "提出归档申请"),
+    FILE("FILE", "法务分控审核"),
+    FILEAUDIT("FILEAUDIT", "办公室专员归档"),
+    FILECOMPLETE("FILECOMPLETE", "归档完成");
 
     FilingProgress(String code, String desc) {
         this.code = code;

@@ -3,7 +3,6 @@ package com.smile.start.model.filing;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,9 +21,11 @@ public class FilingApplyInfo implements Serializable {
 
     private String applicant;
 
-    private Date applyTime;
+    private String applyTime;
 
     private String projectId;
+
+    private String projectName;
 
     private String[] filingList;
 
@@ -65,11 +66,11 @@ public class FilingApplyInfo implements Serializable {
         this.applicant = applicant;
     }
 
-    public Date getApplyTime() {
+    public String getApplyTime() {
         return applyTime;
     }
 
-    public void setApplyTime(Date applyTime) {
+    public void setApplyTime(String applyTime) {
         this.applyTime = applyTime;
     }
 
@@ -79,6 +80,14 @@ public class FilingApplyInfo implements Serializable {
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String[] getFilingList() {
@@ -115,7 +124,12 @@ public class FilingApplyInfo implements Serializable {
     }
 
     public void setFilingListStr(String filingListStr) {
-        this.filingListStr = filingListStr;
+        if (null != filingList && filingList.length != 0) {
+            this.filingListStr = StringUtils.join(filingList, ",");
+        } else {
+            this.filingList = filingListStr.split(",");
+            this.filingListStr = filingListStr;
+        }
     }
 
     /**
@@ -124,9 +138,9 @@ public class FilingApplyInfo implements Serializable {
     @Override
     public String toString() {
         return "{\"id\":\"" + id + "\", \"applyType\":\"" + applyType + "\", \"applicant\":\"" + applicant +
-            "\", \"applyTime\":\"" + applyTime + "\", \"projectId\":\"" + projectId + "\", \"filingList\":\"" +
-            filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
-            "\", \"items\":\"" + items
-            + "\"}  ";
+                "\", \"applyTime\":\"" + applyTime + "\", \"projectId\":\"" + projectId + "\", \"filingList\":\"" +
+                filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
+                "\", \"items\":\"" + items
+                + "\"}  ";
     }
 }

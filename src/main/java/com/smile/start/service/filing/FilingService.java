@@ -20,7 +20,7 @@ public interface FilingService {
      * @param filingApplyInfo
      * @return
      */
-    BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo);
+    BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo, boolean isUpdateItem);
 
 
     /**
@@ -37,4 +37,12 @@ public interface FilingService {
      * @return
      */
     PageInfo<FilingApplyInfo> queryPage(PageRequest<FilingApplyInfo> page);
+
+    /**
+     *
+     * @param projectId
+     * @return
+     */
+    FilingApplyInfo findByProjectId(String projectId);
+
 }

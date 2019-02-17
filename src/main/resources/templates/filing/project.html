@@ -38,6 +38,7 @@
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 			</card>
 	    </div>
+		<input th:value="${type}" id="type" style="display:none"></input>
 	    <script src="js/filing/project.js"></script>
 	</div>
 </html>

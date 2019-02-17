@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.smile.start.controller.filing;
 
@@ -14,9 +14,11 @@ import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @description：归档申请，项目查询
@@ -33,19 +35,26 @@ public class FilingProjectController extends BaseController {
     @Resource
     private ProjectService projectService;
 
+//    @GetMapping
+//    public String index() {
+//        return "filing/project";
+//    }
+
     /**
      *
      * 归档项目查询
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String type = request.getParameter("type");
+        model.addAttribute("type", type);
         return "filing/project";
     }
 
     /**
      * 新增项目
-     * 
+     *
      * @param project
      * @return
      */
