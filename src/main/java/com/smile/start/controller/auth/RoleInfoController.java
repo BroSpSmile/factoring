@@ -1,4 +1,4 @@
-package com.smile.start.controller.user;
+package com.smile.start.controller.auth;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
