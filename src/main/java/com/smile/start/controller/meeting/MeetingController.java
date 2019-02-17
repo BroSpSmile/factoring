@@ -50,7 +50,7 @@ public class MeetingController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
-        return "project/meeting";
+        return "meeting/meeting";
     }
 
     /**

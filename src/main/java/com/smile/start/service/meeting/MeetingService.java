@@ -4,6 +4,8 @@
  */
 package com.smile.start.service.meeting;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -23,6 +25,20 @@ public interface MeetingService {
      * @return
      */
     PageInfo<Meeting> search(PageRequest<MeetingSearch> search);
+
+    /**
+     * 获取会议
+     * @param search
+     * @return
+     */
+    List<Meeting> getMeetings(MeetingSearch search);
+    
+    /**
+     * 根据ID获取会议内容
+     * @param id
+     * @return
+     */
+    Meeting get(Long id);
 
     /**
      * 创建会议

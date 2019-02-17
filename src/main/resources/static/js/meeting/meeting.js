@@ -154,6 +154,10 @@ var vue = new Vue({
 		cancel : function() {
 			this.modal1 = false;
 			this.$refs['entityDataForm'].resetFields();
+		},
+		
+		createMninutes:function(meeting){
+			window.open("minutes?id="+meeting.id,"_blank");
 		}
 	}
 });

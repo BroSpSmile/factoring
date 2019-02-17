@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -58,6 +60,7 @@ public interface ProjectDao {
      * @param id
      * @return
      */
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
     @Select("select * from factoring_project where id = #{id}")
     Project get(Long id);
 
@@ -66,6 +69,7 @@ public interface ProjectDao {
      * @param projectId
      * @return
      */
+    @Results(id = "findByProjectIdMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
     @Select("select * from factoring_project where project_id=#{projectId}")
     List<Project> findByProjectId(String projectId);
 
@@ -74,21 +78,29 @@ public interface ProjectDao {
      * 
      * @return
      */
+    @Results(id = "findAllMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
     @Select("select * from factoring_project")
     List<Project> findAll();
+
+    /**
+     * 查询所有未归档项目
+     * @return
+     */
+    @Results(id = "findUnarchivedProjectsMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
+    @Select("<script>" + "select * from factoring_project where progress !='FILECOMPLETE'" + "<if test = 'user!=null'>and person = #{user.id} </if> "
+            + "</script>")
+    List<Project> findUnarchivedProjects(Project project);
 
     /**
      * 分页查询
      * @param project
      * @return
      */
+    @Results(id = "findByParamMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
     @Select("<script>" + "select * from factoring_project where 1=1 " + "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
             + "<if test = 'kind!=null'> and kind = #{kind}</if>" + "<if test = 'projectName!=null'> and project_name = #{projectName}</if>"
-            + "<if test = 'person!=null'> and person = #{person}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if>"
-            + "<if test = 'progresses!=null'> and progress in  "
-            + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>"
-            +  "#{item} "
-            +  "</foreach>"
-            +  "</if></script>")
+            + "<if test = 'user!=null'> and person = #{user.id}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if>"
+            + "<if test = 'progresses!=null'> and progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach>"
+            + "</if></script>")
     List<Project> findByParam(Project project);
 }

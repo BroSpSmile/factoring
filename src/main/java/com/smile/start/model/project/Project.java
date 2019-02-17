@@ -7,6 +7,7 @@ package com.smile.start.model.project;
 import java.io.Serializable;
 import java.util.List;
 
+import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.enums.ProjectModel;
@@ -35,7 +36,7 @@ public class Project implements Serializable {
     private String            projectName;
 
     /** 项目发起人 */
-    private String            person;
+    private User              user;
 
     /** 当前进度 */
     private Progress          progress;
@@ -47,15 +48,17 @@ public class Project implements Serializable {
     private List<ProjectItem> items;
 
     /** all进度 */
-    private List<String>  progresses;
+    private List<String>      progresses;
 
-    /**
+    /** 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"projectId\":\"" + projectId + "\", \"kind\":\"" + kind + "\", \"projectName\":\"" + projectName + "\", \"person\":\"" + person
-               + "\", \"progress\":\"" + progress + "\", \"model\":\"" + model + "\", \"progresses\":\"" + progresses.toString() + "\"}  ";
+        return "{\"id\":\"" + id + "\", \"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
+               + (projectName != null ? "projectName\":\"" + projectName + "\", \"" : "") + (user != null ? "user\":\"" + user + "\", \"" : "")
+               + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
+               + (items != null ? "items\":\"" + items + "\", \"" : "") + (progresses != null ? "progresses\":\"" + progresses : "") + "\"}  ";
     }
 
     /**
@@ -131,21 +134,21 @@ public class Project implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>person</tt>.
+     * Getter method for property <tt>user</tt>.
      * 
-     * @return property value of person
+     * @return property value of user
      */
-    public String getPerson() {
-        return person;
+    public User getUser() {
+        return user;
     }
 
     /**
-     * Setter method for property <tt>person</tt>.
+     * Setter method for property <tt>user</tt>.
      * 
-     * @param person value to be assigned to property person
+     * @param user value to be assigned to property user
      */
-    public void setPerson(String person) {
-        this.person = person;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     /**

@@ -4,6 +4,7 @@
  */
 package com.smile.start.service.meeting.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.smile.start.commons.DateUtil;
 import com.smile.start.dao.MeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
@@ -53,6 +56,26 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         return result;
     }
 
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#getMeetings(com.smile.start.model.meeting.MeetingSearch)
+     */
+    @Override
+    public List<Meeting> getMeetings(MeetingSearch search) {
+        search.setStatus(MeetingStatus.END);
+        search.setBeginTime(DateUtil.addDays(new Date(), -90));
+        List<MeetingExt> meetingExts = meetingDao.findByParam(search);
+        return toMeeting(meetingExts);
+    }
+
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#get(java.lang.Long)
+     */
+    @Override
+    public Meeting get(Long id) {
+        MeetingExt ext = meetingDao.get(id);
+        return toMeeting(ext);
+    }
+
     /**
      * 转换为meeting
      * @param meetingExts
@@ -70,6 +93,21 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             meetings.add(ext);
         });
         return meetings;
+    }
+
+    /**
+     * 
+     * @param meetingExt
+     * @return
+     */
+    private Meeting toMeeting(MeetingExt meetingExt) {
+        meetingExt.setOriginator(userInfoService.getUserById(meetingExt.getOriginator().getId()));
+        if (StringUtils.isNoneBlank(meetingExt.getParticipantNoList())) {
+            for (Long id : getIds(meetingExt.getParticipantNoList())) {
+                meetingExt.addParticipant(userInfoService.getUserById(id));
+            }
+        }
+        return meetingExt;
     }
 
     /**

@@ -52,4 +52,14 @@ public interface MeetingDao {
             + "<if test = 'endTime!=null'> and begin_time &lt; #{endTime}</if>" + "<if test = 'launchId!=null'> and originator = #{launchId}</if>"
             + "<if test = 'partakeId!=null'> and participant like concat('%',#{partakeId}, '%')</if>" + "</script>")
     List<MeetingExt> findByParam(MeetingSearch search);
+
+    /**
+     * 根据ID获取会议内容
+     * @param id
+     * @return
+     */
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
+                                          @Result(column = "participant", property = "participantNoList") })
+    @Select("select * from meeting where id=#{id}")
+    MeetingExt get(Long id);
 }

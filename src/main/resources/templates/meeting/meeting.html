@@ -48,7 +48,7 @@
 			<br>
 			<p v-for="meeting in pageInfo.list">
 				<row>
-					<i-col span="20" >
+					<i-col span="20" offset="1" >
 						<card dis-hover :title="meeting.theme"  padding="20">
 							<span slot="extra">预定人 : {{meeting.originator.username}}</span>
 							会议地点 : {{meeting.place}}<br>
@@ -58,10 +58,10 @@
 							参会人员 : <span v-for="participant in meeting.participant">{{participant.username}} &nbsp;</span>
 							<br>
 							<span v-if="meeting.status=='PLAN'"><a @click="edit(meeting)">编辑</a>&nbsp;&nbsp;<a @click="cancelMeeting(meeting)">取消</a></span>
-							<span v-if="meeting.status=='MEETING' && meeting.minutes==''"><a>创建会议纪要</a></span>
-							<span v-if="meeting.status=='END' && meeting.minutes==''"><a>创建会议纪要</a></span>
-							<span v-if="meeting.status=='MEETING' && meeting.minutes!=''"><a>查看会议纪要</a></span>
-							<span v-if="meeting.status=='END' && meeting.minutes!=''"><a>查看会议纪要</a></span>
+							<span v-if="meeting.status=='MEETING' && !meeting.minutes"><a @click="createMninutes(meeting)">创建会议纪要</a></span>
+							<span v-if="meeting.status=='END' && !meeting.minutes"><a @click="createMninutes(meeting)">创建会议纪要</a></span>
+							<span v-if="meeting.status=='MEETING' && meeting.minutes"><a>查看会议纪要</a></span>
+							<span v-if="meeting.status=='END' && meeting.minutes"><a>查看会议纪要</a></span>
 						</card>
 						<br>
 					</i-col>
@@ -124,6 +124,6 @@
 		        </div>
 			</modal>
 		</div>
-	    <script src="js/project/meeting.js"></script>
+	    <script src="js/meeting/meeting.js"></script>
 	</div>
 </html>

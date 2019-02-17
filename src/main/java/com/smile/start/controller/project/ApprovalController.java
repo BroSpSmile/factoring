@@ -4,6 +4,7 @@
 package com.smile.start.controller.project;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
@@ -57,9 +59,11 @@ public class ApprovalController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult add(@RequestBody Project project) {
+    public BaseResult add(HttpServletRequest request, @RequestBody Project project) {
         project.setKind(ProjectKind.FACTORING);
         project.setProgress(Progress.INIT);
+        User user = getUserByToken(request);
+        project.setUser(user);
         LoggerUtils.info(logger, "新增项目请求参数={}", FastJsonUtils.toJSONString(project));
         return projectService.initProject(project);
     }
@@ -71,9 +75,11 @@ public class ApprovalController extends BaseController {
      */
     @PutMapping
     @ResponseBody
-    public BaseResult edit(@RequestBody Project project) {
+    public BaseResult edit(HttpServletRequest request,@RequestBody Project project) {
         LoggerUtils.info(logger, "修改项目请求参数={}", FastJsonUtils.toJSONString(project));
         try {
+            User user = getUserByToken(request);
+            project.setUser(user);
             return projectService.updateProject(project);
         } catch (RuntimeException e) {
             return toResult(e);
