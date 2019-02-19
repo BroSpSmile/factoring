@@ -12,12 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.meeting.MeetingService;
@@ -46,6 +50,18 @@ public class MinutesController extends BaseController {
         LoggerUtils.info(logger, "立项申请项目ID={}", id);
         model.addAttribute("id", id);
         return "meeting/minutes";
+    }
+    
+    /**
+     * 保存会议纪要
+     * @param meeting
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public BaseResult saved(@RequestBody Meeting meeting) {
+        LoggerUtils.info(logger, "会议纪要请求参数={}", FastJsonUtils.toJSONString(meeting));
+        return meetingService.saveMinutes(meeting);
     }
 
     /**

@@ -39,6 +39,14 @@ public interface MeetingDao {
      */
     @Update("update meeting set theme=#{theme},begin_time=#{beginTime},end_time=#{endTime},status=#{status},place=#{place},content=#{content},remind=#{remind},originator=#{originator.id},participant=#{participantNoList} where id=#{id}")
     int update(MeetingExt meeting);
+    
+    /**
+     * 保存会议纪要
+     * @param meeting
+     * @return
+     */
+    @Update("update meeting set minutes = #{minutes}, minutes_kind= #{minutesKind} where id = #{id}")
+    int saveMinutes(Meeting meeting);
 
     /**
      * 查询会议

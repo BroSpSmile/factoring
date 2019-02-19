@@ -12,6 +12,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
+import com.smile.start.model.project.ProjectMeeting;
 
 /**
  * 会议服务
@@ -53,4 +54,18 @@ public interface MeetingService {
      * @return
      */
     BaseResult updateMeeting(MeetingExt meeting);
+    
+    /**
+     * 保存会议纪要
+     * @param meeting
+     * @return
+     */
+    BaseResult saveMinutes(Meeting meeting);
+    
+    /**
+     * 关联会议
+     * @param pms
+     * @return
+     */
+    BaseResult relationMeeting(List<ProjectMeeting> pms);
 }

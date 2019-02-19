@@ -12,18 +12,22 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
 import com.smile.start.dao.MeetingDao;
+import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
+import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectMeeting;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.UserInfoService;
 import com.smile.start.service.meeting.MeetingService;
@@ -38,11 +42,15 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
 
     /** 会议dao */
     @Resource
-    private MeetingDao      meetingDao;
+    private MeetingDao        meetingDao;
+
+    /** 关联DAO */
+    @Resource
+    private ProjectMeetingDao projectMeetingDao;
 
     /** 用户服务 */
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService   userInfoService;
 
     /** 
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
@@ -153,6 +161,48 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             result.setErrorCode("VP00011002");
             result.setErrorMessage("更新会议失败,请重试!");
         }
+        return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#saveMinutes(com.smile.start.model.meeting.Meeting)
+     */
+    @Override
+    @Transactional
+    public BaseResult saveMinutes(Meeting meeting) {
+        int effect = meetingDao.saveMinutes(meeting);
+        if(effect>0) {
+            for(Project project:meeting.getProjects()) {
+                ProjectMeeting pm = new ProjectMeeting();
+                pm.setMeetingId(meeting.getId());
+                pm.setProjectId(project.getId());
+                List<ProjectMeeting> result = projectMeetingDao.find(pm);
+                if (result.size() > 0) {
+                    throw new RuntimeException("当前项目已关联此会议纪要");
+                }
+                long peffect = projectMeetingDao.insert(pm);
+                if(peffect<0) {
+                    throw new RuntimeException("插入会议纪要失败");
+                }
+            }
+        }
+        return new BaseResult();
+    }
+
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#relationMeeting(com.smile.start.model.project.ProjectMeeting)
+     */
+    @Override
+    public BaseResult relationMeeting(List<ProjectMeeting> pms) {
+        for (ProjectMeeting pm : pms) {
+            List<ProjectMeeting> result = projectMeetingDao.find(pm);
+            if (result.size() > 0) {
+                throw new RuntimeException("当前项目已关联此会议纪要");
+            }
+            projectMeetingDao.insert(pm);
+        }
+        BaseResult result = new BaseResult();
+        result.setSuccess(true);
         return result;
     }
 

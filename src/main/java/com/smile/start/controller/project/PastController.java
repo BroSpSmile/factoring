@@ -26,6 +26,7 @@ import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.project.Past;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.meeting.MeetingService;
+import com.smile.start.service.project.PastService;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -45,6 +46,10 @@ public class PastController extends BaseController {
     @Resource
     private MeetingService meetingService;
 
+    /** pastService */
+    @Resource
+    private PastService    pastService;
+
     /**
      * 跳转页面
      * @return
@@ -53,7 +58,7 @@ public class PastController extends BaseController {
     public String index() {
         return "project/past";
     }
-    
+
     /**
      * 保存三重一大
      * @param past
@@ -63,7 +68,7 @@ public class PastController extends BaseController {
     @ResponseBody
     public BaseResult Saved(@RequestBody Past past) {
         LoggerUtils.info(logger, "请求参数={}", FastJsonUtils.toJSONString(past));
-        return new BaseResult();
+        return pastService.save(past);
     }
 
     /**

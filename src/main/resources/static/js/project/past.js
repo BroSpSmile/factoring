@@ -39,7 +39,7 @@ var vue = new Vue({
 		 * 提交三重一大
 		 */
 		past:function(){
-			console.log(this.projectMeeting);
+			let self = this;
 			this.$http.post("/past", this.projectMeeting).then(function(response) {
 				if (response.data.success) {
 					self.$Message.info({
