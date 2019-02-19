@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.FilingDao;
 import com.smile.start.dao.ProjectDao;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FilingProgress;
@@ -12,6 +13,7 @@ import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.UserInfoService;
 import com.smile.start.service.common.FileService;
 import com.smile.start.service.filing.FilingService;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,12 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
      */
     @Resource
     private FileService fileService;
+
+    /**
+     * 用户服务
+     */
+    @Resource
+    private UserInfoService userInfoService;
 
     @Override
     @Transactional
@@ -123,7 +131,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
         long updateProjectEffect =
-                projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
+            projectDao.updateProjectProgress(filingApplyInfo.getProjectId(), filingApplyInfo.getProgress());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
         return updateProjectEffect;
     }
@@ -185,6 +193,13 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (!CollectionUtils.isEmpty(projectList) && null != projectList.get(0)) {
             filingApplyInfo.setProjectName(projectList.get(0).getProjectName());
         }
+        try {
+            User user = userInfoService.getUserById(Long.parseLong(filingApplyInfo.getApplicant()));
+            filingApplyInfo.setApplicant(user.getUsername());
+        } catch (Exception e) {
+            LoggerUtils.info(logger, "查询归档申请人失败, ID={} ", filingApplyInfo.getApplicant());
+        }
+
         return filingApplyInfo;
     }
 }

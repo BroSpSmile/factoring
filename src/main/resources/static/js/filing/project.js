@@ -161,10 +161,14 @@ vue.tableColumns = [
         title: '项目名称',
         key: 'projectName',
         align: 'center'
-    }, {
+    },{
         title: '项目负责人',
-        key: 'person',
-        align: 'center'
+        key: 'user',
+        align: 'center',
+        render:(h,param)=>{
+            console.log(param.row.user);
+            return h('span',param.row.user.username)
+        }
     }, {
         title: '当前进度',
         key: 'progress',
