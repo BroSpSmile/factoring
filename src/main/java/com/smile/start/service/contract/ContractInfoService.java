@@ -1,6 +1,9 @@
 package com.smile.start.service.contract;
 
 import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractSignListDTO;
+
+import java.util.List;
 
 /**
  * @author Joseph
@@ -22,4 +25,11 @@ public interface ContractInfoService {
      * @return
      */
     void update(ContractInfoDTO contractInfoDTO);
+
+    /**
+     * 插入签署清单列表
+     * @param  contractSerialNo
+     * @param signListList
+     */
+    void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList);
 }

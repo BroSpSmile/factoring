@@ -2,14 +2,18 @@ package com.smile.start.service.contract.impl;
 
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.ContractInfoDao;
+import com.smile.start.dao.ContractSignListDao;
 import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.contract.ContractInfo;
+import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -21,6 +25,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractInfoDao contractInfoDao;
+
+    @Resource
+    private ContractSignListDao contractSignListDao;
 
     @Resource
     private ContractInfoMapper contractInfoMapper;
@@ -50,5 +57,21 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO);
         contractInfo.setGmtModify(new Date());
         contractInfoDao.update(contractInfo);
+    }
+
+    /**
+     * 插入签署清单列表
+     * @param  contractSerialNo
+     * @param signListList
+     */
+    @Override
+    public void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList) {
+        contractSignListDao.deleteByContractSerialNo(contractSerialNo);
+        final List<ContractSignList> contractSignLists = contractInfoMapper.dtoList2doList(signListList);
+        contractSignLists.forEach(e -> {
+            e.setContractSerialNo(contractSerialNo);
+            e.setSerialNo(SerialNoGenerator.generateSerialNo("SL", 6));
+            contractSignListDao.insert(e);
+        });
     }
 }

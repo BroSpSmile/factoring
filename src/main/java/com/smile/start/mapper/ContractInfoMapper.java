@@ -5,6 +5,8 @@ import com.smile.start.model.contract.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
 
+import java.util.List;
+
 /**
  * @author Joseph
  * @version v1.0 2019/2/19 20:55, ContractInfoMapper.java
@@ -18,6 +20,7 @@ public interface ContractInfoMapper {
 
     ContractSignListDTO do2dto(ContractSignList contractSignList);
     ContractSignList dto2do(ContractSignListDTO dto);
+    List<ContractSignList> dtoList2doList(List<ContractSignListDTO> dtoList);
 
     ContractExtendInfoDTO do2dto(ContractExtendInfo contractExtendInfo);
     ContractExtendInfo dto2do(ContractExtendInfoDTO dto);
