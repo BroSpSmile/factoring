@@ -37,8 +37,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Date nowDate = new Date();
         contractInfo.setGmtCreate(nowDate);
         contractInfo.setGmtModify(nowDate);
-        long id = contractInfoDao.insert(contractInfo);
-        return id;
+        return contractInfoDao.insert(contractInfo);
     }
 
     /**

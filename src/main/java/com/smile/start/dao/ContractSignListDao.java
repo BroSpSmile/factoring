@@ -1,11 +1,9 @@
 package com.smile.start.dao;
 
-import com.smile.start.model.contract.ContractReceivableAgreement;
 import com.smile.start.model.contract.ContractSignList;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
 
 /**
  * @author Joseph

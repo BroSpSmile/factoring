@@ -1,6 +1,5 @@
 package com.smile.start.dao;
 
-import com.smile.start.model.auth.User;
 import com.smile.start.model.contract.ContractInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
