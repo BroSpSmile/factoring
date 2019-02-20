@@ -1,13 +1,15 @@
 package com.smile.start.service.contract.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.ContractInfoDao;
 import com.smile.start.dao.ContractSignListDao;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractSignList;
+import com.smile.start.model.contract.SignListTemplate;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,16 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractInfoMapper contractInfoMapper;
+
+    @Override
+    public PageInfo<ContractInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
+        final PageInfo<ContractInfoDTO> result = new PageInfo<>();
+        final List<ContractInfo> doList = contractInfoDao.findByParam(page.getCondition());
+        result.setTotal(doList.size());
+        result.setPageSize(10);
+        result.setList(contractInfoMapper.doList2dtoListBase(doList));
+        return result;
+    }
 
     /**
      * 插入合同基本信息
@@ -67,7 +79,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList) {
         contractSignListDao.deleteByContractSerialNo(contractSerialNo);
-        final List<ContractSignList> contractSignLists = contractInfoMapper.dtoList2doList(signListList);
+        final List<ContractSignList> contractSignLists = contractInfoMapper.dtoList2doListSign(signListList);
         contractSignLists.forEach(e -> {
             e.setContractSerialNo(contractSerialNo);
             e.setSerialNo(SerialNoGenerator.generateSerialNo("SL", 6));

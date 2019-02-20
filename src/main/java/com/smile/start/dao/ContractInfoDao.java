@@ -1,9 +1,15 @@
 package com.smile.start.dao;
 
+import com.smile.start.dto.ContractInfoSearchDTO;
+import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.contract.ContractInfo;
+import com.smile.start.model.contract.SignListTemplate;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * @author Joseph
@@ -29,4 +35,18 @@ public interface ContractInfoDao {
      */
     @Update("update contract_info set serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
+
+    /**
+     * 分页查询
+     * @param contractInfoSearchDTO
+     * @return
+     */
+    @Select("<script>" + "select * from contract_info where 1=1 "
+            + "<if test = 'contractCode!=null'> and contract_code like CONCAT('%',#{contractCode},'%')</if>"
+            + "<if test = 'contractName!=null'> and contract_name like CONCAT('%',#{contractName},'%')</if>"
+            + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>"
+            + "<if test = 'contractTemplate!=null'> and contract_template = #{contractTemplate}</if>"
+            + "<if test = 'status!=null'> and status = #{status}</if>"
+            + "</script>")
+    List<ContractInfo> findByParam(ContractInfoSearchDTO contractInfoSearchDTO);
 }

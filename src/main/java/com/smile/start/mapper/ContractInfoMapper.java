@@ -17,10 +17,12 @@ public interface ContractInfoMapper {
 
     ContractInfoDTO do2dto(ContractInfo contractInfo);
     ContractInfo dto2do(ContractInfoDTO dto);
+    List<ContractInfoDTO> doList2dtoListBase(List<ContractInfo> doList);
+    List<ContractInfo> dtoList2doListBase(List<ContractInfoDTO> dtoList);
 
     ContractSignListDTO do2dto(ContractSignList contractSignList);
     ContractSignList dto2do(ContractSignListDTO dto);
-    List<ContractSignList> dtoList2doList(List<ContractSignListDTO> dtoList);
+    List<ContractSignList> dtoList2doListSign(List<ContractSignListDTO> dtoList);
 
     ContractExtendInfoDTO do2dto(ContractExtendInfo contractExtendInfo);
     ContractExtendInfo dto2do(ContractExtendInfoDTO dto);

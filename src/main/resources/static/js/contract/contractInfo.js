@@ -1,14 +1,14 @@
 /**
- * 签署清单信息
+ * 合同基本信息
  */
-common.pageName = "signListTemplate";
+common.pageName = "contractInfo";
 common.openName = [ '3' ];
 
 var vue = new Vue({
-	el : '#signListTemplate',
+	el : '#contractInfo',
 	data : {
 		formInline:{
-			type:[]
+            type : []
 		},
 		queryParam : {
 			condition : {},
@@ -36,7 +36,7 @@ var vue = new Vue({
 			this.queryParam.pageNum = page;
 			var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/signListTemplate/list", _self.queryParam).then(
+			this.$http.post("/contractInfo/list", _self.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
 					}, function(error) {
@@ -44,17 +44,17 @@ var vue = new Vue({
 					})
 		},
 		/**
-		 * 新增签署清单
+		 * 新增合同
 		 */
-		addSign : function() {
+        addContract : function() {
 			this.modal1 = true;
             this.addForm = {
             };
 		},
         /**
-		 * 保存签署清单
+		 * 保存合同
          */
-        saveSign : function() {
+        saveContract : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
                 this.$http.post("/signListTemplate", this.addForm).then(function(response) {
@@ -123,9 +123,9 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新签署清单
+         * 更新合同
          */
-        updateSign : function(user){
+        updateContract : function(user){
             this.addForm = user;
             this.modal1 = true;
         },
@@ -147,13 +147,25 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '签署清单名称',
-        key: 'signListName',
+        title: '合同编号',
+        key: 'contractCode',
         align: 'left'
     },{
-        title: '排序值',
-        key: 'sort',
-        align: 'right'
+        title: '合同名称',
+        key: 'contractName',
+        align: 'left'
+    },{
+        title: '项目模式',
+        key: 'projectMode',
+        align: 'left'
+    },{
+        title: '合同模板',
+        key: 'contractTemplate',
+        align: 'left'
+    },{
+        title: '状态',
+        key: 'status',
+        align: 'left'
     },{
         title: '操作',
         align: 'center',
@@ -170,7 +182,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateSign(param.row);
+                            vue.updateContract(param.row);
                         }
                     }
                 }, '编辑'),

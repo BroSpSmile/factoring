@@ -1,7 +1,10 @@
 package com.smile.start.service.contract;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.model.base.PageRequest;
 
 import java.util.List;
 
@@ -11,6 +14,13 @@ import java.util.List;
  * @since 1.8
  */
 public interface ContractInfoService {
+
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    PageInfo<ContractInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page);
 
     /**
      * 插入合同基本信息
