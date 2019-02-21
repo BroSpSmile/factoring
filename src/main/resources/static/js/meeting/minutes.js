@@ -63,6 +63,14 @@ var vue = new Vue({
 			this.$http.get("/minutes/meeting/"+document.getElementById("meetingId").value).then(function(response) {
 				_self.meeting = response.data;
 				console.log(_self.meeting);
+				let projects = [];
+				for (let index in _self.meeting.projects){
+					projects.push(_self.meeting.projects[index].id);
+				}
+				_self.meeting.projects = projects;
+				CKEDITOR.replace( 'myedit');
+				CKEDITOR.instances.myedit.setData(_self.meeting.minutes);
+				console.log(_self.meeting);
 			}, function(error) {
 				console.error(error);
 			})
@@ -95,6 +103,13 @@ var vue = new Vue({
 			},function(error){
 				self.$Message.error(error.data.message);
 			})	
+		},
+		
+		/**
+		 * 下载会议纪要
+		 */
+		download:function(){
+			window.open("/minutes/download/"+this.meeting.id);
 		}
 	}
 });

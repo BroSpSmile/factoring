@@ -66,8 +66,8 @@ public class DocUtil {
         Map<String, Object> data = Maps.newHashMap();
         data.put("head_year", "2019");
         data.put("number", "01");
-        data.put("content", "金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈"
-                            + "\r   金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈金控会议纪要文件哈哈哈哈哈哈哈\r" + "     金控会议纪要文件哈哈哈哈哈哈哈");
+        data.put("content", "我的会议纪要" + 
+                "");
         data.put("meeting_data", "2019年1月20日");
         try {
             File file = DocUtil.createDoc("金控红头文件", "meeting.xml", data);
