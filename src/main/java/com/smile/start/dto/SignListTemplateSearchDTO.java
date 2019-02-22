@@ -12,6 +12,11 @@ public class SignListTemplateSearchDTO implements Serializable {
 
     private String signListName;
 
+    /**
+     * 项目模式：1、有追索权模式；2、无追索权模式
+     */
+    private Integer projectMode;
+
     public String getSignListName() {
         return signListName;
     }
@@ -20,10 +25,19 @@ public class SignListTemplateSearchDTO implements Serializable {
         this.signListName = signListName;
     }
 
+    public Integer getProjectMode() {
+        return projectMode;
+    }
+
+    public void setProjectMode(Integer projectMode) {
+        this.projectMode = projectMode;
+    }
+
     @Override
     public String toString() {
         return "SignListTemplateSearchDTO{" +
                 "signListName='" + signListName + '\'' +
+                ", projectMode=" + projectMode +
                 '}';
     }
 }

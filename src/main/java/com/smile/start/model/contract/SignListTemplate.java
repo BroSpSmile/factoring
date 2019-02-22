@@ -10,10 +10,31 @@ import java.io.Serializable;
  */
 public class SignListTemplate implements Serializable {
     private static final long serialVersionUID = -7554198696100662951L;
+
+    /**
+     * 主键
+     */
     private Long id;
+
+    /**
+     * 业务流水
+     */
     private String serialNo;
+
+    /**
+     * 清单名称
+     */
     private String signListName;
+
+    /**
+     * 排序
+     */
     private Integer sort;
+
+    /**
+     * 项目模式：1、有追索权模式；2、无追索权模式
+     */
+    private Integer projectMode;
 
     public Long getId() {
         return id;
@@ -45,5 +66,13 @@ public class SignListTemplate implements Serializable {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getProjectMode() {
+        return projectMode;
+    }
+
+    public void setProjectMode(Integer projectMode) {
+        this.projectMode = projectMode;
     }
 }

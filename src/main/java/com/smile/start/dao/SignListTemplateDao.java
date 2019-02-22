@@ -19,7 +19,7 @@ public interface SignListTemplateDao {
      * @param signListTemplate
      * @return
      */
-    @Insert("insert into sign_list_template (serial_no,sign_list_name,sort) values (#{serialNo},#{signListName},#{sort})")
+    @Insert("insert into sign_list_template (serial_no,sign_list_name,sort,project_mode) values (#{serialNo},#{signListName},#{sort},#{projectMode})")
     long insert(SignListTemplate signListTemplate);
 
     /**
@@ -27,7 +27,7 @@ public interface SignListTemplateDao {
      * @param signListTemplate
      * @return
      */
-    @Update("update sign_list_template set sign_list_name=#{signListName},sort=#{sort} where id=#{id}")
+    @Update("update sign_list_template set sign_list_name=#{signListName},sort=#{sort},project_mode=#{projectMode} where id=#{id}")
     int update(SignListTemplate signListTemplate);
 
     /**
