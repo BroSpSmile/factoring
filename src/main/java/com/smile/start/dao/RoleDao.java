@@ -3,7 +3,6 @@ package com.smile.start.dao;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.auth.Role;
 import com.smile.start.model.auth.RolePermission;
-import com.smile.start.model.auth.UserRole;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

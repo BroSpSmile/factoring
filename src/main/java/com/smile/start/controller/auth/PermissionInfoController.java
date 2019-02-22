@@ -125,8 +125,6 @@ public class PermissionInfoController extends BaseController {
         }
     }
 
-
-
     @GetMapping(value = "/tree/{roleSerialNo}")
     @ResponseBody
     public ListResult<Tree> tree(@PathVariable String roleSerialNo) {

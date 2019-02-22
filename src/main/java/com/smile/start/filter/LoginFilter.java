@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
     private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("/login", "/logout", "/js", "/css", "/image", "/favicon.ico")));
 
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService          userInfoService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -44,11 +44,11 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-        if(isAllowed(path)) {
+        if (isAllowed(path)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String token = getToken(request);
-            if(token != null && userInfoService.validateToken(token)) {
+            if (token != null && userInfoService.validateToken(token)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 request.getRequestDispatcher("/login").forward(request, response);
@@ -57,8 +57,8 @@ public class LoginFilter implements Filter {
     }
 
     private boolean isAllowed(String path) {
-        for(String allowed : ALLOWED_PATHS) {
-            if(path.startsWith(allowed)) {
+        for (String allowed : ALLOWED_PATHS) {
+            if (path.startsWith(allowed)) {
                 return true;
             }
         }
@@ -66,8 +66,8 @@ public class LoginFilter implements Filter {
     }
 
     private String getToken(HttpServletRequest request) {
-        Cookie[] cookies =  request.getCookies();
-        if(cookies != null) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(Constants.TOKEN_COOKIE_KEY)) {
                     return cookie.getValue();

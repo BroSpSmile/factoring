@@ -35,7 +35,6 @@ public class ProjectServcieTest {
     @Test
     public void testProjectPage() {
         Project query = new Project();
-        query.setPerson("jingyongxiang");
         PageRequest<Project> request = new PageRequest<Project>(query, 1, 4);
         PageInfo<Project> projects = projectService.queryPage(request);
         System.out.println(FastJsonUtils.toJSONString(projects));

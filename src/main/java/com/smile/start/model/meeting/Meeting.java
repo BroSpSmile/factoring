@@ -8,9 +8,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.MinutesKind;
-import com.smile.start.model.organization.Employee;
 import com.smile.start.model.project.Project;
 
 /**
@@ -54,10 +55,10 @@ public class Meeting implements Serializable {
     private String            minutes;
 
     /** 发起人 */
-    private Employee          originator;
+    private User              originator;
 
     /** 参与人员 */
-    private List<Employee>    participant;
+    private List<User>        participant;
 
     /** 会议纪要模板 */
     private MinutesKind       minutesKind;
@@ -70,6 +71,18 @@ public class Meeting implements Serializable {
         return "{\"id\":\"" + id + "\", \"status\":\"" + status + "\", \"theme\":\"" + theme + "\", \"beginTime\":\"" + beginTime + "\", \"endTime\":\"" + endTime
                + "\", \"place\":\"" + place + "\", \"content\":\"" + content + "\", \"remind\":\"" + remind + "\", \"projects\":\"" + projects + "\", \"minutes\":\"" + minutes
                + "\", \"originator\":\"" + originator + "\", \"participant\":\"" + participant + "\", \"minutesKind\":\"" + minutesKind + "\"}  ";
+    }
+
+    /**
+     * 增加参会人员
+     * @param user
+     * @return
+     */
+    public boolean addParticipant(User user) {
+        if (participant == null) {
+            participant = Lists.newArrayList();
+        }
+        return participant.add(user);
     }
 
     /**
@@ -257,7 +270,7 @@ public class Meeting implements Serializable {
      * 
      * @return property value of originator
      */
-    public Employee getOriginator() {
+    public User getOriginator() {
         return originator;
     }
 
@@ -266,7 +279,7 @@ public class Meeting implements Serializable {
      * 
      * @param originator value to be assigned to property originator
      */
-    public void setOriginator(Employee originator) {
+    public void setOriginator(User originator) {
         this.originator = originator;
     }
 
@@ -275,7 +288,7 @@ public class Meeting implements Serializable {
      * 
      * @return property value of participant
      */
-    public List<Employee> getParticipant() {
+    public List<User> getParticipant() {
         return participant;
     }
 
@@ -284,7 +297,7 @@ public class Meeting implements Serializable {
      * 
      * @param participant value to be assigned to property participant
      */
-    public void setParticipant(List<Employee> participant) {
+    public void setParticipant(List<User> participant) {
         this.participant = participant;
     }
 

@@ -4,11 +4,15 @@
  */
 package com.smile.start.service.meeting;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.meeting.Meeting;
+import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
+import com.smile.start.model.project.ProjectMeeting;
 
 /**
  * 会议服务
@@ -24,9 +28,44 @@ public interface MeetingService {
     PageInfo<Meeting> search(PageRequest<MeetingSearch> search);
 
     /**
+     * 获取会议
+     * @param search
+     * @return
+     */
+    List<Meeting> getMeetings(MeetingSearch search);
+    
+    /**
+     * 根据ID获取会议内容
+     * @param id
+     * @return
+     */
+    Meeting get(Long id);
+
+    /**
      * 创建会议
      * @param meeting
      * @return
      */
-    BaseResult createMeeting(Meeting meeting);
+    BaseResult createMeeting(MeetingExt meeting);
+
+    /**
+     * 更新会议
+     * @param meeting
+     * @return
+     */
+    BaseResult updateMeeting(MeetingExt meeting);
+    
+    /**
+     * 保存会议纪要
+     * @param meeting
+     * @return
+     */
+    BaseResult saveMinutes(Meeting meeting);
+    
+    /**
+     * 关联会议
+     * @param pms
+     * @return
+     */
+    BaseResult relationMeeting(List<ProjectMeeting> pms);
 }

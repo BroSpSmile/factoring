@@ -4,6 +4,8 @@
  */
 package com.smile.start.service.project;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -34,6 +36,13 @@ public interface ProjectService {
     BaseResult updateProject(Project project);
 
     /**
+     * 项目申请
+     * @param project
+     * @return
+     */
+    BaseResult apply(Project project);
+
+    /**
      * 删除项目
      * @param id
      * @return
@@ -46,4 +55,10 @@ public interface ProjectService {
      * @return
      */
     PageInfo<Project> queryPage(PageRequest<Project> page);
+
+    /**
+     * 查询所有未归档项目
+     * @return
+     */
+    List<Project> queryUnarchivedProjects(Project project);
 }

@@ -31,10 +31,12 @@ public enum Progress {
                       LOAN("LOAN", "放款申请"),
                       /**  */
                       LOANAUDIT("LOANAUDIT", "放款审核"),
-                      /**  */
+
+                      /** add by xioutman 添加归档类型 */
+                      TOBEFILED("TOBEFILED", "待归档"),
                       FILE("FILE", "归档申请"),
-                      /**  */
-                      FILEAUDIT("FILEAUDIT", "归档审核");
+                      FILEAUDIT("FILEAUDIT", "归档审核"),
+                      FILECOMPLETE("FILECOMPLETE", "归档完成");
 
     Progress(String code, String desc) {
         this.code = code;
@@ -43,7 +45,7 @@ public enum Progress {
 
     /**
      * getByCode
-     * 
+     *
      * @param code
      * @return
      */
@@ -65,7 +67,7 @@ public enum Progress {
 
     /**
      * Getter method for property <tt>code</tt>.
-     * 
+     *
      * @return property value of code
      */
     public String getCode() {
@@ -74,7 +76,7 @@ public enum Progress {
 
     /**
      * Getter method for property <tt>desc</tt>.
-     * 
+     *
      * @return property value of desc
      */
     public String getDesc() {

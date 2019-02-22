@@ -68,9 +68,18 @@ var vue = new Vue({
 			console.log(this.project);
 			let self = this;
 			this.$http.post("/apply",this.project).then(function(response){
-				
+				if (response.data.success) {
+					self.$Message.info({
+						content : "立项申请成功",
+						onClose : function() {
+							window.close();
+						}
+					});
+				} else {
+					self.$Message.error(response.data.errorMessage);
+				}
 			},function(error){
-				self.$Message.error(error.data.errorMessage);
+				self.$Message.error(error);
 			})
 			
 		}
