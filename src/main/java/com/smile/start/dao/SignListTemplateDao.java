@@ -61,6 +61,7 @@ public interface SignListTemplateDao {
      */
     @Select("<script>" + "select * from sign_list_template where 1=1 "
             + "<if test = 'signListName!=null'> and sign_list_name like CONCAT('%',#{signListName},'%')</if>"
+            + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>"
             + "</script>")
     List<SignListTemplate> findByParam(SignListTemplateSearchDTO signListTemplateSearchDTO);
 
