@@ -13,23 +13,18 @@
 						<form-item label="合同名称">
 							<i-input placeholder="输入合同名称" class="inputw" v-model="formInline.contractName"></i-input>
 						</form-item>
+						<form-item label="状态">
+							<i-select class="inputw" v-model="formInline.status" clearable>
+								<i-option v-for="status in statusList" :value="status.flowStatus">
+									{{ status.flowStatusDesc }}
+								</i-option>
+							</i-select>
+						</form-item>
 						<form-item label="项目模式" prop="projectMode">
 							<Radio-Group v-model="formInline.projectMode">
 								<Radio :label="1">有追索权模式</Radio>
 								<Radio :label="2">无追索权模式</Radio>
 							</Radio-Group>
-						</form-item>
-						<form-item label="合同模板">
-							<i-select class="inputw" v-model="formInline.contractTemplate" clearable>
-								<i-option :value="1">标准模板</i-option>
-								<i-option :value="2">自定义模板</i-option>
-							</i-select>
-						</form-item>
-						<form-item label="状态">
-							<i-select class="inputw" v-model="formInline.status" clearable>
-								<i-option :value="1">提出申请</i-option>
-								<i-option :value="2">部门初审</i-option>
-							</i-select>
 						</form-item>
 						<row type="flex">
 							<i-col span="8" offset="8">

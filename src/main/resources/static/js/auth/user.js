@@ -32,13 +32,13 @@ var vue = new Vue({
         model10: []
     },
     created : function() {
-        this.initDate();
+        this.initData();
     },
     methods : {
         /**
          * 初始化数据
          */
-        initDate : function() {
+        initData : function() {
             let self = this;
             this.$http.get("/role/all").then(function(response){
                 if (response.data.success) {

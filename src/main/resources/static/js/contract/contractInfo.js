@@ -21,13 +21,30 @@ var vue = new Vue({
 		},
 		pageInfo:{},
 		tableColumns:[],
+        statusList:[],
 		showResult:false,
 		modal1:false
 	},
 	created : function() {
+	    this.initData();
 	},
 	methods : {
-		
+        /**
+         * 初始化数据
+         */
+        initData : function() {
+            let self = this;
+            this.$http.get("/flowConfig/status/1").then(function(response){
+                if (response.data.success) {
+                    console.log(response.data.values)
+                    self.statusList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
 		/**
 		 * 查询
 		 */
