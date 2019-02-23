@@ -2,11 +2,13 @@ package com.smile.start.service.contract.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.ContractExtendInfoDao;
 import com.smile.start.dao.ContractInfoDao;
 import com.smile.start.dao.ContractSignListDao;
 import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.contract.ContractExtendInfo;
 import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.model.contract.SignListTemplate;
@@ -29,6 +31,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractInfoDao contractInfoDao;
+
+    @Resource
+    private ContractExtendInfoDao contractExtendInfoDao;
 
     @Resource
     private ContractSignListDao contractSignListDao;
@@ -71,6 +76,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignListDao.insert(contractSignList);
             });
         }
+
+        //保存合同信息
+        final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
+        contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI",5));
+        contractExtendInfo.setContractSerialNo(contractSerialNo);
+        contractExtendInfoDao.insert(contractExtendInfo);
         return contractInfoDao.insert(contractInfo);
     }
 

@@ -17,6 +17,7 @@ var vue = new Vue({
 		},
 		addForm : {
 			baseInfo : {},
+            contractExtendInfo : {},
 			signList:[],
             projectMode : 1
 		},
@@ -68,6 +69,7 @@ var vue = new Vue({
 			this.modal1 = true;
             this.addForm = {
                 baseInfo : {},
+                contractExtendInfo : {},
                 signList:[],
                 projectMode : 1
             };
@@ -155,7 +157,7 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-            if(this.addForm.id == '') {
+            if(this.addForm.baseInfo.id === '') {
                 this.$refs['entityDataForm'].resetFields();
             }
 		},

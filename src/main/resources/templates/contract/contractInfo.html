@@ -50,7 +50,7 @@
 							<Collapse v-model="panelOpen" accordion>
 								<Panel name="0">
 									合同基本信息
-									<p slot="content">
+									<div slot="content">
 										<form-item label="合同编号" prop="baseInfo.contractCode">
 											<i-input placeholder="输入合同编号" v-model="addForm.baseInfo.contractCode"></i-input>
 										</form-item>
@@ -63,11 +63,110 @@
 												<Radio :label="2">无追索权模式</Radio>
 											</Radio-Group>
 										</form-item>
-									</p>
+									</div>
 								</Panel>
 								<Panel name="1">
 									保理合同
-									<p slot="content">史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。</p>
+									<div slot="content">
+										<Card>
+											<p slot="title">
+												乙方信息
+											</p>
+											<form-item label="名称" prop="contractExtendInfo.spCompanyName">
+												<i-input placeholder="请输入乙方公司名称" v-model="addForm.contractExtendInfo.spCompanyName"></i-input>
+											</form-item>
+											<form-item label="住所" prop="contractExtendInfo.spResidence">
+												<i-input placeholder="请输入乙方住所" v-model="addForm.contractExtendInfo.spResidence"></i-input>
+											</form-item>
+											<form-item label="法定代表人" prop="contractExtendInfo.spLegalPerson">
+												<i-input placeholder="请输入乙方法定代表人" v-model="addForm.contractExtendInfo.spLegalPerson"></i-input>
+											</form-item>
+											<form-item label="联系地址" prop="contractExtendInfo.spContactAddress">
+												<i-input placeholder="请输入乙方联系地址" v-model="addForm.contractExtendInfo.spContactAddress"></i-input>
+											</form-item>
+											<form-item label="邮编" prop="contractExtendInfo.spPostCode">
+												<i-input placeholder="请输入乙方邮编" v-model="addForm.contractExtendInfo.spPostCode"></i-input>
+											</form-item>
+											<form-item label="电话" prop="contractExtendInfo.spTelephone">
+												<i-input placeholder="请输入乙方电话" v-model="addForm.contractExtendInfo.spTelephone"></i-input>
+											</form-item>
+											<form-item label="传真" prop="contractExtendInfo.spFax">
+												<i-input placeholder="请输入乙方传真" v-model="addForm.contractExtendInfo.spFax"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												商务合同
+											</p>
+											<form-item label="债务人" prop="contractExtendInfo.obligor">
+												<i-input placeholder="请输入债务人" v-model="addForm.contractExtendInfo.obligor"></i-input>
+											</form-item>
+											<form-item label="签署日期" prop="contractExtendInfo.signDate">
+												<i-input placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate"></i-input>
+											</form-item>
+											<form-item label="合同名称" prop="contractExtendInfo.contractName">
+												<i-input placeholder="请输入合同名称" v-model="addForm.contractExtendInfo.contractName"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												应收账款
+											</p>
+											<form-item label="应收账款受让款" prop="contractExtendInfo.receivableAssigneeMoney">
+												<i-input placeholder="请输入应收账款受让款" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></i-input>
+											</form-item>
+											<form-item label="应收账款受让款（大写）" prop="contractExtendInfo.receivableAssigneeMoneyUpper">
+												<i-input placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeMoneyUpper"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												应收账款回收款
+											</p>
+											<form-item label="应收账款回收款" prop="contractExtendInfo.receivableRecoveryMoney">
+												<i-input placeholder="请输入应收账款回收款" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></i-input>
+											</form-item>
+											<form-item label="应收账款回收款（大写）" prop="contractExtendInfo.receivableRecoveryMoneyUpper">
+												<i-input placeholder="请输入应收账款回收款（大写）" v-model="addForm.contractExtendInfo.receivableRecoveryMoneyUpper"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												甲方指定账户
+											</p>
+											<form-item label="户名" prop="contractExtendInfo.fpAccountName">
+												<i-input placeholder="请输入甲方户名" v-model="addForm.contractExtendInfo.fpAccountName"></i-input>
+											</form-item>
+											<form-item label="银行名称" prop="contractExtendInfo.fpBankName">
+												<i-input placeholder="请输入甲方银行名称" v-model="addForm.contractExtendInfo.fpBankName"></i-input>
+											</form-item>
+											<form-item label="账户" prop="contractExtendInfo.fpAccount">
+												<i-input placeholder="请输入甲方银行账户" v-model="addForm.contractExtendInfo.fpAccount"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												乙方指定账户
+											</p>
+											<form-item label="户名" prop="contractExtendInfo.spAccountName">
+												<i-input placeholder="请输入乙方户名" v-model="addForm.contractExtendInfo.spAccountName"></i-input>
+											</form-item>
+											<form-item label="银行名称" prop="contractExtendInfo.spAccountName">
+												<i-input placeholder="请输入乙方银行名称" v-model="addForm.contractExtendInfo.spAccountName"></i-input>
+											</form-item>
+											<form-item label="账户" prop="contractExtendInfo.spAccount">
+												<i-input placeholder="请输入乙方银行账户" v-model="addForm.contractExtendInfo.spAccount"></i-input>
+											</form-item>
+										</Card>
+										<Card>
+											<p slot="title">
+												特别条款
+											</p>
+											<form-item label="合同强制解除日期" prop="contractExtendInfo.ompulsoryRescissionDate">
+												<i-input placeholder="请输入合同强制解除日期" v-model="addForm.contractExtendInfo.ompulsoryRescissionDate"></i-input>
+											</form-item>
+										</Card>
+									</div>
 								</Panel>
 								<Panel name="2">
 									应收账款转让确认函
@@ -78,6 +177,12 @@
 									<p slot="content">乔纳森·伊夫是一位工业设计师，现任Apple公司设计师兼资深副总裁，英国爵士。他曾参与设计了iPod，iMac，iPhone，iPad等众多苹果产品。除了乔布斯，他是对苹果那些著名的产品最有影响力的人。</p>
 								</Panel>
 								<Panel name="4">
+									自定义模板上传
+									<div slot="content">
+
+									</div>
+								</Panel>
+								<Panel name="5">
 									签署清单
 									<div slot="content">
 										<Row v-for="(item, index) in addForm.signList"

@@ -17,6 +17,11 @@ public class ContractInfoDTO implements Serializable {
     private ContractBaseInfoDTO baseInfo;
 
     /**
+     * 合同扩展信息
+     */
+    private ContractExtendInfoDTO contractExtendInfo;
+
+    /**
      * 签署清单
      */
     private List<SignListTemplateDTO> signList;
@@ -27,6 +32,14 @@ public class ContractInfoDTO implements Serializable {
 
     public void setBaseInfo(ContractBaseInfoDTO baseInfo) {
         this.baseInfo = baseInfo;
+    }
+
+    public ContractExtendInfoDTO getContractExtendInfo() {
+        return contractExtendInfo;
+    }
+
+    public void setContractExtendInfo(ContractExtendInfoDTO contractExtendInfo) {
+        this.contractExtendInfo = contractExtendInfo;
     }
 
     public List<SignListTemplateDTO> getSignList() {
