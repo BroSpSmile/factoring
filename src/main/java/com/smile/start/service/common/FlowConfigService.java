@@ -3,6 +3,7 @@ package com.smile.start.service.common;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowConfigSearchDTO;
+import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.StatusInfo;
 
@@ -56,5 +57,5 @@ public interface FlowConfigService {
      * @param flowType
      * @return
      */
-    List<StatusInfo> getStatusList(int flowType);
+    List<FlowStatusDTO> getStatusList(int flowType);
 }

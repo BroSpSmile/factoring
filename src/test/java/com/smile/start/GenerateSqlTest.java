@@ -12,10 +12,11 @@ public class GenerateSqlTest {
 
     @Test
     public void testGenerateSql() {
-        String tableName = "contract_sign_list";
-        String str = "  `serial_no` varchar(64) COLLATE utf8_general_mysql500_ci NOT NULL COMMENT '业务流水',\n" +
-                "  `contract_serial_no` varchar(64) COLLATE utf8_general_mysql500_ci NOT NULL COMMENT '合同流水',\n" +
-                "  `sign_list_name` varchar(256) COLLATE utf8_general_mysql500_ci NOT NULL COMMENT '签署清单名称',";
+        String tableName = "flow_config";
+        String str = "  `serial_no` varchar(64) NOT NULL COMMENT '业务流水',\n" +
+                "  `flow_serial_no` varchar(64) NOT NULL COMMENT '流程配置表流水',\n" +
+                "  `status_serial_no` varchar(64) NOT NULL COMMENT '状态表流水',\n" +
+                "  `role_serial_no` varchar(64) NOT NULL COMMENT '角色表流水',";
 
         List<String> fields = Lists.newArrayList(Splitter.on("\n").split(str));
         List<String> fieldList = Lists.newArrayList();

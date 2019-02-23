@@ -20,6 +20,11 @@ public class StatusInfo implements Serializable {
      */
     private String desc;
 
+    public StatusInfo(Integer value, String desc) {
+        this.value = value;
+        this.desc = desc;
+    }
+
     public Integer getValue() {
         return value;
     }

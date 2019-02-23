@@ -23,4 +23,5 @@ public interface FlowConfigMapper {
 
     FlowStatus dto2do(FlowStatusDTO dto);
     FlowStatusDTO do2dto(FlowStatus flowStatus);
+    List<FlowStatusDTO> doList2dtoListStatus(List<FlowStatus> doList);
 }

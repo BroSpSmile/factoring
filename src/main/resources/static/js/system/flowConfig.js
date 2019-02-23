@@ -1,11 +1,11 @@
 /**
- * 组织架构信息
+ * 流程配置
  */
-common.pageName = "organizational";
+common.pageName = "flowConfig";
 common.openName = [ '8' ];
 
 var vue = new Vue({
-    el : '#organizational',
+    el : '#flowConfig',
     data : {
         formInline:{
             type:[]
@@ -16,20 +16,17 @@ var vue = new Vue({
             pageSize : 10
         },
         addForm : {
-            organizationalName : "",
-            remark : ""
+            flowName : "",
+            statusList:[]
         },
         pageInfo:{},
         tableColumns:[],
         showResult:false,
-        modal1:false,
-        organizationalList:[],
-        model11: ''
+        modal1:false
     },
     created : function() {
     },
     methods : {
-
         /**
          * 查询
          */
@@ -38,7 +35,7 @@ var vue = new Vue({
             this.queryParam.pageNum = page;
             var _self = this;
             _self.queryParam.condition = _self.formInline;
-            this.$http.post("/organizational/list", _self.queryParam).then(
+            this.$http.post("/flowConfig/list", _self.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
@@ -46,37 +43,20 @@ var vue = new Vue({
                 })
         },
         /**
-         * 新增组织架构
+         * 新增流程配置
          */
-        addOrganizational : function() {
+        addFlow : function() {
             this.modal1 = true;
             this.addForm = {
             };
-            this.getOrganizationalList();
         },
         /**
-         * 获取组织列表
+         * 保存流程配置
          */
-        getOrganizationalList() {
-            let self = this;
-            this.$http.get("/organizational/list").then(function(response) {
-                    if (response.data.success) {
-                        self.organizationalList = response.data.values;
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                }
-            )
-        },
-        /**
-         * 保存组织架构
-         */
-        saveOrganizational : function() {
+        saveFlow : function() {
             let self = this;
             if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/organizational", this.addForm).then(function(response) {
+                this.$http.post("/flowConfig", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -92,7 +72,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/organizational", this.addForm).then(function(response) {
+                this.$http.put("/flowConfig", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -110,22 +90,37 @@ var vue = new Vue({
             }
         },
         /**
+         * 获取状态列表
+         */
+        getStatusList:function(value) {
+            let self = this;
+            this.$http.get("/flowConfig/status/" + value).then(function(response){
+                if (response.data.success) {
+                    self.addForm.statusList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
+        /**
          * 删除警告
          */
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前组织架构</p>',
+                content: '<p>确认是否删除当前流程配置</p>',
                 onOk: () => {
-                this.deleteOrganizational(id);
+                this.deleteFlow(id);
         },
             onCancel: () => {}
         })
         },
-        /** 删除组织架构 */
-        deleteOrganizational:function(id){
+        /** 删除流程配置 */
+        deleteFlow:function(id){
             let self = this;
-            this.$http.delete("/organizational/" + id).then(function(response){
+            this.$http.delete("/flowConfig/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -142,12 +137,20 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新角色
+         * 更新流程配置
          */
-        updateOrganizational : function(organizational){
-            this.addForm = organizational;
+        updateFlow : function(id){
+            let self = this;
+            this.$http.get("/flowConfig/" + id).then(function(response){
+                if (response.data.success) {
+                    self.addForm = response.data.data;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
             this.modal1 = true;
-            this.getOrganizationalList();
         },
         /**
          * 取消保存
@@ -158,6 +161,17 @@ var vue = new Vue({
                 this.$refs['entityDataForm'].resetFields();
             }
         },
+        /**
+         * 流程类型
+         */
+        getFlowTypeDesc : function(value){
+            if(value === 1) {
+                return "合同";
+            } else if(value === 2) {
+                return "项目";
+            }
+            return "";
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -167,49 +181,53 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '组织名称',
-        key: 'organizationalName',
+        title: '流程名称',
+        key: 'flowName',
         align: 'left'
-    },{
-        title: '描述',
-        key: 'remark',
-        align: 'left'
+    },
+    {
+        title: '流程类型',
+        key: 'projectMode',
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getFlowTypeDesc(param.row.flowType));
+        }
     },{
         title: '操作',
-        align: 'center',
-        render:(h,param)=>{
-        return h('div', [
-            h('span'),
+            align: 'center',
+            render:(h,param)=>{
+            return h('div', [
+                h('span'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "warning"
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                        vue.updateFlow(param.row.id);
+        }
+        }
+        }, '编辑'),
             h('Button', {
                 props: {
                     size: "small",
-                    type: "warning"
+                    type: "error"
                 },
                 style: {
                     marginRight: '5px'
                 },
                 on: {
                     click: () => {
-                    vue.updateOrganizational(param.row);
-}
-}
-}, '编辑'),
-h('Button', {
-    props: {
-        size: "small",
-        type: "error"
-    },
-    style: {
-        marginRight: '5px'
-    },
-    on: {
-        click: () => {
-        vue.deleteWarn(param.row.id);
-}
-}
-}, '删除')
-]
-)
-}
+                    vue.deleteWarn(param.row.id);
+        }
+    }
+    }, '删除')
+    ]
+    )
+    }
 }
 ];

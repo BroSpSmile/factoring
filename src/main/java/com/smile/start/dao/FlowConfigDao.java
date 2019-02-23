@@ -26,7 +26,7 @@ public interface FlowConfigDao {
      * @param flowConfig
      * @return
      */
-    @Insert("")
+    @Insert("insert into flow_config (serial_no,flow_name,flow_type,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{flowName},#{flowType},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(FlowConfig flowConfig);
 
     /**
@@ -34,7 +34,7 @@ public interface FlowConfigDao {
      * @param flowStatus
      * @return
      */
-    @Insert("")
+    @Insert("insert into flow_status (serial_no,flow_serial_no,flow_status,flow_status_desc) values (#{serialNo},#{flowSerialNo},#{flowStatus},#{flowStatusDesc})")
     long insertFlowStatus(FlowStatus flowStatus);
 
     /**
@@ -42,7 +42,7 @@ public interface FlowConfigDao {
      * @param flowStatusRole
      * @return
      */
-    @Insert("")
+    @Insert("insert into flow_status_role (serial_no,flow_serial_no,status_serial_no,role_serial_no) values (#{serialNo},#{flowSerialNo},#{statusSerialNo},#{roleSerialNo})")
     long insertStatusRole(FlowStatusRole flowStatusRole);
 
     /**
@@ -50,7 +50,7 @@ public interface FlowConfigDao {
      * @param flowConfig
      * @return
      */
-    @Update("")
+    @Update("update flow_config set serial_no=#{serialNo},flow_name=#{flowName},flow_type=#{flowType},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(FlowConfig flowConfig);
 
     /**
@@ -66,8 +66,16 @@ public interface FlowConfigDao {
      * @param flowSerialNo
      * @return
      */
-    @Select("select * from flow_config_status where flow_serial_no=#{flowSerialNo}")
-    List<FlowStatus> findByFlowSerialNo(String flowSerialNo);
+    @Select("select * from flow_status where flow_serial_no=#{flowSerialNo}")
+    List<FlowStatus> findStatusByFlowSerialNo(String flowSerialNo);
+
+    /**
+     * 根据流程状态编号查询对应角色编号
+     * @param statusSerialNo
+     * @return
+     */
+    @Select("select * from flow_status_role where status_serial_no=#{statusSerialNo}")
+    List<FlowStatusRole> findRoleByStatusSerialNo(String statusSerialNo);
 
     /**
      * 分页查询

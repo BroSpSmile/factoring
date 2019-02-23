@@ -7,7 +7,7 @@ package com.smile.start.model.enums;
  * @since 1.8
  */
 public enum FlowTypeEnum {
-    CONTRACT(1, "已删除"),
+    CONTRACT(1, "合同"),
     PROJECT(2, "项目");
 
     private int value;

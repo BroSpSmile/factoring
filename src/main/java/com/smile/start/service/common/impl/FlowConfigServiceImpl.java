@@ -1,17 +1,25 @@
 package com.smile.start.service.common.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.FlowConfigDao;
+import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowConfigSearchDTO;
+import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.mapper.FlowConfigMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
+import com.smile.start.model.common.FlowStatus;
+import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.common.StatusInfo;
+import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +39,9 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     @Resource
     private FlowConfigMapper flowConfigMapper;
 
+    @Resource
+    private RoleInfoService roleInfoService;
+
     /**
      * 根据主键查询流程配置信息
      *
@@ -39,7 +50,21 @@ public class FlowConfigServiceImpl implements FlowConfigService {
      */
     @Override
     public FlowConfigDTO get(Long id) {
-        return null;
+        final FlowConfig flowConfig = flowConfigDao.get(id);
+        final FlowConfigDTO flowConfigDTO = flowConfigMapper.do2dto(flowConfig);
+        final List<FlowStatus> statusList = flowConfigDao.findStatusByFlowSerialNo(flowConfigDTO.getSerialNo());
+        final List<FlowStatusDTO> flowStatusDTOS = flowConfigMapper.doList2dtoListStatus(statusList);
+        flowStatusDTOS.forEach(status -> {
+            status.setRoleList(roleInfoService.findAll());
+            List<FlowStatusRole> roleList = flowConfigDao.findRoleByStatusSerialNo(status.getSerialNo());
+            if(!CollectionUtils.isEmpty(roleList)) {
+                List<String> checkedRoleList = Lists.newArrayList();
+                roleList.forEach(role -> checkedRoleList.add(role.getRoleSerialNo()));
+                status.setCheckedRoleList(checkedRoleList);
+            }
+        });
+        flowConfigDTO.setStatusList(flowStatusDTOS);
+        return flowConfigDTO;
     }
 
     /**
@@ -65,10 +90,33 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     @Override
     public Long insert(FlowConfigDTO flowConfigDTO) {
         FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
-        flowConfig.setSerialNo(SerialNoGenerator.generateSerialNo("FC", 6));
+        String flowSerialNo = SerialNoGenerator.generateSerialNo("FC", 6);
+        flowConfig.setSerialNo(flowSerialNo);
         Date nowDate = new Date();
         flowConfig.setGmtCreate(nowDate);
         flowConfig.setGmtModify(nowDate);
+
+        //保存状态信息
+        final List<FlowStatusDTO> statusList = flowConfigDTO.getStatusList();
+        for(FlowStatusDTO flowStatusDTO : statusList) {
+            String statusSerialNo = SerialNoGenerator.generateSerialNo("FS", 6);
+            FlowStatus flowStatus = new FlowStatus();
+            flowStatus.setSerialNo(statusSerialNo);
+            flowStatus.setFlowSerialNo(flowSerialNo);
+            flowStatus.setFlowStatus(flowStatusDTO.getFlowStatus());
+            flowStatus.setFlowStatusDesc(flowStatusDTO.getFlowStatusDesc());
+            flowConfigDao.insertFlowStatus(flowStatus);
+            if(!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
+                flowStatusDTO.getCheckedRoleList().forEach(e -> {
+                    FlowStatusRole flowStatusRole = new FlowStatusRole();
+                    flowStatusRole.setSerialNo(SerialNoGenerator.generateSerialNo("FSR", 5));
+                    flowStatusRole.setFlowSerialNo(flowSerialNo);
+                    flowStatusRole.setStatusSerialNo(statusSerialNo);
+                    flowStatusRole.setRoleSerialNo(e);
+                    flowConfigDao.insertStatusRole(flowStatusRole);
+                });
+            }
+        }
         return flowConfigDao.insert(flowConfig);
     }
 
@@ -103,16 +151,38 @@ public class FlowConfigServiceImpl implements FlowConfigService {
      * @return
      */
     @Override
-    public List<StatusInfo> getStatusList(int flowType) {
+    public List<FlowStatusDTO> getStatusList(int flowType) {
         FlowTypeEnum flowTypeEnum = FlowTypeEnum.fromValue(flowType);
+        List<FlowStatusDTO> statusList = Lists.newArrayList();
+        if(flowTypeEnum == null) {
+            return statusList;
+        }
+
+        final List<AuthRoleInfoDTO> roleList = roleInfoService.findAll();
         switch (flowTypeEnum) {
             case PROJECT:
-                break;
+                FlowStatusDTO flowStatus1 = new FlowStatusDTO();
+                flowStatus1.setFlowStatus(1);
+                flowStatus1.setFlowStatusDesc("a");
+                flowStatus1.setRoleList(roleList);
+                statusList.add(flowStatus1);
+                FlowStatusDTO flowStatus2 = new FlowStatusDTO();
+                flowStatus2.setFlowStatus(1);
+                flowStatus2.setFlowStatusDesc("a");
+                flowStatus2.setRoleList(roleList);
+                statusList.add(flowStatus2);
+                return statusList;
             case CONTRACT:
-                break;
+                for(ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
+                    FlowStatusDTO flowStatus = new FlowStatusDTO();
+                    flowStatus.setRoleList(roleList);
+                    flowStatus.setFlowStatus(contractStatusEnum.getValue());
+                    flowStatus.setFlowStatusDesc(contractStatusEnum.getDesc());
+                    statusList.add(flowStatus);
+                }
+                return statusList;
             default:
-                ;
+                return statusList;
         }
-        return null;
     }
 }

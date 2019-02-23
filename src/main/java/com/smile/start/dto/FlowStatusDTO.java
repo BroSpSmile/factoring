@@ -32,6 +32,11 @@ public class FlowStatusDTO implements Serializable {
     private Integer flowStatus;
 
     /**
+     * 流程状态描述
+     */
+    private String flowStatusDesc;
+
+    /**
      * 选中角色列表
      */
     private List<String> checkedRoleList;
@@ -79,6 +84,14 @@ public class FlowStatusDTO implements Serializable {
 
     public void setCheckedRoleList(List<String> checkedRoleList) {
         this.checkedRoleList = checkedRoleList;
+    }
+
+    public String getFlowStatusDesc() {
+        return flowStatusDesc;
+    }
+
+    public void setFlowStatusDesc(String flowStatusDesc) {
+        this.flowStatusDesc = flowStatusDesc;
     }
 
     public List<AuthRoleInfoDTO> getRoleList() {

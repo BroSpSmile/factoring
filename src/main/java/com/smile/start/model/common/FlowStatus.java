@@ -31,6 +31,11 @@ public class FlowStatus implements Serializable {
      */
     private Integer flowStatus;
 
+    /**
+     * 流程状态描述
+     */
+    private String flowStatusDesc;
+
     public Long getId() {
         return id;
     }
@@ -61,5 +66,13 @@ public class FlowStatus implements Serializable {
 
     public void setFlowStatus(Integer flowStatus) {
         this.flowStatus = flowStatus;
+    }
+
+    public String getFlowStatusDesc() {
+        return flowStatusDesc;
+    }
+
+    public void setFlowStatusDesc(String flowStatusDesc) {
+        this.flowStatusDesc = flowStatusDesc;
     }
 }

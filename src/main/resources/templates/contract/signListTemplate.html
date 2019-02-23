@@ -36,7 +36,7 @@
 		<modal v-model="modal1" title="新增签署清单"  mask-closable="false">
 			<div id="modalForm">
 				<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
-					<form-item label="签署清单名称" prop="projectMode">
+					<form-item label="项目模式" prop="projectMode">
 						<Radio-Group v-model="addForm.projectMode">
 							<Radio :label="1">有追索权模式</Radio>
 							<Radio :label="2">无追索权模式</Radio>

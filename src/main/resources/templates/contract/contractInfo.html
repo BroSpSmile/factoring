@@ -13,13 +13,11 @@
 						<form-item label="合同名称">
 							<i-input placeholder="输入合同名称" class="inputw" v-model="formInline.contractName"></i-input>
 						</form-item>
-						<form-item label="项目模式">
-							<template>
-								<RadioGroup v-model="formInline.projectMode">
-									<Radio label=":1">有追索权模式</Radio>
-									<Radio label=":2">无追索权模式</Radio>
-								</RadioGroup>
-							</template>
+						<form-item label="项目模式" prop="projectMode">
+							<Radio-Group v-model="formInline.projectMode">
+								<Radio :label="1">有追索权模式</Radio>
+								<Radio :label="2">无追索权模式</Radio>
+							</Radio-Group>
 						</form-item>
 						<form-item label="合同模板">
 							<i-select class="inputw" v-model="formInline.contractTemplate" clearable>
