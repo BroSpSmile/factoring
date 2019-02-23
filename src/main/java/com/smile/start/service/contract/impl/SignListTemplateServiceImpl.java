@@ -48,6 +48,16 @@ public class SignListTemplateServiceImpl implements SignListTemplateService {
         return signListTemplateMapper.doList2dtoList(signListTemplateDao.findAll());
     }
 
+    /**
+     * 按项目模式查询清单列表
+     * @param projectMode
+     * @return
+     */
+    @Override
+    public List<SignListTemplateDTO> findByProjectMode(Integer projectMode) {
+        return signListTemplateMapper.doList2dtoList(signListTemplateDao.findByProjectMode(projectMode));
+    }
+
     @Override
     public Long insert(SignListTemplateDTO signListTemplateDTO) {
         signListTemplateDTO.setSerialNo(SerialNoGenerator.generateSerialNo("S", 7));

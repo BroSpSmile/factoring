@@ -15,7 +15,7 @@ public enum ContractStatusEnum {
     FINISH(6, "完成"),
     NOTIFY_OFFICE(7, "通知办公室"),
     SIGN(8, "签署"),
-    SIGN_FINISH(8, "签署完成");
+    SIGN_FINISH(9, "签署完成");
 
     private int value;
     private String desc;

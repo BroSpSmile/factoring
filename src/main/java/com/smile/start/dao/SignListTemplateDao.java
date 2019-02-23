@@ -55,6 +55,14 @@ public interface SignListTemplateDao {
     List<SignListTemplate> findAll();
 
     /**
+     * 按项目模式查询清单列表
+     * @param projectMode
+     * @return
+     */
+    @Select("select * from sign_list_template where project_mode = #{projectMode}")
+    List<SignListTemplate> findByProjectMode(Integer projectMode);
+
+    /**
      * 分页查询
      * @param signListTemplateSearchDTO
      * @return

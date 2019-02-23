@@ -16,14 +16,16 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		addForm : {
-			signListName : "",
-			sort : ""
+			baseInfo : {},
+			signList:[],
+            projectMode : 1
 		},
 		pageInfo:{},
 		tableColumns:[],
         statusList:[],
 		showResult:false,
-		modal1:false
+		modal1:false,
+        panelOpen : "0"
 	},
 	created : function() {
 	    this.initData();
@@ -65,6 +67,9 @@ var vue = new Vue({
         addContract : function() {
 			this.modal1 = true;
             this.addForm = {
+                baseInfo : {},
+                signList:[],
+                projectMode : 1
             };
 		},
         /**
@@ -72,8 +77,8 @@ var vue = new Vue({
          */
         saveContract : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/signListTemplate", this.addForm).then(function(response) {
+            if(this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === ""){
+                this.$http.post("/contractInfo", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
@@ -89,7 +94,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }else{
-                this.$http.put("/signListTemplate", this.addForm).then(function(response) {
+                this.$http.put("/contractInfo", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "更新成功",
@@ -157,6 +162,63 @@ var vue = new Vue({
         /** 分页 */
         pageChange : function(page){
             this.query();
+        },
+        /**
+         * 获取签署清单
+         * @param projectMode
+         */
+        getSignList : function (projectMode) {
+            let self = this;
+            this.$http.get("/signListTemplate/list/" + projectMode).then(function(response){
+                if (response.data.success) {
+                    self.addForm.signList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
+        /**
+         * 项目模式转换
+         * @param value
+         */
+        getProjectModeDesc : function(value) {
+            if(value === 1) {
+                return "有追索权模式";
+            } else if(value === 2) {
+                return "无追索权模式";
+            }
+            return "";
+        },
+        /**
+         * 状态转换
+         * @param value
+         */
+        getStatusDesc : function(value) {
+            if(value === 1) {
+                return "提出申请";
+            } else if(value === 2) {
+                return "部门初审";
+            } else if(value === 3) {
+                return "法务风控审核";
+            } else if(value === 4) {
+                return "集团副总审核";
+            } else if(value === 5) {
+                return "集团正总审核";
+            } else if(value === 6) {
+                return "完成";
+            } else if(value === 7) {
+                return "通知办公室";
+            } else if(value === 8) {
+                return "签署";
+            } else if(value === 9) {
+                return "签署完成";
+            }
+            return "";
+        },
+        handleRemove : function(index) {
+            this.addForm.signList[index].status = 1;
         }
 	}
 });
@@ -173,15 +235,17 @@ vue.tableColumns=[
     },{
         title: '项目模式',
         key: 'projectMode',
-        align: 'left'
-    },{
-        title: '合同模板',
-        key: 'contractTemplate',
-        align: 'left'
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getProjectModeDesc(param.row.projectMode));
+        }
     },{
         title: '状态',
         key: 'status',
-        align: 'left'
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getStatusDesc(param.row.status));
+        }
     },{
         title: '操作',
         align: 'center',

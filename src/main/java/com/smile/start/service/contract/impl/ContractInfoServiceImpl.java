@@ -10,8 +10,10 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.model.contract.SignListTemplate;
+import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -35,8 +37,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractInfoMapper contractInfoMapper;
 
     @Override
-    public PageInfo<ContractInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
-        final PageInfo<ContractInfoDTO> result = new PageInfo<>();
+    public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
+        final PageInfo<ContractBaseInfoDTO> result = new PageInfo<>();
         final List<ContractInfo> doList = contractInfoDao.findByParam(page.getCondition());
         result.setTotal(doList.size());
         result.setPageSize(10);
@@ -51,11 +53,24 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public Long insert(ContractInfoDTO contractInfoDTO) {
-        final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO);
-        contractInfo.setSerialNo(SerialNoGenerator.generateSerialNo("C",7));
+        final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
+        String contractSerialNo = SerialNoGenerator.generateSerialNo("C",7);
+        contractInfo.setSerialNo(contractSerialNo);
         Date nowDate = new Date();
         contractInfo.setGmtCreate(nowDate);
         contractInfo.setGmtModify(nowDate);
+        contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
+
+        //保存签署清单
+        if(!CollectionUtils.isEmpty(contractInfoDTO.getSignList())) {
+            contractInfoDTO.getSignList().forEach(e -> {
+                ContractSignList contractSignList = new ContractSignList();
+                contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL",5));
+                contractSignList.setContractSerialNo(contractSerialNo);
+                contractSignList.setSignListName(e.getSignListName());
+                contractSignListDao.insert(contractSignList);
+            });
+        }
         return contractInfoDao.insert(contractInfo);
     }
 
@@ -66,7 +81,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void update(ContractInfoDTO contractInfoDTO) {
-        final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO);
+        final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
         contractInfo.setGmtModify(new Date());
         contractInfoDao.update(contractInfo);
     }

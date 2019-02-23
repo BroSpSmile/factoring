@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.SignListTemplateDTO;
 import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.contract.SignListTemplate;
 
 import java.util.List;
 
@@ -32,6 +33,13 @@ public interface SignListTemplateService {
      * @return
      */
     List<SignListTemplateDTO> findAll();
+
+    /**
+     * 按项目模式查询清单列表
+     * @param projectMode
+     * @return
+     */
+    List<SignListTemplateDTO> findByProjectMode(Integer projectMode);
 
     /**
      * 新增签署清单

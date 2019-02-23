@@ -15,10 +15,10 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
 public interface ContractInfoMapper {
 
-    ContractInfoDTO do2dto(ContractInfo contractInfo);
-    ContractInfo dto2do(ContractInfoDTO dto);
-    List<ContractInfoDTO> doList2dtoListBase(List<ContractInfo> doList);
-    List<ContractInfo> dtoList2doListBase(List<ContractInfoDTO> dtoList);
+    ContractBaseInfoDTO do2dto(ContractInfo contractInfo);
+    ContractInfo dto2do(ContractBaseInfoDTO dto);
+    List<ContractBaseInfoDTO> doList2dtoListBase(List<ContractInfo> doList);
+    List<ContractInfo> dtoList2doListBase(List<ContractBaseInfoDTO> dtoList);
 
     ContractSignListDTO do2dto(ContractSignList contractSignList);
     ContractSignList dto2do(ContractSignListDTO dto);

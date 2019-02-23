@@ -2,10 +2,8 @@ package com.smile.start.controller.contract;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.SignListTemplateDTO;
-import com.smile.start.dto.SignListTemplateSearchDTO;
+import com.smile.start.dto.*;
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Controller;
@@ -32,8 +30,28 @@ public class ContractInfoController extends BaseController {
 
     @PostMapping(value = "/list")
     @ResponseBody
-    public PageInfo<ContractInfoDTO> list(@RequestBody PageRequest<ContractInfoSearchDTO> searchDTO) {
-        PageInfo<ContractInfoDTO> contractInfoList = contractInfoService.findAll(searchDTO);
+    public PageInfo<ContractBaseInfoDTO> list(@RequestBody PageRequest<ContractInfoSearchDTO> searchDTO) {
+        PageInfo<ContractBaseInfoDTO> contractInfoList = contractInfoService.findAll(searchDTO);
         return contractInfoList;
+    }
+
+    /**
+     *
+     * @param contractInfoDTO
+     * @return
+     */
+    @PostMapping
+    @ResponseBody
+    public BaseResult add(@RequestBody ContractInfoDTO contractInfoDTO) {
+        try {
+            contractInfoService.insert(contractInfoDTO);
+            BaseResult result = new BaseResult();
+            result.setSuccess(true);
+            result.setErrorMessage("新增合同成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("新增合同失败", e);
+            return toResult(e);
+        }
     }
 }
