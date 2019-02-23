@@ -83,7 +83,7 @@ public class FilingApplyController extends BaseController {
     public BaseResult save(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
         User user = getUserByToken(request);
         if (null != user) {
-            filingApplyInfo.setApplicant(user.getUsername());
+            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
@@ -102,7 +102,7 @@ public class FilingApplyController extends BaseController {
     public BaseResult commit(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
         User user = getUserByToken(request);
         if (null != user) {
-            filingApplyInfo.setApplicant(user.getUsername());
+            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
@@ -153,7 +153,7 @@ public class FilingApplyController extends BaseController {
     public BaseResult rejectAndSave(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
         User user = getUserByToken(request);
         if (null != user) {
-            filingApplyInfo.setApplicant(user.getUsername());
+            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
         filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
