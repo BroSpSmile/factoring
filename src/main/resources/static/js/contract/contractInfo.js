@@ -18,6 +18,8 @@ var vue = new Vue({
 		addForm : {
 			baseInfo : {},
             contractExtendInfo : {},
+            contractReceivableAgreement : {},
+            contractReceivableConfirmation : {},
 			signList:[],
             projectMode : 1
 		},
@@ -70,9 +72,13 @@ var vue = new Vue({
             this.addForm = {
                 baseInfo : {},
                 contractExtendInfo : {},
+                contractReceivableAgreement : {},
+                contractReceivableConfirmation : {},
                 signList:[],
                 projectMode : 1
             };
+            this.addForm.contractExtendInfo.fpAccountName = '苏州市相城融金商业保理有限公司';
+            this.addForm.contractReceivableConfirmation.assigneeAccountName = '苏州市相城融金商业保理有限公司';
 		},
         /**
 		 * 保存合同

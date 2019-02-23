@@ -22,6 +22,16 @@ public class ContractInfoDTO implements Serializable {
     private ContractExtendInfoDTO contractExtendInfo;
 
     /**
+     * 应收账款转让登记协议
+     */
+    private ContractReceivableAgreementDTO contractReceivableAgreement;
+
+    /**
+     * 应收账款转让确认函
+     */
+    private ContractReceivableConfirmationDTO contractReceivableConfirmation;
+
+    /**
      * 签署清单
      */
     private List<SignListTemplateDTO> signList;
@@ -40,6 +50,22 @@ public class ContractInfoDTO implements Serializable {
 
     public void setContractExtendInfo(ContractExtendInfoDTO contractExtendInfo) {
         this.contractExtendInfo = contractExtendInfo;
+    }
+
+    public ContractReceivableAgreementDTO getContractReceivableAgreement() {
+        return contractReceivableAgreement;
+    }
+
+    public void setContractReceivableAgreement(ContractReceivableAgreementDTO contractReceivableAgreement) {
+        this.contractReceivableAgreement = contractReceivableAgreement;
+    }
+
+    public ContractReceivableConfirmationDTO getContractReceivableConfirmation() {
+        return contractReceivableConfirmation;
+    }
+
+    public void setContractReceivableConfirmation(ContractReceivableConfirmationDTO contractReceivableConfirmation) {
+        this.contractReceivableConfirmation = contractReceivableConfirmation;
     }
 
     public List<SignListTemplateDTO> getSignList() {

@@ -2,16 +2,11 @@ package com.smile.start.service.contract.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.ContractExtendInfoDao;
-import com.smile.start.dao.ContractInfoDao;
-import com.smile.start.dao.ContractSignListDao;
+import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.ContractExtendInfo;
-import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.ContractSignList;
-import com.smile.start.model.contract.SignListTemplate;
+import com.smile.start.model.contract.*;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
@@ -34,6 +29,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractExtendInfoDao contractExtendInfoDao;
+
+    @Resource
+    private ContractReceivableAgreementDao contractReceivableAgreementDao;
+
+    @Resource
+    private ContractReceivableConfirmationDao contractReceivableConfirmationDao;
 
     @Resource
     private ContractSignListDao contractSignListDao;
@@ -82,6 +83,18 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI",5));
         contractExtendInfo.setContractSerialNo(contractSerialNo);
         contractExtendInfoDao.insert(contractExtendInfo);
+
+        //保存应收账款转让确认函
+        final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
+        contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC",5));
+        contractReceivableConfirmation.setContractSerialNo(contractSerialNo);
+        contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
+
+        //保存应收账款转让登记协议
+        final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
+        contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA",5));
+        contractReceivableAgreement.setContractSerialNo(contractSerialNo);
+        contractReceivableAgreementDao.insert(contractReceivableAgreement);
         return contractInfoDao.insert(contractInfo);
     }
 
