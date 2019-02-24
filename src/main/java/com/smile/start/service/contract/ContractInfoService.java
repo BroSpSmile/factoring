@@ -38,9 +38,8 @@ public interface ContractInfoService {
     void update(ContractInfoDTO contractInfoDTO);
 
     /**
-     * 插入签署清单列表
-     * @param  contractSerialNo
-     * @param signListList
+     * 删除合同信息
+     * @param id
      */
-    void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList);
+    void delete(Long id);
 }

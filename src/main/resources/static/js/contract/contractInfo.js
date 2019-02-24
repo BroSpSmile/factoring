@@ -135,7 +135,7 @@ var vue = new Vue({
         /** 删除签署清单 */
         deleteSign:function(id){
             let self = this;
-            this.$http.delete("/signListTemplate/" + id).then(function(response){
+            this.$http.delete("/contractInfo/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",

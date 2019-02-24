@@ -111,18 +111,16 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     }
 
     /**
-     * 插入签署清单列表
-     * @param  contractSerialNo
-     * @param signListList
+     * 删除合同信息
+     * @param id
      */
     @Override
-    public void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList) {
-        contractSignListDao.deleteByContractSerialNo(contractSerialNo);
-        final List<ContractSignList> contractSignLists = contractInfoMapper.dtoList2doListSign(signListList);
-        contractSignLists.forEach(e -> {
-            e.setContractSerialNo(contractSerialNo);
-            e.setSerialNo(SerialNoGenerator.generateSerialNo("SL", 6));
-            contractSignListDao.insert(e);
-        });
+    public void delete(Long id) {
+        ContractInfo contractInfo = contractInfoDao.get(id);
+        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        contractInfoDao.delete(id);
     }
 }

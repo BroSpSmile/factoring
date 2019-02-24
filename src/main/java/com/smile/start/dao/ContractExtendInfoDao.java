@@ -1,6 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractExtendInfo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
@@ -29,4 +30,11 @@ public interface ContractExtendInfoDao {
      */
     @Update("update contract_extend_info set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},sp_company_name=#{spCompanyName},sp_residence=#{spResidence},sp_legal_person=#{spLegalPerson},sp_contact_address=#{spContactAddress},sp_post_code=#{spPostCode},sp_telephone=#{spTelephone},sp_fax=#{spFax},obligor=#{obligor},sign_date=#{signDate},contract_name=#{contractName},receivable_assignee_money=#{receivableAssigneeMoney},receivable_assignee_money_upper=#{receivableAssigneeMoneyUpper},receivable_recovery_money=#{receivableRecoveryMoney},receivable_recovery_money_upper=#{receivableRecoveryMoneyUpper},fp_account_name=#{fpAccountName},fp_bank_name=#{fpBankName},fp_account=#{fpAccount},sp_account_name=#{spAccountName},sp_bank_name=#{spBankName},sp_account=#{spAccount},ompulsory_rescission_date=#{ompulsoryRescissionDate} where id=#{id}")
     int update(ContractExtendInfo contractExtendInfo);
+
+    /**
+     * 按合同业务流水删除扩展信息
+     * @param contractSerialNo
+     */
+    @Delete("delete from contract_extend_info where contract_serial_no = #{contractSerialNo}")
+    void deleteByContractSerialNo(String contractSerialNo);
 }

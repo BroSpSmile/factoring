@@ -54,4 +54,24 @@ public class ContractInfoController extends BaseController {
             return toResult(e);
         }
     }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping(value = "/{id}")
+    @ResponseBody
+    public BaseResult delete(@PathVariable Long id) {
+        try {
+            contractInfoService.delete(id);
+            BaseResult result = new BaseResult();
+            result.setSuccess(true);
+            result.setErrorMessage("删除合同成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("删除合同失败", e);
+            return toResult(e);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractReceivableConfirmation;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
@@ -29,4 +30,11 @@ public interface ContractReceivableConfirmationDao {
      */
     @Update("update contract_receivable_confirmation set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},assignor=#{assignor},sign_date=#{signDate},obligor=#{obligor},business_contract_name=#{businessContractName},receivable_assignee_money=#{receivableAssigneeMoney},receivable_recovery_money=#{receivableRecoveryMoney},receivable_expiry_date=#{receivableExpiryDate},contract_receivable=#{contractReceivable},contract_receivable_upper=#{contractReceivableUpper},assignor_abligor_receivable=#{assignorAbligorReceivable},assignor_abligor_receivable_upper=#{assignorAbligorReceivableUpper},receivable_assignee_money_paid=#{receivableAssigneeMoneyPaid},receivable_assignee_money_paid_upper=#{receivableAssigneeMoneyPaidUpper},assignor_commit_date=#{assignorCommitDate},assignee_account_name=#{assigneeAccountName},assignee_bank_name=#{assigneeBankName},assignee_account=#{assigneeAccount},confirmation_address=#{confirmationAddress} where id=#{id}")
     int update(ContractReceivableConfirmation contractReceivableConfirmation);
+
+    /**
+     * 按合同业务流水删除确认函
+     * @param contractSerialNo
+     */
+    @Delete("delete from contract_receivable_confirmation where contract_serial_no = #{contractSerialNo}")
+    void deleteByContractSerialNo(String contractSerialNo);
 }
