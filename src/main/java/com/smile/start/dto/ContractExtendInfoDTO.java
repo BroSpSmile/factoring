@@ -29,7 +29,7 @@ public class ContractExtendInfoDTO implements Serializable {
     /**
      * 乙方公司名称
      */
-    private String spCompanyName = "";
+    private String spCompanyName;
 
     /**
      * 乙方住所
