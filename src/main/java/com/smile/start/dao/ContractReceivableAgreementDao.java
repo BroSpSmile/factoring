@@ -1,9 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractReceivableAgreement;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @author Joseph
@@ -19,7 +17,7 @@ public interface ContractReceivableAgreementDao {
      * @param contractReceivableAgreement
      * @return
      */
-    @Insert("insert into contract_receivable_agreement (serial_no,contract_serial_no,sp_name,sp_residence,sp_legal_person,sp_contact_address,sp_post_code,sp_telephone,sp_fax,contract_sign_day) values (#{serialNo},#{contractSerialNo},#{spName},#{spResidence},#{spLegalPerson},#{spContactAddress},#{spPostCode},#{spTelephone},#{spFax},#{contractSignDay})")
+    @Insert("insert into contract_receivable_agreement (serial_no,contract_serial_no,sp_name,sp_residence,sp_legal_person,sp_contact_address,sp_post_code,sp_telephone,sp_fax,contract_sign_date) values (#{serialNo},#{contractSerialNo},#{spName},#{spResidence},#{spLegalPerson},#{spContactAddress},#{spPostCode},#{spTelephone},#{spFax},#{contractSignDate})")
     long insert(ContractReceivableAgreement contractReceivableAgreement);
 
     /**
@@ -27,6 +25,20 @@ public interface ContractReceivableAgreementDao {
      * @param contractReceivableAgreement
      * @return
      */
-    @Update("update contract_receivable_agreement set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},sp_name=#{spName},sp_residence=#{spResidence},sp_legal_person=#{spLegalPerson},sp_contact_address=#{spContactAddress},sp_post_code=#{spPostCode},sp_telephone=#{spTelephone},sp_fax=#{spFax},contract_sign_day=#{contractSignDay} where id=#{id}")
+    @Update("update contract_receivable_agreement set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},sp_name=#{spName},sp_residence=#{spResidence},sp_legal_person=#{spLegalPerson},sp_contact_address=#{spContactAddress},sp_post_code=#{spPostCode},sp_telephone=#{spTelephone},sp_fax=#{spFax},contract_sign_date=#{contractSignDate} where id=#{id}")
     int update(ContractReceivableAgreement contractReceivableAgreement);
+
+    /**
+     * 按合同业务流水删除登记协议
+     * @param contractSerialNo
+     */
+    @Delete("delete from contract_receivable_agreement where contract_serial_no = #{contractSerialNo}")
+    void deleteByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 按合同业务流水查询登记协议
+     * @param contractSerialNo
+     */
+    @Select("select * from contract_receivable_agreement where contract_serial_no = #{contractSerialNo}")
+    ContractReceivableAgreement findByContractSerialNo(String contractSerialNo);
 }

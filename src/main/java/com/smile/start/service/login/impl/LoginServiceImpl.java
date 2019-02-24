@@ -63,7 +63,7 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
         token.setSerialNo(SerialNoGenerator.generateSerialNo("T", 7));
         token.setMobile(loginRequestDTO.getMobile());
         token.setGmtCreate(nowDate);
-        token.setTokenExpire(DateUtil.addMinutes(nowDate, 30));
+        token.setTokenExpire(DateUtil.addMinutes(nowDate, 600));
         tokenDao.insert(token);
         response.addCookie(new Cookie(Constants.TOKEN_COOKIE_KEY, tokenStr));
         return userInfoService.get(login.getId());

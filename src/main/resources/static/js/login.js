@@ -30,9 +30,8 @@ var app = new Vue({
             		passed = false;
             	}else{
             		this.$http.post("/login",this.form).then(function(response){
-            			console.log(response.data);
             			if (response.data.success) {
-            				window.location.href="index";
+            				window.location.href = "index";
         				} else {
         					self.$Message.error(response.data.errorMessage);
         				}

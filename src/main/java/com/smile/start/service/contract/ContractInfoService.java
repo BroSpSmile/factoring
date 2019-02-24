@@ -1,12 +1,10 @@
 package com.smile.start.service.contract;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.base.PageRequest;
-
-import java.util.List;
 
 /**
  * @author Joseph
@@ -16,11 +14,18 @@ import java.util.List;
 public interface ContractInfoService {
 
     /**
+     * 根据主键获取合同信息
+     * @param id
+     * @return
+     */
+    ContractInfoDTO get(Long id);
+
+    /**
      * 分页查询
      * @param page
      * @return
      */
-    PageInfo<ContractInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page);
+    PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page);
 
     /**
      * 插入合同基本信息
@@ -37,9 +42,8 @@ public interface ContractInfoService {
     void update(ContractInfoDTO contractInfoDTO);
 
     /**
-     * 插入签署清单列表
-     * @param  contractSerialNo
-     * @param signListList
+     * 删除合同信息
+     * @param id
      */
-    void insertSignList(String contractSerialNo, List<ContractSignListDTO> signListList);
+    void delete(Long id);
 }

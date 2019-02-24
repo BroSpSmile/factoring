@@ -2,6 +2,7 @@ package com.smile.start.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.OrganizationalDao;
 import com.smile.start.dto.OrganizationalDTO;
@@ -10,6 +11,7 @@ import com.smile.start.mapper.OrganizationalMapper;
 import com.smile.start.model.auth.Organizational;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.OrganizationalService;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +74,8 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         Date nowDate = new Date();
         organizational.setGmtCreate(nowDate);
         organizational.setGmtModify(nowDate);
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        organizational.setCreateUser(loginUser.getSerialNo());
         organizational.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         if(organizational.getParentSerialNo() == null) {
             organizational.setParentSerialNo("");
@@ -87,6 +91,8 @@ public class OrganizationalServiceImpl implements OrganizationalService {
     public void update(OrganizationalDTO organizationalDTO) {
         final Organizational organizational = organizationalMapper.dto2do(organizationalDTO);
         organizational.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        organizational.setModifyUser(loginUser.getSerialNo());
         organizationalDao.update(organizational);
     }
 

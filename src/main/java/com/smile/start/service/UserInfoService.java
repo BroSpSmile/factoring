@@ -5,6 +5,7 @@ import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.login.LoginUser;
 
 /**
  * @author Joseph
@@ -65,4 +66,11 @@ public interface UserInfoService {
      * @return
      */
     User getUserById(Long id);
+
+    /**
+     * 根据token获取登录用户信息，包括角色、权限信息
+     * @param token
+     * @return
+     */
+    LoginUser getLoginUserByToken(String token);
 }

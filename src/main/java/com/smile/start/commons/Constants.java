@@ -9,4 +9,6 @@ public final class Constants {
     private Constants(){}
 
     public final static String TOKEN_COOKIE_KEY = "token";
+
+    public final static String LOGIN_USER_SESSION_KEY = "loginUserSessionKey";
 }

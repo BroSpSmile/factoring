@@ -5,54 +5,55 @@ common.pageName = "signListTemplate";
 common.openName = [ '3' ];
 
 var vue = new Vue({
-	el : '#signListTemplate',
-	data : {
-		formInline:{
-			type:[]
-		},
-		queryParam : {
-			condition : {},
-			pageNum : 1,
-			pageSize : 10
-		},
-		addForm : {
-			signListName : "",
-			sort : ""
-		},
-		pageInfo:{},
-		tableColumns:[],
-		showResult:false,
-		modal1:false
-	},
-	created : function() {
-	},
-	methods : {
-		
-		/**
-		 * 查询
-		 */
-		query : function(page){
-			this.showResult=true;
-			this.queryParam.pageNum = page;
-			var _self = this;
-            _self.queryParam.condition = _self.formInline;
-			this.$http.post("/signListTemplate/list", _self.queryParam).then(
-					function(response) {
-                        _self.pageInfo = response.data;
-					}, function(error) {
-                    	_self.$Message.error(error.data.message);
-					})
-		},
-		/**
-		 * 新增签署清单
-		 */
-		addSign : function() {
-			this.modal1 = true;
-            this.addForm = {
-            };
-		},
+    el : '#signListTemplate',
+    data : {
+        formInline:{
+            type:[]
+        },
+        queryParam : {
+            condition : {},
+            pageNum : 1,
+            pageSize : 10
+        },
+        addForm : {
+            signListName : "",
+            sort : ""
+        },
+        pageInfo:{},
+        tableColumns:[],
+        showResult:false,
+        modal1:false
+    },
+    created : function() {
+    },
+    methods : {
+
         /**
-		 * 保存签署清单
+         * 查询
+         */
+        query : function(page){
+            this.showResult=true;
+            this.queryParam.pageNum = page;
+            var _self = this;
+            _self.queryParam.condition = _self.formInline;
+            this.$http.post("/signListTemplate/list", _self.queryParam).then(
+                function(response) {
+                    _self.pageInfo = response.data;
+                }, function(error) {
+                    _self.$Message.error(error.data.message);
+                })
+        },
+        /**
+         * 新增签署清单
+         */
+        addSign : function() {
+            this.modal1 = true;
+            this.addForm = {
+                projectMode : 1
+            };
+        },
+        /**
+         * 保存签署清单
          */
         saveSign : function() {
             let self = this;
@@ -89,7 +90,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }
-		},
+        },
         /**
          * 删除警告
          */
@@ -98,10 +99,10 @@ var vue = new Vue({
                 title: '删除提示',
                 content: '<p>确认是否删除当前签署清单</p>',
                 onOk: () => {
-                    this.deleteSign(id);
-                },
-                onCancel: () => {}
-            })
+                this.deleteSign(id);
+        },
+            onCancel: () => {}
+        })
         },
         /** 删除签署清单 */
         deleteSign:function(id){
@@ -129,20 +130,31 @@ var vue = new Vue({
             this.addForm = user;
             this.modal1 = true;
         },
-		/**
-		 * 取消保存
-		 */
-		cancel : function() {
-			this.modal1 = false;
+        /**
+         * 取消保存
+         */
+        cancel : function() {
+            this.modal1 = false;
             if(this.addForm.id == '') {
                 this.$refs['entityDataForm'].resetFields();
             }
-		},
+        },
+        /**
+         * 项目模式
+         */
+        getProjectModeDesc : function(value){
+            if(value === 1) {
+                return "有追索权模式";
+            } else if(value === 2) {
+                return "无追索权模式";
+            }
+            return "";
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
         }
-	}
+    }
 });
 
 vue.tableColumns=[
@@ -150,16 +162,24 @@ vue.tableColumns=[
         title: '签署清单名称',
         key: 'signListName',
         align: 'left'
+    },
+    {
+        title: '项目模式',
+        key: 'projectMode',
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getProjectModeDesc(param.row.projectMode));
+        }
     },{
         title: '排序值',
-        key: 'sort',
-        align: 'right'
+            key: 'sort',
+            align: 'right'
     },{
         title: '操作',
-        align: 'center',
-        render:(h,param)=>{
-        return h('div', [
-            h('span'),
+            align: 'center',
+            render:(h,param)=>{
+            return h('div', [
+                h('span'),
                 h('Button', {
                     props: {
                         size: "small",
@@ -170,26 +190,26 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateSign(param.row);
-                        }
-                    }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "error"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.deleteWarn(param.row.id);
-                        }
-                    }
-                }, '删除')
-                ]
-            )
+                        vue.updateSign(param.row);
+        }
+        }
+        }, '编辑'),
+            h('Button', {
+                props: {
+                    size: "small",
+                    type: "error"
+                },
+                style: {
+                    marginRight: '5px'
+                },
+                on: {
+                    click: () => {
+                    vue.deleteWarn(param.row.id);
         }
     }
+    }, '删除')
+    ]
+    )
+    }
+}
 ];

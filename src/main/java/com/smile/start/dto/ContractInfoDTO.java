@@ -1,6 +1,7 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -11,93 +12,80 @@ public class ContractInfoDTO implements Serializable {
     private static final long serialVersionUID = 8761006705859319164L;
 
     /**
-     * 主键
+     * 基础信息
      */
-    private Long id;
+    private ContractBaseInfoDTO baseInfo;
 
     /**
-     * 业务流水
+     * 合同扩展信息
      */
-    private String serialNo;
+    private ContractExtendInfoDTO contractExtendInfo;
 
     /**
-     * 合同编号
+     * 应收账款转让登记协议
      */
-    private String contractCode;
+    private ContractReceivableAgreementDTO contractReceivableAgreement;
 
     /**
-     * 合同名称
+     * 应收账款转让确认函
      */
-    private String contractName;
+    private ContractReceivableConfirmationDTO contractReceivableConfirmation;
 
     /**
-     * 项目模式：1、有追索权模式；2、无追索权模式
+     * 签署清单
      */
-    private Integer projectMode;
+    private List<ContractSignListDTO> signList;
 
     /**
-     * 合同模板：1、标准模板；2、自定义模板
+     * 附件列表
      */
-    private Integer contractTemplate;
+    private List<ContractAttachDTO> attachList;
 
-    /**
-     * 状态
-     */
-    private Integer status;
-
-    public Long getId() {
-        return id;
+    public ContractBaseInfoDTO getBaseInfo() {
+        return baseInfo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBaseInfo(ContractBaseInfoDTO baseInfo) {
+        this.baseInfo = baseInfo;
     }
 
-    public String getSerialNo() {
-        return serialNo;
+    public ContractExtendInfoDTO getContractExtendInfo() {
+        return contractExtendInfo;
     }
 
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
+    public void setContractExtendInfo(ContractExtendInfoDTO contractExtendInfo) {
+        this.contractExtendInfo = contractExtendInfo;
     }
 
-    public String getContractCode() {
-        return contractCode;
+    public ContractReceivableAgreementDTO getContractReceivableAgreement() {
+        return contractReceivableAgreement;
     }
 
-    public void setContractCode(String contractCode) {
-        this.contractCode = contractCode;
+    public void setContractReceivableAgreement(ContractReceivableAgreementDTO contractReceivableAgreement) {
+        this.contractReceivableAgreement = contractReceivableAgreement;
     }
 
-    public String getContractName() {
-        return contractName;
+    public ContractReceivableConfirmationDTO getContractReceivableConfirmation() {
+        return contractReceivableConfirmation;
     }
 
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
+    public void setContractReceivableConfirmation(ContractReceivableConfirmationDTO contractReceivableConfirmation) {
+        this.contractReceivableConfirmation = contractReceivableConfirmation;
     }
 
-    public Integer getProjectMode() {
-        return projectMode;
+    public List<ContractSignListDTO> getSignList() {
+        return signList;
     }
 
-    public void setProjectMode(Integer projectMode) {
-        this.projectMode = projectMode;
+    public void setSignList(List<ContractSignListDTO> signList) {
+        this.signList = signList;
     }
 
-    public Integer getContractTemplate() {
-        return contractTemplate;
+    public List<ContractAttachDTO> getAttachList() {
+        return attachList;
     }
 
-    public void setContractTemplate(Integer contractTemplate) {
-        this.contractTemplate = contractTemplate;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setAttachList(List<ContractAttachDTO> attachList) {
+        this.attachList = attachList;
     }
 }

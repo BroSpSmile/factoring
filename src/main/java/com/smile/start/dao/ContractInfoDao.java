@@ -2,10 +2,15 @@ package com.smile.start.dao;
 
 import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.model.contract.ContractInfo;
+<<<<<<< HEAD
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+=======
+import com.smile.start.model.contract.SignListTemplate;
+import org.apache.ibatis.annotations.*;
+>>>>>>> Joseph
 
 import java.util.List;
 
@@ -16,6 +21,14 @@ import java.util.List;
  */
 @Mapper
 public interface ContractInfoDao {
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @Select("select * from contract_info where id = #{id}")
+    ContractInfo get(Long id);
 
     /**
      * 新增合同基本信息
@@ -47,4 +60,11 @@ public interface ContractInfoDao {
             + "<if test = 'status!=null'> and status = #{status}</if>"
             + "</script>")
     List<ContractInfo> findByParam(ContractInfoSearchDTO contractInfoSearchDTO);
+
+    /**
+     * 删除合同信息
+     * @param id
+     */
+    @Delete("delete from contract_info where id = #{id}")
+    void delete(Long id);
 }

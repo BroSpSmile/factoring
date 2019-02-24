@@ -14,6 +14,11 @@ public class SignListTemplateDTO implements Serializable {
     private String signListName;
     private Integer sort;
 
+    /**
+     * 项目模式：1、有追索权模式；2、无追索权模式
+     */
+    private Integer projectMode;
+
     public Long getId() {
         return id;
     }
@@ -46,6 +51,14 @@ public class SignListTemplateDTO implements Serializable {
         this.sort = sort;
     }
 
+    public Integer getProjectMode() {
+        return projectMode;
+    }
+
+    public void setProjectMode(Integer projectMode) {
+        this.projectMode = projectMode;
+    }
+
     @Override
     public String toString() {
         return "SignListTemplateDTO{" +
@@ -53,6 +66,7 @@ public class SignListTemplateDTO implements Serializable {
                 ", serialNo='" + serialNo + '\'' +
                 ", signListName='" + signListName + '\'' +
                 ", sort=" + sort +
+                ", projectMode=" + projectMode +
                 '}';
     }
 }

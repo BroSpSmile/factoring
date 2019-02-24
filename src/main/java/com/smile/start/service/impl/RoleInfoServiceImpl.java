@@ -2,6 +2,7 @@ package com.smile.start.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
@@ -11,6 +12,7 @@ import com.smile.start.model.auth.*;
 import com.smile.start.model.auth.Role;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.RoleInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -82,6 +84,8 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         Date nowDate = new Date();
         role.setGmtCreate(nowDate);
         role.setGmtModify(nowDate);
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        role.setCreateUser(loginUser.getSerialNo());
         role.setSerialNo(SerialNoGenerator.generateSerialNo("R", 7));
         role.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         return roleDao.insert(role);
@@ -96,6 +100,8 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     public void update(AuthRoleInfoDTO authRoleInfoDTO) {
         final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);
         role.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        role.setModifyUser(loginUser.getSerialNo());
         roleDao.update(role);
     }
 

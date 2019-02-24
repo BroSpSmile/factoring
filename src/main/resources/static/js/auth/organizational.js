@@ -2,7 +2,7 @@
  * 组织架构信息
  */
 common.pageName = "organizational";
-common.openName = [ '7' ];
+common.openName = [ '8' ];
 
 var vue = new Vue({
     el : '#organizational',

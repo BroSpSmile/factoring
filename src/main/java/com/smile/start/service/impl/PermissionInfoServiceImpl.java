@@ -2,6 +2,7 @@ package com.smile.start.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dao.RoleDao;
@@ -12,6 +13,7 @@ import com.smile.start.model.auth.Permission;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
 import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.PermissionInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -74,6 +76,8 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         Date nowDate = new Date();
         permission.setGmtCreate(nowDate);
         permission.setGmtModify(nowDate);
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        permission.setCreateUser(loginUser.getSerialNo());
         permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
         permission.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         if(permission.getParentSerialNo() == null) {
@@ -91,6 +95,8 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     public void update(AuthPermissionInfoDTO authPermissionInfoDTO) {
         final Permission permission = permissionInfoMapper.dto2do(authPermissionInfoDTO);
         permission.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        permission.setModifyUser(loginUser.getSerialNo());
         permissionDao.update(permission);
     }
 
