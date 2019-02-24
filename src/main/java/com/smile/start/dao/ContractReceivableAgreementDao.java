@@ -1,10 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractReceivableAgreement;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @author Joseph
@@ -37,4 +34,11 @@ public interface ContractReceivableAgreementDao {
      */
     @Delete("delete from contract_receivable_agreement where contract_serial_no = #{contractSerialNo}")
     void deleteByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 按合同业务流水查询登记协议
+     * @param contractSerialNo
+     */
+    @Select("select * from contract_receivable_agreement where contract_serial_no = #{contractSerialNo}")
+    ContractReceivableAgreement findByContractSerialNo(String contractSerialNo);
 }

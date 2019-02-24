@@ -5,6 +5,7 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.dto.*;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,26 @@ public class ContractInfoController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
         return "contract/contractInfo";
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public SingleResult<ContractInfoDTO> get(@PathVariable Long id) {
+        try {
+            ContractInfoDTO contractInfoDTO = contractInfoService.get(id);
+            SingleResult<ContractInfoDTO> result = new SingleResult<>();
+            result.setSuccess(true);
+            result.setData(contractInfoDTO);
+            return result;
+        } catch (Exception e) {
+            logger.error("查询合同信息失败", e);
+            return toResult(e, ContractInfoDTO.class);
+        }
     }
 
     @PostMapping(value = "/list")
@@ -51,6 +72,26 @@ public class ContractInfoController extends BaseController {
             return result;
         } catch (Exception e) {
             logger.error("新增合同失败", e);
+            return toResult(e);
+        }
+    }
+
+    /**
+     *
+     * @param contractInfoDTO
+     * @return
+     */
+    @PutMapping
+    @ResponseBody
+    public BaseResult update(@RequestBody ContractInfoDTO contractInfoDTO) {
+        try {
+            BaseResult result = new BaseResult();
+            contractInfoService.update(contractInfoDTO);
+            result.setSuccess(true);
+            result.setErrorMessage("更新合同成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("更新合同失败", e);
             return toResult(e);
         }
     }

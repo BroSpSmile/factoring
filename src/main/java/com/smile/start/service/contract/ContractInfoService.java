@@ -4,10 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.base.PageRequest;
-
-import java.util.List;
 
 /**
  * @author Joseph
@@ -15,6 +12,13 @@ import java.util.List;
  * @since 1.8
  */
 public interface ContractInfoService {
+
+    /**
+     * 根据主键获取合同信息
+     * @param id
+     * @return
+     */
+    ContractInfoDTO get(Long id);
 
     /**
      * 分页查询

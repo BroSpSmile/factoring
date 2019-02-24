@@ -19,6 +19,7 @@ import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
@@ -88,6 +89,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
      * @return
      */
     @Override
+    @Transactional
     public Long insert(FlowConfigDTO flowConfigDTO) {
         FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
         String flowSerialNo = SerialNoGenerator.generateSerialNo("FC", 6);

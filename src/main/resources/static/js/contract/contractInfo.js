@@ -20,12 +20,14 @@ var vue = new Vue({
             contractExtendInfo : {},
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
-			signList:[],
+			signList : [],
+            attachList : [],
             projectMode : 1
 		},
 		pageInfo:{},
 		tableColumns:[],
         statusList:[],
+        fileList : [],
 		showResult:false,
 		modal1:false,
         panelOpen : "0"
@@ -74,7 +76,8 @@ var vue = new Vue({
                 contractExtendInfo : {},
                 contractReceivableAgreement : {},
                 contractReceivableConfirmation : {},
-                signList:[],
+                signList : [],
+                attachList : [],
                 projectMode : 1
             };
             this.addForm.contractExtendInfo.fpAccountName = '苏州市相城融金商业保理有限公司';
@@ -85,6 +88,7 @@ var vue = new Vue({
          */
         saveContract : function() {
             let self = this;
+            this.genFileInfo();
             if(this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === ""){
                 this.$http.post("/contractInfo", this.addForm).then(function(response) {
                     if (response.data.success) {
@@ -154,9 +158,19 @@ var vue = new Vue({
         /**
          * 更新合同
          */
-        updateContract : function(user){
-            this.addForm = user;
+        updateContract : function(id){
+            let self = this;
+            this.$http.get("/contractInfo/" + id).then(function(response){
+                if (response.data.success) {
+                    self.addForm = response.data.data;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
             this.modal1 = true;
+            console.log(this.addForm)
         },
 		/**
 		 * 取消保存
@@ -227,6 +241,84 @@ var vue = new Vue({
         },
         handleRemove : function(index) {
             this.addForm.signList[index].status = 1;
+        },
+        /**
+         * 文件上传成功
+         */
+        uploadSuccess: function (response, file, fileList) {
+            this.fileList = fileList;
+            console.log(fileList);
+        },
+        /**
+         * 文件上传失败
+         */
+        uploadError: function (error, file, fileList) {
+            this.fileList = fileList;
+            console.log(error);
+        },
+        removeFile: function (file, fileList) {
+            this.fileList = fileList;
+            console.log(file);
+            let fileId = file.response.data.fileId;
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+        },
+        deleteFile: function (fileId) {
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+                    for (let index in self.addForm.attachList) {
+                        if (self.addForm.attachList[index].fileId === fileId) {
+                            let item = self.addForm.attachList[index];
+                            this.remove(self.addForm.attachList, item);
+                        }
+                    }
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+        },
+        removeAllFile: function () {
+            for (let index in this.addForm.fileList) {
+                let fileId = this.addForm.fileList[index].response.data.fileId;
+                this.$http.delete("/file/" + fileId).then(function (response) {
+                    if (response.data.success) {
+                        //self.$Message.info("删除成功");
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function (error) {
+                    self.$Message.error(error.data.errorMessage);
+                })
+            }
+        },
+        genFileInfo: function () {
+            for (let index in this.fileList) {
+                let item = {
+                    attachName: this.fileList[index].name,
+                    fileId: this.fileList[index].response.data.fileId
+                };
+                this.addForm.attachList.push(item);
+            }
+            return true;
+        },
+        remove: function (array, val) {
+            let index = array.indexOf(val);
+            if (index > -1) {
+                array.splice(index, 1);
+            }
         }
 	}
 });
@@ -270,7 +362,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.updateContract(param.row);
+                            vue.updateContract(param.row.id);
                         }
                     }
                 }, '编辑'),

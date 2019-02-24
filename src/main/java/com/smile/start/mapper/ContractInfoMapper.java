@@ -23,6 +23,7 @@ public interface ContractInfoMapper {
     ContractSignListDTO do2dto(ContractSignList contractSignList);
     ContractSignList dto2do(ContractSignListDTO dto);
     List<ContractSignList> dtoList2doListSign(List<ContractSignListDTO> dtoList);
+    List<ContractSignListDTO> doList2dtoListSign(List<ContractSignList> doList);
 
     ContractExtendInfoDTO do2dto(ContractExtendInfo contractExtendInfo);
     ContractExtendInfo dto2do(ContractExtendInfoDTO dto);
@@ -32,4 +33,8 @@ public interface ContractInfoMapper {
 
     ContractReceivableConfirmationDTO do2dto(ContractReceivableConfirmation contractReceivableConfirmation);
     ContractReceivableConfirmation dto2do(ContractReceivableConfirmationDTO dto);
+
+    ContractAttach dto2do(ContractAttachDTO dto);
+    ContractAttachDTO do2dto(ContractAttach contractAttach);
+    List<ContractAttachDTO> doList2dtoListAttach(List<ContractAttach> doList);
 }

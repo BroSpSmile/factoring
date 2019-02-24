@@ -1,10 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractExtendInfo;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @author Joseph
@@ -37,4 +34,11 @@ public interface ContractExtendInfoDao {
      */
     @Delete("delete from contract_extend_info where contract_serial_no = #{contractSerialNo}")
     void deleteByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 按合同业务流水查询扩展信息
+     * @param contractSerialNo
+     */
+    @Select("select * from contract_extend_info where contract_serial_no = #{contractSerialNo}")
+    ContractExtendInfo findByContractSerialNo(String contractSerialNo);
 }

@@ -34,7 +34,12 @@ public class ContractInfoDTO implements Serializable {
     /**
      * 签署清单
      */
-    private List<SignListTemplateDTO> signList;
+    private List<ContractSignListDTO> signList;
+
+    /**
+     * 附件列表
+     */
+    private List<ContractAttachDTO> attachList;
 
     public ContractBaseInfoDTO getBaseInfo() {
         return baseInfo;
@@ -68,11 +73,19 @@ public class ContractInfoDTO implements Serializable {
         this.contractReceivableConfirmation = contractReceivableConfirmation;
     }
 
-    public List<SignListTemplateDTO> getSignList() {
+    public List<ContractSignListDTO> getSignList() {
         return signList;
     }
 
-    public void setSignList(List<SignListTemplateDTO> signList) {
+    public void setSignList(List<ContractSignListDTO> signList) {
         this.signList = signList;
+    }
+
+    public List<ContractAttachDTO> getAttachList() {
+        return attachList;
+    }
+
+    public void setAttachList(List<ContractAttachDTO> attachList) {
+        this.attachList = attachList;
     }
 }
