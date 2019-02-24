@@ -115,4 +115,24 @@ public class ContractInfoController extends BaseController {
             return toResult(e);
         }
     }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping(value = "/stateFlow/{id}")
+    @ResponseBody
+    public BaseResult stateFlow(@PathVariable Long id) {
+        try {
+            contractInfoService.delete(id);
+            BaseResult result = new BaseResult();
+            result.setSuccess(true);
+            result.setErrorMessage("状态流转成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("状态流转失败", e);
+            return toResult(e);
+        }
+    }
 }

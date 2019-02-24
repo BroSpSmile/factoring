@@ -156,6 +156,26 @@ var vue = new Vue({
             })
         },
         /**
+         * 提交审核警告
+         */
+        submitAuditWarn:function(id){
+            this.$Modal.confirm({
+                title: '审核提示',
+                content: '<p>确认要提交审核</p>',
+                onOk: () => {
+                    this.stateFlow(id);
+                },
+                onCancel: () => {}
+            })
+        },
+        /**
+         * 状态流转
+         * @param id
+         */
+        stateFlow : function(id) {
+
+        },
+        /**
          * 更新合同
          */
         updateContract : function(id){
@@ -366,6 +386,20 @@ vue.tableColumns=[
                         }
                     }
                 }, '编辑'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "warning"
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            vue.submitAuditWarn(param.row.id);
+                        }
+                    }
+                }, '提交审核'),
                 h('Button', {
                     props: {
                         size: "small",
