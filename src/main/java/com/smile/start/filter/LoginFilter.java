@@ -1,6 +1,8 @@
 package com.smile.start.filter;
 
 import com.smile.start.commons.Constants;
+import com.smile.start.commons.LoginHandler;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.UserInfoService;
 import org.springframework.core.annotation.Order;
 
@@ -49,6 +51,12 @@ public class LoginFilter implements Filter {
         } else {
             String token = getToken(request);
             if (token != null && userInfoService.validateToken(token)) {
+                //从session中获取登录用户信息，如果session中没有则从数据库中获取
+                LoginUser loginUser = (LoginUser) request.getSession().getAttribute(Constants.LOGIN_USER_SESSION_KEY);
+                if(loginUser == null) {
+                    loginUser = userInfoService.getLoginUserByToken(token);
+                }
+                LoginHandler.setLoginUser(loginUser);
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 request.getRequestDispatcher("/login").forward(request, response);

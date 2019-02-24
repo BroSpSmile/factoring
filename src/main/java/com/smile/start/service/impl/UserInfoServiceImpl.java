@@ -6,10 +6,7 @@ import com.smile.start.commons.Asserts;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.TokenDao;
 import com.smile.start.dao.UserDao;
-import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.OrganizationalDTO;
-import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.dto.*;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
@@ -18,6 +15,9 @@ import com.smile.start.model.auth.UserRole;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.enums.StatusEnum;
+import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.login.LoginUserPermission;
+import com.smile.start.model.login.LoginUserRole;
 import com.smile.start.service.OrganizationalService;
 import com.smile.start.service.PermissionInfoService;
 import com.smile.start.service.RoleInfoService;
@@ -224,6 +224,57 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public User getUserById(Long id) {
         return userDao.get(id);
+    }
+
+    /**
+     * 根据token获取登录用户信息，包括角色、权限信息
+     * @param token
+     * @return
+     */
+    @Override
+    public LoginUser getLoginUserByToken(String token) {
+        Token tokenDo = tokenDao.findByToken(token);
+        User user = userDao.getByMobile(tokenDo.getMobile());
+
+        //封装用户信息
+        LoginUser loginUser = new LoginUser();
+        loginUser.setSerialNo(user.getSerialNo());
+        loginUser.setUsername(user.getUsername());
+        loginUser.setMobile(user.getMobile());
+        loginUser.setOpenid(user.getOpenid());
+        loginUser.setEmail(user.getEmail());
+
+        //获取用户角色信息
+        final List<AuthRoleInfoDTO> roleList = roleInfoService.findByUserSerialNo(user.getSerialNo());
+        if(!CollectionUtils.isEmpty(roleList)) {
+            List<LoginUserRole> userRoleList = Lists.newArrayList();
+            roleList.forEach(e -> {
+                LoginUserRole loginUserRole = new LoginUserRole();
+                loginUserRole.setSerialNo(e.getSerialNo());
+                loginUserRole.setRoleCode(e.getRoleCode());
+                loginUserRole.setRoleName(e.getRoleName());
+                loginUserRole.setRoleDesc(e.getRoleDesc());
+                userRoleList.add(loginUserRole);
+            });
+            loginUser.setRoleList(userRoleList);
+        }
+
+        //获取用户权限信息
+        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByUserSerialNo(user.getSerialNo());
+        if(!CollectionUtils.isEmpty(permissionList)) {
+            List<LoginUserPermission> userPermissionList = Lists.newArrayList();
+            permissionList.forEach(e -> {
+                LoginUserPermission loginUserPermission = new LoginUserPermission();
+                loginUserPermission.setSerialNo(e.getSerialNo());
+                loginUserPermission.setPermissionCode(e.getPermissionCode());
+                loginUserPermission.setPermissionName(e.getPermissionName());
+                loginUserPermission.setPermissionType(e.getPermissionType());
+                loginUserPermission.setUrl(e.getUrl());
+                userPermissionList.add(loginUserPermission);
+            });
+            loginUser.setPermissionList(userPermissionList);
+        }
+        return loginUser;
     }
 
 }
