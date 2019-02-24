@@ -1,6 +1,7 @@
 package com.smile.start.service.contract.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.*;
 import com.smile.start.dto.*;
@@ -8,6 +9,7 @@ import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.*;
 import com.smile.start.model.enums.ContractStatusEnum;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,6 +102,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtCreate(nowDate);
         contractInfo.setGmtModify(nowDate);
         contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        contractInfo.setCreateUser(loginUser.getSerialNo());
 
         //保存签署清单
         insertSignList(contractInfoDTO.getSignList(), contractSerialNo);
@@ -137,6 +141,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public void update(ContractInfoDTO contractInfoDTO) {
         final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
         contractInfo.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        contractInfo.setModifyUser(loginUser.getSerialNo());
         contractInfoDao.update(contractInfo);
 
         //更新合同信息

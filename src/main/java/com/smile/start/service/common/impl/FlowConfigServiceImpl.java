@@ -2,6 +2,7 @@ package com.smile.start.service.common.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
@@ -16,6 +17,7 @@ import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.common.StatusInfo;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,8 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         Date nowDate = new Date();
         flowConfig.setGmtCreate(nowDate);
         flowConfig.setGmtModify(nowDate);
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        flowConfig.setCreateUser(loginUser.getSerialNo());
 
         //保存状态信息
         final List<FlowStatusDTO> statusList = flowConfigDTO.getStatusList();
@@ -131,6 +135,8 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     public void update(FlowConfigDTO flowConfigDTO) {
         FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
         flowConfig.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        flowConfig.setModifyUser(loginUser.getSerialNo());
         flowConfigDao.update(flowConfig);
     }
 

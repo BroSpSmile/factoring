@@ -3,6 +3,7 @@ package com.smile.start.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.Asserts;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.TokenDao;
 import com.smile.start.dao.UserDao;
@@ -128,6 +129,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         Date nowDate = new Date();
         user.setGmtCreate(nowDate);
         user.setGmtModify(nowDate);
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        user.setCreateUser(loginUser.getSerialNo());
         user.setStatus(StatusEnum.VALID.getValue());
         user.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         //TODO
@@ -148,6 +151,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void update(AuthUserInfoDTO authUserInfoDTO) {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
         user.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        user.setModifyUser(loginUser.getSerialNo());
         userDao.update(user);
 
         //处理角色信息
