@@ -19,10 +19,19 @@ var vue = new Vue({
 		addMeeting : {},
 		modal1 : false,
 		statusItems : [],
-		users:[]
+		users:[],
+		project:{},
+		meetingReminds:[
+			{value:15,text:"会议开始前15分钟"},
+			{value:30,text:"会议开始前30分钟"},
+			{value:45,text:"会议开始前45分钟"},
+			{value:60,text:"会议开始前60分钟"}
+		]
 	},
 	created : function() {
+		this.project.id = document.getElementById("projectId").value;
 		this.initDate();
+		this.findProject();
 	},
 	filters:{
 		timeFilter:function(value){
@@ -53,6 +62,26 @@ var vue = new Vue({
 			}, function(error) {
 				console.error(error);
 			})
+		},
+		
+		/**
+		 * 查询项目
+		 */
+		findProject:function(){
+			let _self = this;
+			if(this.project.id){
+				this.$http.get("/approval/"+this.project.id).then(function(response){
+					_self.project = response.data;
+					if(_self.project){
+						_self.addMeeting.theme = _self.project.projectName+"立项会";
+						_self.addMeeting.content = _self.project.projectName + "立项讨论会";
+						_self.addMeeting.kind = "APPROVAL";
+						_self.modal1 = true;
+					}
+				},function(error){
+					console.error(error);
+				})
+			}
 		},
 
 		/**

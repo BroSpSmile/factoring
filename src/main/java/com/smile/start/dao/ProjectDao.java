@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.smile.start.model.meeting.Meeting;
@@ -25,7 +26,8 @@ public interface ProjectDao {
      * @param project
      * @return
      */
-    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{person},#{progress})")
+    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{user.id},#{progress})")
+    @SelectKey(statement="select last_insert_id()", keyProperty="id", before=false, resultType=long.class)  
     long insert(Project project);
 
     /**

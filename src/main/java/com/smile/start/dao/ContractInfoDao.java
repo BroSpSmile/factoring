@@ -1,9 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.SignListTemplate;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

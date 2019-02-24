@@ -213,4 +213,35 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         return result;
     }
 
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#schedule()
+     */
+    @Override
+    public BaseResult schedule() {
+        MeetingSearch search = new MeetingSearch();
+        search.setBeginTime(new Date());
+        List<MeetingExt> meetings = meetingDao.findNotEnd(search);
+        meetings.stream().forEach(meeting -> update(meeting));
+        return new BaseResult();
+    }
+
+    /**
+     * 更新会议状态
+     * @param meeting
+     */
+    private void update(MeetingExt meeting) {
+        if (MeetingStatus.PLAN.equals(meeting.getStatus())) {
+            meeting.setStatus(MeetingStatus.MEETING);
+            meetingDao.update(meeting);
+        } else if (MeetingStatus.MEETING.equals(meeting.getStatus())) {
+            if (DateUtil.isBeforeNow(meeting.getEndTime())) {
+                meeting.setStatus(MeetingStatus.END);
+                meetingDao.update(meeting);
+            }
+        }
+        if (DateUtil.isBeforeNow(DateUtil.addMinutes(meeting.getBeginTime(), -1 * meeting.getRemind()))) {
+            //TODO 会议通知
+        }
+    }
+
 }

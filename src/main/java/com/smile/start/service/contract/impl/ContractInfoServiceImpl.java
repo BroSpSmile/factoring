@@ -9,7 +9,6 @@ import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractSignList;
-import com.smile.start.model.contract.SignListTemplate;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 

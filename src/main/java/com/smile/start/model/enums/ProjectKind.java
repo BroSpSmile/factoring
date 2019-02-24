@@ -14,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ProjectKind {
 	/**  */
-	FACTORING("FACTORING", "保理", "FCT"),
+	FACTORING("FACTORING", "保理", "RJBL"),
 	/**  */
-	FUND("FUND", "母基金", "FND"),
+	FUND("FUND", "母基金", "RJMJ"),
 	/**  */
-	INVESTMENT("INVESTMENT", "直投", "INV");
+	INVESTMENT("INVESTMENT", "直投", "RJZT");
 
 	ProjectKind(String code, String desc, String scode) {
 		this.code = code;

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="factoring">
+			<row>
+				<i-col span="22" offset="1">
+					<br>
+					<h2>新建项目</h2>
+					<br>
+				</i-col>
+				<i-col span="16" offset="1">
+					<i-form :label-width="130" >
+						<form-item label="项目名称" prop="projectName">
+							 <i-input placeholder="输入项目名称"  v-model="detail.project.projectName"></i-input>
+						</form-item>
+						<form-item label="与让人" prop="creditor">
+							 <i-input placeholder="输入与让人"  v-model="detail.creditor"></i-input>
+						</form-item>
+						<form-item label="债务人" prop="debtor">
+							 <i-input placeholder="输入债务人"  v-model="detail.debtor"></i-input>
+						</form-item>
+						<form-item label="追索权" prop="model">
+							 <radio-group v-model="detail.project.model">
+							 	<radio label="RECOURSE_RIGHT">有追索权模式</radio>
+							 	<radio label="DIS_RECOURSE_RIGHT">无追索权模式</radio>
+							 </radio-group>
+						</form-item>
+						<row>
+							<i-col span="8">
+								<form-item label="应收账款受让款(万元)" prop="assignee">
+									 <input-number placeholder="输入应收账款受让款" min="0" v-model="detail.assignee"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="8">
+								<form-item label="应收账款(万元)" prop="receivable">
+									 <input-number placeholder="输入应收账款" min="0" v-model="detail.receivable"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="8">
+								<form-item label="已投放金额(万元)" prop="dropAmount">
+									 <input-number placeholder="输入已投放金额" min="0" v-model="detail.dropAmount"></input-number>
+								</form-item>
+							</i-col>
+						</row>
+						<row>
+							<i-col span="6">
+								<form-item label="转让年限(年)" prop="duration">
+									<input-number placeholder="输入转让年限" min="1"  v-model="detail.duration"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="9">
+								<form-item label="合同汇款日" prop="remittanceDay">
+									<date-picker type="date" placeholder="选择合同汇款日" v-model="detail.remittanceDay"></date-picker>
+								</form-item>
+							</i-col>
+							<i-col span="9">
+								<form-item label="实际回款日" prop="realBackDay">
+									<date-picker type="date" placeholder="选择实际回款日" v-model="detail.realBackDay"></date-picker>
+								</form-item>
+							</i-col>
+						</row>
+						<row>
+							<i-col span="12">
+								<form-item label="回款金额(万元)" prop="backAmount">
+									 <input-number placeholder="输入回款金额"  v-model="detail.backAmount"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="12">
+								<form-item label="是否回款" prop="moneyBack">
+									<radio-group v-model="detail.moneyBack">
+									 	<radio label="true">是</radio>
+									 	<radio label="false">否</radio>
+									 </radio-group>
+								</form-item>
+							</i-col>
+						</row>
+						<row>
+							<i-col span="12">
+								<form-item label="保理费合计(万元)" prop="totalFactoringFee">
+									 <input-number placeholder="输入项目名称"  v-model="detail.totalFactoringFee"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="12">
+								<form-item label="保理费分期(万元)" prop="factoringStages">
+									 <input-number placeholder="输入项目名称"  v-model="detail.factoringStages"></input-number>
+								</form-item>
+							</i-col>
+						</row>
+						<row>
+							<i-col span="12">
+								<form-item label="收益率(/年)" prop="returnRate">
+									 <input-number placeholder="输入项目名称"  v-model="detail.returnRate"></input-number>
+								</form-item>
+							</i-col>
+							<i-col span="12">
+								<form-item label="保理费到账日(前)" prop="accountDay">
+									<date-picker type="date" placeholder="选择保理费到账日" v-model="detail.accountDay"></date-picker>
+								</form-item>
+							</i-col>
+						</row>
+						<row>
+							<i-col span="12">
+								<form-item label="已开发票" prop="invoicing">
+									<radio-group v-model="detail.invoicing">
+									 	<radio label="true">是</radio>
+									 	<radio label="false">否</radio>
+									 </radio-group>
+								</form-item>
+							</i-col>
+							<i-col span="12">
+								<form-item label="是否已支付" prop="paied">
+									<radio-group v-model="detail.paied">
+									 	<radio label="true">是</radio>
+									 	<radio label="false">否</radio>
+									 </radio-group>
+								</form-item>
+							</i-col>
+						</row>
+						<form-item label="备注" prop="remark">
+							 <i-input placeholder="输入项目名称"  v-model="detail.remark"></i-input>
+						</form-item>
+						<row>
+							<i-col offset="4"><i-button type="success"  @click="commit">创建项目</i-button></i-col>
+						</row>
+	                </i-form>
+                </i-col>
+			</row>
+			<br><br>
+	    </div>
+	    <script src="js/project/factoring.js"></script>
+	</div>
+</html>
