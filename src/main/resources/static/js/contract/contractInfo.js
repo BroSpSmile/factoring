@@ -5,37 +5,37 @@ common.pageName = "contractInfo";
 common.openName = [ '3' ];
 
 var vue = new Vue({
-	el : '#contractInfo',
-	data : {
-		formInline:{
+    el : '#contractInfo',
+    data : {
+        formInline:{
             type : []
-		},
-		queryParam : {
-			condition : {},
-			pageNum : 1,
-			pageSize : 10
-		},
-		addForm : {
-			baseInfo : {},
+        },
+        queryParam : {
+            condition : {},
+            pageNum : 1,
+            pageSize : 10
+        },
+        addForm : {
+            baseInfo : {},
             contractExtendInfo : {},
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
-			signList : [],
+            signList : [],
             attachList : [],
             projectMode : 1
-		},
-		pageInfo:{},
-		tableColumns:[],
+        },
+        pageInfo:{},
+        tableColumns:[],
         statusList:[],
         fileList : [],
-		showResult:false,
-		modal1:false,
+        showResult:false,
+        modal1:false,
         panelOpen : "0"
-	},
-	created : function() {
-	    this.initData();
-	},
-	methods : {
+    },
+    created : function() {
+        this.initData();
+    },
+    methods : {
         /**
          * 初始化数据
          */
@@ -51,26 +51,26 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             })
         },
-		/**
-		 * 查询
-		 */
-		query : function(page){
-			this.showResult=true;
-			this.queryParam.pageNum = page;
-			var _self = this;
+        /**
+         * 查询
+         */
+        query : function(page){
+            this.showResult=true;
+            this.queryParam.pageNum = page;
+            var _self = this;
             _self.queryParam.condition = _self.formInline;
-			this.$http.post("/contractInfo/list", _self.queryParam).then(
-					function(response) {
-                        _self.pageInfo = response.data;
-					}, function(error) {
-                    	_self.$Message.error(error.data.message);
-					})
-		},
-		/**
-		 * 新增合同
-		 */
+            this.$http.post("/contractInfo/list", _self.queryParam).then(
+                function(response) {
+                    _self.pageInfo = response.data;
+                }, function(error) {
+                    _self.$Message.error(error.data.message);
+                })
+        },
+        /**
+         * 新增合同
+         */
         addContract : function() {
-			this.modal1 = true;
+            this.modal1 = true;
             this.addForm = {
                 baseInfo : {},
                 contractExtendInfo : {},
@@ -82,9 +82,9 @@ var vue = new Vue({
             };
             this.addForm.contractExtendInfo.fpAccountName = '苏州市相城融金商业保理有限公司';
             this.addForm.contractReceivableConfirmation.assigneeAccountName = '苏州市相城融金商业保理有限公司';
-		},
+        },
         /**
-		 * 保存合同
+         * 保存合同
          */
         saveContract : function() {
             let self = this;
@@ -122,7 +122,7 @@ var vue = new Vue({
                     self.$Message.error(error.data.message);
                 });
             }
-		},
+        },
         /**
          * 删除警告
          */
@@ -131,10 +131,10 @@ var vue = new Vue({
                 title: '删除提示',
                 content: '<p>确认是否删除当前签署清单</p>',
                 onOk: () => {
-                    this.deleteSign(id);
-                },
-                onCancel: () => {}
-            })
+                this.deleteSign(id);
+        },
+            onCancel: () => {}
+        })
         },
         /** 删除签署清单 */
         deleteSign:function(id){
@@ -163,17 +163,32 @@ var vue = new Vue({
                 title: '审核提示',
                 content: '<p>确认要提交审核</p>',
                 onOk: () => {
-                    this.stateFlow(id);
-                },
-                onCancel: () => {}
-            })
+                this.submitAudit(id);
+        },
+            onCancel: () => {}
+        })
         },
         /**
          * 状态流转
          * @param id
          */
-        stateFlow : function(id) {
-
+        submitAudit : function(id) {
+            let self = this;
+            this.$http.put("/contractInfo/submitAudit/" + id).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "提交审核成功",
+                        onClose : function() {
+                            self.query();
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
         },
         /**
          * 更新合同
@@ -192,15 +207,15 @@ var vue = new Vue({
             this.modal1 = true;
             console.log(this.addForm)
         },
-		/**
-		 * 取消保存
-		 */
-		cancel : function() {
-			this.modal1 = false;
+        /**
+         * 取消保存
+         */
+        cancel : function() {
+            this.modal1 = false;
             if(this.addForm.baseInfo.id === '') {
                 this.$refs['entityDataForm'].resetFields();
             }
-		},
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -340,7 +355,7 @@ var vue = new Vue({
                 array.splice(index, 1);
             }
         }
-	}
+    }
 });
 
 vue.tableColumns=[
@@ -357,65 +372,65 @@ vue.tableColumns=[
         key: 'projectMode',
         align: 'left',
         render:(h,param)=> {
-            return h('span', vue.getProjectModeDesc(param.row.projectMode));
-        }
-    },{
-        title: '状态',
+        return h('span', vue.getProjectModeDesc(param.row.projectMode));
+}
+},{
+    title: '状态',
         key: 'status',
         align: 'left',
         render:(h,param)=> {
-            return h('span', vue.getStatusDesc(param.row.status));
-        }
-    },{
-        title: '操作',
+        return h('span', vue.getStatusDesc(param.row.status));
+    }
+},{
+    title: '操作',
         align: 'center',
         render:(h,param)=>{
         return h('div', [
             h('span'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "warning"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.updateContract(param.row.id);
-                        }
-                    }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "warning"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.submitAuditWarn(param.row.id);
-                        }
-                    }
-                }, '提交审核'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "error"
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.deleteWarn(param.row.id);
-                        }
-                    }
-                }, '删除')
-                ]
-            )
-        }
+            h('Button', {
+                props: {
+                    size: "small",
+                    type: "warning"
+                },
+                style: {
+                    marginRight: '5px'
+                },
+                on: {
+                    click: () => {
+                    vue.updateContract(param.row.id);
     }
+    }
+    }, '编辑'),
+        h('Button', {
+            props: {
+                size: "small",
+                type: "warning"
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                vue.submitAuditWarn(param.row.id);
+    }
+    }
+    }, '提交审核'),
+        h('Button', {
+            props: {
+                size: "small",
+                type: "error"
+            },
+            style: {
+                marginRight: '5px'
+            },
+            on: {
+                click: () => {
+                vue.deleteWarn(param.row.id);
+    }
+    }
+    }, '删除')
+    ]
+    )
+    }
+}
 ];

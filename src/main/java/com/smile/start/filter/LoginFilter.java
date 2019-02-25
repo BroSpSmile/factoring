@@ -55,6 +55,7 @@ public class LoginFilter implements Filter {
                 LoginUser loginUser = (LoginUser) request.getSession().getAttribute(Constants.LOGIN_USER_SESSION_KEY);
                 if(loginUser == null) {
                     loginUser = userInfoService.getLoginUserByToken(token);
+                    request.getSession().setAttribute(Constants.LOGIN_USER_SESSION_KEY, loginUser);
                 }
                 LoginHandler.setLoginUser(loginUser);
                 filterChain.doFilter(servletRequest, servletResponse);

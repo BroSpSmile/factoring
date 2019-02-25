@@ -121,11 +121,11 @@ public class ContractInfoController extends BaseController {
      * @param id
      * @return
      */
-    @PostMapping(value = "/stateFlow/{id}")
+    @PutMapping(value = "/submitAudit/{id}")
     @ResponseBody
-    public BaseResult stateFlow(@PathVariable Long id) {
+    public BaseResult submitAudit(@PathVariable Long id) {
         try {
-            contractInfoService.delete(id);
+            contractInfoService.submitAudit(id);
             BaseResult result = new BaseResult();
             result.setSuccess(true);
             result.setErrorMessage("状态流转成功");

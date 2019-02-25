@@ -1,10 +1,13 @@
 package com.smile.start.dao;
 
+import com.smile.start.dto.ContractAuditSearchDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.SignListTemplate;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -23,6 +26,14 @@ public interface ContractInfoDao {
      */
     @Select("select * from contract_info where id = #{id}")
     ContractInfo get(Long id);
+
+    /**
+     *
+     * @param serialNo
+     * @return
+     */
+    @Select("select * from contract_info where serial_no = #{serialNo}")
+    ContractInfo findBySerialNo(String serialNo);
 
     /**
      * 新增合同基本信息
@@ -61,4 +72,21 @@ public interface ContractInfoDao {
      */
     @Delete("delete from contract_info where id = #{id}")
     void delete(Long id);
+
+    /**
+     * 此方法只供合同审核列表用，根据当前登录用户查询待审核的合同列表
+     * @param contractAuditSearchDTO
+     * @return
+     */
+    @Select("<script>"
+            + "select ci.* from auth_user_role_info uri,flow_status fs,flow_status_role fsr,contract_info ci "
+            + "where uri.user_serial_no = #{userSerialNo} "
+            + "and fsr.role_serial_no = uri.role_serial_no "
+            + "and fs.serial_no = fsr.status_serial_no "
+            + "and ci.status = fs.flow_status "
+            + "<if test = 'contractCode!=null'> and ci.contract_code like CONCAT('%',#{contractCode},'%')</if>"
+            + "<if test = 'contractName!=null'> and ci.contract_name like CONCAT('%',#{contractName},'%')</if>"
+            + "<if test = 'projectMode!=null'> and ci.project_mode = #{projectMode}</if>"
+            + "</script>")
+    List<ContractInfo> findAuditList(ContractAuditSearchDTO contractAuditSearchDTO);
 }
