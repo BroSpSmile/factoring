@@ -103,7 +103,30 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         flowConfig.setCreateUser(loginUser.getSerialNo());
 
         //保存状态信息
-        final List<FlowStatusDTO> statusList = flowConfigDTO.getStatusList();
+        saveStatus(flowConfigDTO.getStatusList(), flowSerialNo);
+        return flowConfigDao.insert(flowConfig);
+    }
+
+    /**
+     * 更新流程配置信息
+     *
+     * @param flowConfigDTO
+     */
+    @Override
+    public void update(FlowConfigDTO flowConfigDTO) {
+        FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
+        flowConfig.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        flowConfig.setModifyUser(loginUser.getSerialNo());
+        flowConfigDao.update(flowConfig);
+
+        //保存状态信息
+        flowConfigDao.deleteStatusRole(flowConfigDTO.getSerialNo());
+        flowConfigDao.deleteFlowStatus(flowConfigDTO.getSerialNo());
+        saveStatus(flowConfigDTO.getStatusList(), flowConfigDTO.getSerialNo());
+    }
+
+    private void saveStatus(List<FlowStatusDTO> statusList, String flowSerialNo) {
         for(FlowStatusDTO flowStatusDTO : statusList) {
             String statusSerialNo = SerialNoGenerator.generateSerialNo("FS", 6);
             FlowStatus flowStatus = new FlowStatus();
@@ -123,21 +146,6 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 });
             }
         }
-        return flowConfigDao.insert(flowConfig);
-    }
-
-    /**
-     * 更新流程配置信息
-     *
-     * @param flowConfigDTO
-     */
-    @Override
-    public void update(FlowConfigDTO flowConfigDTO) {
-        FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
-        flowConfig.setGmtModify(new Date());
-        LoginUser loginUser = LoginHandler.getLoginUser();
-        flowConfig.setModifyUser(loginUser.getSerialNo());
-        flowConfigDao.update(flowConfig);
     }
 
     /**

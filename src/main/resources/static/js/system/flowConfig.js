@@ -55,7 +55,7 @@ var vue = new Vue({
          */
         saveFlow : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
+            if(this.addForm.id === null || this.addForm.id === ""){
                 this.$http.post("/flowConfig", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
@@ -71,7 +71,7 @@ var vue = new Vue({
                 }, function(error) {
                     self.$Message.error(error.data.message);
                 });
-            }else{
+            } else {
                 this.$http.put("/flowConfig", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
