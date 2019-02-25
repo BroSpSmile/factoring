@@ -14,7 +14,6 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
-import com.smile.start.model.common.StatusInfo;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.login.LoginUser;
@@ -37,13 +36,13 @@ import javax.annotation.Resource;
 public class FlowConfigServiceImpl implements FlowConfigService {
 
     @Resource
-    private FlowConfigDao flowConfigDao;
+    private FlowConfigDao    flowConfigDao;
 
     @Resource
     private FlowConfigMapper flowConfigMapper;
 
     @Resource
-    private RoleInfoService roleInfoService;
+    private RoleInfoService  roleInfoService;
 
     /**
      * 根据主键查询流程配置信息
@@ -60,7 +59,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         flowStatusDTOS.forEach(status -> {
             status.setRoleList(roleInfoService.findAll());
             List<FlowStatusRole> roleList = flowConfigDao.findRoleByStatusSerialNo(status.getSerialNo());
-            if(!CollectionUtils.isEmpty(roleList)) {
+            if (!CollectionUtils.isEmpty(roleList)) {
                 List<String> checkedRoleList = Lists.newArrayList();
                 roleList.forEach(role -> checkedRoleList.add(role.getRoleSerialNo()));
                 status.setCheckedRoleList(checkedRoleList);
@@ -104,7 +103,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
 
         //保存状态信息
         final List<FlowStatusDTO> statusList = flowConfigDTO.getStatusList();
-        for(FlowStatusDTO flowStatusDTO : statusList) {
+        for (FlowStatusDTO flowStatusDTO : statusList) {
             String statusSerialNo = SerialNoGenerator.generateSerialNo("FS", 6);
             FlowStatus flowStatus = new FlowStatus();
             flowStatus.setSerialNo(statusSerialNo);
@@ -112,7 +111,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
             flowStatus.setFlowStatus(flowStatusDTO.getFlowStatus());
             flowStatus.setFlowStatusDesc(flowStatusDTO.getFlowStatusDesc());
             flowConfigDao.insertFlowStatus(flowStatus);
-            if(!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
+            if (!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
                 flowStatusDTO.getCheckedRoleList().forEach(e -> {
                     FlowStatusRole flowStatusRole = new FlowStatusRole();
                     flowStatusRole.setSerialNo(SerialNoGenerator.generateSerialNo("FSR", 5));
@@ -162,7 +161,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     public List<FlowStatusDTO> getStatusList(int flowType) {
         FlowTypeEnum flowTypeEnum = FlowTypeEnum.fromValue(flowType);
         List<FlowStatusDTO> statusList = Lists.newArrayList();
-        if(flowTypeEnum == null) {
+        if (flowTypeEnum == null) {
             return statusList;
         }
 
@@ -181,7 +180,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 statusList.add(flowStatus2);
                 return statusList;
             case CONTRACT:
-                for(ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
+                for (ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
                     FlowStatusDTO flowStatus = new FlowStatusDTO();
                     flowStatus.setRoleList(roleList);
                     flowStatus.setFlowStatus(contractStatusEnum.getValue());

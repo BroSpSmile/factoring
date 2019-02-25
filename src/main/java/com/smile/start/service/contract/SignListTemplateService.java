@@ -4,8 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.SignListTemplateDTO;
 import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.SignListTemplate;
-
 import java.util.List;
 
 /**

@@ -5,8 +5,6 @@ import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowConfigSearchDTO;
 import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.common.StatusInfo;
-
 import java.util.List;
 
 /**
