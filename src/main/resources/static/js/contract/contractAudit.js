@@ -96,22 +96,7 @@ var vue = new Vue({
          * @param id
          */
         auditReject : function() {
-            let self = this;
-            this.$http.post("/contractAudit/audit").then(function(response) {
-                if (response.data.success) {
-                    self.$Message.info({
-                        content : "驳回成功",
-                        onClose : function() {
-                            self.query();
-                            self.cancel();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function(error) {
-                self.$Message.error(error.data.message);
-            });
+            this.modal2 = true;
         },
         /**
          * 审核详情
