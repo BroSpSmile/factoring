@@ -72,6 +72,9 @@
 							</i-col>
 						</row>
 					</i-form>
+					<template>
+						<Table :columns="auditRecordColumns" :data="auditRecordList"></Table>
+					</template>
 				</div>
 				<div slot="footer">
 					<i-button type="primary" @click="auditPass" style="margin-left: 8px">审核通过</i-button>

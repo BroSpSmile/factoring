@@ -26,8 +26,10 @@ var vue = new Vue({
         contractAudit : {
 
         },
+        auditRecordList : [],
 		pageInfo:{},
 		tableColumns:[],
+        auditRecordColumns : [],
         statusList:[],
         fileList : [],
 		showResult:false,
@@ -125,6 +127,16 @@ var vue = new Vue({
             },function(error){
                 self.$Message.error(error.data.message);
             })
+
+            this.$http.get("/contractAudit/auditRecordList/C20190224151058EDG5HU8").then(function(response){
+                if (response.data.success) {
+                    self.auditRecordList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
             this.modal1 = true;
         },
         /**
@@ -188,6 +200,30 @@ var vue = new Vue({
         }
 	}
 });
+
+vue.auditRecordColumns=[
+    {
+        title: '操作状态',
+        key: 'operationStatus',
+        align: 'left'
+    },{
+        title: '操作人',
+        key: 'operationUser',
+        align: 'left'
+    },{
+        title: '操作类型',
+        key: 'operationType',
+        align: 'left'
+    },{
+        title: '操作时间',
+        key: 'operationTime',
+        align: 'left'
+    },{
+        title: '备注',
+        key: 'remark',
+        align: 'left'
+    }
+];
 
 vue.tableColumns=[
     {
