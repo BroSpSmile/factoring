@@ -41,7 +41,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Insert("insert into contract_info (serial_no,contract_code,contract_name,project_mode,contract_template,status,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into contract_info (project_id,serial_no,contract_code,contract_name,project_mode,contract_template,status,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(ContractInfo contractInfo);
 
     /**
@@ -49,7 +49,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**

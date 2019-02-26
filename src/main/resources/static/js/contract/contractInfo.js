@@ -28,6 +28,7 @@ var vue = new Vue({
         tableColumns:[],
         statusList:[],
         fileList : [],
+        projectList : [],
         showResult:false,
         modal1:false,
         panelOpen : "0"
@@ -50,6 +51,13 @@ var vue = new Vue({
             },function(error){
                 self.$Message.error(error.data.message);
             })
+
+            this.$http.get("/past/project").then(function(response){
+                self.projectList = response.data;
+                console.log(response.data)
+            },function(error){
+                console.error(error);
+            });
         },
         /**
          * 查询
@@ -221,6 +229,24 @@ var vue = new Vue({
             this.query();
         },
         /**
+         * 选择项目
+         * @param value
+         */
+        changeProject : function(value) {
+            for(let index in this.projectList) {
+                if(this.projectList[index].id === value) {
+                    //有追索权模式
+                    if(this.projectList[index].model === 'RECOURSE_RIGHT') {
+                        this.addForm.baseInfo.projectMode = 1;
+                        this.getSignList(1);
+                    } else {
+                        this.addForm.baseInfo.projectMode = 2;
+                        this.getSignList(2);
+                    }
+                }
+            }
+        },
+        /**
          * 获取签署清单
          * @param projectMode
          */
@@ -300,7 +326,6 @@ var vue = new Vue({
             this.$http.delete("/file/" + fileId).then(function (response) {
                 if (response.data.success) {
                     self.$Message.info("删除成功");
-
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }

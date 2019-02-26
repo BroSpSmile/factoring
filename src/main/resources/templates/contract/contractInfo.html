@@ -51,18 +51,25 @@
 								<Panel name="0">
 									合同基本信息
 									<div slot="content">
+										<form-item label="所属项目" prop="baseInfo.projectId">
+											<i-select v-model="addForm.baseInfo.projectId" @on-change="changeProject" clearable>
+												<i-option v-for="project in projectList" :value="project.id">
+													{{ project.projectName }}
+												</i-option>
+											</i-select>
+										</form-item>
 										<form-item label="合同编号" prop="baseInfo.contractCode">
 											<i-input placeholder="输入合同编号" v-model="addForm.baseInfo.contractCode"></i-input>
 										</form-item>
 										<form-item label="合同名称" prop="baseInfo.contractName">
 											<i-input placeholder="输入合同名称" v-model="addForm.baseInfo.contractName"></i-input>
 										</form-item>
-										<form-item label="项目模式" prop="baseInfo.projectMode">
-											<Radio-Group v-model="addForm.baseInfo.projectMode" @on-change="getSignList(addForm.baseInfo.projectMode)">
-												<Radio :label="1">有追索权模式</Radio>
-												<Radio :label="2">无追索权模式</Radio>
-											</Radio-Group>
-										</form-item>
+										<!--<form-item label="项目模式" prop="baseInfo.projectMode">-->
+											<!--<Radio-Group v-model="addForm.baseInfo.projectMode" @on-change="getSignList(addForm.baseInfo.projectMode)">-->
+												<!--<Radio :label="1">有追索权模式</Radio>-->
+												<!--<Radio :label="2">无追索权模式</Radio>-->
+											<!--</Radio-Group>-->
+										<!--</form-item>-->
 									</div>
 								</Panel>
 								<Panel name="1">
