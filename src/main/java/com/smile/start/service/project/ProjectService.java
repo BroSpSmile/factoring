@@ -50,6 +50,13 @@ public interface ProjectService {
     BaseResult delete(Long id);
 
     /**
+     * 获取项目
+     * @param id
+     * @return
+     */
+    Project getProject(Long id);
+
+    /**
      * 分页查询
      * @param page
      * @return

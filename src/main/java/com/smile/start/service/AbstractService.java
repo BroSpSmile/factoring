@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractService {
 	/** formatter */
-	protected SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+	protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
 
 	/** logger */
 	public Logger logger = LoggerFactory.getLogger(getClass());

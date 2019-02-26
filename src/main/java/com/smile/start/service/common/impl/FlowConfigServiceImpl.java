@@ -60,7 +60,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         flowStatusDTOS.forEach(status -> {
             status.setRoleList(roleInfoService.findAll());
             List<FlowStatusRole> roleList = flowConfigDao.findRoleByStatusSerialNo(status.getSerialNo());
-            if(!CollectionUtils.isEmpty(roleList)) {
+            if (!CollectionUtils.isEmpty(roleList)) {
                 List<String> checkedRoleList = Lists.newArrayList();
                 roleList.forEach(role -> checkedRoleList.add(role.getRoleSerialNo()));
                 status.setCheckedRoleList(checkedRoleList);
@@ -135,7 +135,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
             flowStatus.setFlowStatus(flowStatusDTO.getFlowStatus());
             flowStatus.setFlowStatusDesc(flowStatusDTO.getFlowStatusDesc());
             flowConfigDao.insertFlowStatus(flowStatus);
-            if(!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
+            if (!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
                 flowStatusDTO.getCheckedRoleList().forEach(e -> {
                     FlowStatusRole flowStatusRole = new FlowStatusRole();
                     flowStatusRole.setSerialNo(SerialNoGenerator.generateSerialNo("FSR", 5));
@@ -170,7 +170,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     public List<FlowStatusDTO> getStatusList(int flowType) {
         FlowTypeEnum flowTypeEnum = FlowTypeEnum.fromValue(flowType);
         List<FlowStatusDTO> statusList = Lists.newArrayList();
-        if(flowTypeEnum == null) {
+        if (flowTypeEnum == null) {
             return statusList;
         }
 
@@ -189,7 +189,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 statusList.add(flowStatus2);
                 return statusList;
             case CONTRACT:
-                for(ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
+                for (ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
                     FlowStatusDTO flowStatus = new FlowStatusDTO();
                     flowStatus.setRoleList(roleList);
                     flowStatus.setFlowStatus(contractStatusEnum.getValue());

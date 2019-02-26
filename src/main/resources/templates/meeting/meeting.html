@@ -60,8 +60,8 @@
 							<span v-if="meeting.status=='PLAN'"><a @click="edit(meeting)">编辑</a>&nbsp;&nbsp;<a @click="cancelMeeting(meeting)">取消</a></span>
 							<span v-if="meeting.status=='MEETING' && !meeting.minutes"><a @click="createMninutes(meeting)">创建会议纪要</a></span>
 							<span v-if="meeting.status=='END' && !meeting.minutes"><a @click="createMninutes(meeting)">创建会议纪要</a></span>
-							<span v-if="meeting.status=='MEETING' && meeting.minutes"><a>查看会议纪要</a></span>
-							<span v-if="meeting.status=='END' && meeting.minutes"><a>查看会议纪要</a></span>
+							<span v-if="meeting.status=='MEETING' && meeting.minutes"><a @click="createMninutes(meeting)">查看会议纪要</a></span>
+							<span v-if="meeting.status=='END' && meeting.minutes"><a @click="createMninutes(meeting)">查看会议纪要</a></span>
 						</card>
 						<br>
 					</i-col>
@@ -110,10 +110,7 @@
 						</form-item>
 						<form-item label="到点提醒" prop="remind">
 							<i-select class="inputw" v-model="addMeeting.remind" clearable >
-		                      		<i-option value="15">会议开始前15分钟</i-option>
-		                      		<i-option value="30">会议开始前30分钟</i-option>
-		                      		<i-option value="45">会议开始前45分钟</i-option>
-		                      		<i-option value="60">会议开始前60分钟</i-option>
+								<i-option v-for="item in meetingReminds"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
 						</form-item>
 					</i-form>
@@ -123,6 +120,7 @@
 		            <i-button  @click="cancel" style="margin-left: 8px">取消</i-button>
 		        </div>
 			</modal>
+			<input th:value="${id}" id="projectId" style="display:none" ></input>	
 		</div>
 	    <script src="js/meeting/meeting.js"></script>
 	</div>

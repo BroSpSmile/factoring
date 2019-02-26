@@ -275,7 +275,8 @@ var vue = new Vue({
             return "";
         },
         handleRemove : function(index) {
-            this.addForm.signList[index].status = 1;
+           // this.addForm.signList[index].status = 1;
+            this.addForm.signList.splice(index,1);
         },
         /**
          * 文件上传成功

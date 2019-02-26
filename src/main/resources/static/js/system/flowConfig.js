@@ -48,6 +48,7 @@ var vue = new Vue({
         addFlow : function() {
             this.modal1 = true;
             this.addForm = {
+            		statusList:[]
             };
         },
         /**
@@ -93,9 +94,11 @@ var vue = new Vue({
          * 获取状态列表
          */
         getStatusList:function(value) {
+        	console.log(value);
             let self = this;
             this.$http.get("/flowConfig/status/" + value).then(function(response){
                 if (response.data.success) {
+                	
                     self.addForm.statusList = response.data.values;
                 } else {
                     self.$Message.error(response.data.errorMessage);

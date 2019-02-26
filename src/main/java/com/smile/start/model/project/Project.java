@@ -205,10 +205,20 @@ public class Project implements Serializable {
         this.items = items;
     }
 
+    /**
+     * Getter method for property <tt>progresses</tt>.
+     * 
+     * @return property value of progresses
+     */
     public List<String> getProgresses() {
         return progresses;
     }
 
+    /**
+     * Setter method for property <tt>progresses</tt>.
+     * 
+     * @param progresses value to be assigned to property progresses
+     */
     public void setProgresses(List<String> progresses) {
         this.progresses = progresses;
     }

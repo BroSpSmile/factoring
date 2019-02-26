@@ -118,7 +118,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Transactional(rollbackFor = Exception.class)
     public Long insert(ContractInfoDTO contractInfoDTO) {
         final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
-        String contractSerialNo = SerialNoGenerator.generateSerialNo("C",7);
+        String contractSerialNo = SerialNoGenerator.generateSerialNo("C", 7);
         contractInfo.setSerialNo(contractSerialNo);
         Date nowDate = new Date();
         contractInfo.setGmtCreate(nowDate);
@@ -132,19 +132,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //保存合同信息
         final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
-        contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI",5));
+        contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
         contractExtendInfo.setContractSerialNo(contractSerialNo);
         contractExtendInfoDao.insert(contractExtendInfo);
 
         //保存应收账款转让确认函
         final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
-        contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC",5));
+        contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
         contractReceivableConfirmation.setContractSerialNo(contractSerialNo);
         contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
 
         //保存应收账款转让登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
-        contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA",5));
+        contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
         contractReceivableAgreement.setContractSerialNo(contractSerialNo);
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
@@ -194,10 +194,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @param contractSerialNo
      */
     private void insertSignList(List<ContractSignListDTO> signList, String contractSerialNo) {
-        if(!CollectionUtils.isEmpty(signList)) {
+        if (!CollectionUtils.isEmpty(signList)) {
             signList.forEach(e -> {
                 ContractSignList contractSignList = new ContractSignList();
-                contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL",5));
+                contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
                 contractSignList.setContractSerialNo(contractSerialNo);
                 contractSignList.setSignListName(e.getSignListName());
                 contractSignListDao.insert(contractSignList);
@@ -211,9 +211,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @param contractSerialNo
      */
     private void insertAttachList(List<ContractAttachDTO> attachList, String contractSerialNo) {
-        if(!CollectionUtils.isEmpty(attachList)) {
+        if (!CollectionUtils.isEmpty(attachList)) {
             attachList.forEach(e -> {
-                e.setSerialNo(SerialNoGenerator.generateSerialNo("CA",5));
+                e.setSerialNo(SerialNoGenerator.generateSerialNo("CA", 5));
                 e.setContractSerialNo(contractSerialNo);
                 contractAttachDao.insert(contractInfoMapper.dto2do(e));
             });

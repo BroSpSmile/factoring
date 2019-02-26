@@ -8,8 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
+import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.Project;
 
 /**
@@ -24,7 +26,8 @@ public interface ProjectDao {
      * @param project
      * @return
      */
-    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{person},#{progress})")
+    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{user.id},#{progress})")
+    @SelectKey(statement="select last_insert_id()", keyProperty="id", before=false, resultType=long.class)  
     long insert(Project project);
 
     /**
@@ -87,8 +90,7 @@ public interface ProjectDao {
      * @return
      */
     @Results(id = "findUnarchivedProjectsMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
-    @Select("<script>" + "select * from factoring_project where progress !='FILECOMPLETE'" + "<if test = 'user!=null'>and person = #{user.id} </if> "
-            + "</script>")
+    @Select("<script>" + "select * from factoring_project where progress !='FILECOMPLETE'" + "<if test = 'user!=null'>and person = #{user.id} </if> " + "</script>")
     List<Project> findUnarchivedProjects(Project project);
 
     /**
@@ -103,4 +105,13 @@ public interface ProjectDao {
             + "<if test = 'progresses!=null'> and progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach>"
             + "</if></script>")
     List<Project> findByParam(Project project);
+
+    /**
+     * 根据会议查找关联项目
+     * @param meeting
+     * @return
+     */
+    @Results(id = "findByMeetingMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
+    @Select("select t1.* from factoring_project t1 inner join project_meeting t2 on t1.id = t2.project_id where t2.meeting_id = #{id}")
+    List<Project> findByMeeting(Meeting meeting);
 }

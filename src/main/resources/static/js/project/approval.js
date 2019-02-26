@@ -90,10 +90,7 @@ var vue = new Vue({
 		 * 新增项目
 		 */
 		addProject : function() {
-			this.addForm = {
-				projectId:""
-			};
-			this.modal1 = true;
+			window.open("factoring","_blank"); 
 		},
 
 		/** 保存项目 */
@@ -179,10 +176,10 @@ var vue = new Vue({
 		},
 		
 		/**
-		 * 立项申请
+		 * 立项会申请
 		 */
 		apply:function(projectId){
-			window.open("apply?id="+projectId,"_blank"); 
+			window.open("meeting?id="+projectId,"_blank"); 
 		},
 
 		/**
@@ -239,7 +236,7 @@ vue.tableColumns=[
 									 vue.apply(param.row.id);
 								}
 							}
-						}, '立项申请'):
+						}, '发起立项会'):
 						h('span'),
 				h('Button', {
 					props: {

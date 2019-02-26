@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.MinutesKind;
 import com.smile.start.model.project.Project;
@@ -26,6 +27,9 @@ public class Meeting implements Serializable {
 
     /** ID */
     private long              id;
+
+    /** 会议类型 */
+    private MeetingKind       kind;
 
     /** 会议状态 */
     private MeetingStatus     status;
@@ -68,9 +72,12 @@ public class Meeting implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"status\":\"" + status + "\", \"theme\":\"" + theme + "\", \"beginTime\":\"" + beginTime + "\", \"endTime\":\"" + endTime
-               + "\", \"place\":\"" + place + "\", \"content\":\"" + content + "\", \"remind\":\"" + remind + "\", \"projects\":\"" + projects + "\", \"minutes\":\"" + minutes
-               + "\", \"originator\":\"" + originator + "\", \"participant\":\"" + participant + "\", \"minutesKind\":\"" + minutesKind + "\"}  ";
+        return "{\"id\":\"" + id + "\", \"" + (kind != null ? "kind\":\"" + kind + "\", \"" : "") + (status != null ? "status\":\"" + status + "\", \"" : "")
+               + (theme != null ? "theme\":\"" + theme + "\", \"" : "") + (beginTime != null ? "beginTime\":\"" + beginTime + "\", \"" : "")
+               + (endTime != null ? "endTime\":\"" + endTime + "\", \"" : "") + (place != null ? "place\":\"" + place + "\", \"" : "")
+               + (content != null ? "content\":\"" + content + "\", \"" : "") + "remind\":\"" + remind + "\", \"" + (projects != null ? "projects\":\"" + projects + "\", \"" : "")
+               + (minutes != null ? "minutes\":\"" + minutes + "\", \"" : "") + (originator != null ? "originator\":\"" + originator + "\", \"" : "")
+               + (participant != null ? "participant\":\"" + participant + "\", \"" : "") + (minutesKind != null ? "minutesKind\":\"" + minutesKind : "") + "\"}  ";
     }
 
     /**
@@ -101,6 +108,24 @@ public class Meeting implements Serializable {
      */
     public void setId(long id) {
         this.id = id;
+    }
+
+    /**
+     * Getter method for property <tt>kind</tt>.
+     * 
+     * @return property value of kind
+     */
+    public MeetingKind getKind() {
+        return kind;
+    }
+
+    /**
+     * Setter method for property <tt>kind</tt>.
+     * 
+     * @param kind value to be assigned to property kind
+     */
+    public void setKind(MeetingKind kind) {
+        this.kind = kind;
     }
 
     /**

@@ -19,7 +19,6 @@ var app = new Vue({
 		
 	},
 	methods : {
-		
 		/**
 		 * 登录
 		 */

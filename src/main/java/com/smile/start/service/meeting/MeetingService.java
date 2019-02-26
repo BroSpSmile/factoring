@@ -33,7 +33,7 @@ public interface MeetingService {
      * @return
      */
     List<Meeting> getMeetings(MeetingSearch search);
-    
+
     /**
      * 根据ID获取会议内容
      * @param id
@@ -54,18 +54,24 @@ public interface MeetingService {
      * @return
      */
     BaseResult updateMeeting(MeetingExt meeting);
-    
+
     /**
      * 保存会议纪要
      * @param meeting
      * @return
      */
     BaseResult saveMinutes(Meeting meeting);
-    
+
     /**
      * 关联会议
      * @param pms
      * @return
      */
     BaseResult relationMeeting(List<ProjectMeeting> pms);
+
+    /**
+     * 会议调度任务
+     * @return
+     */
+    BaseResult schedule();
 }

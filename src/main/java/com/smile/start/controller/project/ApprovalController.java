@@ -52,6 +52,18 @@ public class ApprovalController extends BaseController {
     }
 
     /**
+     * 获取项目
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Project get(@PathVariable Long id) {
+        LoggerUtils.info(logger, "根据ID获取项目信息,id={}", id);
+        return projectService.getProject(id);
+    }
+
+    /**
      * 新增项目
      * 
      * @param project
@@ -75,7 +87,7 @@ public class ApprovalController extends BaseController {
      */
     @PutMapping
     @ResponseBody
-    public BaseResult edit(HttpServletRequest request,@RequestBody Project project) {
+    public BaseResult edit(HttpServletRequest request, @RequestBody Project project) {
         LoggerUtils.info(logger, "修改项目请求参数={}", FastJsonUtils.toJSONString(project));
         try {
             User user = getUserByToken(request);

@@ -7,18 +7,17 @@ package com.smile.start.model.enums;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * 项目附件枚举
+ * 
  * @author smile.jing
- * @version $Id: ProjectItemType.java, v 0.1 Jan 28, 2019 3:49:43 PM smile.jing Exp $
+ * @version $Id: LoanType.java, v 0.1 Feb 25, 2019 4:19:25 PM smile.jing Exp $
  */
-public enum ProjectItemType {
-                             /**  */
-                             DUE_DILIGENCE("DUE_DILIGENCE", "尽调文件"),
+public enum LoanType {
+                      /** 线上  */
+                      ONLINE("ONLINE", "线上"),
+                      /** 线下 */
+                      OFFLINE("OFFLINE", "线下");
 
-                             /**  */
-                             LOAN_FILE("LOAN_FILE", "放款文件");
-
-    ProjectItemType(String code, String desc) {
+    LoanType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -29,9 +28,9 @@ public enum ProjectItemType {
      * @param code
      * @return
      */
-    public static ProjectItemType getByCode(String code) {
-        ProjectItemType[] values = ProjectItemType.values();
-        for (ProjectItemType value : values) {
+    public LoanType getByCode(String code) {
+        LoanType[] values = LoanType.values();
+        for (LoanType value : values) {
             if (StringUtils.equals(code, value.code)) {
                 return value;
             }
@@ -44,9 +43,6 @@ public enum ProjectItemType {
 
     /** 状态描述 */
     private String desc;
-
-    /** 简码 */
-    private String scode;
 
     /**
      * Getter method for property <tt>code</tt>.
@@ -65,14 +61,4 @@ public enum ProjectItemType {
     public String getDesc() {
         return desc;
     }
-
-    /**
-     * Getter method for property <tt>scode</tt>.
-     * 
-     * @return property value of scode
-     */
-    public String getScode() {
-        return scode;
-    }
-
 }

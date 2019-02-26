@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="apply">
+			<row>
+				<i-col span="22" offset="1">
+					<br>
+					<h2>放款申请</h2>
+					<br>
+					<i-form :label-width="130">
+						<form-item label="放款申请方式" prop="type">
+							 <radio-group v-model="loan.type">
+							 	<radio label="ONLINE">线上申请</radio>
+							 	<radio label="OFFLINE">线下申请</radio>
+							 </radio-group>
+						</form-item>
+						<div v-if="loan.type=='ONLINE'">
+							<card dis-hover title="项目付款申请表">
+								<row>
+									<i-col span="8">
+										<form-item label="申请部门" prop="">
+											<i-input placeholder="输入申请部门"  v-model="loan.department.id"></i-input>
+										</form-item>
+									</i-col>
+									<i-col span="8">
+										<form-item label="申请人" prop="">
+											<i-input placeholder="输入申请人" readonly  v-model="loan.user.username"></i-input>
+										</form-item>
+									</i-col>
+									<i-col span="8">
+										<form-item label="申请时间" prop="">
+											<date-picker type="date" placeholder="选择申请时间" v-model="loan.createTime"></date-picker>
+										</form-item>
+									</i-col>
+								</row>
+								<form-item label="项目名称" prop="">
+									<i-select filterable v-model="loan.project.id"  class="inputm" clearable>
+										<i-option v-for="project in projects" :value="project.id">{{project.projectName}}</i-option>
+									</i-select>
+								</form-item>
+								<row>
+									<i-col span="12">
+										<form-item label="认缴投资金额" prop="">
+											<input-number placeholder="输入认缴投资金额" :max="100000000000"  class="select-width-180" 
+											:formatter="formatter" :parser="parser"  v-model="loan.subscriptionAmount">
+											</input-number>&nbsp;元
+										</form-item>
+									</i-col>
+									<i-col span="12">
+										<form-item label="本次付款金额" prop="">
+											<input-number placeholder="输入本次付款金额" :max="100000000000" class="select-width-180" 
+											:formatter="formatter" :parser="parser"  v-model="loan.payments" @on-change="toChinese">
+											</input-number>&nbsp;元
+										</form-item>
+									</i-col>
+								</row>
+								<form-item label="金额(大写)人民币" prop="">
+									<i-input placeholder="输入金额大写"  class="inputm" v-model="loan.chineseAmount"></i-input>
+								</form-item>
+								<row>
+									<i-col span="12">
+										<form-item label="累计付款金额" prop="">
+											<input-number placeholder="输入累计付款金额" :max="100000000000"  class="select-width-180" 
+											:formatter="formatter" :parser="parser" v-model="loan.accumulativeyments">
+											</input-number>&nbsp;元
+										</form-item>
+									</i-col>
+									<i-col span="12">
+										<form-item label="未付款金额" prop="">
+											<input-number placeholder="输入未付款金额" :max="100000000000"  class="select-width-180"
+											:formatter="formatter" :parser="parser"  v-model="loan.unpaid">
+											 </input-number>&nbsp;元
+										</form-item>
+									</i-col>
+								</row>
+								<form-item label="付款用途" prop="">
+									<i-input placeholder="输入付款用途"  v-model="loan.paymentPurpose"></i-input>
+								</form-item>
+							</card>
+							<card dis-hover title="收款方">
+								<form-item label="单位名称" prop="">
+									<i-input placeholder="输入单位名称"  v-model="loan.payeeName"></i-input>
+								</form-item>
+								<form-item label="开户银行" prop="">
+									<i-input placeholder="输入开户银行"  v-model="loan.payeeBankName"></i-input>
+								</form-item>
+								<form-item label="银行账号" prop="">
+									<i-input placeholder="输入银行账号"  v-model="loan.payeeAccountNo"></i-input>
+								</form-item>
+							</card>
+							<card dis-hover title="出资方">
+								<form-item label="单位名称" prop="">
+									<i-input placeholder="输入单位名称"  v-model="loan.payerName"></i-input>
+								</form-item>
+								<form-item label="开户银行" prop="">
+									<i-input placeholder="输入开户银行"  v-model="loan.payerBankName"></i-input>
+								</form-item>
+								<form-item label="银行账号" prop="">
+									<i-input placeholder="输入银行账号"  v-model="loan.payerAccountNo"></i-input>
+								</form-item>
+							</card>
+						</div>
+						<div v-if="loan.type=='OFFLINE'">
+							<form-item label="项目名称" prop="">
+								<i-select filterable v-model="loan.project.id"  class="inputm" clearable>
+									<i-option v-for="project in projects" :value="project.id">{{project.projectName}}</i-option>
+								</i-select>
+							</form-item>
+							<row>
+								<i-col span="4" >
+									<form-item label="放款申请表上传"></form-item>
+								</i-col>
+								<i-col span="13">
+									<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
+								        <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
+								    </Upload>
+							    </i-col>
+							</row>
+						</div>
+						<br><br>
+						<row type="flex">
+		                   <i-col span="8" offset="1">
+		                   		<i-button type="info"  @click="commit">保存</i-button>
+		                   		<i-button type="info"  @click="commit" style="margin-left: 8px">保存并下载</i-button>
+		                        <i-button type="success" @click="commit" style="margin-left: 8px">提交审核</i-button>
+		                   </i-col>
+		            	</row>
+					</i-form>
+				</i-col>
+			</row>
+		</div>
+		<br><br>
+		<script src="js/loan/apply.js"></script>
+	</div>
+</html>

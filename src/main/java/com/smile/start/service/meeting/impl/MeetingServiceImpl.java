@@ -19,6 +19,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
 import com.smile.start.dao.MeetingDao;
+import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -47,6 +48,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     /** 关联DAO */
     @Resource
     private ProjectMeetingDao projectMeetingDao;
+
+    /**  */
+    @Resource
+    private ProjectDao        projectDao;
 
     /** 用户服务 */
     @Resource
@@ -110,6 +115,8 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      */
     private Meeting toMeeting(MeetingExt meetingExt) {
         meetingExt.setOriginator(userInfoService.getUserById(meetingExt.getOriginator().getId()));
+        List<Project> projects = projectDao.findByMeeting(meetingExt);
+        meetingExt.setProjects(projects);
         if (StringUtils.isNoneBlank(meetingExt.getParticipantNoList())) {
             for (Long id : getIds(meetingExt.getParticipantNoList())) {
                 meetingExt.addParticipant(userInfoService.getUserById(id));
@@ -171,8 +178,8 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     @Transactional
     public BaseResult saveMinutes(Meeting meeting) {
         int effect = meetingDao.saveMinutes(meeting);
-        if(effect>0) {
-            for(Project project:meeting.getProjects()) {
+        if (effect > 0) {
+            for (Project project : meeting.getProjects()) {
                 ProjectMeeting pm = new ProjectMeeting();
                 pm.setMeetingId(meeting.getId());
                 pm.setProjectId(project.getId());
@@ -181,7 +188,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                     throw new RuntimeException("当前项目已关联此会议纪要");
                 }
                 long peffect = projectMeetingDao.insert(pm);
-                if(peffect<0) {
+                if (peffect < 0) {
                     throw new RuntimeException("插入会议纪要失败");
                 }
             }
@@ -204,6 +211,37 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         BaseResult result = new BaseResult();
         result.setSuccess(true);
         return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.meeting.MeetingService#schedule()
+     */
+    @Override
+    public BaseResult schedule() {
+        MeetingSearch search = new MeetingSearch();
+        search.setBeginTime(new Date());
+        List<MeetingExt> meetings = meetingDao.findNotEnd(search);
+        meetings.stream().forEach(meeting -> update(meeting));
+        return new BaseResult();
+    }
+
+    /**
+     * 更新会议状态
+     * @param meeting
+     */
+    private void update(MeetingExt meeting) {
+        if (MeetingStatus.PLAN.equals(meeting.getStatus())) {
+            meeting.setStatus(MeetingStatus.MEETING);
+            meetingDao.update(meeting);
+        } else if (MeetingStatus.MEETING.equals(meeting.getStatus())) {
+            if (DateUtil.isBeforeNow(meeting.getEndTime())) {
+                meeting.setStatus(MeetingStatus.END);
+                meetingDao.update(meeting);
+            }
+        }
+        if (DateUtil.isBeforeNow(DateUtil.addMinutes(meeting.getBeginTime(), -1 * meeting.getRemind()))) {
+            //TODO 会议通知
+        }
     }
 
 }

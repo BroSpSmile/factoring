@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +50,11 @@ public class MeetingController extends BaseController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        if (StringUtils.isNotBlank(id)) {
+            model.addAttribute("id", id);
+        }
         return "meeting/meeting";
     }
 

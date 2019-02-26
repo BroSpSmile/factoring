@@ -159,6 +159,14 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
+     * @see com.smile.start.service.project.ProjectService#getProject(java.lang.Long)
+     */
+    @Override
+    public Project getProject(Long id) {
+        return projectDao.get(id);
+    }
+
+    /** 
      * @see com.smile.start.service.project.ProjectService#queryPage(com.smile.start.model.base.PageRequest)
      */
     @Override

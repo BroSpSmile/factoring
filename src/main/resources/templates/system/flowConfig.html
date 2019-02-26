@@ -37,7 +37,7 @@
 			<div id="modalForm">
 				<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
 					<form-item label="流程类型" prop="flowType">
-						<i-select v-model="addForm.flowType" @on-change="getStatusList(addForm.flowType)" clearable>
+						<i-select v-model="addForm.flowType" @on-change="getStatusList" clearable>
 							<i-option :value="1">合同</i-option>
 							<i-option :value="2">项目</i-option>
 						</i-select>

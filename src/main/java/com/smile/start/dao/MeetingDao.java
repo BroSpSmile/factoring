@@ -29,7 +29,7 @@ public interface MeetingDao {
      * @param meeting
      * @return
      */
-    @Insert("insert meeting (theme,begin_time,end_time,status,place,content,remind,originator,participant) values(#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{originator.id},#{participantNoList})")
+    @Insert("insert meeting (kind,theme,begin_time,end_time,status,place,content,remind,originator,participant) values(#{kind},#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{originator.id},#{participantNoList})")
     long insert(Meeting meeting);
 
     /**
@@ -37,9 +37,9 @@ public interface MeetingDao {
      * @param meeting
      * @return
      */
-    @Update("update meeting set theme=#{theme},begin_time=#{beginTime},end_time=#{endTime},status=#{status},place=#{place},content=#{content},remind=#{remind},originator=#{originator.id},participant=#{participantNoList} where id=#{id}")
+    @Update("update meeting set kind=#{kind}, theme=#{theme},begin_time=#{beginTime},end_time=#{endTime},status=#{status},place=#{place},content=#{content},remind=#{remind},originator=#{originator.id},participant=#{participantNoList} where id=#{id}")
     int update(MeetingExt meeting);
-    
+
     /**
      * 保存会议纪要
      * @param meeting
@@ -67,7 +67,17 @@ public interface MeetingDao {
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
-                                          @Result(column = "participant", property = "participantNoList") })
+                                      @Result(column = "participant", property = "participantNoList") })
     @Select("select * from meeting where id=#{id}")
     MeetingExt get(Long id);
+
+    /**
+     * 
+     * @param time
+     * @return
+     */
+    @Results(id = "findNotEndMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
+                                             @Result(column = "participant", property = "participantNoList") })
+    @Select("<script>select * from meeting where status in ('PLAN','MEETING') " + "<if test = 'beginTime!=null'> and begin_time &lt; #{beginTime}</if></script>")
+    List<MeetingExt> findNotEnd(MeetingSearch search);
 }
