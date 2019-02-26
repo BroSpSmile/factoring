@@ -42,6 +42,12 @@
 							<Radio :label="2">无追索权模式</Radio>
 						</Radio-Group>
 					</form-item>
+					<form-item label="是否必须" prop="isRequired">
+						<Radio-Group v-model="addForm.isRequired">
+							<Radio :label="1">必须</Radio>
+							<Radio :label="2">非必须</Radio>
+						</Radio-Group>
+					</form-item>
 					<form-item label="签署清单名称" prop="signListName">
 						<i-input placeholder="输入签署清单名称" v-model="addForm.signListName"></i-input>
 					</form-item>

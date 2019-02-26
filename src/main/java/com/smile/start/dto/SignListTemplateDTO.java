@@ -19,6 +19,11 @@ public class SignListTemplateDTO implements Serializable {
      */
     private Integer projectMode;
 
+    /**
+     * 是否必须：1、必须；2、非必须
+     */
+    private Integer isRequired;
+
     public Long getId() {
         return id;
     }
@@ -59,6 +64,14 @@ public class SignListTemplateDTO implements Serializable {
         this.projectMode = projectMode;
     }
 
+    public Integer getIsRequired() {
+        return isRequired;
+    }
+
+    public void setIsRequired(Integer isRequired) {
+        this.isRequired = isRequired;
+    }
+
     @Override
     public String toString() {
         return "SignListTemplateDTO{" +
@@ -67,6 +80,7 @@ public class SignListTemplateDTO implements Serializable {
                 ", signListName='" + signListName + '\'' +
                 ", sort=" + sort +
                 ", projectMode=" + projectMode +
+                ", isRequired=" + isRequired +
                 '}';
     }
 }

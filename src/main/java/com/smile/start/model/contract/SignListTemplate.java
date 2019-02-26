@@ -36,6 +36,11 @@ public class SignListTemplate implements Serializable {
      */
     private Integer projectMode;
 
+    /**
+     * 是否必须：1、必须；2、非必须
+     */
+    private Integer isRequired;
+
     public Long getId() {
         return id;
     }
@@ -74,5 +79,13 @@ public class SignListTemplate implements Serializable {
 
     public void setProjectMode(Integer projectMode) {
         this.projectMode = projectMode;
+    }
+
+    public Integer getIsRequired() {
+        return isRequired;
+    }
+
+    public void setIsRequired(Integer isRequired) {
+        this.isRequired = isRequired;
     }
 }
