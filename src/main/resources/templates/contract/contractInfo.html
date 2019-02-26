@@ -323,7 +323,7 @@
 												{{ item.signListName }}
 											</Col>
 											<Col span="4" offset="1">
-												<i-button @click="handleRemove(index)" style="margin-left: 8px">删除</i-button>
+												<i-button v-if="item.isRequired == 2" @click="handleRemove(index)" style="margin-left: 8px">删除</i-button>
 											</Col>
 										</Row>
 									</div>
