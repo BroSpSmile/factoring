@@ -142,7 +142,7 @@ var vue = new Vue({
         /**
          * 审核详情
          */
-        auditDetail : function(id){
+        auditDetail : function(id, serialNo){
             let self = this;
             this.$http.get("/contractInfo/" + id).then(function(response){
                 if (response.data.success) {
@@ -154,7 +154,7 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             })
 
-            this.$http.get("/contractAudit/auditRecordList/C20190224151058EDG5HU8").then(function(response){
+            this.$http.get("/contractAudit/auditRecordList/" + serialNo).then(function(response){
                 if (response.data.success) {
                     self.auditRecordList = response.data.values;
                 } else {
@@ -294,7 +294,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            vue.auditDetail(param.row.id);
+                            vue.auditDetail(param.row.id, param.row.serialNo);
                         }
                     }
                 }, '审核详情')
