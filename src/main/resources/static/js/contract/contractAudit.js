@@ -203,6 +203,18 @@ var vue = new Vue({
             return "";
         },
         /**
+         * 操作类型转换
+         * @param value
+         */
+        getOperationTypeDesc : function(value) {
+            if(value === 1) {
+                return "通过";
+            } else if(value === 2) {
+                return "驳回";
+            }
+            return "";
+        },
+        /**
          * 状态转换
          * @param value
          */
@@ -243,7 +255,10 @@ vue.auditRecordColumns=[
     },{
         title: '操作类型',
         key: 'operationType',
-        align: 'left'
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getOperationTypeDesc(param.row.operationType));
+        }
     },{
         title: '操作时间',
         key: 'operationTime',
