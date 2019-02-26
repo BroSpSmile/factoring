@@ -307,7 +307,6 @@
 									签署清单
 									<div slot="content">
 										<Row v-for="(item, index) in addForm.signList"
-											 v-if="!item.status"
 											 :key="index"
 											 :prop="'items.' + index + '.value'">
 											<Col span="4">
