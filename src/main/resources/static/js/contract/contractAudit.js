@@ -37,8 +37,24 @@ var vue = new Vue({
         modal2 : false
 	},
 	created : function() {
+	    this.initData();
 	},
 	methods : {
+        /**
+         * 初始化数据
+         */
+        initData : function() {
+            let self = this;
+            this.$http.get("/flowConfig/status/1").then(function(response){
+                if (response.data.success) {
+                    self.statusList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            },function(error){
+                self.$Message.error(error.data.message);
+            })
+        },
 		/**
 		 * 查询
 		 */
@@ -81,6 +97,31 @@ var vue = new Vue({
                         content : "审核成功",
                         onClose : function() {
                             self.query();
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
+        },
+        /**
+         * 审核驳回
+         * @param id
+         */
+        saveAuditReject : function() {
+            let self = this;
+            this.contractAudit.operationType = 2;
+            this.contractAudit.contractSerialNo = this.contractInfo.baseInfo.serialNo;
+            this.$http.post("/contractAudit/audit", this.contractAudit).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "审核驳回成功",
+                        onClose : function() {
+                            self.query();
+                            self.cancelReject();
                             self.cancel();
                         }
                     });
@@ -141,6 +182,10 @@ var vue = new Vue({
                 this.$refs['entityDataForm'].resetFields();
             }
 		},
+        cancelReject : function() {
+            this.modal2 = false;
+            this.$refs['rejectForm'].resetFields();
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
