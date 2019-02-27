@@ -10,14 +10,7 @@ import com.smile.start.dao.ContractInfoDao;
 import com.smile.start.dao.ContractReceivableAgreementDao;
 import com.smile.start.dao.ContractReceivableConfirmationDao;
 import com.smile.start.dao.ContractSignListDao;
-import com.smile.start.dto.ContractAttachDTO;
-import com.smile.start.dto.ContractAuditDTO;
-import com.smile.start.dto.ContractAuditRecordDTO;
-import com.smile.start.dto.ContractAuditSearchDTO;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractAttach;
@@ -200,7 +193,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
                 contractSignList.setContractSerialNo(contractSerialNo);
                 contractSignList.setSignListName(e.getSignListName());
-                contractSignList.setStatus(0);
+                contractSignList.setStatus(false);
+                contractSignList.setIsRequired(e.getIsRequired());
                 contractSignListDao.insert(contractSignList);
             });
         }
@@ -316,5 +310,26 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public List<ContractAuditRecordDTO> findAuditRecord(String contractSerialNo) {
         return contractInfoMapper.doList2dtoListAuditRecord(contractAuditRecordDao.findByContractSerialNo(contractSerialNo));
+    }
+
+    /**
+     * 获取合同签署清单列表
+     * @param contractSerialNo
+     * @return
+     */
+    @Override
+    public List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo) {
+        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractSerialNo));
+    }
+
+    /**
+     * 保存签署信息
+     * @param contractSignDTO
+     */
+    @Override
+    public void saveSign(ContractSignDTO contractSignDTO) {
+        if(!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+        }
     }
 }

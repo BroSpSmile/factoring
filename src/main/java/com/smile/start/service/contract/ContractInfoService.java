@@ -1,13 +1,9 @@
 package com.smile.start.service.contract;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.ContractAuditDTO;
-import com.smile.start.dto.ContractAuditRecordDTO;
-import com.smile.start.dto.ContractAuditSearchDTO;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
+import com.smile.start.dto.*;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.contract.ContractSignList;
 
 import java.util.List;
 
@@ -77,4 +73,17 @@ public interface ContractInfoService {
      * @return
      */
     List<ContractAuditRecordDTO> findAuditRecord(String contractSerialNo);
+
+    /**
+     * 获取合同签署清单列表
+     * @param contractSerialNo
+     * @return
+     */
+    List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 保存签署信息
+     * @param contractSignDTO
+     */
+    void saveSign(ContractSignDTO contractSignDTO);
 }
