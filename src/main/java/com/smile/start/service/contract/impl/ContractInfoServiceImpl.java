@@ -331,5 +331,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         if(!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
             contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
         }
+
+        if(contractSignDTO.getFinished()) {
+            final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
+            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
+            contractInfoDao.update(contractInfo);
+        }
     }
 }

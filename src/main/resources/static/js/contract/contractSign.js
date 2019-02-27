@@ -48,6 +48,7 @@ var vue = new Vue({
         sign : function(serialNo) {
             console.log(serialNo)
             var self = this;
+            self.addForm.serialNo = serialNo;
             this.$http.get("/contractInfo/signList/" + serialNo).then(function(response){
                 if (response.data.success) {
                     self.addForm.signList = response.data.values;
