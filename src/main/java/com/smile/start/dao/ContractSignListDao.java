@@ -22,7 +22,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name) values (#{serialNo},#{contractSerialNo},#{signListName})")
+    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name,status) values (#{serialNo},#{contractSerialNo},#{signListName},#{status})")
     long insert(ContractSignList contractSignList);
 
     /**

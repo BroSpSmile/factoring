@@ -200,6 +200,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
                 contractSignList.setContractSerialNo(contractSerialNo);
                 contractSignList.setSignListName(e.getSignListName());
+                contractSignList.setStatus(0);
                 contractSignListDao.insert(contractSignList);
             });
         }

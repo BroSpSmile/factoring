@@ -31,6 +31,11 @@ public class ContractSignList implements Serializable {
      */
     private String signListName;
 
+    /**
+     * 状态：0、未完成；1、完成
+     */
+    private Integer status;
+
     public Long getId() {
         return id;
     }
@@ -61,5 +66,13 @@ public class ContractSignList implements Serializable {
 
     public void setSignListName(String signListName) {
         this.signListName = signListName;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
