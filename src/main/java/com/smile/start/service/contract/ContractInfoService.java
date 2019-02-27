@@ -1,10 +1,15 @@
 package com.smile.start.service.contract;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.dto.ContractAuditDTO;
+import com.smile.start.dto.ContractAuditRecordDTO;
+import com.smile.start.dto.ContractAuditSearchDTO;
 import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.model.base.PageRequest;
+
+import java.util.List;
 
 /**
  * @author Joseph
@@ -46,4 +51,30 @@ public interface ContractInfoService {
      * @param id
      */
     void delete(Long id);
+
+    /**
+     * 提交审核
+     * @param id
+     */
+    void submitAudit(Long id);
+
+    /**
+     * 此方法只供合同审核列表用，根据当前登录用户查询待审核的合同列表
+     * @param page
+     * @return
+     */
+    PageInfo<ContractBaseInfoDTO> findAuditList(PageRequest<ContractAuditSearchDTO> page);
+
+    /**
+     * 合同审核
+     * @param contractAuditDTO
+     */
+    void audit(ContractAuditDTO contractAuditDTO);
+
+    /**
+     * 查询合同审核历史
+     * @param contractSerialNo
+     * @return
+     */
+    List<ContractAuditRecordDTO> findAuditRecord(String contractSerialNo);
 }

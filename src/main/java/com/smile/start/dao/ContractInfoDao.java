@@ -1,15 +1,15 @@
 package com.smile.start.dao;
 
-import java.util.List;
-
+import com.smile.start.dto.ContractAuditSearchDTO;
+import com.smile.start.dto.ContractInfoSearchDTO;
+import com.smile.start.model.contract.ContractInfo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.model.contract.ContractInfo;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -28,12 +28,20 @@ public interface ContractInfoDao {
     ContractInfo get(Long id);
 
     /**
+     *
+     * @param serialNo
+     * @return
+     */
+    @Select("select * from contract_info where serial_no = #{serialNo}")
+    ContractInfo findBySerialNo(String serialNo);
+
+    /**
      * 新增合同基本信息
      *
      * @param contractInfo
      * @return
      */
-    @Insert("insert into contract_info (serial_no,contract_code,contract_name,project_mode,contract_template,status,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into contract_info (project_id,serial_no,contract_code,contract_name,project_mode,contract_template,status,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(ContractInfo contractInfo);
 
     /**
@@ -41,7 +49,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**
@@ -49,10 +57,13 @@ public interface ContractInfoDao {
      * @param contractInfoSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from contract_info where 1=1 " + "<if test = 'contractCode!=null'> and contract_code like CONCAT('%',#{contractCode},'%')</if>"
+    @Select("<script>" + "select * from contract_info where 1=1 "
+            + "<if test = 'contractCode!=null'> and contract_code like CONCAT('%',#{contractCode},'%')</if>"
             + "<if test = 'contractName!=null'> and contract_name like CONCAT('%',#{contractName},'%')</if>"
-            + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>" + "<if test = 'contractTemplate!=null'> and contract_template = #{contractTemplate}</if>"
-            + "<if test = 'status!=null'> and status = #{status}</if>" + "</script>")
+            + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>"
+            + "<if test = 'contractTemplate!=null'> and contract_template = #{contractTemplate}</if>"
+            + "<if test = 'status!=null'> and status = #{status}</if>"
+            + "</script>")
     List<ContractInfo> findByParam(ContractInfoSearchDTO contractInfoSearchDTO);
 
     /**
@@ -61,4 +72,21 @@ public interface ContractInfoDao {
      */
     @Delete("delete from contract_info where id = #{id}")
     void delete(Long id);
+
+    /**
+     * 此方法只供合同审核列表用，根据当前登录用户查询待审核的合同列表
+     * @param contractAuditSearchDTO
+     * @return
+     */
+    @Select("<script>"
+            + "select ci.* from auth_user_role_info uri,flow_status fs,flow_status_role fsr,contract_info ci "
+            + "where uri.user_serial_no = #{userSerialNo} "
+            + "and fsr.role_serial_no = uri.role_serial_no "
+            + "and fs.serial_no = fsr.status_serial_no "
+            + "and ci.status = fs.flow_status "
+            + "<if test = 'contractCode!=null'> and ci.contract_code like CONCAT('%',#{contractCode},'%')</if>"
+            + "<if test = 'contractName!=null'> and ci.contract_name like CONCAT('%',#{contractName},'%')</if>"
+            + "<if test = 'projectMode!=null'> and ci.project_mode = #{projectMode}</if>"
+            + "</script>")
+    List<ContractInfo> findAuditList(ContractAuditSearchDTO contractAuditSearchDTO);
 }

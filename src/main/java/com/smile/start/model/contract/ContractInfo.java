@@ -18,6 +18,11 @@ public class ContractInfo implements Serializable {
     private Long id;
 
     /**
+     * 项目主键
+     */
+    private Long projectId;
+
+    /**
      * 业务流水
      */
     private String serialNo;
@@ -57,6 +62,14 @@ public class ContractInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getSerialNo() {

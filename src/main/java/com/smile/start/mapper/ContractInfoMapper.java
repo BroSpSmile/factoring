@@ -37,4 +37,7 @@ public interface ContractInfoMapper {
     ContractAttach dto2do(ContractAttachDTO dto);
     ContractAttachDTO do2dto(ContractAttach contractAttach);
     List<ContractAttachDTO> doList2dtoListAttach(List<ContractAttach> doList);
+
+    ContractAuditRecordDTO do2dto(ContractAuditRecord contractAuditRecord);
+    List<ContractAuditRecordDTO> doList2dtoListAuditRecord(List<ContractAuditRecord> doList);
 }

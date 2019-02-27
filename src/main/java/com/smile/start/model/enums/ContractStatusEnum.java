@@ -7,15 +7,105 @@ package com.smile.start.model.enums;
  * @since 1.8
  */
 public enum ContractStatusEnum {
-    APPLY(1, "提出申请"),
-    DEPARTMENT_AUDIT(2, "部门初审"),
-    LEGAL_AUDIT(3, "法务风控审核"),
-    VICE_GENERAL_MANAGER_AUDIT(4, "集团副总审核"),
-    GENERAL_MANAGER_AUDIT(5, "集团正总审核"),
-    FINISH(6, "完成"),
-    NOTIFY_OFFICE(7, "通知办公室"),
-    SIGN(8, "签署"),
-    SIGN_FINISH(9, "签署完成");
+    APPLY(1, "提出申请") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return DEPARTMENT_AUDIT;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return null;
+        }
+    },
+    DEPARTMENT_AUDIT(2, "部门初审") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return LEGAL_AUDIT;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return APPLY;
+        }
+    },
+    LEGAL_AUDIT(3, "法务风控审核") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return VICE_GENERAL_MANAGER_AUDIT;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return DEPARTMENT_AUDIT;
+        }
+    },
+    VICE_GENERAL_MANAGER_AUDIT(4, "集团副总审核") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return GENERAL_MANAGER_AUDIT;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return LEGAL_AUDIT;
+        }
+    },
+    GENERAL_MANAGER_AUDIT(5, "集团正总审核") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return FINISH;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return VICE_GENERAL_MANAGER_AUDIT;
+        }
+    },
+    FINISH(6, "完成") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return null;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return null;
+        }
+    },
+    NOTIFY_OFFICE(7, "通知办公室") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return null;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return null;
+        }
+    },
+    SIGN(8, "签署") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return null;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return null;
+        }
+    },
+    SIGN_FINISH(9, "签署完成") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return null;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return null;
+        }
+    };
 
     private int value;
     private String desc;
@@ -32,4 +122,16 @@ public enum ContractStatusEnum {
     public String getDesc() {
         return desc;
     }
+
+    public static ContractStatusEnum fromValue(int value) {
+        for(ContractStatusEnum statusEnum : ContractStatusEnum.values()) {
+            if(statusEnum.getValue() == value) {
+                return statusEnum;
+            }
+        }
+        return null;
+    }
+
+    public abstract ContractStatusEnum getDefaultRejectStatus();
+    public abstract ContractStatusEnum getNextStatus();
 }

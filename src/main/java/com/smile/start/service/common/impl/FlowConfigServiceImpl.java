@@ -14,6 +14,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
+import com.smile.start.model.common.StatusInfo;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.login.LoginUser;
@@ -36,13 +37,13 @@ import javax.annotation.Resource;
 public class FlowConfigServiceImpl implements FlowConfigService {
 
     @Resource
-    private FlowConfigDao    flowConfigDao;
+    private FlowConfigDao flowConfigDao;
 
     @Resource
     private FlowConfigMapper flowConfigMapper;
 
     @Resource
-    private RoleInfoService  roleInfoService;
+    private RoleInfoService roleInfoService;
 
     /**
      * 根据主键查询流程配置信息
@@ -102,8 +103,31 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         flowConfig.setCreateUser(loginUser.getSerialNo());
 
         //保存状态信息
-        final List<FlowStatusDTO> statusList = flowConfigDTO.getStatusList();
-        for (FlowStatusDTO flowStatusDTO : statusList) {
+        saveStatus(flowConfigDTO.getStatusList(), flowSerialNo);
+        return flowConfigDao.insert(flowConfig);
+    }
+
+    /**
+     * 更新流程配置信息
+     *
+     * @param flowConfigDTO
+     */
+    @Override
+    public void update(FlowConfigDTO flowConfigDTO) {
+        FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
+        flowConfig.setGmtModify(new Date());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        flowConfig.setModifyUser(loginUser.getSerialNo());
+        flowConfigDao.update(flowConfig);
+
+        //保存状态信息
+        flowConfigDao.deleteStatusRole(flowConfigDTO.getSerialNo());
+        flowConfigDao.deleteFlowStatus(flowConfigDTO.getSerialNo());
+        saveStatus(flowConfigDTO.getStatusList(), flowConfigDTO.getSerialNo());
+    }
+
+    private void saveStatus(List<FlowStatusDTO> statusList, String flowSerialNo) {
+        for(FlowStatusDTO flowStatusDTO : statusList) {
             String statusSerialNo = SerialNoGenerator.generateSerialNo("FS", 6);
             FlowStatus flowStatus = new FlowStatus();
             flowStatus.setSerialNo(statusSerialNo);
@@ -122,21 +146,6 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 });
             }
         }
-        return flowConfigDao.insert(flowConfig);
-    }
-
-    /**
-     * 更新流程配置信息
-     *
-     * @param flowConfigDTO
-     */
-    @Override
-    public void update(FlowConfigDTO flowConfigDTO) {
-        FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
-        flowConfig.setGmtModify(new Date());
-        LoginUser loginUser = LoginHandler.getLoginUser();
-        flowConfig.setModifyUser(loginUser.getSerialNo());
-        flowConfigDao.update(flowConfig);
     }
 
     /**

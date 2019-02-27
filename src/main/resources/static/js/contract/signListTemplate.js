@@ -150,6 +150,17 @@ var vue = new Vue({
             }
             return "";
         },
+        /**
+         * 是否必须
+         */
+        getIsRequiredDesc : function(value){
+            if(value === 1) {
+                return "必须";
+            } else if(value === 2) {
+                return "非必须";
+            }
+            return "";
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -174,6 +185,13 @@ vue.tableColumns=[
         title: '排序值',
             key: 'sort',
             align: 'right'
+    },{
+        title: '是否必须',
+        key: 'isRequired',
+        align: 'left',
+        render:(h,param)=> {
+            return h('span', vue.getIsRequiredDesc(param.row.isRequired));
+        }
     },{
         title: '操作',
             align: 'center',
