@@ -5,7 +5,6 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.dto.ContractSignDTO;
-import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.service.contract.ContractInfoService;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author Joseph
