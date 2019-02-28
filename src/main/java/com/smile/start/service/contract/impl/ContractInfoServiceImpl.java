@@ -20,6 +20,7 @@ import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractReceivableAgreement;
 import com.smile.start.model.contract.ContractReceivableConfirmation;
 import com.smile.start.model.contract.ContractSignList;
+import com.smile.start.model.enums.ContractAttachTypeEnum;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.contract.ContractInfoService;
@@ -210,6 +211,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             attachList.forEach(e -> {
                 e.setSerialNo(SerialNoGenerator.generateSerialNo("CA", 5));
                 e.setContractSerialNo(contractSerialNo);
+                e.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
                 contractAttachDao.insert(contractInfoMapper.dto2do(e));
             });
         }
