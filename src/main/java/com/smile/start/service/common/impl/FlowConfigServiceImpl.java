@@ -14,7 +14,6 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
-import com.smile.start.model.common.StatusInfo;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.login.LoginUser;

@@ -16,9 +16,9 @@ public enum Progress {
                       /**  */
                       INIT("INIT", "创建"),
                       /**  */
-                      APPLY("APPLY", "立项申请"),
+                      APPLY("APPLY", "立项"),
                       /**  */
-                      EXAMINE("EXAMINE", "立项审核"),
+                      TUNEUP("TUNEUP", "尽调"),
                       /**  */
                       PASTMEETING("PASTMEETING", "三重一大"),
                       /**  */
@@ -34,8 +34,11 @@ public enum Progress {
 
                       /** add by xioutman 添加归档类型 */
                       TOBEFILED("TOBEFILED", "待归档"),
+                      /**  */
                       FILE("FILE", "归档申请"),
+                      /**  */
                       FILEAUDIT("FILEAUDIT", "归档审核"),
+                      /**  */
                       FILECOMPLETE("FILECOMPLETE", "归档完成");
 
     Progress(String code, String desc) {

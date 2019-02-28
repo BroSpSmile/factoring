@@ -39,4 +39,10 @@ public interface FileService {
      */
     boolean delete(String fileId);
 
+    /**
+     * 文件下载
+     * @param fileId
+     * @return
+     */
+    InputStream download(String fileId);
 }

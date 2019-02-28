@@ -58,7 +58,7 @@ public class ApplyController extends BaseController {
     @ResponseBody
     public BaseResult apply(@RequestBody Project project) {
         LoggerUtils.info(logger, "立项申请project={}", FastJsonUtils.toJSONString(project));
-        project.setProgress(Progress.APPLY);
+        project.setProgress(Progress.TUNEUP);
         return projectService.apply(project);
     }
 }

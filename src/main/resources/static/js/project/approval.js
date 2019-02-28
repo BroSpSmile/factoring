@@ -181,6 +181,13 @@ var vue = new Vue({
 		apply:function(projectId){
 			window.open("meeting?id="+projectId,"_blank"); 
 		},
+		
+		/**
+		 * 尽调审核
+		 */
+		tuneup:function(projectId){
+			window.open("apply?id="+projectId,"_blank"); 
+		},
 
 		/**
 		 * 取消保存
@@ -208,7 +215,6 @@ vue.tableColumns=[
         key: 'user',
         align: 'center',
         render:(h,param)=>{
-        	console.log(param.row.user);
         	return h('span',param.row.user.username)
         }
     },{
@@ -237,6 +243,21 @@ vue.tableColumns=[
 								}
 							}
 						}, '发起立项会'):
+						h('span'),
+				param.row.progress=='TUNEUP'?
+						h('Button', {
+							props: {
+								size: "small"
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.tuneup(param.row.id);
+								}
+							}
+						}, '发起尽调审核'):
 						h('span'),
 				h('Button', {
 					props: {
