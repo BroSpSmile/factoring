@@ -86,7 +86,16 @@ var vue = new Vue({
          */
         signFinish : function() {
             let self = this;
-            this.addForm.finished = true;
+
+            //校验所有必须项是否已完成
+            for(index in self.addForm.signList) {
+                let sign = self.addForm.signList[index];
+                if(sign.isRequired === 1 && !sign.status) {
+                    self.$Message.error('带红星项全部完成才可以签署完成');
+                    return;
+                }
+            }
+
             this.$http.post("/contractSign/save", this.addForm).then(function(response) {
                 if (response.data.success) {
                     self.$Message.info({
@@ -102,6 +111,7 @@ var vue = new Vue({
             }, function(error) {
                 self.$Message.error(error.data.message);
             });
+            this.addForm.finished = true;
         },
         /**
          * 取消保存

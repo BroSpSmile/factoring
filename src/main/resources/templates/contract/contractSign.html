@@ -42,9 +42,11 @@
 							 :key="index"
 							 :prop="'items.' + index + '.value'">
 							<Col span="4">
-							<Checkbox v-model="item.status"></Checkbox>
+								<Checkbox v-model="item.status"></Checkbox>
 							</Col>
 							<Col span="18">
+							<span v-if="item.isRequired == 1" style="color: red">*</span>
+							<span v-if="item.isRequired == 2">&nbsp;</span>
 							{{ item.signListName }}
 							</Col>
 						</Row>
