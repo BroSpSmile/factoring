@@ -1,5 +1,7 @@
 package com.smile.start.dto;
 
+import com.smile.start.model.project.Project;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -40,6 +42,11 @@ public class ContractInfoDTO implements Serializable {
      * 附件列表
      */
     private List<ContractAttachDTO> attachList;
+
+    /**
+     * 项目信息
+     */
+    private Project project;
 
     public ContractBaseInfoDTO getBaseInfo() {
         return baseInfo;
@@ -87,5 +94,13 @@ public class ContractInfoDTO implements Serializable {
 
     public void setAttachList(List<ContractAttachDTO> attachList) {
         this.attachList = attachList;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

@@ -30,6 +30,16 @@ public class ContractSignListDTO implements Serializable {
      */
     private String signListName;
 
+    /**
+     * 状态：0、未完成；1、完成
+     */
+    private Boolean status;
+
+    /**
+     * 是否必须：1、必须；2、非必须
+     */
+    private Integer isRequired;
+
     public Long getId() {
         return id;
     }
@@ -60,5 +70,21 @@ public class ContractSignListDTO implements Serializable {
 
     public void setSignListName(String signListName) {
         this.signListName = signListName;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Integer getIsRequired() {
+        return isRequired;
+    }
+
+    public void setIsRequired(Integer isRequired) {
+        this.isRequired = isRequired;
     }
 }

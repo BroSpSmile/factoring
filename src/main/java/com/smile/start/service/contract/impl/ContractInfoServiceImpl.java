@@ -3,21 +3,8 @@ package com.smile.start.service.contract.impl;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.ContractAttachDao;
-import com.smile.start.dao.ContractAuditRecordDao;
-import com.smile.start.dao.ContractExtendInfoDao;
-import com.smile.start.dao.ContractInfoDao;
-import com.smile.start.dao.ContractReceivableAgreementDao;
-import com.smile.start.dao.ContractReceivableConfirmationDao;
-import com.smile.start.dao.ContractSignListDao;
-import com.smile.start.dto.ContractAttachDTO;
-import com.smile.start.dto.ContractAuditDTO;
-import com.smile.start.dto.ContractAuditRecordDTO;
-import com.smile.start.dto.ContractAuditSearchDTO;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.dao.*;
+import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractAttach;
@@ -27,12 +14,15 @@ import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractReceivableAgreement;
 import com.smile.start.model.contract.ContractReceivableConfirmation;
 import com.smile.start.model.contract.ContractSignList;
+import com.smile.start.model.enums.ContractAttachTypeEnum;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.project.Project;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.List;
@@ -68,6 +58,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractAuditRecordDao contractAuditRecordDao;
 
     @Resource
+    private ProjectDao projectDao;
+
+    @Resource
     private ContractInfoMapper contractInfoMapper;
 
     /**
@@ -96,6 +89,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
         final List<ContractAttach> attachList = contractAttachDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setAttachList(contractInfoMapper.doList2dtoListAttach(attachList));
+
+        final Project project = projectDao.get(contractInfo.getProjectId());
+        contractInfoDTO.setProject(project);
         return contractInfoDTO;
     }
 
@@ -200,6 +196,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
                 contractSignList.setContractSerialNo(contractSerialNo);
                 contractSignList.setSignListName(e.getSignListName());
+                contractSignList.setStatus(false);
+                contractSignList.setIsRequired(e.getIsRequired());
                 contractSignListDao.insert(contractSignList);
             });
         }
@@ -215,6 +213,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             attachList.forEach(e -> {
                 e.setSerialNo(SerialNoGenerator.generateSerialNo("CA", 5));
                 e.setContractSerialNo(contractSerialNo);
+                e.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
                 contractAttachDao.insert(contractInfoMapper.dto2do(e));
             });
         }
@@ -315,5 +314,32 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public List<ContractAuditRecordDTO> findAuditRecord(String contractSerialNo) {
         return contractInfoMapper.doList2dtoListAuditRecord(contractAuditRecordDao.findByContractSerialNo(contractSerialNo));
+    }
+
+    /**
+     * 获取合同签署清单列表
+     * @param contractSerialNo
+     * @return
+     */
+    @Override
+    public List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo) {
+        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractSerialNo));
+    }
+
+    /**
+     * 保存签署信息
+     * @param contractSignDTO
+     */
+    @Override
+    public void saveSign(ContractSignDTO contractSignDTO) {
+        if(!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+        }
+
+        if(contractSignDTO.getFinished()) {
+            final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
+            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
+            contractInfoDao.update(contractInfo);
+        }
     }
 }

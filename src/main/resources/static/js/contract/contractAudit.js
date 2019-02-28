@@ -21,7 +21,8 @@ var vue = new Vue({
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
             signList : [],
-            attachList : []
+            attachList : [],
+            project : {}
 		},
         contractAudit : {
 
@@ -47,6 +48,7 @@ var vue = new Vue({
             let self = this;
             this.$http.get("/flowConfig/status/1").then(function(response){
                 if (response.data.success) {
+                    console.log(response.data.values)
                     self.statusList = response.data.values;
                 } else {
                     self.$Message.error(response.data.errorMessage);

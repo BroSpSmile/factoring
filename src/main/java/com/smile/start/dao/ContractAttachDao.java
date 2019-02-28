@@ -21,7 +21,7 @@ public interface ContractAttachDao {
      * @param contractAttach
      * @return
      */
-    @Insert("insert into contract_attach (serial_no,contract_serial_no,attach_name,file_id) values (#{serialNo},#{contractSerialNo},#{attachName},#{fileId})")
+    @Insert("insert into contract_attach (serial_no,contract_serial_no,attach_name,file_id,attach_type) values (#{serialNo},#{contractSerialNo},#{attachName},#{fileId},#{attachType})")
     long insert(ContractAttach contractAttach);
 
     /**
@@ -37,5 +37,5 @@ public interface ContractAttachDao {
      * @return
      */
     @Delete("delete from contract_attach where contract_serial_no = #{contractSerialNo}")
-    int deleteByContractSerialNo(String contractSerialNo);
+    void deleteByContractSerialNo(String contractSerialNo);
 }

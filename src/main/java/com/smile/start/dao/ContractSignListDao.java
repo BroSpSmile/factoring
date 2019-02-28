@@ -1,10 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.contract.ContractSignList;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,8 +19,15 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name) values (#{serialNo},#{contractSerialNo},#{signListName})")
+    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name,status,is_required) values (#{serialNo},#{contractSerialNo},#{signListName},#{status},#{isRequired})")
     long insert(ContractSignList contractSignList);
+
+    /**
+     * 更新合同签署清单
+     * @param contractSignList
+     */
+    @Update("update contract_sign_list set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},sign_list_name=#{signListName},status=#{status},is_required=#{isRequired} where id=#{id}")
+    void update(ContractSignList contractSignList);
 
     /**
      * 按合同业务流水删除签署清单

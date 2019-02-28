@@ -35,6 +35,11 @@ public class ContractAttach implements Serializable {
      */
     private String fileId;
 
+    /**
+     * 附件类型：1、标准；2、自定义
+     */
+    private Integer attachType;
+
     public Long getId() {
         return id;
     }
@@ -73,5 +78,13 @@ public class ContractAttach implements Serializable {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
+    }
+
+    public Integer getAttachType() {
+        return attachType;
+    }
+
+    public void setAttachType(Integer attachType) {
+        this.attachType = attachType;
     }
 }

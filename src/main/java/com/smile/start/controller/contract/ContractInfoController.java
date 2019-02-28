@@ -2,6 +2,8 @@ package com.smile.start.controller.contract;
 
 import javax.annotation.Resource;
 
+import com.smile.start.dto.*;
+import com.smile.start.model.base.ListResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.service.contract.ContractInfoService;
+
+import java.util.List;
 
 /**
  * @author Joseph
@@ -144,6 +145,22 @@ public class ContractInfoController extends BaseController {
         } catch (Exception e) {
             logger.error("状态流转失败", e);
             return toResult(e);
+        }
+    }
+
+    @GetMapping(value = "/signList/{contractSerialNo}")
+    @ResponseBody
+    public ListResult<ContractSignListDTO> signList(@PathVariable String contractSerialNo) {
+        try {
+            final List<ContractSignListDTO> signList = contractInfoService.findSignListByContractSerialNo(contractSerialNo);
+            ListResult<ContractSignListDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取合同签署清单成功");
+            result.setValues(signList);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取合同签署清单失败", e);
+            return toListResult(e, ContractSignListDTO.class);
         }
     }
 }

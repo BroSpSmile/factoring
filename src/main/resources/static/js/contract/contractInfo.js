@@ -144,7 +144,7 @@ var vue = new Vue({
             onCancel: () => {}
         })
         },
-        /** 删除签署清单 */
+        /** 删除合同 */
         deleteSign:function(id){
             let self = this;
             this.$http.delete("/contractInfo/" + id).then(function(response){
