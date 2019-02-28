@@ -21,7 +21,8 @@ var vue = new Vue({
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
             signList : [],
-            attachList : []
+            attachList : [],
+            project : {}
 		},
         contractAudit : {
 

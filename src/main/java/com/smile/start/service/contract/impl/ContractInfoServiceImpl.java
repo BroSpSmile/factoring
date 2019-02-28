@@ -3,13 +3,7 @@ package com.smile.start.service.contract.impl;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.ContractAttachDao;
-import com.smile.start.dao.ContractAuditRecordDao;
-import com.smile.start.dao.ContractExtendInfoDao;
-import com.smile.start.dao.ContractInfoDao;
-import com.smile.start.dao.ContractReceivableAgreementDao;
-import com.smile.start.dao.ContractReceivableConfirmationDao;
-import com.smile.start.dao.ContractSignListDao;
+import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
@@ -23,10 +17,12 @@ import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.model.enums.ContractAttachTypeEnum;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.project.Project;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.List;
@@ -62,6 +58,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractAuditRecordDao contractAuditRecordDao;
 
     @Resource
+    private ProjectDao projectDao;
+
+    @Resource
     private ContractInfoMapper contractInfoMapper;
 
     /**
@@ -90,6 +89,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
         final List<ContractAttach> attachList = contractAttachDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setAttachList(contractInfoMapper.doList2dtoListAttach(attachList));
+
+        final Project project = projectDao.get(contractInfo.getProjectId());
+        contractInfoDTO.setProject(project);
         return contractInfoDTO;
     }
 
