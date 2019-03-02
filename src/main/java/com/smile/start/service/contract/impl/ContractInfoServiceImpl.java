@@ -288,11 +288,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //审核通过
         if(contractAuditDTO.getOperationType() == 1) {
-            //如果审核完成直接通知办公室
+            contractInfo.setStatus(currentStatus.getNextStatus().getValue());
+            //如果审核完成通知办公室
             if(currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
-                contractInfo.setStatus(currentStatus.getNextStatus().getNextStatus().getValue());
-            } else {
-                contractInfo.setStatus(currentStatus.getNextStatus().getValue());
+                //TODO 调用通知接口
             }
         } else {
             //默认驳回到上一状态
