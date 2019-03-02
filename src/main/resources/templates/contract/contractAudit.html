@@ -84,7 +84,8 @@
 					</template>
 				</div>
 				<div slot="footer">
-					<i-button type="primary" @click="auditPass" style="margin-left: 8px">审核通过</i-button>
+					<i-button v-if="contractInfo.baseInfo.status != 7" type="primary" @click="auditPass" style="margin-left: 8px">审核通过</i-button>
+					<i-button v-if="contractInfo.baseInfo.status == 7" type="primary" @click="auditPass" style="margin-left: 8px">签章完成</i-button>
 					<i-button type="warning" @click="auditReject" style="margin-left: 8px">审核驳回</i-button>
 					<i-button @click="cancel" style="margin-left: 8px">取消</i-button>
 				</div>

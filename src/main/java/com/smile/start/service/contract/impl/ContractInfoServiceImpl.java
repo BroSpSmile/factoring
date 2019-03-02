@@ -5,6 +5,7 @@ import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.*;
 import com.smile.start.dto.*;
+import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractAttach;
@@ -280,10 +281,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public void audit(ContractAuditDTO contractAuditDTO) {
         final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractAuditDTO.getContractSerialNo());
         ContractStatusEnum currentStatus = ContractStatusEnum.fromValue(contractInfo.getStatus());
+        //状态合法性校验
+        if (currentStatus == null) {
+            throw new ValidateException("合同状态非法，status = " + contractInfo.getStatus());
+        }
 
         //审核通过
         if(contractAuditDTO.getOperationType() == 1) {
-            contractInfo.setStatus(currentStatus.getNextStatus().getValue());
+            //如果审核完成直接通知办公室
+            if(currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
+                contractInfo.setStatus(currentStatus.getNextStatus().getNextStatus().getValue());
+            } else {
+                contractInfo.setStatus(currentStatus.getNextStatus().getValue());
+            }
         } else {
             //默认驳回到上一状态
             if(contractAuditDTO.getRejectStatus() != null && contractAuditDTO.getRejectStatus() != 0) {

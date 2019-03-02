@@ -76,7 +76,7 @@ public enum ContractStatusEnum {
     NOTIFY_OFFICE(7, "通知办公室") {
         @Override
         public ContractStatusEnum getNextStatus() {
-            return null;
+            return SIGN;
         }
 
         @Override
