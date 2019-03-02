@@ -301,8 +301,15 @@ var vue = new Vue({
             return "";
         },
         handleRemove : function(index) {
-           // this.addForm.signList[index].status = 1;
             this.addForm.signList.splice(index,1);
+        },
+        handleAdd : function() {
+            this.addForm.signList.push({
+                status: 0,
+                signListName : '',
+                isRequired : 2,
+                type : 'add'
+            });
         },
         /**
          * 文件上传成功
