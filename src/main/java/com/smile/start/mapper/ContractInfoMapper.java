@@ -3,6 +3,7 @@ package com.smile.start.mapper;
 import com.smile.start.dto.*;
 import com.smile.start.model.contract.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
 public interface ContractInfoMapper {
 
+    @Mapping(source = "gmtCreate", target = "gmtCreate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ContractBaseInfoDTO do2dto(ContractInfo contractInfo);
     ContractInfo dto2do(ContractBaseInfoDTO dto);
     List<ContractBaseInfoDTO> doList2dtoListBase(List<ContractInfo> doList);
@@ -38,6 +40,7 @@ public interface ContractInfoMapper {
     ContractAttachDTO do2dto(ContractAttach contractAttach);
     List<ContractAttachDTO> doList2dtoListAttach(List<ContractAttach> doList);
 
+    @Mapping(source = "operationTime", target = "operationTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ContractAuditRecordDTO do2dto(ContractAuditRecord contractAuditRecord);
     List<ContractAuditRecordDTO> doList2dtoListAuditRecord(List<ContractAuditRecord> doList);
 }

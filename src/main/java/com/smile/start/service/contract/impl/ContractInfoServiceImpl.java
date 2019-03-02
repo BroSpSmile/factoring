@@ -19,11 +19,11 @@ import com.smile.start.model.enums.ContractAttachTypeEnum;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.UserInfoService;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.List;
@@ -62,6 +62,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ProjectDao projectDao;
 
     @Resource
+    private UserInfoService userInfoService;
+
+    @Resource
     private ContractInfoMapper contractInfoMapper;
 
     /**
@@ -75,6 +78,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         final ContractInfo contractInfo = contractInfoDao.get(id);
         final ContractBaseInfoDTO contractBaseInfoDTO = contractInfoMapper.do2dto(contractInfo);
         contractInfoDTO.setBaseInfo(contractBaseInfoDTO);
+        AuthUserInfoDTO userInfo = userInfoService.findBySerialNo(contractInfo.getCreateUser());
+        contractBaseInfoDTO.setCreateUser(userInfo.getUsername());
 
         final ContractExtendInfo contractExtendInfo =
                 contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());

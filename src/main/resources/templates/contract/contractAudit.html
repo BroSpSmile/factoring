@@ -47,13 +47,18 @@
 						</row>
 						<row>
 							<i-col span="7" offset="1">
-								<form-item label="合同编号">
-									<span>{{contractInfo.baseInfo.contractCode}}</span>
+								<form-item label="申请类型">
+									<span>合同审核</span>
 								</form-item>
 							</i-col>
 							<i-col span="7">
-								<form-item label="合同名称">
-									<span>{{contractInfo.baseInfo.contractName}}</span>
+								<form-item label="申请时间">
+									<span>{{contractInfo.baseInfo.gmtCreate}}</span>
+								</form-item>
+							</i-col>
+							<i-col span="7">
+								<form-item label="申请人">
+									<span>{{contractInfo.baseInfo.createUser}}</span>
 								</form-item>
 							</i-col>
 						</row>

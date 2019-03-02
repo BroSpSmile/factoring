@@ -282,4 +282,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         return loginUser;
     }
 
+    /**
+     * 根据用户编号查询用户
+     * @param serialNo
+     * @return
+     */
+    @Override
+    public AuthUserInfoDTO findBySerialNo(String serialNo) {
+        return userInfoMapper.do2dto(userDao.findBySerialNo(serialNo));
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Joseph
@@ -49,6 +50,16 @@ public class ContractBaseInfoDTO implements Serializable {
      * 状态
      */
     private Integer status;
+
+    /**
+     * 创建人
+     */
+    private String createUser;
+
+    /**
+     * 创建时间
+     */
+    private String gmtCreate;
 
     public Long getId() {
         return id;
@@ -112,5 +123,21 @@ public class ContractBaseInfoDTO implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(String gmtCreate) {
+        this.gmtCreate = gmtCreate;
     }
 }

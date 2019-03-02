@@ -72,7 +72,7 @@ public interface UserDao {
      * @return
      */
     @Select("select * from auth_user_info where serial_no=#{serialNo}")
-    List<User> findBySerialNo(String serialNo);
+    User findBySerialNo(String serialNo);
 
     /**
      * 查询全部用户
