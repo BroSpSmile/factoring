@@ -124,23 +124,21 @@ var vue = new Vue({
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
                     if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === ""){
-
-                                this.$http.post("/user", this.addForm).then(function (response) {
-                                    if (response.data.success) {
-                                        self.$Message.info({
-                                            content: "保存成功",
-                                            onClose: function () {
-                                                self.query();
-                                                self.cancel();
-                                            }
-                                        });
-                                    } else {
-                                        self.$Message.error(response.data.errorMessage);
+                        this.$http.post("/user", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
                                     }
-                                }, function (error) {
-                                    self.$Message.error(error.data.message);
                                 });
-
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
+                            }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
+                        });
                     } else {
                         this.$http.put("/user", this.addForm).then(function(response) {
                             if (response.data.success) {
