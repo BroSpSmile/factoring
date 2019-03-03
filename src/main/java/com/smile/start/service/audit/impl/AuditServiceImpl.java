@@ -127,6 +127,12 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     public PageInfo<Audit> query(PageRequest<AuditParam> param) {
         PageHelper.startPage(param.getPageNum(), param.getPageSize(), "id desc");
         List<Audit> audits = auditDao.query(param.getCondition());
+        for (Audit audit : audits) {
+            Project project = projectService.getProject(audit.getProject().getId());
+            audit.setProject(project);
+            User user = userInfoService.getUserById(audit.getApplicant().getId());
+            audit.setApplicant(user);
+        }
         PageInfo<Audit> result = new PageInfo<>(audits);
         return result;
     }

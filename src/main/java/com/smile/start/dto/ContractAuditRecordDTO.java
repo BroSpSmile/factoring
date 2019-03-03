@@ -1,7 +1,6 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Joseph
@@ -14,42 +13,42 @@ public class ContractAuditRecordDTO implements Serializable {
     /**
      * 主键
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 业务流水号
      */
-    private String serialNo;
+    private String            serialNo;
 
     /**
      * 合同业务流水
      */
-    private String contractSerialNo;
+    private String            contractSerialNo;
 
     /**
      * 操作状态
      */
-    private String operationStatus;
+    private String            operationStatus;
 
     /**
      * 操作类型：1、通过；2、驳回
      */
-    private Integer operationType;
+    private Integer           operationType;
 
     /**
      * 操作人
      */
-    private String operationUser;
+    private String            operationUser;
 
     /**
      * 操作时间
      */
-    private String operationTime;
+    private String            operationTime;
 
     /**
      * 备注
      */
-    private String remark;
+    private String            remark;
 
     public Long getId() {
         return id;

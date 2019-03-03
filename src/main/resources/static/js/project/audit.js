@@ -71,7 +71,7 @@ var vue = new Vue({
 		},
 		
 		auditResultText:function(value){
-			for(let index in this.auditType){
+			for(let index in this.auditResult){
 				if(value==this.auditResult[index].value){
 					return this.auditResult[index].text;
 				}
@@ -125,7 +125,7 @@ var vue = new Vue({
 						content : "审核成功",
 						onClose : function() {
 							_self.cancel();
-							_self.getAudit(document.getElementById("auditId").value);
+							window.close();
 						}
 					});
 				} else {

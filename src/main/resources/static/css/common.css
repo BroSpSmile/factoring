@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.inputs{
+	width: 160px;
+}
+
 .inputw{
 	width: 250px;
 }

@@ -195,3 +195,13 @@ html, body {
 	min-height: 100%;
 	background: #dcdee2;
 }
+
+.wrapper-header-nav-list {
+    height: inherit;
+    float: right;
+}
+
+.info-menu {
+    display: inline-block;
+    margin-left: 32px;
+}

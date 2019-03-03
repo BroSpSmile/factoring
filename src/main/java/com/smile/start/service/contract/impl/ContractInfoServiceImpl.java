@@ -1,10 +1,35 @@
 package com.smile.start.service.contract.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.*;
-import com.smile.start.dto.*;
+import com.smile.start.dao.ContractAttachDao;
+import com.smile.start.dao.ContractAuditRecordDao;
+import com.smile.start.dao.ContractExtendInfoDao;
+import com.smile.start.dao.ContractInfoDao;
+import com.smile.start.dao.ContractReceivableAgreementDao;
+import com.smile.start.dao.ContractReceivableConfirmationDao;
+import com.smile.start.dao.ContractSignListDao;
+import com.smile.start.dao.ProjectDao;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.ContractAttachDTO;
+import com.smile.start.dto.ContractAuditDTO;
+import com.smile.start.dto.ContractAuditRecordDTO;
+import com.smile.start.dto.ContractAuditSearchDTO;
+import com.smile.start.dto.ContractBaseInfoDTO;
+import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractInfoSearchDTO;
+import com.smile.start.dto.ContractSignDTO;
+import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
@@ -19,15 +44,8 @@ import com.smile.start.model.enums.ContractAttachTypeEnum;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.Project;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.contract.ContractInfoService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -38,34 +56,34 @@ import javax.annotation.Resource;
 public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
-    private ContractInfoDao contractInfoDao;
+    private ContractInfoDao                   contractInfoDao;
 
     @Resource
-    private ContractExtendInfoDao contractExtendInfoDao;
+    private ContractExtendInfoDao             contractExtendInfoDao;
 
     @Resource
-    private ContractReceivableAgreementDao contractReceivableAgreementDao;
+    private ContractReceivableAgreementDao    contractReceivableAgreementDao;
 
     @Resource
     private ContractReceivableConfirmationDao contractReceivableConfirmationDao;
 
     @Resource
-    private ContractSignListDao contractSignListDao;
+    private ContractSignListDao               contractSignListDao;
 
     @Resource
-    private ContractAttachDao contractAttachDao;
+    private ContractAttachDao                 contractAttachDao;
 
     @Resource
-    private ContractAuditRecordDao contractAuditRecordDao;
+    private ContractAuditRecordDao            contractAuditRecordDao;
 
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao                        projectDao;
 
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService                   userInfoService;
 
     @Resource
-    private ContractInfoMapper contractInfoMapper;
+    private ContractInfoMapper                contractInfoMapper;
 
     /**
      * 根据主键获取合同信息
@@ -81,17 +99,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         AuthUserInfoDTO userInfo = userInfoService.findBySerialNo(contractInfo.getCreateUser());
         contractBaseInfoDTO.setCreateUser(userInfo.getUsername());
 
-        final ContractExtendInfo contractExtendInfo =
-                contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
+        final ContractExtendInfo contractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractExtendInfo(contractInfoMapper.do2dto(contractExtendInfo));
-        final ContractReceivableAgreement contractReceivableAgreement =
-                contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
+        final ContractReceivableAgreement contractReceivableAgreement = contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableAgreement(contractInfoMapper.do2dto(contractReceivableAgreement));
-        final ContractReceivableConfirmation contractReceivableConfirmation =
-                contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
+        final ContractReceivableConfirmation contractReceivableConfirmation = contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableConfirmation(contractInfoMapper.do2dto(contractReceivableConfirmation));
-        final List<ContractSignList> signList =
-                contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo());
+        final List<ContractSignList> signList = contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
         final List<ContractAttach> attachList = contractAttachDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setAttachList(contractInfoMapper.doList2dtoListAttach(attachList));
@@ -292,15 +306,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         }
 
         //审核通过
-        if(contractAuditDTO.getOperationType() == 1) {
+        if (contractAuditDTO.getOperationType() == 1) {
             contractInfo.setStatus(currentStatus.getNextStatus().getValue());
             //如果审核完成通知办公室
-            if(currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
+            if (currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
                 //TODO 调用通知接口
             }
         } else {
             //默认驳回到上一状态
-            if(contractAuditDTO.getRejectStatus() != null && contractAuditDTO.getRejectStatus() != 0) {
+            if (contractAuditDTO.getRejectStatus() != null && contractAuditDTO.getRejectStatus() != 0) {
                 contractInfo.setStatus(contractAuditDTO.getRejectStatus());
             } else {
                 contractInfo.setStatus(currentStatus.getDefaultRejectStatus().getValue());
@@ -346,11 +360,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-        if(!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
             contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
         }
 
-        if(contractSignDTO.getFinished()) {
+        if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
             contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
             contractInfoDao.update(contractInfo);

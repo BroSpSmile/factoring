@@ -10,15 +10,14 @@
 					<card dis-hover title="业务筛选">
 						<i-form ref="searchForm" :model="formInline" :label-width="80" inline>
 							<form-item label="项目编号" prop="projectId">
-								 <i-input placeholder="输入项目编号" class="inputw" v-model="formInline.projectId"></i-input>
+								 <i-input placeholder="输入项目编号"  v-model="formInline.projectId"></i-input>
 							</form-item>
 							<form-item label="申请类型" prop="projectName">
-								 <i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
+								<i-select  v-model="formInline.auditType" class="inputs" clearable>
+	                        		<i-option v-for="item in auditType"  :value="item.value">{{item.text}}</i-option>
+								</i-select>
 							</form-item>
-							<form-item label="申请人" prop="person">
-								 <i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
-							</form-item>
-							<form-item label="会议时间">
+							<form-item label="申请时间">
 								<row>
 					                <i-col span="11">
 					                	<form-item  prop="beginTime">
@@ -41,9 +40,14 @@
 	                		</row>
 						</i-form>
 					</card>
+					<br>
+					<card dis-hover title="查询结果">
+						<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
+						<br/>
+						<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
+					</card>
 				</i-col>
 			</row>
-			
 	    </div>
 	    <script src="js/project/audits.js"></script>
 	</div>

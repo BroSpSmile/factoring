@@ -1,7 +1,6 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Joseph
@@ -14,52 +13,52 @@ public class ContractBaseInfoDTO implements Serializable {
     /**
      * 主键
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 项目主键
      */
-    private Long projectId;
+    private Long              projectId;
 
     /**
      * 业务流水
      */
-    private String serialNo;
+    private String            serialNo;
 
     /**
      * 合同编号
      */
-    private String contractCode;
+    private String            contractCode;
 
     /**
      * 合同名称
      */
-    private String contractName;
+    private String            contractName;
 
     /**
      * 项目模式：1、有追索权模式；2、无追索权模式
      */
-    private Integer projectMode;
+    private Integer           projectMode;
 
     /**
      * 合同模板：1、标准模板；2、自定义模板
      */
-    private Integer contractTemplate;
+    private Integer           contractTemplate;
 
     /**
      * 状态
      */
-    private Integer status;
+    private Integer           status;
 
     /**
      * 创建人
      */
-    private String createUser;
+    private String            createUser;
 
     /**
      * 创建时间
      */
-    private String gmtCreate;
+    private String            gmtCreate;
 
     public Long getId() {
         return id;

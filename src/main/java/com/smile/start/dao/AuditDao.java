@@ -50,7 +50,7 @@ public interface AuditDao {
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
                                       @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
     @Select("<script>" + "select * from audit t1 where 1 =1 " + "<if test='null != applicant and null!= applicant.id'>and t1.applicant = #{applicant.id}</if>"
-            + "<if test='null != projectId and \"\"= projectId'>and exists (select * from factoring_project t2 where t1.project = t2.id and t2.project_id = #{projectId})</if>"
+            + "<if test='null != projectId and \"\" != projectId'>and exists (select * from factoring_project t2 where t1.project = t2.id and t2.project_id = #{projectId})</if>"
             + "<if test='null != auditType'>and t1.audit_type = #{auditType}</if>" + "<if test='null != beginTime'>and t1.create_time &gt; #{beginTime}</if>"
             + "<if test='null != endTime'>and t1.create_time &lt; #{endTime}</if>"
             + "<if test='null != audit and null!=audit.serialNo'>and exists (select * from auth_user_role_info t3 where t1.role = t3.role_serial_no and t3.user_serial_no = #{audit.serialNo})</if>"

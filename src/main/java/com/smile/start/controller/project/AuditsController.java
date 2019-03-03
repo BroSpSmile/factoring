@@ -4,11 +4,25 @@
  */
 package com.smile.start.controller.project;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.FastJsonUtils;
+import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.auth.User;
+import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.AuditParam;
+import com.smile.start.model.project.Audit;
+import com.smile.start.service.audit.AuditService;
 
 /**
  * 
@@ -19,6 +33,10 @@ import com.smile.start.controller.BaseController;
 @RequestMapping("/audits")
 public class AuditsController extends BaseController {
 
+    /** auditService */
+    @Resource
+    private AuditService auditService;
+
     /**
      * 页面索引
      * @return
@@ -26,5 +44,20 @@ public class AuditsController extends BaseController {
     @GetMapping
     public String index() {
         return "project/audits";
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @return
+     */
+    @PostMapping("/query")
+    @ResponseBody
+    public PageInfo<Audit> query(HttpServletRequest request, @RequestBody PageRequest<AuditParam> query) {
+        User user = getUserByToken(request);
+        query.getCondition().setAudit(user);
+        LoggerUtils.info(logger, "查询参数={}", FastJsonUtils.toJSONString(query));
+        PageInfo<Audit> result = auditService.query(query);
+        return result;
     }
 }
