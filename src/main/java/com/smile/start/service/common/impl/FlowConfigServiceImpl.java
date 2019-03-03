@@ -37,13 +37,13 @@ import javax.annotation.Resource;
 public class FlowConfigServiceImpl implements FlowConfigService {
 
     @Resource
-    private FlowConfigDao flowConfigDao;
+    private FlowConfigDao    flowConfigDao;
 
     @Resource
     private FlowConfigMapper flowConfigMapper;
 
     @Resource
-    private RoleInfoService roleInfoService;
+    private RoleInfoService  roleInfoService;
 
     /**
      * 根据主键查询流程配置信息
@@ -127,7 +127,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     }
 
     private void saveStatus(List<FlowStatusDTO> statusList, String flowSerialNo) {
-        for(FlowStatusDTO flowStatusDTO : statusList) {
+        for (FlowStatusDTO flowStatusDTO : statusList) {
             String statusSerialNo = SerialNoGenerator.generateSerialNo("FS", 6);
             FlowStatus flowStatus = new FlowStatus();
             flowStatus.setSerialNo(statusSerialNo);
@@ -176,7 +176,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
 
         final List<AuthRoleInfoDTO> roleList = roleInfoService.findAll();
         switch (flowTypeEnum) {
-            case PROJECT:
+            case TUNEUP:
                 FlowStatusDTO flowStatus1 = new FlowStatusDTO();
                 flowStatus1.setFlowStatus(1);
                 flowStatus1.setFlowStatusDesc("a");

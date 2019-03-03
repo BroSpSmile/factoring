@@ -9,8 +9,8 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditParam;
 import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditParam;
 import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.Project;
 

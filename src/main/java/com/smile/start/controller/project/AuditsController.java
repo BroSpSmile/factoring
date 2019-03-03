@@ -20,8 +20,8 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.AuditParam;
 import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditParam;
 import com.smile.start.service.audit.AuditService;
 
 /**

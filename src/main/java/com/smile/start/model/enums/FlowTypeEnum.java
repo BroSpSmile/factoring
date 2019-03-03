@@ -7,10 +7,16 @@ package com.smile.start.model.enums;
  * @since 1.8
  */
 public enum FlowTypeEnum {
-    CONTRACT(1, "合同"),
-    PROJECT(2, "项目");
+                          /**  */
+                          CONTRACT(1, "合同审核流程 "),
+                          /**  */
+                          TUNEUP(2, "尽调审核流程"),
 
-    private int value;
+                          LOAN(3, "放款审核流程"),
+
+                          FILING(4, "归档审核流程");
+
+    private int    value;
     private String desc;
 
     FlowTypeEnum(int value, String desc) {
@@ -19,8 +25,8 @@ public enum FlowTypeEnum {
     }
 
     public static FlowTypeEnum fromValue(int flowType) {
-        for(FlowTypeEnum flowTypeEnum : FlowTypeEnum.values()) {
-            if(flowTypeEnum.getValue() == flowType) {
+        for (FlowTypeEnum flowTypeEnum : FlowTypeEnum.values()) {
+            if (flowTypeEnum.getValue() == flowType) {
                 return flowTypeEnum;
             }
         }

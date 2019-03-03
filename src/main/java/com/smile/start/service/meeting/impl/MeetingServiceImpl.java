@@ -148,13 +148,14 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      * @see com.smile.start.service.meeting.MeetingService#createMeeting(com.smile.start.model.meeting.Meeting)
      */
     @Override
+    @Transactional
     public BaseResult createMeeting(MeetingExt meeting) {
         meeting.toParticipantNoList();
         long effect = meetingDao.insert(meeting);
         if (effect > 0 && MeetingKind.APPROVAL.equals(meeting.getKind())) {
             for (Project project : meeting.getProjects()) {
-                project.setProgress(Progress.APPLY);
-                projectDao.update(project);
+                project.setProgress(Progress.INITIATE);
+                projectService.turnover(project);
                 ProjectMeeting pm = new ProjectMeeting();
                 pm.setMeetingId(meeting.getId());
                 pm.setProjectId(project.getId());
@@ -175,6 +176,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      * @see com.smile.start.service.meeting.MeetingService#updateMeeting(com.smile.start.model.meeting.MeetingExt)
      */
     @Override
+    @Transactional
     public BaseResult updateMeeting(MeetingExt meeting) {
         meeting.toParticipantNoList();
         int effect = meetingDao.update(meeting);
@@ -213,8 +215,8 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         } else {
             Project project = meeting.getProjects().get(0);
-            project.setProgress(Progress.TUNEUP);
-            projectService.apply(meeting.getProjects().get(0));
+            project.setProgress(Progress.APPROVAL);
+            projectService.turnover(meeting.getProjects().get(0));
         }
         return new BaseResult();
     }

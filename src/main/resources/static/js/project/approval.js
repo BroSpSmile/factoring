@@ -244,7 +244,7 @@ vue.tableColumns=[
 							}
 						}, '发起立项会'):
 						h('span'),
-				param.row.progress=='TUNEUP'?
+				param.row.progress=='APPROVAL'?
 						h('Button', {
 							props: {
 								size: "small"
@@ -257,7 +257,7 @@ vue.tableColumns=[
 									 vue.tuneup(param.row.id);
 								}
 							}
-						}, '发起尽调审核'):
+						}, '项目尽调'):
 						h('span'),
 				h('Button', {
 					props: {

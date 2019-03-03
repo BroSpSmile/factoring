@@ -14,8 +14,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
-import com.smile.start.model.enums.AuditParam;
 import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditParam;
 
 /**
  * AuditDao

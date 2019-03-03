@@ -6,7 +6,7 @@ package com.smile.start.model.project;
 
 import java.io.Serializable;
 
-import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProjectItemType;
 
 /**
  * 项目附件
@@ -25,7 +25,7 @@ public class ProjectItem implements Serializable {
     private Long              projectId;
 
     /** 附件类型 */
-    private Progress          itemType;
+    private ProjectItemType   itemType;
 
     /** 附件名称 */
     private String            itemName;
@@ -83,7 +83,7 @@ public class ProjectItem implements Serializable {
      * 
      * @return property value of itemType
      */
-    public Progress getItemType() {
+    public ProjectItemType getItemType() {
         return itemType;
     }
 
@@ -92,7 +92,7 @@ public class ProjectItem implements Serializable {
      * 
      * @param itemType value to be assigned to property itemType
      */
-    public void setItemType(Progress itemType) {
+    public void setItemType(ProjectItemType itemType) {
         this.itemType = itemType;
     }
 

@@ -56,7 +56,7 @@ var vue = new Vue({
 			for(let index in this.fileList){
 				let item={
 						projectId:this.project.id,
-						itemType:"TUNEUP",
+						itemType:"DUE_DILIGENCE",
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
 				}
@@ -66,7 +66,7 @@ var vue = new Vue({
 			this.$http.post("/apply",this.project).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
-						content : "立项申请成功",
+						content : "尽调申请成功",
 						onClose : function() {
 							window.close();
 						}

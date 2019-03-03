@@ -62,6 +62,6 @@ public class ApplyController extends BaseController {
         project.setUser(user);
         project.setProgress(Progress.TUNEUP);
         LoggerUtils.info(logger, "立项申请project={}", FastJsonUtils.toJSONString(project));
-        return projectService.apply(project);
+        return projectService.turnover(project);
     }
 }

@@ -2,12 +2,13 @@
  * jsszvip.com Inc.
  * Copyright (c) 2012-2019 All Rights Reserved.
  */
-package com.smile.start.model.enums;
+package com.smile.start.model.project;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import com.smile.start.model.auth.User;
+import com.smile.start.model.enums.AuditType;
 
 /**
  * 审核查询条件

@@ -36,11 +36,11 @@ public interface ProjectService {
     BaseResult updateProject(Project project);
 
     /**
-     * 项目申请
+     * 业务状态流转
      * @param project
      * @return
      */
-    BaseResult apply(Project project);
+    BaseResult turnover(Project project);
 
     /**
      * 删除项目

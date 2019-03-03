@@ -4,6 +4,7 @@
  */
 package com.smile.start.service.project.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,14 +18,16 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectItemDao;
+import com.smile.start.dao.ProjectRecordDao;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProgressStatus;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
+import com.smile.start.model.project.ProjectRecord;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.project.IdGenService;
 import com.smile.start.service.project.ProjectService;
@@ -41,23 +44,23 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** 项目DAO */
     @Resource
-    private ProjectDao      projectDao;
+    private ProjectDao       projectDao;
+
+    /** projectRecordDao */
+    @Resource
+    private ProjectRecordDao projectRecordDao;
 
     /** 用户服务 */
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService  userInfoService;
 
     /** 项目附件DAO */
     @Resource
-    private ProjectItemDao  projectItemDao;
+    private ProjectItemDao   projectItemDao;
 
     /** Id生成服务 */
     @Resource
-    private IdGenService    idGenService;
-
-    /** 审核服务 */
-    @Resource
-    private AuditService    auditService;
+    private IdGenService     idGenService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -107,18 +110,35 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.project.ProjectService#apply(com.smile.start.model.project.Project)
+     * @see com.smile.start.service.project.ProjectService#turnover(com.smile.start.model.project.Project)
      */
     @Override
     @Transactional
-    public BaseResult apply(Project project) {
+    public BaseResult turnover(Project project) {
         int effect = projectDao.update(project);
+        addRecord(project);
         LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
-        for (ProjectItem item : project.getItems()) {
-            projectItemDao.insert(item);
+        if (!CollectionUtils.isEmpty(project.getItems())) {
+            for (ProjectItem item : project.getItems()) {
+                projectItemDao.insert(item);
+            }
         }
-        BaseResult result = auditService.apply(project, project.getUser());
-        return result;
+        return new BaseResult();
+    }
+
+    /**
+     * 添加项目记录
+     * @param project
+     * @return
+     */
+    private BaseResult addRecord(Project project) {
+        ProjectRecord record = new ProjectRecord();
+        record.setProject(project);
+        record.setProgress(project.getProgress());
+        record.setStatus(ProgressStatus.COMPLETED);
+        record.setCreateTime(new Date());
+        long effect = projectRecordDao.insert(record);
+        return toResult(effect);
     }
 
     /** 
