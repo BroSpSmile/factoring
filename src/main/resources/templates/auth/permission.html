@@ -32,31 +32,29 @@
 			<!-- 新增权限 -->
 			<modal v-model="modal1" title="新增权限"  mask-closable="false">
 				<div id="modalForm">
-					<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
-						<form-item label="上级权限" prop="parentSerialNo" v-if="addForm.parentSerialNo!=''">
-							<i-col span="12" style="padding-right:10px">
-								<i-select :model.sync="model11" v-model="addForm.parentSerialNo" filterable clearable>
-									<i-option v-for="item in permissionList" :value="item.serialNo">{{ item.permissionName }}</i-option>
-								</i-select>
-							</i-col>
+					<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
+						<form-item label="上级权限" prop="parentSerialNo">
+							<i-select :model.sync="model11" v-model="addForm.parentSerialNo" filterable clearable>
+								<i-option v-for="item in permissionList" :value="item.serialNo">{{ item.permissionName }}</i-option>
+							</i-select>
 						</form-item>
-						<form-item label="权限编号" prop="permissionCode" v-if="addForm.permissionCode!=''">
-							<i-input placeholder="输入角色编号"  v-model="addForm.permissionCode"></i-input>
+						<form-item label="权限编号" prop="permissionCode">
+							<i-input placeholder="输入角色编号" v-model="addForm.permissionCode"></i-input>
 						</form-item>
 						<form-item label="权限名称" prop="permissionName">
-							<i-input placeholder="输入权限名称"  v-model="addForm.permissionName"></i-input>
+							<i-input placeholder="输入权限名称" v-model="addForm.permissionName"></i-input>
 						</form-item>
-						<form-item label="权限类型">
-							<i-select class="inputw" v-model="addForm.permissionType" clearable>
+						<form-item label="权限类型" prop="permissionType">
+							<i-select v-model="addForm.permissionType" clearable>
 								<i-option :value="1">菜单</i-option>
 								<i-option :value="2">按钮</i-option>
 							</i-select>
 						</form-item>
 						<form-item label="菜单路径" prop="url">
-							<i-input placeholder="输入菜单路径"  v-model="addForm.url"></i-input>
+							<i-input placeholder="输入菜单路径" v-model="addForm.url"></i-input>
 						</form-item>
 						<form-item label="备注" prop="remark">
-							<i-input type="textarea" placeholder="输入备注"  v-model="addForm.remark"></i-input>
+							<i-input type="textarea" placeholder="输入备注" v-model="addForm.remark"></i-input>
 						</form-item>
 					</i-form>
 				</div>
