@@ -1,4 +1,4 @@
-package com.smile.start.service.impl;
+package com.smile.start.service.auth.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
@@ -12,7 +12,8 @@ import com.smile.start.model.auth.Organizational;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.login.LoginUser;
-import com.smile.start.service.OrganizationalService;
+import com.smile.start.service.auth.OrganizationalService;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

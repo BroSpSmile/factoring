@@ -1,4 +1,4 @@
-package com.smile.start.service;
+package com.smile.start.service.auth;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthPermissionInfoDTO;

@@ -118,7 +118,7 @@ var vue = new Vue({
 				for(let index in this.fileList){
 					let item={
 							projectId:this.loan.project.id,
-							itemType:"LOAN_FILE",
+							itemType:"LOAN",
 							itemName:this.fileList[index].name,
 							itemValue:this.fileList[index].response.data.fileId
 					}

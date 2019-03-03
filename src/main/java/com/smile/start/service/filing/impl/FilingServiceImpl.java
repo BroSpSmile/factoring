@@ -13,9 +13,10 @@ import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FileService;
 import com.smile.start.service.filing.FilingService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

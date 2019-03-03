@@ -24,7 +24,8 @@ import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.project.IdGenService;
 import com.smile.start.service.project.ProjectService;
 
@@ -53,6 +54,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     /** Id生成服务 */
     @Resource
     private IdGenService    idGenService;
+
+    /** 审核服务 */
+    @Resource
+    private AuditService    auditService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -112,13 +117,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         for (ProjectItem item : project.getItems()) {
             projectItemDao.insert(item);
         }
-        BaseResult result = new BaseResult();
-        if (effect > 0) {
-            result.setSuccess(true);
-        } else {
-            result.setErrorCode("VP00011004");
-            result.setErrorMessage("项目立项申请失败,请重试!");
-        }
+        BaseResult result = auditService.apply(project, project.getUser());
         return result;
     }
 
@@ -163,7 +162,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      */
     @Override
     public Project getProject(Long id) {
-        return projectDao.get(id);
+        Project project = projectDao.get(id);
+        List<ProjectItem> items = projectItemDao.getItems(project);
+        project.setItems(items);
+        return project;
     }
 
     /** 

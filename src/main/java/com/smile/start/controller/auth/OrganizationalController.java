@@ -8,7 +8,8 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.service.OrganizationalService;
+import com.smile.start.service.auth.OrganizationalService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

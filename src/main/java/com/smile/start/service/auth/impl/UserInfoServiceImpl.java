@@ -1,4 +1,4 @@
-package com.smile.start.service.impl;
+package com.smile.start.service.auth.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -19,10 +19,11 @@ import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.login.LoginUserPermission;
 import com.smile.start.model.login.LoginUserRole;
-import com.smile.start.service.OrganizationalService;
-import com.smile.start.service.PermissionInfoService;
-import com.smile.start.service.RoleInfoService;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.OrganizationalService;
+import com.smile.start.service.auth.PermissionInfoService;
+import com.smile.start.service.auth.RoleInfoService;
+import com.smile.start.service.auth.UserInfoService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -214,7 +215,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /** 
-     * @see com.smile.start.service.UserInfoService#getUserByToken(java.lang.String)
+     * @see com.smile.start.service.auth.UserInfoService#getUserByToken(java.lang.String)
      */
     @Override
     public User getUserByToken(String token) {
@@ -224,7 +225,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /** 
-     * @see com.smile.start.service.UserInfoService#getUserById(java.lang.Long)
+     * @see com.smile.start.service.auth.UserInfoService#getUserById(java.lang.Long)
      */
     @Override
     public User getUserById(Long id) {

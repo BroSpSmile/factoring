@@ -1,4 +1,4 @@
-package com.smile.start.service.impl;
+package com.smile.start.service.auth.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -14,7 +14,8 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.login.LoginUser;
-import com.smile.start.service.PermissionInfoService;
+import com.smile.start.service.auth.PermissionInfoService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

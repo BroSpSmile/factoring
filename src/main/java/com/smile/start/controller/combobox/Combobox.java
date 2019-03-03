@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dao.UserDao;
 import com.smile.start.model.auth.User;
+import com.smile.start.model.enums.AuditResult;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
@@ -62,6 +64,30 @@ public class Combobox extends BaseController {
     @RequestMapping("/meetingStatus")
     public List<Item> getMeetingStatus() {
         MeetingStatus[] enums = MeetingStatus.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 审核类型
+     * @return
+     */
+    @RequestMapping("/auditType")
+    public List<Item> getAuditType() {
+        AuditType[] enums = AuditType.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+    
+    /**
+     * 审核结果
+     * @return
+     */
+    @RequestMapping("auditResult")
+    public List<Item> getAuditResult(){
+        AuditResult[] enums = AuditResult.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;

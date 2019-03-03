@@ -27,7 +27,7 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
 
 /**
  * @author jingyongxiang

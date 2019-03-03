@@ -7,7 +7,8 @@ import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

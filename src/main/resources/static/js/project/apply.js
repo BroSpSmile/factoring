@@ -23,7 +23,6 @@ var vue = new Vue({
 		 */
 		uploadSuccess : function(response, file, fileList) {
 			this.fileList=fileList;
-			console.log(response);
 		},
 		
 		/**
@@ -31,12 +30,10 @@ var vue = new Vue({
 		 */
 		uploadError:function(error, file, fileList){
 			this.fileList=fileList;
-			console.log(error);
 		},
 		
 		removeFile:function(file, fileList){
 			this.fileList=fileList;
-			console.log(file);
 			let fileId = file.response.data.fileId;
 			let self =this;
 			this.$http.delete("/file/"+fileId).then(function(response){
@@ -59,7 +56,7 @@ var vue = new Vue({
 			for(let index in this.fileList){
 				let item={
 						projectId:this.project.id,
-						itemType:"DUE_DILIGENCE",
+						itemType:"TUNEUP",
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
 				}

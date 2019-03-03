@@ -2,7 +2,7 @@
  * 菜单信息
  */
 common.pageName = "meeting";
-common.openName = [ '6' ];
+common.openName = [ 'meeting' ];
 
 var vue = new Vue({
 	el : '#minutes',

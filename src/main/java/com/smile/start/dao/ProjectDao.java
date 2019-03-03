@@ -27,7 +27,7 @@ public interface ProjectDao {
      * @return
      */
     @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{user.id},#{progress})")
-    @SelectKey(statement="select last_insert_id()", keyProperty="id", before=false, resultType=long.class)  
+    @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Project project);
 
     /**
@@ -36,8 +36,8 @@ public interface ProjectDao {
      * @return
      */
     @Update("<script>" + "update factoring_project" + " set id=#{id}" + "<if test = 'projectId!=null'>,project_id = #{projectId}</if>"
-            + "<if test = 'projectName!=null'>, project_name = #{projectName}</if>" + "<if test = 'user!=null and user.id!=null'> , person = #{user.id}</if>"
-            + "<if test = 'progress!=null'> , progress = #{progress}</if>" + "<if test = 'model!=null'> , model = #{model}</if>" + " where id=#{id} " + "</script>")
+            + "<if test = 'projectName!=null'>, project_name = #{projectName}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>"
+            + "<if test = 'model!=null'> , model = #{model}</if>" + " where id=#{id} " + "</script>")
     int update(Project project);
 
     /**

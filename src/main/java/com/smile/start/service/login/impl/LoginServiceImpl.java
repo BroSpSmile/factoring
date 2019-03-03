@@ -14,10 +14,11 @@ import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
-import com.smile.start.service.UserInfoService;
+
 import org.springframework.stereotype.Service;
 
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.login.LoginService;
 
 import javax.annotation.Resource;

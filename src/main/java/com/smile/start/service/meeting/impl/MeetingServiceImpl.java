@@ -32,7 +32,7 @@ import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectMeeting;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.project.ProjectService;
 

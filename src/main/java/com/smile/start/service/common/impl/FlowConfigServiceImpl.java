@@ -17,8 +17,9 @@ import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.login.LoginUser;
-import com.smile.start.service.RoleInfoService;
+import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

@@ -6,31 +6,26 @@ package com.smile.start.model.project;
 
 import java.io.Serializable;
 
-import com.smile.start.model.enums.Progress;
-
 /**
- * 项目附件
+ * 审核附件
  * @author smile.jing
- * @version $Id: ProjectItem.java, v 0.1 Jan 28, 2019 3:47:50 PM smile.jing Exp $
+ * @version $Id: AuditRecordItem.java, v 0.1 Mar 2, 2019 9:44:43 PM smile.jing Exp $
  */
-public class ProjectItem implements Serializable {
+public class AuditRecordItem implements Serializable {
 
     /** UID */
-    private static final long serialVersionUID = 1206639280144526741L;
-
-    /** 编号 */
-    private Long              id;
+    private static final long serialVersionUID = -8877662160331925955L;
 
     /** 项目编号 */
-    private Long              projectId;
+    private Long              id;
 
-    /** 附件类型 */
-    private Progress          itemType;
+    /** 审核记录 */
+    private AuditRecord       record;
 
     /** 附件名称 */
     private String            itemName;
 
-    /** 附件文件id */
+    /** 文件值 */
     private String            itemValue;
 
     /** 
@@ -38,8 +33,8 @@ public class ProjectItem implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"projectId\":\"" + projectId + "\", \"itemType\":\"" + itemType + "\", \"itemName\":\"" + itemName + "\", \"itemValue\":\"" + itemValue
-               + "\"}  ";
+        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (record != null ? "record\":\"" + record + "\", \"" : "")
+               + (itemName != null ? "itemName\":\"" + itemName + "\", \"" : "") + (itemValue != null ? "itemValue\":\"" + itemValue : "") + "\"}  ";
     }
 
     /**
@@ -61,39 +56,21 @@ public class ProjectItem implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>projectId</tt>.
+     * Getter method for property <tt>record</tt>.
      * 
-     * @return property value of projectId
+     * @return property value of record
      */
-    public Long getProjectId() {
-        return projectId;
+    public AuditRecord getRecord() {
+        return record;
     }
 
     /**
-     * Setter method for property <tt>projectId</tt>.
+     * Setter method for property <tt>record</tt>.
      * 
-     * @param projectId value to be assigned to property projectId
+     * @param record value to be assigned to property record
      */
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    /**
-     * Getter method for property <tt>itemType</tt>.
-     * 
-     * @return property value of itemType
-     */
-    public Progress getItemType() {
-        return itemType;
-    }
-
-    /**
-     * Setter method for property <tt>itemType</tt>.
-     * 
-     * @param itemType value to be assigned to property itemType
-     */
-    public void setItemType(Progress itemType) {
-        this.itemType = itemType;
+    public void setRecord(AuditRecord record) {
+        this.record = record;
     }
 
     /**

@@ -3,7 +3,8 @@ package com.smile.start.filter;
 import com.smile.start.commons.Constants;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.model.login.LoginUser;
-import com.smile.start.service.UserInfoService;
+import com.smile.start.service.auth.UserInfoService;
+
 import org.springframework.core.annotation.Order;
 
 import java.io.IOException;

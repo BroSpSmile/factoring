@@ -5,12 +5,17 @@
 package com.smile.start.controller.common;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -75,4 +80,23 @@ public class FileApi extends BaseController {
         return result;
     }
 
+    /**
+     * 下载文件
+     * @param request
+     * @param response
+     */
+    @GetMapping
+    public void download(HttpServletRequest request, HttpServletResponse response) {
+        String fileId = request.getParameter("fileId");
+        String fileName = request.getParameter("fileName");
+        if (StringUtils.isNotBlank(fileId)) {
+            InputStream is = fileService.download(fileId);
+            try {
+                download(StringUtils.isNotBlank(fileName) ? fileName : fileId, is, response);
+            } catch (UnsupportedEncodingException e) {
+                LoggerUtils.error(logger, "文件下载异常", e);
+            }
+        }
+
+    }
 }

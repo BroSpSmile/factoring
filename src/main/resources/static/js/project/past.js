@@ -2,7 +2,7 @@
  * 菜单信息
  */
 common.pageName = "past";
-common.openName = [ '2' ];
+common.openName = [ 'past' ];
 
 var vue = new Vue({
 	el:"#past",

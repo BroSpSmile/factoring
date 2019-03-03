@@ -169,7 +169,7 @@ var vue = new Vue({
             for (let index in this.fileList) {
                 let item = {
                     projectId: this.filingInfo.projectId,
-                    itemType: "DUE_DILIGENCE",
+                    itemType: "TUNEUP",
                     itemName: this.fileList[index].name,
                     itemValue: this.fileList[index].response.data.fileId
                 };
