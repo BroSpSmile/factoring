@@ -19,6 +19,14 @@ var vue = new Vue({
             signListName : "",
             sort : ""
         },
+        ruleValidate: {
+            signListName: [
+                { required: true, message: '签署清单名称不能为空', trigger: 'blur' }
+            ],
+            sort: [
+                { required: true, message: '排序值不能为空', trigger: 'blur' }
+            ]
+        },
         pageInfo:{},
         tableColumns:[],
         showResult:false,
@@ -49,7 +57,8 @@ var vue = new Vue({
         addSign : function() {
             this.modal1 = true;
             this.addForm = {
-                projectMode : 1
+                projectMode : 1,
+                isRequired : 1
             };
         },
         /**
@@ -57,39 +66,43 @@ var vue = new Vue({
          */
         saveSign : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/signListTemplate", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                        this.$http.post("/signListTemplate", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/signListTemplate", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/signListTemplate", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
         },
         /**
          * 删除警告
@@ -135,8 +148,8 @@ var vue = new Vue({
          */
         cancel : function() {
             this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
         },
         /**
