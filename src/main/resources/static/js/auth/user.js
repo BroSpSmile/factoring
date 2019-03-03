@@ -20,8 +20,29 @@ var vue = new Vue({
             mobile : "",
             email : "",
             passwd : "",
-            checkedRoleList:[],
-            checkedOrganizationalList:[]
+            checkedRoleList : [],
+            checkedOrganizationalList : []
+        },
+        ruleValidate: {
+            username: [
+                { required: true, message: '用户名不能为空', trigger: 'blur' }
+            ],
+            email: [
+                { required: true, message: '邮箱不能为空', trigger: 'blur' },
+                { type: 'email', message: '邮箱格式不正常', trigger: 'blur' }
+            ],
+            mobile: [
+                { required: true, message: '手机号不能为空', trigger: 'blur' }
+            ],
+            passwd: [
+                { required: true, message: '密码不能为空', trigger: 'blur' }
+            ],
+            checkedRoleList: [
+                { required: true, type: 'array', min: 1, message: '请选择角色', trigger: 'change' }
+            ],
+            checkedOrganizationalList: [
+                { required: true, type: 'array', min: 1, message: '请选择组织架构', trigger: 'change' }
+            ]
         },
         pageInfo:{},
         tableColumns:[],
@@ -100,39 +121,45 @@ var vue = new Vue({
          */
         saveUser : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/user", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
-                            }
-                        });
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === ""){
+
+                                this.$http.post("/user", this.addForm).then(function (response) {
+                                    if (response.data.success) {
+                                        self.$Message.info({
+                                            content: "保存成功",
+                                            onClose: function () {
+                                                self.query();
+                                                self.cancel();
+                                            }
+                                        });
+                                    } else {
+                                        self.$Message.error(response.data.errorMessage);
+                                    }
+                                }, function (error) {
+                                    self.$Message.error(error.data.message);
+                                });
+
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/user", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/user", this.addForm).then(function(response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content : "更新成功",
+                                    onClose : function() {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function(error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
         },
         /**
          * 删除警告
@@ -142,10 +169,10 @@ var vue = new Vue({
                 title: '删除提示',
                 content: '<p>确认是否删除当前用户</p>',
                 onOk: () => {
-                this.deleteUser(id);
-        },
-            onCancel: () => {}
-        })
+                    this.deleteUser(id);
+                },
+                onCancel: () => {}
+            })
         },
         /** 删除用户 */
         deleteUser:function(id){
@@ -178,8 +205,8 @@ var vue = new Vue({
          */
         cancel : function() {
             this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
         },
 

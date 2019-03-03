@@ -38,8 +38,8 @@
 		<!-- 新增用户 -->
 		<modal v-model="modal1" title="新增用户"  mask-closable="false">
 			<div id="modalForm">
-				<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
-					<form-item label="用户名称" prop="username" v-if="addForm.username!=''">
+				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
+					<form-item label="用户名称" prop="username">
 						<i-input placeholder="输入用户名称"  v-model="addForm.username"></i-input>
 					</form-item>
 					<form-item label="手机号" prop="mobile">
@@ -49,16 +49,14 @@
 						<i-input placeholder="输入用户邮箱"  v-model="addForm.email"></i-input>
 					</form-item>
 					<form-item label="密码" prop="passwd">
-						<i-input placeholder="输入用户登录密码" v-model="addForm.passwd"></i-input>
+						<i-input type="password" placeholder="输入用户登录密码" v-model="addForm.passwd"></i-input>
 					</form-item>
-					<form-item label="选择组织">
-						<i-col span="12" style="padding-right:10px">
+					<form-item label="选择组织" prop="checkedOrganizationalList">
 							<i-select :model.sync="model10" v-model="addForm.checkedOrganizationalList" multiple filterable clearable>
 								<i-option v-for="item in organizationalList" :value="item.serialNo">{{ item.organizationalName }}</i-option>
 							</i-select>
-						</i-col>
 					</form-item>
-					<form-item label="选择角色">
+					<form-item label="选择角色" prop="checkedRoleList">
 						<checkbox-group v-model="addForm.checkedRoleList">
 							<checkbox v-for="item in roleList" :label="item.serialNo"><span>{{item.roleName}}</span></checkbox>
 						</checkbox-group>
