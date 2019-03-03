@@ -65,7 +65,6 @@ var vue = new Vue({
 				}
 				this.project.items.push(item);
 			}
-			console.log(this.project);
 			let self = this;
 			this.$http.post("/apply",this.project).then(function(response){
 				if (response.data.success) {

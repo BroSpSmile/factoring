@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.smile.start.model.meeting.Meeting;
@@ -30,6 +31,7 @@ public interface MeetingDao {
      * @return
      */
     @Insert("insert meeting (kind,theme,begin_time,end_time,status,place,content,remind,originator,participant) values(#{kind},#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{originator.id},#{participantNoList})")
+    @SelectKey(statement="select last_insert_id()", keyProperty="id", before=false, resultType=long.class)  
     long insert(Meeting meeting);
 
     /**

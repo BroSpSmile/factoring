@@ -4,12 +4,8 @@
  */
 package com.smile.start.controller.meeting;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -96,39 +92,7 @@ public class MinutesController extends BaseController {
         data.put("meeting_data", DateUtil.format(new Date(), DateUtil.chineseDtFormat));
         File file = DocUtil.createDoc(meeting.getTheme(), "meeting.xml", data);
         if (file.exists()) {
-            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Type", "application/octet-stream");
-            response.addHeader("Content-Disposition", "attachment;filename="+URLEncoder.encode(meeting.getTheme()+".doc", "UTF-8"));
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = null;
-            BufferedInputStream bis = null;
-            try {
-                fis = new FileInputStream(file);
-                bis = new BufferedInputStream(fis);
-                OutputStream os = response.getOutputStream();
-                int i = bis.read(buffer);
-                while (i != -1) {
-                    os.write(buffer, 0, i);
-                    i = bis.read(buffer);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            download(meeting.getTheme() + ".doc", file, response);
         }
     }
 

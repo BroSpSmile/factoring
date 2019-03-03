@@ -4,6 +4,8 @@
  */
 package com.smile.start.controller.loan;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.loan.Loan;
+import com.smile.start.service.loan.LoanService;
 
 /**
  * 放款申请
@@ -26,6 +29,11 @@ import com.smile.start.model.loan.Loan;
 @Controller
 @RequestMapping("/loanApply")
 public class LoanApplyController extends BaseController {
+
+    /**  */
+    @Resource
+    private LoanService loanService;
+
     /**
      * 跳转
      * @return
@@ -44,7 +52,7 @@ public class LoanApplyController extends BaseController {
     @ResponseBody
     public BaseResult save(@RequestBody Loan loan) {
         LoggerUtils.info(logger, "放款审核请求={}", FastJsonUtils.toJSONString(loan));
-        return new BaseResult();
+        return loanService.save(loan);
     }
 
     /**
@@ -64,6 +72,6 @@ public class LoanApplyController extends BaseController {
     @PostMapping("/commit")
     @ResponseBody
     public BaseResult commit(@RequestBody Loan loan) {
-        return new BaseResult();
+        return loanService.commit(loan);
     }
 }

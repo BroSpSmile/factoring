@@ -23,7 +23,9 @@ import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
@@ -32,6 +34,7 @@ import com.smile.start.model.project.ProjectMeeting;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.UserInfoService;
 import com.smile.start.service.meeting.MeetingService;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 实现
@@ -52,6 +55,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     /**  */
     @Resource
     private ProjectDao        projectDao;
+
+    /**  */
+    @Resource
+    private ProjectService    projectService;
 
     /** 用户服务 */
     @Resource
@@ -144,14 +151,24 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     public BaseResult createMeeting(MeetingExt meeting) {
         meeting.toParticipantNoList();
         long effect = meetingDao.insert(meeting);
-        BaseResult result = new BaseResult();
-        if (effect > 0) {
-            result.setSuccess(true);
-        } else {
-            result.setErrorCode("VP00011002");
-            result.setErrorMessage("新增会议失败,请重试!");
+        if (effect > 0 && MeetingKind.APPROVAL.equals(meeting.getKind())) {
+            for (Project project : meeting.getProjects()) {
+                project.setProgress(Progress.APPLY);
+                projectDao.update(project);
+                ProjectMeeting pm = new ProjectMeeting();
+                pm.setMeetingId(meeting.getId());
+                pm.setProjectId(project.getId());
+                List<ProjectMeeting> result = projectMeetingDao.find(pm);
+                if (result.size() > 0) {
+                    throw new RuntimeException("当前项目已关联此会议纪要");
+                }
+                long peffect = projectMeetingDao.insert(pm);
+                if (peffect < 0) {
+                    throw new RuntimeException("插入会议纪要失败");
+                }
+            }
         }
-        return result;
+        return new BaseResult();
     }
 
     /** 
@@ -178,20 +195,26 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     @Transactional
     public BaseResult saveMinutes(Meeting meeting) {
         int effect = meetingDao.saveMinutes(meeting);
-        if (effect > 0) {
-            for (Project project : meeting.getProjects()) {
-                ProjectMeeting pm = new ProjectMeeting();
-                pm.setMeetingId(meeting.getId());
-                pm.setProjectId(project.getId());
-                List<ProjectMeeting> result = projectMeetingDao.find(pm);
-                if (result.size() > 0) {
-                    throw new RuntimeException("当前项目已关联此会议纪要");
-                }
-                long peffect = projectMeetingDao.insert(pm);
-                if (peffect < 0) {
-                    throw new RuntimeException("插入会议纪要失败");
+        if (MeetingKind.DIRECTORATE.equals(meeting.getKind())) {
+            if (effect > 0) {
+                for (Project project : meeting.getProjects()) {
+                    ProjectMeeting pm = new ProjectMeeting();
+                    pm.setMeetingId(meeting.getId());
+                    pm.setProjectId(project.getId());
+                    List<ProjectMeeting> result = projectMeetingDao.find(pm);
+                    if (result.size() > 0) {
+                        throw new RuntimeException("当前项目已关联此会议纪要");
+                    }
+                    long peffect = projectMeetingDao.insert(pm);
+                    if (peffect < 0) {
+                        throw new RuntimeException("插入会议纪要失败");
+                    }
                 }
             }
+        } else {
+            Project project = meeting.getProjects().get(0);
+            project.setProgress(Progress.TUNEUP);
+            projectService.apply(meeting.getProjects().get(0));
         }
         return new BaseResult();
     }

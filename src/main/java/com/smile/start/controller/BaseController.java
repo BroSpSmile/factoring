@@ -3,9 +3,20 @@
  */
 package com.smile.start.controller;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -103,4 +114,55 @@ public class BaseController {
         return StringUtils.EMPTY;
     }
 
+    /**
+     * @param fileName
+     * @param file
+     * @param response
+     * @throws UnsupportedEncodingException 
+     * @throws FileNotFoundException 
+     */
+    public void download(String fileName, File file, HttpServletResponse response) throws UnsupportedEncodingException, FileNotFoundException {
+        InputStream is = new FileInputStream(file);
+        download(fileName, is, response);
+    }
+
+    /**
+     * @param fileName
+     * @param is
+     * @param response
+     * @throws UnsupportedEncodingException 
+     */
+    public void download(String fileName, InputStream is, HttpServletResponse response) throws UnsupportedEncodingException {
+        response.setContentType("application/force-download");// 设置强制下载不打开
+        response.addHeader("Content-Type", "application/octet-stream");
+        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        byte[] buffer = new byte[1024];
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream(is);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

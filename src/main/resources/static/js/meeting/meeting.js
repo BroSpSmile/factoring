@@ -16,7 +16,9 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		pageInfo : {},
-		addMeeting : {},
+		addMeeting : {
+			projects:[]
+		},
 		modal1 : false,
 		statusItems : [],
 		users:[],
@@ -29,7 +31,9 @@ var vue = new Vue({
 		]
 	},
 	created : function() {
-		this.project.id = document.getElementById("projectId").value;
+		if(document.getElementById("projectId").value){
+			this.project.id = document.getElementById("projectId").value;
+		}
 		this.initDate();
 		this.findProject();
 	},
@@ -122,6 +126,9 @@ var vue = new Vue({
 		 */
 		save : function() {
 			let self = this;
+			if(this.project.id){
+				this.addMeeting.projects.push(this.project);
+			}
 			if(this.addMeeting.id==null||this.addMeeting.id==''){
 				this.$http.post("/meeting",this.addMeeting).then(function(response){
 					if (response.data.success) {

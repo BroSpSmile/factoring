@@ -69,4 +69,12 @@ public class FileServiceImpl extends AbstractService implements FileService {
         return fileClient.delete(fileId);
     }
 
+    /** 
+     * @see com.smile.start.service.common.FileService#download(java.lang.String)
+     */
+    @Override
+    public InputStream download(String fileId) {
+        return fileClient.download(fileId);
+    }
+
 }
