@@ -181,6 +181,13 @@ var vue = new Vue({
             this.modal1 = true;
             this.getMenuList();
         },
+        changePermissionType : function(value) {
+            if(value === 1) {
+                this.ruleValidate.url[0].required = true;
+            } else {
+                this.ruleValidate.url[0].required = false;
+            }
+        },
         /**
          * 取消保存
          */

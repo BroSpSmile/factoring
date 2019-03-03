@@ -45,7 +45,7 @@
 							<i-input placeholder="输入权限名称" v-model="addForm.permissionName"></i-input>
 						</form-item>
 						<form-item label="权限类型" prop="permissionType">
-							<i-select v-model="addForm.permissionType" clearable>
+							<i-select v-model="addForm.permissionType" @on-change="changePermissionType" clearable>
 								<i-option :value="1">菜单</i-option>
 								<i-option :value="2">按钮</i-option>
 							</i-select>
