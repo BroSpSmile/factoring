@@ -29,13 +29,11 @@
 		<!-- 新增组织架构 -->
 		<modal v-model="modal1" title="新增组织架构"  mask-closable="false">
 			<div id="modalForm">
-				<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
-					<form-item label="上级组织">
-						<i-col span="12" style="padding-right:10px">
-							<i-select :model.sync="model11" v-model="addForm.parentSerialNo" filterable clearable>
-								<i-option v-for="item in organizationalList" :value="item.serialNo">{{ item.organizationalName }}</i-option>
-							</i-select>
-						</i-col>
+				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
+					<form-item label="上级组织" prop="parentSerialNo">
+						<i-select :model.sync="model11" v-model="addForm.parentSerialNo" filterable clearable>
+							<i-option v-for="item in organizationalList" :value="item.serialNo">{{ item.organizationalName }}</i-option>
+						</i-select>
 					</form-item>
 					<form-item label="组织名称" prop="organizationalName">
 						<i-input placeholder="输入组织架构名称"  v-model="addForm.organizationalName"></i-input>

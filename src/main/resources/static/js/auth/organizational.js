@@ -19,6 +19,11 @@ var vue = new Vue({
             organizationalName : "",
             remark : ""
         },
+        ruleValidate: {
+            organizationalName: [
+                { required: true, message: '组织架构名称不能为空', trigger: 'blur' }
+            ]
+        },
         pageInfo:{},
         tableColumns:[],
         showResult:false,
@@ -75,39 +80,43 @@ var vue = new Vue({
          */
         saveOrganizational : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/organizational", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                        this.$http.post("/organizational", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/organizational", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/organizational", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
         },
         /**
          * 删除警告
@@ -154,8 +163,8 @@ var vue = new Vue({
          */
         cancel : function() {
             this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
         },
         /** 分页 */

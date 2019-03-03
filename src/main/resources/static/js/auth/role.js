@@ -20,6 +20,14 @@ var vue = new Vue({
 			roleName : "",
 			roleDesc : ""
 		},
+        ruleValidate: {
+            roleCode: [
+                { required: true, message: '角色编号不能为空', trigger: 'blur' }
+            ],
+            roleName: [
+                { required: true, message: '角色名称不能为空', trigger: 'blur' }
+            ]
+        },
         permissionList : [],
 		pageInfo:{},
 		tableColumns:[],
@@ -63,39 +71,43 @@ var vue = new Vue({
          */
 		saveRole : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/role", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                        this.$http.post("/role", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/role", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/role", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
 		},
         /**
          * 删除警告
@@ -158,8 +170,8 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
 		},
         /**

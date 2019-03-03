@@ -18,10 +18,23 @@ var vue = new Vue({
         addForm : {
             permissionCode : "",
             permissionName : "",
-            permissionType : "",
             parentSerialNo : "",
             url : "",
             remark : ""
+        },
+        ruleValidate: {
+            permissionCode: [
+                { required: true, message: '权限编号不能为空', trigger: 'blur' }
+            ],
+            permissionName: [
+                { required: true, message: '权限名称不能为空', trigger: 'blur' }
+            ],
+            permissionType: [
+                { required: true, message: '权限类型不能为空', trigger: 'change', type:'number'}
+            ],
+            url: [
+                { required: true, message: '菜单路径不能为空', trigger: 'blur' }
+            ]
         },
         pageInfo:{},
         tableColumns:[],
@@ -90,39 +103,43 @@ var vue = new Vue({
          */
         savePermission : function() {
             let self = this;
-            if(this.addForm.id == null || this.addForm.id == ""){
-                this.$http.post("/permission", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                        this.$http.post("/permission", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/permission", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/permission", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
         },
         /**
          * 删除警告
@@ -164,13 +181,20 @@ var vue = new Vue({
             this.modal1 = true;
             this.getMenuList();
         },
+        changePermissionType : function(value) {
+            if(value === 1) {
+                this.ruleValidate.url[0].required = true;
+            } else {
+                this.ruleValidate.url[0].required = false;
+            }
+        },
         /**
          * 取消保存
          */
         cancel : function() {
             this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
         },
 

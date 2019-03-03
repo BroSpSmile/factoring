@@ -19,6 +19,14 @@ var vue = new Vue({
             flowName : "",
             statusList:[]
         },
+        ruleValidate: {
+            flowName: [
+                { required: true, message: '流程名称不能为空', trigger: 'blur' }
+            ],
+            flowType: [
+                { required: true, message: '流程类型不能为空', trigger: 'change', type:'number'}
+            ]
+        },
         pageInfo:{},
         tableColumns:[],
         showResult:false,
@@ -48,7 +56,8 @@ var vue = new Vue({
         addFlow : function() {
             this.modal1 = true;
             this.addForm = {
-            		statusList:[]
+                flowName : "",
+            	statusList:[]
             };
         },
         /**
@@ -56,56 +65,60 @@ var vue = new Vue({
          */
         saveFlow : function() {
             let self = this;
-            if(this.addForm.id === null || this.addForm.id === ""){
-                this.$http.post("/flowConfig", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                        this.$http.post("/flowConfig", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            } else {
-                this.$http.put("/flowConfig", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+                        this.$http.put("/flowConfig", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.query();
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
+                }
+            });
         },
         /**
          * 获取状态列表
          */
         getStatusList:function(value) {
-        	console.log(value);
-            let self = this;
-            this.$http.get("/flowConfig/status/" + value).then(function(response){
-                if (response.data.success) {
-                	
-                    self.addForm.statusList = response.data.values;
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.message);
-            })
+        	if(value !== undefined) {
+                let self = this;
+                this.$http.get("/flowConfig/status/" + value).then(function(response){
+                    if (response.data.success) {
+                        self.addForm.statusList = response.data.values;
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                },function(error){
+                    self.$Message.error(error.data.message);
+                })
+            }
         },
         /**
          * 删除警告
@@ -160,8 +173,8 @@ var vue = new Vue({
          */
         cancel : function() {
             this.modal1 = false;
-            if(this.addForm.id == '') {
-                this.$refs['entityDataForm'].resetFields();
+            if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
+                this.$refs.addForm.resetFields();
             }
         },
         /**
