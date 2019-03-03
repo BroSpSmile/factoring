@@ -320,10 +320,16 @@
 												{{ index + 1 }}
 											</Col>
 											<Col span="18">
-												{{ item.signListName }}
+												<span v-if="item.type != 'add'">{{ item.signListName }}</span>
+												<i-input v-if="item.type == 'add'" placeholder="请输入签署清单名称" class="inputw" v-model="item.signListName"></i-input>
 											</Col>
 											<Col span="4" offset="1">
 												<i-button v-if="item.isRequired == 2" @click="handleRemove(index)" style="margin-left: 8px">删除</i-button>
+											</Col>
+										</Row>
+										<Row>
+											<Col span="12">
+												<i-button type="dashed" @click="handleAdd" icon="md-add">添加清单</i-button>
 											</Col>
 										</Row>
 									</div>

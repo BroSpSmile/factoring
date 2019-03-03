@@ -44,7 +44,7 @@ public class ContractAuditRecordDTO implements Serializable {
     /**
      * 操作时间
      */
-    private Date operationTime;
+    private String operationTime;
 
     /**
      * 备注
@@ -99,11 +99,11 @@ public class ContractAuditRecordDTO implements Serializable {
         this.operationUser = operationUser;
     }
 
-    public Date getOperationTime() {
+    public String getOperationTime() {
         return operationTime;
     }
 
-    public void setOperationTime(Date operationTime) {
+    public void setOperationTime(String operationTime) {
         this.operationTime = operationTime;
     }
 

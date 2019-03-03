@@ -73,4 +73,11 @@ public interface UserInfoService {
      * @return
      */
     LoginUser getLoginUserByToken(String token);
+
+    /**
+     * 根据用户编号查询用户
+     * @param serialNo
+     * @return
+     */
+    AuthUserInfoDTO findBySerialNo(String serialNo);
 }
