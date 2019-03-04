@@ -27,6 +27,12 @@ var vue = new Vue({
         contractAudit : {
 
         },
+        rejectRuleValidate: {
+            remark: [
+                { required: true, message: '驳回原因不能为空', trigger: 'blur' },
+                { type: 'string', max: 500, message: '最多输入500个字', trigger: 'blur' }
+            ]
+        },
         auditRecordList : [],
 		pageInfo:{},
 		tableColumns:[],
@@ -115,24 +121,28 @@ var vue = new Vue({
          */
         saveAuditReject : function() {
             let self = this;
-            this.contractAudit.operationType = 2;
-            this.contractAudit.contractSerialNo = this.contractInfo.baseInfo.serialNo;
-            this.$http.post("/contractAudit/audit", this.contractAudit).then(function(response) {
-                if (response.data.success) {
-                    self.$Message.info({
-                        content : "审核驳回成功",
-                        onClose : function() {
-                            self.query();
-                            self.cancelReject();
-                            self.cancel();
+            this.$refs.rejectForm.validate((valid) => {
+                if(valid) {
+                    this.contractAudit.operationType = 2;
+                    this.contractAudit.contractSerialNo = this.contractInfo.baseInfo.serialNo;
+                    this.$http.post("/contractAudit/audit", this.contractAudit).then(function (response) {
+                        if (response.data.success) {
+                            self.$Message.info({
+                                content: "审核驳回成功",
+                                onClose: function () {
+                                    self.query();
+                                    self.cancelReject();
+                                    self.cancel();
+                                }
+                            });
+                        } else {
+                            self.$Message.error(response.data.errorMessage);
                         }
+                    }, function (error) {
+                        self.$Message.error(error.data.message);
                     });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
                 }
-            }, function(error) {
-                self.$Message.error(error.data.message);
-            });
+            })
         },
         /**
          * 审核驳回

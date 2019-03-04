@@ -107,7 +107,7 @@
 			<!-- 审核驳回 -->
 			<modal v-model="modal2" title="审核驳回" mask-closable="false" width="700px">
 				<div id="contractAuditReject">
-					<i-form ref="rejectForm" :model="contractAudit" :label-width="120" >
+					<i-form ref="rejectForm" :model="contractAudit" :rules="rejectRuleValidate" :label-width="120" >
 						<form-item label="驳回至" prop="rejectStatus">
 							<i-select v-model="contractAudit.rejectStatus" clearable>
 								<i-option v-for="status in statusList" :value="status.flowStatus">
