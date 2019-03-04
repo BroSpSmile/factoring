@@ -129,8 +129,12 @@ public class ContractBaseInfoDTO implements Serializable {
         this.status = status;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(Integer deleteFlag) {
+        this.deleteFlag = deleteFlag;
     }
 
     public String getCreateUser() {

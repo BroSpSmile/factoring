@@ -18,6 +18,7 @@ public interface ContractInfoMapper {
 
     @Mapping(source = "gmtCreate", target = "gmtCreate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ContractBaseInfoDTO do2dto(ContractInfo contractInfo);
+    @Mapping(source = "gmtCreate", target = "gmtCreate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ContractInfo dto2do(ContractBaseInfoDTO dto);
     List<ContractBaseInfoDTO> doList2dtoListBase(List<ContractInfo> doList);
     List<ContractInfo> dtoList2doListBase(List<ContractBaseInfoDTO> dtoList);
