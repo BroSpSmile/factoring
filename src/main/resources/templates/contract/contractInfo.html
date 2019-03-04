@@ -302,7 +302,7 @@
 										</row>
 										<row>
 											<i-col span="8" offset="1">
-												<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
+												<Upload ref="upload" action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
 														:on-remove="removeFile">
 													<i-button icon="ios-cloud-upload-outline">添加合同附件</i-button>
 												</Upload>

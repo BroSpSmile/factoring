@@ -222,6 +222,9 @@ var vue = new Vue({
             this.modal1 = false;
             if(this.addForm.baseInfo.id === '') {
                 this.$refs['entityDataForm'].resetFields();
+            } else {
+                this.fileList = [];
+                this.$refs.upload.clearFiles();
             }
         },
         /** 分页 */
