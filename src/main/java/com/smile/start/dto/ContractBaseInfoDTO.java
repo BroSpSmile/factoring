@@ -51,6 +51,11 @@ public class ContractBaseInfoDTO implements Serializable {
     private Integer           status;
 
     /**
+     * 删除标志：0、未删除；1、删除
+     */
+    private Integer deleteFlag;
+
+    /**
      * 创建人
      */
     private String            createUser;
@@ -122,6 +127,10 @@ public class ContractBaseInfoDTO implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getCreateUser() {

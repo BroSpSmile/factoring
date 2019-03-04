@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.enums.DeleteFlagEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -142,6 +143,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
+        contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
 
         //保存签署清单
         insertSignList(contractInfoDTO.getSignList(), contractSerialNo);
@@ -247,11 +249,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
-        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        contractInfoDao.delete(id);
+        contractInfo.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
+//        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        contractInfoDao.update(contractInfo);
     }
 
     /**

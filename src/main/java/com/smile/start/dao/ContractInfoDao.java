@@ -41,7 +41,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Insert("insert into contract_info (project_id,serial_no,contract_code,contract_name,project_mode,contract_template,status,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into contract_info (project_id,serial_no,contract_code,contract_name,project_mode,contract_template,status,delete_flag,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractCode},#{contractName},#{projectMode},#{contractTemplate},#{status},#{deleteFlag},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(ContractInfo contractInfo);
 
     /**
@@ -49,7 +49,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_code=#{contractCode},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**
@@ -57,7 +57,7 @@ public interface ContractInfoDao {
      * @param contractInfoSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from contract_info where 1=1 "
+    @Select("<script>" + "select * from contract_info where delete_flag = 0 "
             + "<if test = 'contractCode!=null'> and contract_code like CONCAT('%',#{contractCode},'%')</if>"
             + "<if test = 'contractName!=null'> and contract_name like CONCAT('%',#{contractName},'%')</if>"
             + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>"
