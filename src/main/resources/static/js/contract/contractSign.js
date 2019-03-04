@@ -65,6 +65,21 @@ var vue = new Vue({
          */
         saveSign : function() {
             let self = this;
+
+            //检查是否有选中
+            let checked = false;
+            for(index in self.addForm.signList) {
+                let sign = self.addForm.signList[index];
+                if(sign.status) {
+                    checked = true;
+                    break;
+                }
+            }
+            if(!checked) {
+                self.$Message.error('至少选择一项才能签署');
+                return;
+            }
+
             this.$http.post("/contractSign/save", this.addForm).then(function(response) {
                 if (response.data.success) {
                     self.$Message.info({
