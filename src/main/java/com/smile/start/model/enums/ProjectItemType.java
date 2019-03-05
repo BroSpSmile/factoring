@@ -13,13 +13,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ProjectItemType {
                              /**  */
-                             DUE_DILIGENCE("DUE_DILIGENCE", "尽调文件"),
+                             TUNEUP("TUNEUP", "尽调文件"),
 
                              /**  */
-                             LOAN_FILE("LOAN_FILE", "放款文件"),
+                             PENDINGLOAN("PENDINGLOAN", "放款文件"),
 
                              /** */
-                             APPLY_MINUTES("APPLY_MINUTES", "立项纪要");
+                             INITIATE("INITIATE", "立项纪要");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

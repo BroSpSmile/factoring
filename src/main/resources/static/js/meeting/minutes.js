@@ -95,7 +95,7 @@ var vue = new Vue({
 				for(let index in this.fileList){
 					let item={
 							projectId:this.meeting.projects[0].id,
-							itemType:"APPLY_MINUTES",
+							itemType:"INITIATE",
 							itemName:this.fileList[index].name,
 							itemValue:this.fileList[index].response.data.fileId
 					}

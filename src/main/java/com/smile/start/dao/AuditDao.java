@@ -30,7 +30,7 @@ public interface AuditDao {
      * @param audit
      * @return
      */
-    @Insert("insert audit (audit_type,create_time,applicant,project,role) " + "values(#{auditType},#{createTime},#{applicant.id},#{project.id},#{role.serialNo})")
+    @Insert("insert audit (audit_type,create_time,applicant,project,step,role) " + "values(#{auditType},#{createTime},#{applicant.id},#{project.id},#{step},#{role.serialNo})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Audit audit);
 
@@ -39,7 +39,7 @@ public interface AuditDao {
      * @param audit
      * @return
      */
-    @Update("update audit set role = #{role.serialNo} where id = #{id}")
+    @Update("update audit set step =#{step} , role = #{role.serialNo} where id = #{id}")
     int updateRole(Audit audit);
 
     /**

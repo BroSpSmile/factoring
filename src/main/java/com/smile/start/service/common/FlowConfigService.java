@@ -1,11 +1,13 @@
 package com.smile.start.service.common;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowConfigSearchDTO;
 import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.base.PageRequest;
-import java.util.List;
+import com.smile.start.model.enums.FlowTypeEnum;
 
 /**
  * @author Joseph
@@ -21,6 +23,13 @@ public interface FlowConfigService {
      * @return
      */
     FlowConfigDTO get(Long id);
+
+    /**
+     * 根据流程类型获取配置信息
+     * @param type
+     * @return
+     */
+    FlowConfigDTO getByType(FlowTypeEnum type);
 
     /**
      * 查询所有流程配置信息

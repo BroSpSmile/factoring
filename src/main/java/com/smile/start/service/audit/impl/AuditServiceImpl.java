@@ -4,26 +4,31 @@
  */
 package com.smile.start.service.audit.impl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dao.AuditDao;
 import com.smile.start.dao.AuditRecordDao;
 import com.smile.start.dao.AuditRecordItemDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.FlowConfigDTO;
+import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditParam;
 import com.smile.start.model.project.AuditRecord;
@@ -32,6 +37,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.common.FlowConfigService;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -58,6 +64,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Resource
     protected UserInfoService  userInfoService;
 
+    /** flowConfigService */
+    @Resource
+    private FlowConfigService  flowConfigService;
+
     /** 项目服务 */
     @Resource
     private ProjectService     projectService;
@@ -72,9 +82,13 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setApplicant(user);
         audit.setProject(project);
         audit.setCreateTime(new Date());
+        audit.setStep(1);
         audit.setAuditType(AuditType.getByCode(project.getProgress().getCode()));
+        FlowStatusDTO step = nextStep(audit, toType(project.getProgress()), 1);
+        audit.setStep(step.getFlowStatus());
+        //获取审核流程
         AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-        role.setSerialNo("R20190127154107XVQRJWC");
+        role.setSerialNo(step.getCheckedRoleList().get(0));
         audit.setRole(role);
         long effect = auditDao.insert(audit);
         SingleResult<Audit> result = new SingleResult<Audit>();
@@ -89,18 +103,54 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         }
     }
 
+    /**
+     * 获取下一审核步骤
+     * @param audit
+     * @param type
+     * @return
+     */
+    private FlowStatusDTO nextStep(Audit audit, FlowTypeEnum type, Integer offset) {
+        FlowConfigDTO config = flowConfigService.getByType(type);
+        List<FlowStatusDTO> steps = config.getStatusList();
+        for (FlowStatusDTO step : steps) {
+            if (step.getFlowStatus() == (audit.getStep() + offset)) {
+                return step;
+            }
+        }
+        return null;
+    }
+
+    private FlowTypeEnum toType(Progress progress) {
+        return FlowTypeEnum.valueOf(progress.name());
+    }
+
     /** 
      * @see com.smile.start.service.audit.AuditService#pass(com.smile.start.model.project.AuditRecord, com.smile.start.dto.AuthRoleInfoDTO)
      */
     @Override
     @Transactional
     public BaseResult pass(AuditRecord record) {
+        Audit audit = getAudit(record.getAudit().getId());
+        FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
         record.setResult(AuditResult.PASS);
-        record.setType("测试");
+        record.setType(step.getFlowStatusDesc());
         record.setRemark("审核通过");
         record.setStatus("通过");
         record.setAuditTime(new Date());
-        auditDao.updateRole(record.getAudit());
+        FlowStatusDTO nextStep = nextStep(audit, toType(audit.getProject().getProgress()), 1);
+        if (null != nextStep) {
+            audit.setStep(nextStep.getFlowStatus());
+            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
+            role.setSerialNo(nextStep.getCheckedRoleList().get(0));
+            audit.setRole(role);
+        } else {
+            audit.setStep(-1);
+            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
+            role.setSerialNo(StringUtils.EMPTY);
+            audit.setRole(role);
+            turnover(audit.getProject());
+        }
+        auditDao.updateRole(audit);
         auditRecordDao.insert(record);
         for (AuditRecordItem item : record.getItems()) {
             item.setRecord(record);
@@ -109,13 +159,42 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         return new BaseResult();
     }
 
+    /**
+     * 更新项目状态
+     * @param project
+     * @return
+     */
+    private BaseResult turnover(Project project) {
+        project.setItems(Collections.emptyList());
+        project.setProgress(Progress.getByIndex(project.getProgress().getIndex() + 1));
+        return projectService.turnover(project);
+    }
+
     /** 
      * @see com.smile.start.service.audit.AuditService#reject(com.smile.start.model.project.AuditRecord, com.smile.start.dto.AuthRoleInfoDTO)
      */
     @Override
+    @Transactional
     public BaseResult reject(AuditRecord record) {
-        record.setResult(AuditResult.REJECTED);
-        auditDao.updateRole(record.getAudit());
+        Audit audit = getAudit(record.getAudit().getId());
+        FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
+        record.setResult(AuditResult.PASS);
+        record.setType(step.getFlowStatusDesc());
+        record.setStatus("驳回");
+        record.setAuditTime(new Date());
+        FlowStatusDTO nextStep = nextStep(audit, toType(audit.getProject().getProgress()), -1);
+        if (null != nextStep) {
+            audit.setStep(nextStep.getFlowStatus());
+            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
+            role.setSerialNo(nextStep.getCheckedRoleList().get(0));
+            audit.setRole(role);
+        } else {
+            audit.setStep(-1);
+            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
+            role.setSerialNo(StringUtils.EMPTY);
+            audit.setRole(role);
+        }
+        auditDao.updateRole(audit);
         auditRecordDao.insert(record);
         return new BaseResult();
     }

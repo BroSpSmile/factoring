@@ -188,6 +188,29 @@ var vue = new Vue({
 		tuneup:function(projectId){
 			window.open("apply?id="+projectId,"_blank"); 
 		},
+		
+		/**
+		 * 审核会议
+		 */
+		meeting:function(){
+			window.open("meeting");
+		},
+		
+		contract:function(){
+			window.open("contractInfo");
+		},
+		
+		contractSign:function(){
+			window.open("contractSign");
+		},
+		
+		loanApply:function(){
+			window.open("loanApply");
+		},
+		
+		filingProject:function(){
+			window.open("filingProject");
+		},
 
 		/**
 		 * 取消保存
@@ -232,7 +255,9 @@ vue.tableColumns=[
         		param.row.progress=='INIT'?
 						h('Button', {
 							props: {
-								size: "small"
+								size: "small",
+								type: "info",
+								ghost:true
 							},
 							style: {
 								marginRight: '5px'
@@ -247,7 +272,9 @@ vue.tableColumns=[
 				param.row.progress=='APPROVAL'?
 						h('Button', {
 							props: {
-								size: "small"
+								size: "small",
+								type: "info",
+								ghost:true
 							},
 							style: {
 								marginRight: '5px'
@@ -258,6 +285,91 @@ vue.tableColumns=[
 								}
 							}
 						}, '项目尽调'):
+						h('span'),
+				param.row.progress=='INVESTIGATION'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "info",
+								ghost:true
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.meeting();
+								}
+							}
+						}, '发起会议'):
+						h('span'),
+				param.row.progress=='PASTMEETING'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "info",
+								ghost:true
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.contract();
+								}
+							}
+						}, '合同草拟'):
+						h('span'),
+				param.row.progress=='DRAWUP'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "info",
+								ghost:true
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.contractSign();
+								}
+							}
+						}, '合同签署'):
+						h('span'),
+				param.row.progress=='SIGN'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "info",
+								ghost:true
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.loanApply();
+								}
+							}
+						}, '放款'):
+						h('span'),
+				param.row.progress=='LOAN'?
+						h('Button', {
+							props: {
+								size: "small",
+								type: "info",
+								ghost:true
+							},
+							style: {
+								marginRight: '5px'
+							},
+							on: {
+								click: () => {
+									 vue.filingProject();
+								}
+							}
+						}, '归档'):
 						h('span'),
 				h('Button', {
 					props: {

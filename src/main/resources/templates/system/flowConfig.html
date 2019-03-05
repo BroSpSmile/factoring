@@ -12,8 +12,10 @@
 					</form-item>
 					<form-item label="流程类型">
 						<i-select class="inputw" v-model="formInline.flowType" clearable>
-							<i-option :value="1">合同</i-option>
-							<i-option :value="2">项目</i-option>
+							<i-option :value="2">尽调审核流程</i-option>
+							<i-option :value="1">合同审核流程</i-option>
+							<i-option :value="3">放款审核流程</i-option>
+							<i-option :value="4">归档审核流程</i-option>
 						</i-select>
 					</form-item>
 					<row type="flex">
@@ -38,8 +40,10 @@
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 					<form-item label="流程类型" prop="flowType">
 						<i-select v-model="addForm.flowType" @on-change="getStatusList" clearable>
-							<i-option :value="1">合同</i-option>
-							<i-option :value="2">项目</i-option>
+							<i-option :value="2">尽调审核流程</i-option>
+							<i-option :value="1">合同审核流程</i-option>
+							<i-option :value="3">放款审核流程</i-option>
+							<i-option :value="4">归档审核流程</i-option>
 						</i-select>
 					</form-item>
 					<form-item label="流程名称" prop="flowName">
