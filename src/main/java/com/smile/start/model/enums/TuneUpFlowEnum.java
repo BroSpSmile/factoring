@@ -17,10 +17,10 @@ public enum TuneUpFlowEnum {
                                     return null;
                                 }
                             },
-                            FINANCIAL_AUDIT(2, "财务审核") {
+                            DEPARTMENT_AUDIT(2, "部门负责人审核") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
-                                    return FORENSIC_AUDIT;
+                                    return FINANCIAL_AUDIT;
                                 }
 
                                 @Override
@@ -28,7 +28,7 @@ public enum TuneUpFlowEnum {
                                     return APPLY;
                                 }
                             },
-                            FORENSIC_AUDIT(3, "法务审核") {
+                            FORENSIC_AUDIT(4, "法务审核") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
                                     return null;
@@ -37,6 +37,17 @@ public enum TuneUpFlowEnum {
                                 @Override
                                 public TuneUpFlowEnum getDefaultRejectStatus() {
                                     return FORENSIC_AUDIT;
+                                }
+                            },
+                            FINANCIAL_AUDIT(3, "财务审核") {
+                                @Override
+                                public TuneUpFlowEnum getNextStatus() {
+                                    return DEPARTMENT_AUDIT;
+                                }
+
+                                @Override
+                                public TuneUpFlowEnum getDefaultRejectStatus() {
+                                    return APPLY;
                                 }
                             };
 
