@@ -11,7 +11,12 @@ var vue = new Vue({
 			project:{
 				projectName:"",
 				model:"RECOURSE_RIGHT"
+				
 			},
+			factoringInstallments:[{
+				amount:"123",
+				installmentDate:new Date()
+			}],
 			assignee:0,
 			receivable:0,
 			dropAmount:0,
@@ -23,6 +28,20 @@ var vue = new Vue({
 	created : function() {
 	},
 	methods : {
+		add:function(){
+			this.detail.factoringInstallments.push({
+				amount:"",
+				installmentDate:new Date()
+			});
+		},
+		
+		/**
+		 * 移除
+		 */
+		remove:function(index){
+			this.detail.factoringInstallments.splice(index,1);
+		},
+		
 		commit:function(){
 			console.log(this.project);
 			let self = this;

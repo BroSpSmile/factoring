@@ -29,6 +29,7 @@ var vue = new Vue({
 	},
 	created : function() {
 		this.initDate();
+		this.query();
 	},
 	methods : {
 		/**

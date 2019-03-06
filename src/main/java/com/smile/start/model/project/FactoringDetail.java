@@ -6,6 +6,7 @@ package com.smile.start.model.project;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 项目明细
@@ -22,11 +23,17 @@ public class FactoringDetail implements Serializable {
     /** 所属项目 */
     private Project           project;
 
-    /** 与让人 */
+    /** 让与人 */
     private String            creditor;
 
     /** 债务人 */
     private String            debtor;
+
+    /** 签署日期 */
+    private Date              signDate;
+
+    /** 基础合同 */
+    private String            baseContract;
 
     /** 应收账款受让款 */
     private double            assignee;
@@ -37,38 +44,26 @@ public class FactoringDetail implements Serializable {
     /** 已投放金额 */
     private double            dropAmount;
 
+    /** 放款分期信息 */
+    private List<Installment> loanInstallments;
+
     /** 转让年限 */
     private int               duration;
 
-    /** 合同汇款日 */
+    /** 合同回款日 */
     private Date              remittanceDay;
 
-    /** 实际回款日 */
-    private Date              realBackDay;
-
-    /** 回款金额 */
-    private double            backAmount;
-
-    /** 是否回款 */
-    private boolean           moneyBack;
+    /** 回款分期信息 */
+    private List<Installment> returnInstallments;
 
     /** 保理费合计 */
     private double            totalFactoringFee;
 
-    /** 保理费分期 */
-    private double            factoringStages;
+    /** 保理费分期信息 */
+    private List<Installment> factoringInstallments;
 
     /** 收益率 */
     private double            returnRate;
-
-    /** 保理费到账日 */
-    private Date              accountDay;
-
-    /** 已开发票 */
-    private boolean           invoicing;
-
-    /** 是否已支付 */
-    private boolean           paied;
 
     /** 备注 */
     private String            remark;
@@ -79,12 +74,14 @@ public class FactoringDetail implements Serializable {
     @Override
     public String toString() {
         return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (project != null ? "project\":\"" + project + "\", \"" : "")
-               + (creditor != null ? "creditor\":\"" + creditor + "\", \"" : "") + (debtor != null ? "debtor\":\"" + debtor + "\", \"" : "") + "assignee\":\"" + assignee
-               + "\", \"receivable\":\"" + receivable + "\", \"dropAmount\":\"" + dropAmount + "\", \"duration\":\"" + duration + "\", \""
-               + (remittanceDay != null ? "remittanceDay\":\"" + remittanceDay + "\", \"" : "") + (realBackDay != null ? "realBackDay\":\"" + realBackDay + "\", \"" : "")
-               + "backAmount\":\"" + backAmount + "\", \"moneyBack\":\"" + moneyBack + "\", \"totalFactoringFee\":\"" + totalFactoringFee + "\", \"factoringStages\":\""
-               + factoringStages + "\", \"returnRate\":\"" + returnRate + "\", \"" + (accountDay != null ? "accountDay\":\"" + accountDay + "\", \"" : "") + "invoicing\":\""
-               + invoicing + "\", \"paied\":\"" + paied + "\", \"" + (remark != null ? "remark\":\"" + remark : "") + "\"}  ";
+               + (creditor != null ? "creditor\":\"" + creditor + "\", \"" : "") + (debtor != null ? "debtor\":\"" + debtor + "\", \"" : "")
+               + (signDate != null ? "signDate\":\"" + signDate + "\", \"" : "") + (baseContract != null ? "baseContract\":\"" + baseContract + "\", \"" : "") + "assignee\":\""
+               + assignee + "\", \"receivable\":\"" + receivable + "\", \"dropAmount\":\"" + dropAmount + "\", \""
+               + (loanInstallments != null ? "loanInstallments\":\"" + loanInstallments + "\", \"" : "") + "duration\":\"" + duration + "\", \""
+               + (remittanceDay != null ? "remittanceDay\":\"" + remittanceDay + "\", \"" : "")
+               + (returnInstallments != null ? "returnInstallments\":\"" + returnInstallments + "\", \"" : "") + "totalFactoringFee\":\"" + totalFactoringFee + "\", \""
+               + (factoringInstallments != null ? "factoringInstallments\":\"" + factoringInstallments + "\", \"" : "") + "returnRate\":\"" + returnRate + "\", \""
+               + (remark != null ? "remark\":\"" + remark : "") + "\"}  ";
     }
 
     /**
@@ -160,6 +157,42 @@ public class FactoringDetail implements Serializable {
     }
 
     /**
+     * Getter method for property <tt>signDate</tt>.
+     * 
+     * @return property value of signDate
+     */
+    public Date getSignDate() {
+        return signDate;
+    }
+
+    /**
+     * Setter method for property <tt>signDate</tt>.
+     * 
+     * @param signDate value to be assigned to property signDate
+     */
+    public void setSignDate(Date signDate) {
+        this.signDate = signDate;
+    }
+
+    /**
+     * Getter method for property <tt>baseContract</tt>.
+     * 
+     * @return property value of baseContract
+     */
+    public String getBaseContract() {
+        return baseContract;
+    }
+
+    /**
+     * Setter method for property <tt>baseContract</tt>.
+     * 
+     * @param baseContract value to be assigned to property baseContract
+     */
+    public void setBaseContract(String baseContract) {
+        this.baseContract = baseContract;
+    }
+
+    /**
      * Getter method for property <tt>assignee</tt>.
      * 
      * @return property value of assignee
@@ -214,6 +247,24 @@ public class FactoringDetail implements Serializable {
     }
 
     /**
+     * Getter method for property <tt>loanInstallments</tt>.
+     * 
+     * @return property value of loanInstallments
+     */
+    public List<Installment> getLoanInstallments() {
+        return loanInstallments;
+    }
+
+    /**
+     * Setter method for property <tt>loanInstallments</tt>.
+     * 
+     * @param loanInstallments value to be assigned to property loanInstallments
+     */
+    public void setLoanInstallments(List<Installment> loanInstallments) {
+        this.loanInstallments = loanInstallments;
+    }
+
+    /**
      * Getter method for property <tt>duration</tt>.
      * 
      * @return property value of duration
@@ -250,57 +301,21 @@ public class FactoringDetail implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>realBackDay</tt>.
+     * Getter method for property <tt>returnInstallments</tt>.
      * 
-     * @return property value of realBackDay
+     * @return property value of returnInstallments
      */
-    public Date getRealBackDay() {
-        return realBackDay;
+    public List<Installment> getReturnInstallments() {
+        return returnInstallments;
     }
 
     /**
-     * Setter method for property <tt>realBackDay</tt>.
+     * Setter method for property <tt>returnInstallments</tt>.
      * 
-     * @param realBackDay value to be assigned to property realBackDay
+     * @param returnInstallments value to be assigned to property returnInstallments
      */
-    public void setRealBackDay(Date realBackDay) {
-        this.realBackDay = realBackDay;
-    }
-
-    /**
-     * Getter method for property <tt>backAmount</tt>.
-     * 
-     * @return property value of backAmount
-     */
-    public double getBackAmount() {
-        return backAmount;
-    }
-
-    /**
-     * Setter method for property <tt>backAmount</tt>.
-     * 
-     * @param backAmount value to be assigned to property backAmount
-     */
-    public void setBackAmount(double backAmount) {
-        this.backAmount = backAmount;
-    }
-
-    /**
-     * Getter method for property <tt>moneyBack</tt>.
-     * 
-     * @return property value of moneyBack
-     */
-    public boolean isMoneyBack() {
-        return moneyBack;
-    }
-
-    /**
-     * Setter method for property <tt>moneyBack</tt>.
-     * 
-     * @param moneyBack value to be assigned to property moneyBack
-     */
-    public void setMoneyBack(boolean moneyBack) {
-        this.moneyBack = moneyBack;
+    public void setReturnInstallments(List<Installment> returnInstallments) {
+        this.returnInstallments = returnInstallments;
     }
 
     /**
@@ -322,21 +337,21 @@ public class FactoringDetail implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>factoringStages</tt>.
+     * Getter method for property <tt>factoringInstallments</tt>.
      * 
-     * @return property value of factoringStages
+     * @return property value of factoringInstallments
      */
-    public double getFactoringStages() {
-        return factoringStages;
+    public List<Installment> getFactoringInstallments() {
+        return factoringInstallments;
     }
 
     /**
-     * Setter method for property <tt>factoringStages</tt>.
+     * Setter method for property <tt>factoringInstallments</tt>.
      * 
-     * @param factoringStages value to be assigned to property factoringStages
+     * @param factoringInstallments value to be assigned to property factoringInstallments
      */
-    public void setFactoringStages(double factoringStages) {
-        this.factoringStages = factoringStages;
+    public void setFactoringInstallments(List<Installment> factoringInstallments) {
+        this.factoringInstallments = factoringInstallments;
     }
 
     /**
@@ -355,60 +370,6 @@ public class FactoringDetail implements Serializable {
      */
     public void setReturnRate(double returnRate) {
         this.returnRate = returnRate;
-    }
-
-    /**
-     * Getter method for property <tt>accountDay</tt>.
-     * 
-     * @return property value of accountDay
-     */
-    public Date getAccountDay() {
-        return accountDay;
-    }
-
-    /**
-     * Setter method for property <tt>accountDay</tt>.
-     * 
-     * @param accountDay value to be assigned to property accountDay
-     */
-    public void setAccountDay(Date accountDay) {
-        this.accountDay = accountDay;
-    }
-
-    /**
-     * Getter method for property <tt>invoicing</tt>.
-     * 
-     * @return property value of invoicing
-     */
-    public boolean isInvoicing() {
-        return invoicing;
-    }
-
-    /**
-     * Setter method for property <tt>invoicing</tt>.
-     * 
-     * @param invoicing value to be assigned to property invoicing
-     */
-    public void setInvoicing(boolean invoicing) {
-        this.invoicing = invoicing;
-    }
-
-    /**
-     * Getter method for property <tt>paied</tt>.
-     * 
-     * @return property value of paied
-     */
-    public boolean isPaied() {
-        return paied;
-    }
-
-    /**
-     * Setter method for property <tt>paied</tt>.
-     * 
-     * @param paied value to be assigned to property paied
-     */
-    public void setPaied(boolean paied) {
-        this.paied = paied;
     }
 
     /**
