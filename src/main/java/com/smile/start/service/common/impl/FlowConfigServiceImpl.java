@@ -16,6 +16,7 @@ import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.enums.TuneUpFlowEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
@@ -68,6 +69,15 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         });
         flowConfigDTO.setStatusList(flowStatusDTOS);
         return flowConfigDTO;
+    }
+
+    /** 
+     * @see com.smile.start.service.common.FlowConfigService#getByType(com.smile.start.model.enums.FlowTypeEnum)
+     */
+    @Override
+    public FlowConfigDTO getByType(FlowTypeEnum type) {
+        FlowConfig flowConfig = flowConfigDao.getByType(type.getValue());
+        return this.get(flowConfig.getId());
     }
 
     /**
@@ -177,16 +187,13 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         final List<AuthRoleInfoDTO> roleList = roleInfoService.findAll();
         switch (flowTypeEnum) {
             case TUNEUP:
-                FlowStatusDTO flowStatus1 = new FlowStatusDTO();
-                flowStatus1.setFlowStatus(1);
-                flowStatus1.setFlowStatusDesc("a");
-                flowStatus1.setRoleList(roleList);
-                statusList.add(flowStatus1);
-                FlowStatusDTO flowStatus2 = new FlowStatusDTO();
-                flowStatus2.setFlowStatus(1);
-                flowStatus2.setFlowStatusDesc("a");
-                flowStatus2.setRoleList(roleList);
-                statusList.add(flowStatus2);
+                for (TuneUpFlowEnum tuneUpFlowEnum : TuneUpFlowEnum.values()) {
+                    FlowStatusDTO flowStatus = new FlowStatusDTO();
+                    flowStatus.setRoleList(roleList);
+                    flowStatus.setFlowStatus(tuneUpFlowEnum.getValue());
+                    flowStatus.setFlowStatusDesc(tuneUpFlowEnum.getDesc());
+                    statusList.add(flowStatus);
+                }
                 return statusList;
             case CONTRACT:
                 for (ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {

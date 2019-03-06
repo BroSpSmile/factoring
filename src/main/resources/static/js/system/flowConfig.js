@@ -189,9 +189,13 @@ var vue = new Vue({
          */
         getFlowTypeDesc : function(value){
             if(value === 1) {
-                return "合同";
+                return "合同审核流程";
             } else if(value === 2) {
-                return "项目";
+                return "尽调审核流程";
+            }else if(value === 3) {
+                return "放款审核流程";
+            }else if(value === 4) {
+                return "归档审核流程";
             }
             return "";
         },

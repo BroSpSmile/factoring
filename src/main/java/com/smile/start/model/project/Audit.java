@@ -37,6 +37,9 @@ public class Audit implements Serializable {
     /** 所属项目 */
     private Project           project;
 
+    /** 当前审核步骤 */
+    private Integer           step;
+
     /** 当前审核角色 */
     private AuthRoleInfoDTO   role;
 
@@ -51,9 +54,11 @@ public class Audit implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"" + (auditType != null ? "auditType\":\"" + auditType + "\", \"" : "") + (createTime != null ? "createTime\":\"" + createTime + "\", \"" : "")
-               + (applicant != null ? "applicant\":\"" + applicant + "\", \"" : "") + (project != null ? "project\":\"" + project + "\", \"" : "")
-               + (role != null ? "role\":\"" + role : "") + "\"}  ";
+        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (auditType != null ? "auditType\":\"" + auditType + "\", \"" : "")
+               + (createTime != null ? "createTime\":\"" + createTime + "\", \"" : "") + (applicant != null ? "applicant\":\"" + applicant + "\", \"" : "")
+               + (project != null ? "project\":\"" + project + "\", \"" : "") + (step != null ? "step\":\"" + step + "\", \"" : "")
+               + (role != null ? "role\":\"" + role + "\", \"" : "") + (auditor != null ? "auditor\":\"" + auditor + "\", \"" : "")
+               + (records != null ? "records\":\"" + records : "") + "\"}  ";
     }
 
     /**
@@ -144,6 +149,24 @@ public class Audit implements Serializable {
      */
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    /**
+     * Getter method for property <tt>step</tt>.
+     * 
+     * @return property value of step
+     */
+    public Integer getStep() {
+        return step;
+    }
+
+    /**
+     * Setter method for property <tt>step</tt>.
+     * 
+     * @param step value to be assigned to property step
+     */
+    public void setStep(Integer step) {
+        this.step = step;
     }
 
     /**

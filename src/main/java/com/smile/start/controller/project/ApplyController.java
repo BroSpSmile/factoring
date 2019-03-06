@@ -20,9 +20,8 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Project;
-import com.smile.start.service.project.ProjectService;
+import com.smile.start.service.project.TuneupService;
 
 /**
  * 立项申请
@@ -35,7 +34,7 @@ public class ApplyController extends BaseController {
 
     /** 项目服务 */
     @Resource
-    private ProjectService projectService;
+    private TuneupService tuneupService;
 
     /**
      * 页面跳转
@@ -60,8 +59,7 @@ public class ApplyController extends BaseController {
     public BaseResult apply(HttpServletRequest request, @RequestBody Project project) {
         User user = getUserByToken(request);
         project.setUser(user);
-        project.setProgress(Progress.TUNEUP);
         LoggerUtils.info(logger, "立项申请project={}", FastJsonUtils.toJSONString(project));
-        return projectService.turnover(project);
+        return tuneupService.tuneupApply(project);
     }
 }

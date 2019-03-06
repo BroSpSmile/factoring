@@ -62,6 +62,14 @@ public interface FlowConfigDao {
     FlowConfig get(Long id);
 
     /**
+     * 根据类型获取流程配置
+     * @param flowType
+     * @return
+     */
+    @Select("select * from flow_config where flow_type = #{flowType}")
+    FlowConfig getByType(Integer flowType);
+
+    /**
      * 根据流程配置编号查询状态信息
      * @param flowSerialNo
      * @return
@@ -82,10 +90,8 @@ public interface FlowConfigDao {
      * @param flowConfigSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from flow_config where 1=1 "
-        + "<if test = 'flowName!=null'> and flow_name like CONCAT('%',#{flowName},'%')</if>"
-        + "<if test = 'flowType!=null'> and flow_type = #{flowType}</if>"
-        + "</script>")
+    @Select("<script>" + "select * from flow_config where 1=1 " + "<if test = 'flowName!=null'> and flow_name like CONCAT('%',#{flowName},'%')</if>"
+            + "<if test = 'flowType!=null'> and flow_type = #{flowType}</if>" + "</script>")
     List<FlowConfig> findByParam(FlowConfigSearchDTO flowConfigSearchDTO);
 
     /**

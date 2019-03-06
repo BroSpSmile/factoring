@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectModel;
 import com.smile.start.model.project.Past;
 import com.smile.start.model.project.Project;
@@ -48,7 +49,8 @@ public class PastServiceImpl extends AbstractService implements PastService {
         project.setModel(ProjectModel.valueOf(past.getProjectModel()));
         List<ProjectMeeting> pms = Lists.newArrayListWithCapacity(past.getMeetingIds().size());
         past.getMeetingIds().forEach(meeting -> pms.add(new ProjectMeeting(past.getProjectId(), meeting)));
-        BaseResult result = projectService.updateProject(project);
+        project.setProgress(Progress.PASTMEETING);
+        BaseResult result = projectService.turnover(project);
         if (result.isSuccess()) {
             result = meetingService.relationMeeting(pms);
         }
