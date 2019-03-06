@@ -144,6 +144,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
+        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        contractInfo.setContractCode(project.getProjectId() + "-1");
 
         //保存签署清单
         insertSignList(contractInfoDTO.getSignList(), contractSerialNo);
@@ -183,6 +185,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
+        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        contractInfo.setContractCode(project.getProjectId() + "-1");
         contractInfoDao.update(contractInfo);
 
         //更新合同信息
