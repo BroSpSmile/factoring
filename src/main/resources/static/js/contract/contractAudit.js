@@ -191,10 +191,14 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-            // if(this.addForm.baseInfo.id === '') {
-                this.$refs['entityDataForm'].resetFields();
-            // }
+			this.$refs['entityDataForm'].resetFields();
 		},
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         cancelReject : function() {
             this.modal2 = false;
             this.$refs['rejectForm'].resetFields();

@@ -176,6 +176,12 @@ var vue = new Vue({
             }
 		},
         /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
+        /**
          * 取消权限设置页面
          */
         cancelPermission : function() {

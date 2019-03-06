@@ -168,6 +168,12 @@ var vue = new Vue({
                 this.$refs.addForm.resetFields();
             }
         },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();

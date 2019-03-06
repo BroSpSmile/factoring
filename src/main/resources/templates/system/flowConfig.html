@@ -7,10 +7,10 @@
 		<card dis-hover title="搜索条件" style="width:100%">
 			<p>
 				<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-					<form-item label="流程名称">
+					<form-item label="流程名称" prop="flowName">
 						<i-input placeholder="输入流程名称" class="inputw" v-model="formInline.flowName"></i-input>
 					</form-item>
-					<form-item label="流程类型">
+					<form-item label="流程类型" prop="flowType">
 						<i-select class="inputw" v-model="formInline.flowType" clearable>
 							<i-option :value="1">合同</i-option>
 							<i-option :value="2">项目</i-option>
@@ -20,6 +20,7 @@
 						<i-col span="8" offset="8">
 							<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
 							<i-button type="success"  icon="ios-add" @click="addFlow" style="margin-left: 8px">新增</i-button>
+							<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
 						</i-col>
 					</row>
 				</i-form>

@@ -179,6 +179,12 @@ var vue = new Vue({
             }
         },
         /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
+        /**
          * 流程类型
          */
         getFlowTypeDesc : function(value){

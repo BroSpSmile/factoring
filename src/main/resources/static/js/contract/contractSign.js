@@ -135,6 +135,12 @@ var vue = new Vue({
         cancel : function() {
             this.modal1 = false;
         },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
