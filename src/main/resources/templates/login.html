@@ -14,8 +14,15 @@
 	<title></title>
 </head>
 <body>
+	
 	<div class="login">
-		<div id="app" class="login-con">
+		<h1  style="padding: 2%;">
+			<img src="image/xcjk.png" style="width: 7%;height: 7%; position:relative;"></img>
+			<span style="color:#2F4F4F ; font-size:150% ; font-family:华文行楷; position:absolute;top: 8%;left:10%;">
+				苏州市相城金融控股（集团）有限公司管理系统
+			</span>
+		</h1>
+		<div id="app" class="login-con"> 
 			<card dis-hover title="欢迎登录">
 				<i-form ref="loginForm" :model="form" :rules="ruleValidate"  @keydown.enter.native="login">
 				   <form-item prop="userName">
@@ -40,9 +47,6 @@
 		</div>
 	</div>
 	
-		
-
-		
 	<script src="js/login.js"></script>
 </body>
 </html>
