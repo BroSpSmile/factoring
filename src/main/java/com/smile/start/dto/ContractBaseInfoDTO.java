@@ -21,6 +21,11 @@ public class ContractBaseInfoDTO implements Serializable {
     private Long              projectId;
 
     /**
+     * 项目名称
+     */
+    private String projectName;
+
+    /**
      * 业务流水
      */
     private String            serialNo;
@@ -79,6 +84,14 @@ public class ContractBaseInfoDTO implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getSerialNo() {

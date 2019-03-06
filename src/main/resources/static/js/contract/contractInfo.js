@@ -403,8 +403,8 @@ vue.tableColumns=[
         key: 'contractCode',
         align: 'left'
     },{
-        title: '合同名称',
-        key: 'contractName',
+        title: '项目名称',
+        key: 'projectName',
         align: 'left'
     },{
         title: '项目模式',
