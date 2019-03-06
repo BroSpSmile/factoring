@@ -36,16 +36,16 @@ public enum Progress {
                       SIGN("SIGN", "已签署", 9),
                       /**  */
                       PENDINGLOAN("PENDINGLOAN", "放款申请", 10),
-                      /**  */
+                      /**  已放款状态可提出归档申请，即待归档状态*/
                       LOAN("LOAN", "已放款", 11),
-                      /** add by xioutman 添加归档类型 */
-                      TOBEFILED("TOBEFILED", "待归档", 12),
                       /**  */
-                      FILE("FILE", "归档申请", 13),
+                      FILE_APPLY("FILE", "提出归档申请", 12),
                       /**  */
-                      FILEAUDIT("FILEAUDIT", "归档审核", 14),
+                      FILE_LEGAL_AUDIT("FILE_LEGAL_AUDIT", "法务分控审核", 13),
                       /**  */
-                      FILECOMPLETE("FILECOMPLETE", "归档完成", 15);
+                      FILE_OFFICER("FILE_OFFICER", "办公室专员归档", 14),
+                      /**  */
+                      FILE_COMPLETE("FILE_COMPLETE", "归档完成", 15);
 
     Progress(String code, String desc, int index) {
         this.code = code;

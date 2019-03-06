@@ -49,14 +49,15 @@ var vue = new Vue({
                     // }
                 } else {
                     for (let index in this.statusItems) {
-                        if (index == 0) {
+                        if (index == 0 || index == 1) {
+                            //归档审核菜单只能查看审批中的
                             this.statusItems.shift();
                         }
                     }
                 }
                 this.search();
             }, function (error) {
-                console.error(error);
+                console.error(error);FilingFileItem
             })
         },
 
@@ -180,7 +181,7 @@ vue.tableColumns = [
         title: '操作',
         align: 'center',
         render: (h, param) => {
-            if (param.row.progress == 'TOBEFILED') {
+            if (param.row.progress == 'LOAN' || param.row.progress == 'FILE_APPLY') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('span') : h('Button', {
                         props: {
@@ -197,7 +198,7 @@ vue.tableColumns = [
                         }
                     }, '归档申请')
                 ])
-            } else if (param.row.progress == 'FILE') {
+            } else if (param.row.progress == 'FILE_LEGAL_AUDIT') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('Button', {
                         props: {
@@ -226,7 +227,7 @@ vue.tableColumns = [
                             }
                         }
                     }, '审核详情')]);
-            } else if (param.row.progress == 'FILEAUDIT') {
+            } else if (param.row.progress == 'FILE_OFFICER') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('Button', {
                         props: {
@@ -255,7 +256,7 @@ vue.tableColumns = [
                             }
                         }
                     }, '审核详情')]);
-            } else if (param.row.progress == 'FILECOMPLETE') {
+            } else if (param.row.progress == 'FILE_COMPLETE') {
                 return h('div', [
                     h('Button', {
                         props: {

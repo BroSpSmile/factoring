@@ -9,6 +9,7 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FilingProgress;
+import com.smile.start.model.enums.Progress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Project;
@@ -147,7 +148,8 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             if (filingApplyInfo == null) {
                 throw new RuntimeException("删除归档申请失败,当前归档申请不存在");
             }
-            if (!FilingProgress.TOBEFILED.getCode().equals(filingApplyInfo.getProgress())) {
+            if (!(FilingProgress.LOAN.getCode().equals(filingApplyInfo.getProgress()) ||
+                FilingProgress.FILE_APPLY.getCode().equals(filingApplyInfo.getProgress()))) {
                 throw new RuntimeException("删除归档申请失败,当前归档申请状态非法");
             }
             int effect = filingDao.delete(id);
@@ -155,12 +157,18 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
             //删除归档文件 in db
             long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProjectId());
-            if (effect > 0 && effectDelItem > 0) {
+
+            //更新项目状态为待归档状态即 已放款状态
+            filingApplyInfo.setProgress(Progress.LOAN.getCode());
+            long updateProjectEffect = updateProject(filingApplyInfo);
+
+            if (effect > 0 && effectDelItem > 0 && updateProjectEffect > 0) {
                 result.setSuccess(true);
             } else {
                 result.setErrorCode("VP00011003");
                 result.setErrorMessage("删除归档申请失败,请重试!");
             }
+
             return result;
         } finally {
             //删除文件
