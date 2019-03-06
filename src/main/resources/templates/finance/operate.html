@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="operate">
+			<row>
+				<i-col span="22" offset="1">
+					<br>
+					<h2>财务操作页面</h2>
+					<br>
+					<i-form :label-width="130">
+						<form-item label="放款申请方式" prop="type">
+							 <radio-group v-model="operate.type">
+							 	<radio label="ONLINE">线上申请</radio>
+							 	<radio label="OFFLINE">线下申请</radio>
+							 </radio-group>
+						</form-item>
+						
+						<br><br>
+						<row type="flex">
+		                   <i-col span="8" offset="1">
+		                   		<i-button type="info" v-if="operate.type=='ONLINE'" @click="commit">保存</i-button>
+		                   		<i-button type="info" v-if="operate.type=='ONLINE'" @click="commit" style="margin-left: 8px">保存并下载</i-button>
+		                        <i-button type="success" @click="commit" style="margin-left: 8px">提交审核</i-button>
+		                   </i-col>
+		            	</row>
+					</i-form>
+				</i-col>
+			</row>
+		</div>
+		<br><br>
+		<script src="js/finance/operate.js"></script>
+	</div>
+</html>
