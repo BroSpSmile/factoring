@@ -87,7 +87,7 @@
 										<Col span="4">
 										<Tag type="border" color="primary" style="width: 80px;" v-if="item.attachType == 1">标准模板</Tag>
 										<Tag type="border" color="warning" style="width: 80px;" v-if="item.attachType == 2">自定义模板</Tag>
-										{{item.attachName}}
+										<a @click="downloadItem(item)">{{item.attachName}}</a>
 										</Col>
 									</Row>
 								</form-item>

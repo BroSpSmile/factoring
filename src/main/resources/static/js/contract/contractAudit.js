@@ -256,6 +256,12 @@ var vue = new Vue({
                 return "签署完成";
             }
             return "";
+        },
+        /**
+         * 下载文件
+         */
+        downloadItem:function(item){
+            window.open("/file?fileId=" + item.fileId + "&fileName=" + item.attachName);
         }
 	}
 });
