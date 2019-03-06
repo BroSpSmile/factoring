@@ -40,6 +40,7 @@ var vue = new Vue({
         }
 	},
 	created : function() {
+        this.query();
 	},
 	methods : {
 		

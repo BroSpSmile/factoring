@@ -33,6 +33,7 @@ var vue = new Vue({
         modal1:false
     },
     created : function() {
+        this.query();
     },
     methods : {
 

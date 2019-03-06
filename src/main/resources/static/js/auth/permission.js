@@ -44,6 +44,7 @@ var vue = new Vue({
         model11: ''
     },
     created : function() {
+        this.query();
     },
     methods : {
 

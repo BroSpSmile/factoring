@@ -45,6 +45,7 @@ var vue = new Vue({
 	},
 	created : function() {
 	    this.initData();
+        this.query();
 	},
 	methods : {
         /**
