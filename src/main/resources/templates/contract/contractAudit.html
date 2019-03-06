@@ -41,7 +41,7 @@
 						<row>
 							<template>
 								<Steps :current="contractInfo.baseInfo.status">
-									<Step v-for="(item, index) in statusList" v-if="item.flowStatus < 8 " :title="item.flowStatusDesc" :content="item.desc"></Step>
+									<Step v-for="(item, index) in statusList" v-if="item.flowStatus > 0 && item.flowStatus < 8" :title="item.flowStatusDesc" :content="item.desc"></Step>
 								</Steps>
 							</template>
 						</row>

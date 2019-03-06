@@ -140,7 +140,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Date nowDate = new Date();
         contractInfo.setGmtCreate(nowDate);
         contractInfo.setGmtModify(nowDate);
-        contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
+        contractInfo.setStatus(ContractStatusEnum.NEW.getValue());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
@@ -264,7 +264,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public void submitAudit(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
-        contractInfo.setStatus(ContractStatusEnum.DEPARTMENT_AUDIT.getValue());
+        contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
         contractInfoDao.update(contractInfo);
 
         //保存审核记录
@@ -329,7 +329,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
         contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
         contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-        contractAuditRecord.setOperationStatus(currentStatus.getDesc());
+        contractAuditRecord.setOperationStatus(currentStatus.getNextStatus().getDesc());
         contractAuditRecord.setOperationType(contractAuditDTO.getOperationType());
         contractAuditRecord.setOperationTime(new Date());
         contractAuditRecord.setRemark(contractAuditDTO.getRemark());

@@ -283,7 +283,9 @@ var vue = new Vue({
          * @param value
          */
         getStatusDesc : function(value) {
-            if(value === 1) {
+            if(value === 0) {
+                return "新建";
+            } if(value === 1) {
                 return "提出申请";
             } else if(value === 2) {
                 return "部门初审";

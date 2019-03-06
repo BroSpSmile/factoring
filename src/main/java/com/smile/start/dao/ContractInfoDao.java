@@ -79,7 +79,7 @@ public interface ContractInfoDao {
      * @return
      */
     @Select("<script>"
-            + "select ci.* from auth_user_role_info uri,flow_status fs,flow_status_role fsr,contract_info ci "
+            + "select distinct ci.* from auth_user_role_info uri,flow_status fs,flow_status_role fsr,contract_info ci "
             + "where uri.user_serial_no = #{userSerialNo} "
             + "and fsr.role_serial_no = uri.role_serial_no "
             + "and fs.serial_no = fsr.status_serial_no "
