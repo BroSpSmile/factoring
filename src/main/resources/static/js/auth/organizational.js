@@ -32,6 +32,7 @@ var vue = new Vue({
         model11: ''
     },
     created : function() {
+        this.query();
     },
     methods : {
 
@@ -166,6 +167,12 @@ var vue = new Vue({
             if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
                 this.$refs.addForm.resetFields();
             }
+        },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
         },
         /** 分页 */
         pageChange : function(page){

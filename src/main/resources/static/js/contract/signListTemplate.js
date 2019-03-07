@@ -33,6 +33,7 @@ var vue = new Vue({
         modal1:false
     },
     created : function() {
+        this.query();
     },
     methods : {
 
@@ -173,6 +174,12 @@ var vue = new Vue({
                 return "非必须";
             }
             return "";
+        },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
         },
         /** 分页 */
         pageChange : function(page){

@@ -35,6 +35,7 @@ var vue = new Vue({
     },
     created : function() {
         this.initData();
+        this.query();
     },
     methods : {
         /**
@@ -227,6 +228,12 @@ var vue = new Vue({
                 this.$refs.upload.clearFiles();
             }
         },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -282,7 +289,9 @@ var vue = new Vue({
          * @param value
          */
         getStatusDesc : function(value) {
-            if(value === 1) {
+            if(value === 0) {
+                return "新建";
+            } if(value === 1) {
                 return "提出申请";
             } else if(value === 2) {
                 return "部门初审";
@@ -400,8 +409,8 @@ vue.tableColumns=[
         key: 'contractCode',
         align: 'left'
     },{
-        title: '合同名称',
-        key: 'contractName',
+        title: '项目名称',
+        key: 'projectName',
         align: 'left'
     },{
         title: '项目模式',

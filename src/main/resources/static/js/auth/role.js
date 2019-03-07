@@ -40,6 +40,7 @@ var vue = new Vue({
         }
 	},
 	created : function() {
+        this.query();
 	},
 	methods : {
 		
@@ -174,6 +175,12 @@ var vue = new Vue({
                 this.$refs.addForm.resetFields();
             }
 		},
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         /**
          * 取消权限设置页面
          */

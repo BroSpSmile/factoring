@@ -25,6 +25,7 @@ var vue = new Vue({
         modal1:false
     },
     created : function() {
+        this.query();
     },
     methods : {
         /**
@@ -134,6 +135,12 @@ var vue = new Vue({
         cancel : function() {
             this.modal1 = false;
         },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -191,8 +198,8 @@ vue.tableColumns=[
         key: 'contractCode',
         align: 'left'
     },{
-        title: '合同名称',
-        key: 'contractName',
+        title: '项目名称',
+        key: 'projectName',
         align: 'left'
     },{
         title: '项目模式',

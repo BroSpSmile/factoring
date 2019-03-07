@@ -35,6 +35,12 @@ public class ContractInfoSearchDTO implements Serializable {
      */
     private Integer status;
 
+    /**
+     * 项目
+     * @return
+     */
+    private Long projectId;
+
     public String getContractCode() {
         return contractCode;
     }
@@ -75,6 +81,14 @@ public class ContractInfoSearchDTO implements Serializable {
         this.status = status;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     @Override
     public String toString() {
         return "ContractInfoSearchDTO{" +
@@ -83,6 +97,7 @@ public class ContractInfoSearchDTO implements Serializable {
                 ", projectMode=" + projectMode +
                 ", contractTemplate=" + contractTemplate +
                 ", status=" + status +
+                ", projectId=" + projectId +
                 '}';
     }
 }

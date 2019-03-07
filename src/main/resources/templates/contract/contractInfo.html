@@ -7,13 +7,17 @@
 			<card dis-hover title="搜索条件" style="width:100%">
 				<p>
 					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-						<form-item label="合同编号">
+						<form-item label="合同编号" prop="contractCode">
 							<i-input placeholder="输入合同编号" class="inputw" v-model="formInline.contractCode"></i-input>
 						</form-item>
-						<form-item label="合同名称">
-							<i-input placeholder="输入合同名称" class="inputw" v-model="formInline.contractName"></i-input>
+						<form-item label="所属项目" prop="projectId">
+							<i-select class="inputw" v-model="formInline.projectId" clearable>
+								<i-option v-for="project in projectList" :value="project.id">
+									{{ project.projectName }}
+								</i-option>
+							</i-select>
 						</form-item>
-						<form-item label="状态">
+						<form-item label="状态" prop="status">
 							<i-select class="inputw" v-model="formInline.status" clearable>
 								<i-option v-for="status in statusList" :value="status.flowStatus">
 									{{ status.flowStatusDesc }}
@@ -30,6 +34,7 @@
 							<i-col span="8" offset="8">
 								<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
 								<i-button type="success"  icon="ios-add" @click="addContract" style="margin-left: 8px">新增</i-button>
+								<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
 							</i-col>
 						</row>
 					</i-form>
@@ -58,18 +63,18 @@
 												</i-option>
 											</i-select>
 										</form-item>
-										<form-item label="合同编号" prop="baseInfo.contractCode">
+										<!--<form-item label="合同编号" prop="baseInfo.contractCode">
 											<i-input placeholder="输入合同编号" v-model="addForm.baseInfo.contractCode"></i-input>
 										</form-item>
 										<form-item label="合同名称" prop="baseInfo.contractName">
 											<i-input placeholder="输入合同名称" v-model="addForm.baseInfo.contractName"></i-input>
 										</form-item>
-										<!--<form-item label="项目模式" prop="baseInfo.projectMode">-->
-											<!--<Radio-Group v-model="addForm.baseInfo.projectMode" @on-change="getSignList(addForm.baseInfo.projectMode)">-->
-												<!--<Radio :label="1">有追索权模式</Radio>-->
-												<!--<Radio :label="2">无追索权模式</Radio>-->
-											<!--</Radio-Group>-->
-										<!--</form-item>-->
+										<form-item label="项目模式" prop="baseInfo.projectMode">
+											<Radio-Group v-model="addForm.baseInfo.projectMode" @on-change="getSignList(addForm.baseInfo.projectMode)">
+												<Radio :label="1">有追索权模式</Radio>
+												<Radio :label="2">无追索权模式</Radio>
+											</Radio-Group>
+										</form-item>-->
 									</div>
 								</Panel>
 								<Panel name="1">

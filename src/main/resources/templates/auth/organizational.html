@@ -7,13 +7,14 @@
 		<card dis-hover title="搜索条件" style="width:100%">
 			<p>
 				<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-					<form-item label="组织名称">
+					<form-item label="组织名称" prop="organizationalName">
 						<i-input placeholder="输入组织名称" class="inputw" v-model="formInline.organizationalName"></i-input>
 					</form-item>
 					<row type="flex">
 						<i-col span="8" offset="8">
 							<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
 							<i-button type="success"  icon="ios-add" @click="addOrganizational" style="margin-left: 8px">新增</i-button>
+							<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
 						</i-col>
 					</row>
 				</i-form>
@@ -45,7 +46,7 @@
 			</div>
 			<div slot="footer">
 				<i-button type="primary"  @click="saveOrganizational" style="margin-left: 8px">确定</i-button>
-				<i-button  @click="cancel" style="margin-left: 8px">取消</i-button>
+				<i-button @click="cancel" style="margin-left: 8px">取消</i-button>
 			</div>
 		</modal>
 	</div>

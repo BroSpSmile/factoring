@@ -7,12 +7,12 @@
 			<card dis-hover title="搜索条件" style="width:100%">
 				<p>
 					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-						<form-item label="合同编号">
+						<form-item label="合同编号" prop="contractCode">
 							<i-input placeholder="输入合同编号" class="inputw" v-model="formInline.contractCode"></i-input>
 						</form-item>
-						<form-item label="合同名称">
+						<!--<form-item label="合同名称">
 							<i-input placeholder="输入合同名称" class="inputw" v-model="formInline.contractName"></i-input>
-						</form-item>
+						</form-item>-->
 						<form-item label="项目模式" prop="projectMode">
 							<Radio-Group v-model="formInline.projectMode">
 								<Radio :label="1">有追索权模式</Radio>
@@ -22,6 +22,7 @@
 						<row type="flex">
 							<i-col span="8" offset="8">
 								<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
+								<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
 							</i-col>
 						</row>
 					</i-form>

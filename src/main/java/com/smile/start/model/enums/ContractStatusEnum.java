@@ -7,7 +7,7 @@ package com.smile.start.model.enums;
  * @since 1.8
  */
 public enum ContractStatusEnum {
-    APPLY(1, "提出申请") {
+    NEW(0, "新建") {
         @Override
         public ContractStatusEnum getNextStatus() {
             return DEPARTMENT_AUDIT;
@@ -16,6 +16,17 @@ public enum ContractStatusEnum {
         @Override
         public ContractStatusEnum getDefaultRejectStatus() {
             return null;
+        }
+    },
+    APPLY(1, "提出申请") {
+        @Override
+        public ContractStatusEnum getNextStatus() {
+            return DEPARTMENT_AUDIT;
+        }
+
+        @Override
+        public ContractStatusEnum getDefaultRejectStatus() {
+            return NEW;
         }
     },
     DEPARTMENT_AUDIT(2, "部门初审") {

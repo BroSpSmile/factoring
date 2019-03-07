@@ -33,6 +33,7 @@ var vue = new Vue({
         modal1:false
     },
     created : function() {
+        this.query();
     },
     methods : {
         /**
@@ -176,6 +177,12 @@ var vue = new Vue({
             if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
                 this.$refs.addForm.resetFields();
             }
+        },
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
         },
         /**
          * 流程类型

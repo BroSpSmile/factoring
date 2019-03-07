@@ -7,16 +7,17 @@
 			<card dis-hover title="搜索条件" style="width:100%">
 				<p>
 					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-						<form-item label="角色编号">
+						<form-item label="角色编号" prop="roleCode">
 							<i-input placeholder="输入角色编号" class="inputw" v-model="formInline.roleCode"></i-input>
 						</form-item>
-						<form-item label="角色名称">
+						<form-item label="角色名称" prop="roleName">
 							<i-input placeholder="输入角色名称" class="inputw" v-model="formInline.roleName"></i-input>
 						</form-item>
 						<row type="flex">
 							<i-col span="8" offset="8">
 								<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
 								<i-button type="success"  icon="ios-add" @click="addRole" style="margin-left: 8px">新增</i-button>
+								<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
 							</i-col>
 						</row>
 					</i-form>

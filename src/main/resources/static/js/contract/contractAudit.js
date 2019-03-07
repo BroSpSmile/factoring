@@ -45,6 +45,7 @@ var vue = new Vue({
 	},
 	created : function() {
 	    this.initData();
+        this.query();
 	},
 	methods : {
         /**
@@ -190,10 +191,14 @@ var vue = new Vue({
 		 */
 		cancel : function() {
 			this.modal1 = false;
-            if(this.addForm.baseInfo.id === '') {
-                this.$refs['entityDataForm'].resetFields();
-            }
+			this.$refs['entityDataForm'].resetFields();
 		},
+        /**
+         * 重置
+         */
+        reset: function () {
+            this.$refs['searchForm'].resetFields();
+        },
         cancelReject : function() {
             this.modal2 = false;
             this.$refs['rejectForm'].resetFields();
@@ -251,6 +256,12 @@ var vue = new Vue({
                 return "签署完成";
             }
             return "";
+        },
+        /**
+         * 下载文件
+         */
+        downloadItem:function(item){
+            window.open("/file?fileId=" + item.fileId + "&fileName=" + item.attachName);
         }
 	}
 });
@@ -288,8 +299,8 @@ vue.tableColumns=[
         key: 'contractCode',
         align: 'left'
     },{
-        title: '合同名称',
-        key: 'contractName',
+        title: '项目名称',
+        key: 'projectName',
         align: 'left'
     },{
         title: '项目模式',
