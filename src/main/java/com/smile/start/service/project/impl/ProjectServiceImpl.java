@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.dao.ProjectRecordDao;
@@ -24,6 +25,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProgressStatus;
+import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.model.project.ProjectRecord;
@@ -44,23 +46,27 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** 项目DAO */
     @Resource
-    private ProjectDao       projectDao;
+    private ProjectDao         projectDao;
 
     /** projectRecordDao */
     @Resource
-    private ProjectRecordDao projectRecordDao;
+    private ProjectRecordDao   projectRecordDao;
 
     /** 用户服务 */
     @Resource
-    private UserInfoService  userInfoService;
+    private UserInfoService    userInfoService;
 
     /** 项目附件DAO */
     @Resource
-    private ProjectItemDao   projectItemDao;
+    private ProjectItemDao     projectItemDao;
+
+    /** factoringDetailDao */
+    @Resource
+    private FactoringDetailDao factoringDetailDao;
 
     /** Id生成服务 */
     @Resource
-    private IdGenService     idGenService;
+    private IdGenService       idGenService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -195,10 +201,16 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     public PageInfo<Project> queryPage(PageRequest<Project> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
         List<Project> projects = projectDao.findByParam(page.getCondition());
-        projects.stream().forEach(project -> project.setUser(getUser(project.getUser().getId())));
+        projects.stream().forEach(project -> setDetail(project));
         //4. 根据返回的集合，创建PageInfo对象
         PageInfo<Project> result = new PageInfo<>(projects);
         return result;
+    }
+
+    private void setDetail(Project project) {
+        project.setUser(getUser(project.getUser().getId()));
+        FactoringDetail detail = factoringDetailDao.getByProject(project.getId());
+        project.setDetail(detail);
     }
 
     /**

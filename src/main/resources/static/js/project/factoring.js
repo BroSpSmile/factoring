@@ -14,12 +14,14 @@ var vue = new Vue({
 				
 			},
 			factoringInstallments:[{
-				amount:"123",
-				installmentDate:new Date()
+				amount:0,
+				installmentDate:new Date(),
+				type:"FACTORING"
 			}],
 			assignee:0,
 			receivable:0,
 			dropAmount:0,
+			totalFactoringFee:0,
 			moneyBack:"false",
 			invoicing:"false",
 			paied:"false"
@@ -30,8 +32,9 @@ var vue = new Vue({
 	methods : {
 		add:function(){
 			this.detail.factoringInstallments.push({
-				amount:"",
-				installmentDate:new Date()
+				amount:0,
+				installmentDate:new Date(),
+				type:"FACTORING"
 			});
 		},
 		
@@ -40,6 +43,15 @@ var vue = new Vue({
 		 */
 		remove:function(index){
 			this.detail.factoringInstallments.splice(index,1);
+		},
+		
+		/** 计算保理费分期 */
+		computeFee:function(){
+			var total = 0;
+			for(let index in this.detail.factoringInstallments){
+				total += this.detail.factoringInstallments[index].amount;
+			}
+			this.detail.totalFactoringFee = total;
 		},
 		
 		commit:function(){

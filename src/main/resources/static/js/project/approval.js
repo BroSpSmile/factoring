@@ -225,8 +225,22 @@ var vue = new Vue({
 	}
 });
 
-vue.tableColumns=[
-	{
+vue.tableColumns=[{
+		type: 'expand',
+	    width: 50,
+	    render: (h, params) => {
+	    	return h('div', {
+                props: {
+                    row: params.row
+                },
+                domProps:{
+                	innerHTML:'<span>让与人:'+params.row.detail.creditor+'</span>&nbsp;&nbsp;<span>债务人:'+params.row.detail.debtor+
+                	'</span>&nbsp;&nbsp;<span>基础合同:'+params.row.detail.baseContract+'</span>&nbsp;&nbsp;<br><span>签署日期:'+moment(params.row.detail.signDate).format('YYYY-MM-DD HH:mm')+
+                	'</span>&nbsp;&nbsp;<span>应收账款受让款:'+params.row.detail.assignee+'</span>&nbsp;&nbsp;<span>应收账款:'+params.row.detail.receivable+'</span>'
+                }
+            })
+	    }
+	},{
         title: '项目编号',
         key: 'projectId',
         align: 'center'

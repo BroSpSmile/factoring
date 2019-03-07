@@ -8,12 +8,13 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.smile.start.dao.FactoringDetailDao;
+import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.FactoringService;
@@ -35,6 +36,10 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
     @Resource
     private FactoringDetailDao factoringDetailDao;
 
+    /** installmentDao */
+    @Resource
+    private InstallmentDao     installmentDao;
+
     /** 
      * @see com.smile.start.service.project.FactoringService#create(com.smile.start.model.project.FactoringDetail)
      */
@@ -47,6 +52,10 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         BaseResult result = projectService.initProject(detail.getProject());
         if (result.isSuccess()) {
             long effect = factoringDetailDao.insert(detail);
+            for (Installment item : detail.getFactoringInstallments()) {
+                item.setDetail(detail);
+                installmentDao.insert(item);
+            }
             if (effect > 0) {
                 result.setSuccess(true);
             } else {

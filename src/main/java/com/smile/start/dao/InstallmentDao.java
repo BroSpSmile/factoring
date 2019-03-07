@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -21,6 +22,7 @@ import com.smile.start.model.project.Installment;
  * @author smile.jing
  * @version $Id: InstallmentDao.java, v 0.1 Mar 6, 2019 8:51:36 PM smile.jing Exp $
  */
+@Mapper
 public interface InstallmentDao {
     /**
      * 插入

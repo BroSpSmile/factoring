@@ -50,6 +50,9 @@ public class Project implements Serializable {
     /** all进度 */
     private List<String>      progresses;
 
+    /** 项目明细 */
+    private FactoringDetail   detail;
+
     /** 
      * @see java.lang.Object#toString()
      */
@@ -58,7 +61,8 @@ public class Project implements Serializable {
         return "{\"id\":\"" + id + "\", \"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
                + (projectName != null ? "projectName\":\"" + projectName + "\", \"" : "") + (user != null ? "user\":\"" + user + "\", \"" : "")
                + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
-               + (items != null ? "items\":\"" + items + "\", \"" : "") + (progresses != null ? "progresses\":\"" + progresses : "") + "\"}  ";
+               + (items != null ? "items\":\"" + items + "\", \"" : "") + (progresses != null ? "progresses\":\"" + progresses + "\", \"" : "")
+               + (detail != null ? "detail\":\"" + detail : "") + "\"}  ";
     }
 
     /**
@@ -221,6 +225,24 @@ public class Project implements Serializable {
      */
     public void setProgresses(List<String> progresses) {
         this.progresses = progresses;
+    }
+
+    /**
+     * Getter method for property <tt>detail</tt>.
+     * 
+     * @return property value of detail
+     */
+    public FactoringDetail getDetail() {
+        return detail;
+    }
+
+    /**
+     * Setter method for property <tt>detail</tt>.
+     * 
+     * @param detail value to be assigned to property detail
+     */
+    public void setDetail(FactoringDetail detail) {
+        this.detail = detail;
     }
 
 }

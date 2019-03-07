@@ -39,7 +39,7 @@ public interface FactoringDetailDao {
      * @param projectId
      * @return
      */
-    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "projectId.id") })
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id") })
     @Select("select * from factoring_detail where project_id = #{projectId}")
     FactoringDetail getByProject(Long projectId);
     

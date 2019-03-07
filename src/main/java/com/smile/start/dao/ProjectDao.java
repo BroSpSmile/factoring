@@ -26,7 +26,7 @@ public interface ProjectDao {
      * @param project
      * @return
      */
-    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress) values (#{projectId},#{kind},#{projectName},#{user.id},#{progress})")
+    @Insert("insert into factoring_project (project_id,kind,project_name,person,progress,model) values (#{projectId},#{kind},#{projectName},#{user.id},#{progress},#{model})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Project project);
 
