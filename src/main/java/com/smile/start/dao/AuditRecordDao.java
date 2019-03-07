@@ -31,14 +31,25 @@ public interface AuditRecordDao {
     @Insert("insert into audit_record (audit,type,auditor,result,remark,status,audit_time) values (#{audit.id},#{type},#{auditor.id},#{result},#{remark},#{status},#{auditTime})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(AuditRecord record);
-    
+
     /**
      * 
      * @param audit
      * @return
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "audit", property = "audit.id"),
-                                      @Result(column = "auditor", property = "auditor.id")})
+                                        @Result(column = "auditor", property = "auditor.id") })
     @Select("select * from audit_record where audit = #{id} order by id desc")
     List<AuditRecord> query(Audit audit);
+
+    /**
+     * 
+     * @param auditId
+     * @param type
+     * @return
+     */
+    @Results(id = "getLastMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "audit", property = "audit.id"),
+                                          @Result(column = "auditor", property = "auditor.id") })
+    @Select("select * from audit_record where audit =#{auditId} and type = #{type} order by id desc limit 1")
+    AuditRecord getLast(Long auditId, String type);
 }

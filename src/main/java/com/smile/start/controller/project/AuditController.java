@@ -7,6 +7,7 @@ package com.smile.start.controller.project;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.login.LoginUserRole;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
 import com.smile.start.service.audit.AuditService;
@@ -57,10 +62,21 @@ public class AuditController extends BaseController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public Audit getAudit(@PathVariable Long id) {
+    public SingleResult<Audit> getAudit(@PathVariable Long id) {
         LoggerUtils.info(logger, "审核编号={}", id);
         Audit audit = auditService.getAudit(id);
-        return audit;
+        LoginUser user = LoginHandler.getLoginUser();
+        SingleResult<Audit> result = new SingleResult<Audit>();
+        result.setData(audit);
+        boolean right = false;
+        for (LoginUserRole role : user.getRoleList()) {
+            if (StringUtils.equals(role.getSerialNo(), audit.getRole().getSerialNo())) {
+                right = true;
+                break;
+            }
+        }
+        result.setSuccess(right);
+        return result;
     }
 
     /**
@@ -70,7 +86,7 @@ public class AuditController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult pass(HttpServletRequest request,@RequestBody AuditRecord record) {
+    public BaseResult pass(HttpServletRequest request, @RequestBody AuditRecord record) {
         User user = getUserByToken(request);
         record.setAuditor(user);
         LoggerUtils.info(logger, "项目审核数据={}", FastJsonUtils.toJSONString(record));

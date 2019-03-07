@@ -12,6 +12,10 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id: AuditResult.java, v 0.1 Mar 2, 2019 9:12:40 PM smile.jing Exp $
  */
 public enum AuditResult {
+
+                         /**  */
+                         APPLY("APPLY", "申请"),
+
                          /**  */
                          PASS("PASS", "通过"),
 

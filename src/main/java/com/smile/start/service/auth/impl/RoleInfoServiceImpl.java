@@ -31,7 +31,7 @@ import javax.annotation.Resource;
 public class RoleInfoServiceImpl implements RoleInfoService {
 
     @Resource
-    private RoleDao roleDao;
+    private RoleDao        roleDao;
 
     @Resource
     private RoleInfoMapper roleInfoMapper;
@@ -45,6 +45,14 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     @Override
     public AuthRoleInfoDTO get(Long id) {
         return roleInfoMapper.do2dto(roleDao.get(id));
+    }
+
+    /** 
+     * @see com.smile.start.service.auth.RoleInfoService#getBySerialNo(java.lang.String)
+     */
+    @Override
+    public AuthRoleInfoDTO getBySerialNo(String serialNo) {
+        return roleInfoMapper.do2dto(roleDao.findBySerialNo(serialNo));
     }
 
     /**
@@ -137,7 +145,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     public void savePermission(PermissionSetting permissionSetting) {
         roleDao.deletePermission(permissionSetting.getRoleSerialNo());
         //处理权限信息
-        if(!CollectionUtils.isEmpty(permissionSetting.getCheckedPermissionList())) {
+        if (!CollectionUtils.isEmpty(permissionSetting.getCheckedPermissionList())) {
             permissionSetting.getCheckedPermissionList().forEach(e -> {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setSerialNo(SerialNoGenerator.generateSerialNo("U", 7));

@@ -24,6 +24,13 @@ public interface RoleInfoService {
     AuthRoleInfoDTO get(Long id);
 
     /**
+     * 根据角色编号获取角色信息
+     * @param serialNo
+     * @return
+     */
+    AuthRoleInfoDTO getBySerialNo(String serialNo);
+
+    /**
      * 查询所有角色信息
      * @return
      */

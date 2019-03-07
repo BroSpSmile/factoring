@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.smile.start.dao.AuditDao;
 import com.smile.start.dao.AuditRecordDao;
 import com.smile.start.dao.AuditRecordItemDao;
@@ -30,12 +31,14 @@ import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditFlow;
 import com.smile.start.model.project.AuditParam;
 import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.AuditRecordItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FlowConfigService;
 import com.smile.start.service.project.ProjectService;
@@ -64,6 +67,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Resource
     protected UserInfoService  userInfoService;
 
+    /** 角色服务 */
+    @Resource
+    private RoleInfoService    roleInfoService;
+
     /** flowConfigService */
     @Resource
     private FlowConfigService  flowConfigService;
@@ -82,7 +89,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setApplicant(user);
         audit.setProject(project);
         audit.setCreateTime(new Date());
-        audit.setStep(1);
+        audit.setStep(0);
         audit.setAuditType(AuditType.getByCode(project.getProgress().getCode()));
         FlowStatusDTO step = nextStep(audit, toType(project.getProgress()), 1);
         audit.setStep(step.getFlowStatus());
@@ -124,6 +131,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         return FlowTypeEnum.valueOf(progress.name());
     }
 
+    private FlowTypeEnum toType(AuditType auditType) {
+        return FlowTypeEnum.valueOf(auditType.name());
+    }
+
     /** 
      * @see com.smile.start.service.audit.AuditService#pass(com.smile.start.model.project.AuditRecord, com.smile.start.dto.AuthRoleInfoDTO)
      */
@@ -134,9 +145,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
         record.setResult(AuditResult.PASS);
         record.setType(step.getFlowStatusDesc());
-        record.setRemark("审核通过");
-        record.setStatus("通过");
-        record.setAuditTime(new Date());
         FlowStatusDTO nextStep = nextStep(audit, toType(audit.getProject().getProgress()), 1);
         if (null != nextStep) {
             audit.setStep(nextStep.getFlowStatus());
@@ -151,12 +159,46 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             turnover(audit.getProject());
         }
         auditDao.updateRole(audit);
-        auditRecordDao.insert(record);
+        addAuditRecord(record);
         for (AuditRecordItem item : record.getItems()) {
             item.setRecord(record);
             auditRecordItemDao.insert(item);
         }
-        return new BaseResult();
+        return addApplyRecord(audit);
+    }
+
+    /**
+     * 申请添加审核记录
+     * @param audit
+     * @return
+     */
+    private BaseResult addApplyRecord(Audit audit) {
+        AuditRecord record = new AuditRecord();
+        record.setStatus("成功");
+        record.setRemark("申请成功");
+        record.setType("发起审核");
+        record.setAudit(audit);
+        record.setAuditor(audit.getApplicant());
+        record.setResult(AuditResult.APPLY);
+        record.setStatus(record.getResult().getDesc());
+        return addAuditRecord(record);
+    }
+
+    /**
+     * 插入审批记录
+     * @param record
+     * @return
+     */
+    private BaseResult addAuditRecord(AuditRecord record) {
+        record.setStatus(record.getResult().getDesc());
+        record.setAuditTime(new Date());
+        long effect = auditRecordDao.insert(record);
+        if (effect > 0) {
+            return new BaseResult();
+        } else {
+            throw new RuntimeException("新增审核记录失败");
+        }
+
     }
 
     /**
@@ -178,10 +220,8 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     public BaseResult reject(AuditRecord record) {
         Audit audit = getAudit(record.getAudit().getId());
         FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
-        record.setResult(AuditResult.PASS);
+        record.setResult(AuditResult.REJECTED);
         record.setType(step.getFlowStatusDesc());
-        record.setStatus("驳回");
-        record.setAuditTime(new Date());
         FlowStatusDTO nextStep = nextStep(audit, toType(audit.getProject().getProgress()), -1);
         if (null != nextStep) {
             audit.setStep(nextStep.getFlowStatus());
@@ -195,8 +235,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             audit.setRole(role);
         }
         auditDao.updateRole(audit);
-        auditRecordDao.insert(record);
-        return new BaseResult();
+        return addAuditRecord(record);
     }
 
     /** 
@@ -234,7 +273,27 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             record.setAuditor(user);
         }
         audit.setRecords(records);
+        audit.setFlows(getFlows(audit));
         return audit;
+    }
+
+    private List<AuditFlow> getFlows(Audit audit) {
+        FlowConfigDTO configDTO = flowConfigService.getByType(toType(audit.getAuditType()));
+        List<AuditFlow> flows = Lists.newArrayList();
+        for (FlowStatusDTO statu : configDTO.getStatusList()) {
+            AuditFlow flow = new AuditFlow();
+            flow.setStep(statu.getFlowStatus());
+            flow.setDesc(statu.getFlowStatusDesc());
+            flow.setRole(roleInfoService.getBySerialNo(statu.getCheckedRoleList().get(0)));
+            //查询审核记录
+            AuditRecord record = auditRecordDao.getLast(audit.getId(), statu.getFlowStatusDesc());
+            if (null != record) {
+                flow.setResult(record.getResult());
+                flow.setUser(userInfoService.getUserById(record.getAuditor().getId()));
+            }
+            flows.add(flow);
+        }
+        return flows;
     }
 
 }

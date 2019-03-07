@@ -6,7 +6,7 @@ package com.smile.start.model.enums;
  * @version $Id: TuneUpFlowEnum.java, v 0.1 Mar 5, 2019 12:30:14 PM smile.jing Exp $
  */
 public enum TuneUpFlowEnum {
-                            APPLY(1, "提出申请") {
+                            APPLY(0, "提出申请") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
                                     return FINANCIAL_AUDIT;
@@ -17,7 +17,7 @@ public enum TuneUpFlowEnum {
                                     return null;
                                 }
                             },
-                            DEPARTMENT_AUDIT(2, "部门负责人审核") {
+                            DEPARTMENT_AUDIT(1, "部门负责人审核") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
                                     return FINANCIAL_AUDIT;
@@ -28,7 +28,7 @@ public enum TuneUpFlowEnum {
                                     return APPLY;
                                 }
                             },
-                            FORENSIC_AUDIT(4, "法务审核") {
+                            FORENSIC_AUDIT(3, "法务审核") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
                                     return null;
@@ -39,7 +39,7 @@ public enum TuneUpFlowEnum {
                                     return FORENSIC_AUDIT;
                                 }
                             },
-                            FINANCIAL_AUDIT(3, "财务审核") {
+                            FINANCIAL_AUDIT(2, "财务审核") {
                                 @Override
                                 public TuneUpFlowEnum getNextStatus() {
                                     return DEPARTMENT_AUDIT;

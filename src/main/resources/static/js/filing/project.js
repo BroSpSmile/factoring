@@ -186,7 +186,8 @@ vue.tableColumns = [
                     "1" == document.getElementById("type").value ? h('span') : h('Button', {
                         props: {
                             size: "small",
-                            type: "success"
+                            type: "success",
+							ghost:true
                         },
                         style: {
                             marginRight: '5px'
@@ -203,7 +204,8 @@ vue.tableColumns = [
                     "1" == document.getElementById("type").value ? h('Button', {
                         props: {
                             size: "small",
-                            type: "warning"
+                            type: "warning",
+							ghost:true
                         },
                         style: {
                             marginRight: '5px'
@@ -216,7 +218,8 @@ vue.tableColumns = [
                     }, '归档审核') : h('span'), h('Button', {
                         props: {
                             size: "small",
-                            type: "info"
+                            type: "info",
+							ghost:true
                         },
                         style: {
                             marginRight: '5px'
@@ -245,7 +248,8 @@ vue.tableColumns = [
                     }, '归档审核') : h('span'), h('Button', {
                         props: {
                             size: "small",
-                            type: "info"
+                            type: "info",
+							ghost:true
                         },
                         style: {
                             marginRight: '5px'
@@ -261,7 +265,8 @@ vue.tableColumns = [
                     h('Button', {
                         props: {
                             size: "small",
-                            type: "info"
+                            type: "info",
+							ghost:true
                         },
                         style: {
                             marginRight: '5px'

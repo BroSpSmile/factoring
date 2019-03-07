@@ -1,11 +1,16 @@
 package com.smile.start.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.model.auth.Role;
 import com.smile.start.model.auth.RolePermission;
-import org.apache.ibatis.annotations.*;
-
-import java.util.List;
 
 /**
  * @author Joseph
@@ -54,7 +59,7 @@ public interface RoleDao {
      * @return
      */
     @Select("select * from auth_role_info where serial_no=#{serialNo}")
-    List<Role> findBySerialNo(String serialNo);
+    Role findBySerialNo(String serialNo);
 
     /**
      * 根据角色编号查询角色
@@ -77,10 +82,8 @@ public interface RoleDao {
      * @param roleSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from auth_role_info where 1=1 and delete_flag = 0"
-        + "<if test = 'roleCode!=null'> and role_code = #{roleCode}</if>"
-        + "<if test = 'roleName!=null'> and role_name = #{roleName}</if>"
-        + "</script>")
+    @Select("<script>" + "select * from auth_role_info where 1=1 and delete_flag = 0" + "<if test = 'roleCode!=null'> and role_code = #{roleCode}</if>"
+            + "<if test = 'roleName!=null'> and role_name = #{roleName}</if>" + "</script>")
     List<Role> findByParam(RoleSearchDTO roleSearchDTO);
 
     /**

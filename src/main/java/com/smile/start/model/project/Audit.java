@@ -46,6 +46,9 @@ public class Audit implements Serializable {
     /** 审核人 */
     private User              auditor;
 
+    /** 审核流程状态 */
+    private List<AuditFlow>   flows;
+
     /** 审核历史 */
     private List<AuditRecord> records;
 
@@ -221,6 +224,24 @@ public class Audit implements Serializable {
      */
     public void setAuditor(User auditor) {
         this.auditor = auditor;
+    }
+
+    /**
+     * Getter method for property <tt>flows</tt>.
+     * 
+     * @return property value of flows
+     */
+    public List<AuditFlow> getFlows() {
+        return flows;
+    }
+
+    /**
+     * Setter method for property <tt>flows</tt>.
+     * 
+     * @param flows value to be assigned to property flows
+     */
+    public void setFlows(List<AuditFlow> flows) {
+        this.flows = flows;
     }
 
 }

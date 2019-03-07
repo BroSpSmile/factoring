@@ -15,6 +15,7 @@ var vue = new Vue({
 		record:{
 			items:[]
 		},
+		showAuditButton:false,
 		tableColumns:[]
 	},
 	created : function() {
@@ -86,7 +87,8 @@ var vue = new Vue({
 			if(id){
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
-					_self.audit = response.data;
+					_self.audit = response.data.data;
+					_self.showAuditButton = response.data.success;
 				},function(error){
 					console.log(error);
 				})

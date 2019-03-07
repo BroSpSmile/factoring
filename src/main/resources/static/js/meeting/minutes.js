@@ -81,7 +81,7 @@ var vue = new Vue({
 		/**
 		 * 保存
 		 */
-		save:function(){
+		save:function(progress){
 			let meeting = JSON.parse(JSON.stringify(this.meeting));
 			if(meeting.kind=='DIRECTORATE'){
 				meeting.minutes = CKEDITOR.instances.myedit.getData();
@@ -91,7 +91,6 @@ var vue = new Vue({
 				}
 				meeting.projects = projects;
 			}else{
-				console.log(this.fileList);
 				for(let index in this.fileList){
 					let item={
 							projectId:this.meeting.projects[0].id,
@@ -100,9 +99,9 @@ var vue = new Vue({
 							itemValue:this.fileList[index].response.data.fileId
 					}
 					meeting.projects[0].items = new Array();
-					console.log(meeting.projects[0]);
 					meeting.projects[0].items.push(item);
 				}
+				meeting.projects[0].progress = progress;
 			}
 			let self = this;
 			this.$http.post("/minutes",meeting).then(function(response){

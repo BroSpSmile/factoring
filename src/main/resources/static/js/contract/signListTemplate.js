@@ -221,7 +221,8 @@ vue.tableColumns=[
                 h('Button', {
                     props: {
                         size: "small",
-                        type: "warning"
+                        type: "warning",
+						ghost:true
                     },
                     style: {
                         marginRight: '5px'
@@ -235,7 +236,8 @@ vue.tableColumns=[
             h('Button', {
                 props: {
                     size: "small",
-                    type: "error"
+                    type: "error",
+					ghost:true
                 },
                 style: {
                     marginRight: '5px'

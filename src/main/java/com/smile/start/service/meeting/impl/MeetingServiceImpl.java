@@ -215,8 +215,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         } else {
             Project project = meeting.getProjects().get(0);
-            project.setProgress(Progress.APPROVAL);
-            projectService.turnover(meeting.getProjects().get(0));
+            projectService.turnover(project);
         }
         return new BaseResult();
     }

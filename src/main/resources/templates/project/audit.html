@@ -7,6 +7,12 @@
 			<row>
 				<i-col span="22" offset="1">
 					<br><h2>{{auditTypeShow}}</h2><br>
+					<card dis-hover title="审核流程">
+						 <Steps :current="audit.step==-1?10000:audit.step">
+						 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
+					    </Steps>
+					</card>
+					<br>
 					<card dis-hover title="申请详情">
 						<i-form  :label-width="100" inline>
 							<row>
@@ -41,7 +47,7 @@
 							<form-item label="附件查看">
 								<div  v-for="item in audit.project.items" v-if="item.itemType==audit.auditType"><icon type="ios-attach" ></icon><a @click="downloadItem(item)">{{item.itemName}}</a></div>
 							</form-item>
-							<row type="flex">
+							<row type="flex" v-if="showAuditButton">
 			                    <i-col span="12" offset="2">
 			                        	<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
 			                            <i-button type="error"  icon="ios-close" @click="" style="margin-left: 8px">驳回</i-button>
