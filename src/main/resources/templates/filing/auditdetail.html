@@ -65,7 +65,7 @@
                 <row>
                     <i-col offset="1">
                         <form-item label="归档文件">
-                            <Tag v-for="item in filingInfo.items" @click.native="download(item.itemValue)">
+                            <Tag v-for="item in filingInfo.items" @click.native="download(item.itemValue,item.itemName)">
                                 {{item.itemName}}
                             </Tag>
                         </form-item>

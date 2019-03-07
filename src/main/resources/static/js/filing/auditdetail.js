@@ -71,6 +71,8 @@ var vue = new Vue({
             let progresses = [];
             this.$http.get("/combo/filingProgress").then(function (response) {
                 _self.allProgresses = response.data;
+                //去除第一个待归档状态
+                _self.allProgresses.shift();
                 for (let i = 0; i < this.allProgresses.length; i++) {
                     let stepObj = new Object();
                     if (i == 0) {
@@ -82,15 +84,15 @@ var vue = new Vue({
                     _self.steps.push(stepObj);
                 }
                 _self.setProgresses();
-                if (_self.filingInfo.progress == 'FILE') {
+                if (_self.filingInfo.progress == 'FILE_LEGAL_AUDIT') {
                     this.step = 1;
                     _self.steps[1].content = '高育良';
-                } else if (_self.filingInfo.progress == 'FILEAUDIT') {
+                } else if (_self.filingInfo.progress == 'FILE_OFFICER') {
                     this.step = 2;
                     _self.steps[1].content = '高育良';
                     _self.steps[2].content = '丁义珍';
                     this.isLastAuditStep = true;
-                } else if (_self.filingInfo.progress == 'FILECOMPLETE') {
+                } else if (_self.filingInfo.progress == 'FILE_COMPLETE') {
                     _self.steps[1].content = '高育良';
                     _self.steps[2].content = '丁义珍';
                     this.step = 3;
@@ -122,9 +124,10 @@ var vue = new Vue({
             this.progresses.reverse();
         },
 
-        download: function (fileId) {
+        download: function (fileId, fileName) {
             //TODO
             console.debug(fileId);
+            window.open("/file?fileId=" + fileId + "&fileName=" + fileName);
         },
         /**
          * 判断数组是否包含元素

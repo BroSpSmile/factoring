@@ -15,6 +15,7 @@ import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.enums.ContractStatusEnum;
+import com.smile.start.model.enums.FileFlowEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.TuneUpFlowEnum;
 import com.smile.start.model.login.LoginUser;
@@ -201,6 +202,15 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                     flowStatus.setRoleList(roleList);
                     flowStatus.setFlowStatus(contractStatusEnum.getValue());
                     flowStatus.setFlowStatusDesc(contractStatusEnum.getDesc());
+                    statusList.add(flowStatus);
+                }
+                return statusList;
+            case FILE:
+                for (FileFlowEnum fileFlowEnum : FileFlowEnum.values()) {
+                    FlowStatusDTO flowStatus = new FlowStatusDTO();
+                    flowStatus.setRoleList(roleList);
+                    flowStatus.setFlowStatus(fileFlowEnum.getValue());
+                    flowStatus.setFlowStatusDesc(fileFlowEnum.getDesc());
                     statusList.add(flowStatus);
                 }
                 return statusList;

@@ -86,7 +86,7 @@ public class FilingApplyController extends BaseController {
             filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
+        filingApplyInfo.setProgress(FilingProgress.FILE_APPLY.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
     }
@@ -105,7 +105,7 @@ public class FilingApplyController extends BaseController {
             filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+        filingApplyInfo.setProgress(FilingProgress.FILE_LEGAL_AUDIT.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
     }
@@ -120,7 +120,7 @@ public class FilingApplyController extends BaseController {
     @ResponseBody
     public BaseResult audit(@RequestBody FilingApplyInfo filingApplyInfo) {
         //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILEAUDIT.getCode());
+        filingApplyInfo.setProgress(FilingProgress.FILE_OFFICER.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.updateFilingApply(filingApplyInfo, false);
     }
@@ -136,7 +136,7 @@ public class FilingApplyController extends BaseController {
     public BaseResult reject(@RequestBody FilingApplyInfo filingApplyInfo) {
         //filingApplyInfo.setApplyTime(new Date());
         if (StringUtils.isBlank(filingApplyInfo.getProgress())) {
-            filingApplyInfo.setProgress(FilingProgress.FILE.getCode());
+            filingApplyInfo.setProgress(FilingProgress.FILE_LEGAL_AUDIT.getCode());
         }
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.updateFilingApply(filingApplyInfo, false);
@@ -156,7 +156,7 @@ public class FilingApplyController extends BaseController {
             filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.TOBEFILED.getCode());
+        filingApplyInfo.setProgress(FilingProgress.FILE_APPLY.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.addFilingApply(filingApplyInfo);
     }
@@ -171,7 +171,7 @@ public class FilingApplyController extends BaseController {
     @ResponseBody
     public BaseResult complete(@RequestBody FilingApplyInfo filingApplyInfo) {
         //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILECOMPLETE.getCode());
+        filingApplyInfo.setProgress(FilingProgress.FILE_COMPLETE.getCode());
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
         return filingService.updateFilingApply(filingApplyInfo, false);
     }

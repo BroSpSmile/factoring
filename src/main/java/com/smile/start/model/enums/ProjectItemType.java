@@ -19,7 +19,10 @@ public enum ProjectItemType {
                              PENDINGLOAN("PENDINGLOAN", "放款文件"),
 
                              /** */
-                             INITIATE("INITIATE", "立项纪要");
+                             INITIATE("INITIATE", "立项纪要"),
+
+                             /** */
+                             FILE("FILE", "归档文件");
 
     ProjectItemType(String code, String desc) {
         this.code = code;
