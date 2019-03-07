@@ -25,6 +25,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProgressStatus;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
@@ -91,6 +92,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      * @see com.smile.start.service.project.ProjectService#updateProject(com.smile.start.model.project.Project)
      */
     @Override
+    @Transactional
     public BaseResult updateProject(Project project) {
         List<Project> projects = projectDao.findByProjectId(project.getProjectId());
         if (!CollectionUtils.isEmpty(projects) && projects.size() > 1) {
@@ -132,21 +134,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         return new BaseResult();
     }
 
-    /**
-     * 添加项目记录
-     * @param project
-     * @return
-     */
-    private BaseResult addRecord(Project project) {
-        ProjectRecord record = new ProjectRecord();
-        record.setProject(project);
-        record.setProgress(project.getProgress());
-        record.setStatus(ProgressStatus.COMPLETED);
-        record.setCreateTime(new Date());
-        long effect = projectRecordDao.insert(record);
-        return toResult(effect);
-    }
-
     /** 
      * @see com.smile.start.service.project.ProjectService#delete(java.lang.Long)
      */
@@ -173,17 +160,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.project.ProjectService#findAll()
-     */
-    public List<Project> findAll() {
-        PageHelper.offsetPage(0, 4, "id desc");
-        List<Project> projects = projectDao.findAll();
-        //4. 根据返回的集合，创建PageInfo对象
-        PageInfo<Project> page = new PageInfo<>(projects);
-        return page.getList();
-    }
-
-    /** 
      * @see com.smile.start.service.project.ProjectService#getProject(java.lang.Long)
      */
     @Override
@@ -207,6 +183,52 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         return result;
     }
 
+    /** 
+     * @see com.smile.start.service.project.ProjectService#queryUnarchivedProjects()
+     */
+    @Override
+    public List<Project> queryUnarchivedProjects(Project project) {
+        return projectDao.findUnarchivedProjects(project);
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#queryItems(java.lang.Long, com.smile.start.model.enums.ProjectItemType)
+     */
+    @Override
+    public List<ProjectItem> queryItems(Long projectId, ProjectItemType type) {
+        return projectItemDao.getTypeItems(projectId, type);
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#findAll()
+     */
+    public List<Project> findAll() {
+        PageHelper.offsetPage(0, 4, "id desc");
+        List<Project> projects = projectDao.findAll();
+        //4. 根据返回的集合，创建PageInfo对象
+        PageInfo<Project> page = new PageInfo<>(projects);
+        return page.getList();
+    }
+
+    /**
+     * 添加项目记录
+     * @param project
+     * @return
+     */
+    private BaseResult addRecord(Project project) {
+        ProjectRecord record = new ProjectRecord();
+        record.setProject(project);
+        record.setProgress(project.getProgress());
+        record.setStatus(ProgressStatus.COMPLETED);
+        record.setCreateTime(new Date());
+        long effect = projectRecordDao.insert(record);
+        return toResult(effect);
+    }
+
+    /**
+     * 
+     * @param project
+     */
     private void setDetail(Project project) {
         project.setUser(getUser(project.getUser().getId()));
         FactoringDetail detail = factoringDetailDao.getByProject(project.getId());
@@ -220,14 +242,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      */
     private User getUser(Long id) {
         return userInfoService.getUserById(id);
-    }
-
-    /** 
-     * @see com.smile.start.service.project.ProjectService#queryUnarchivedProjects()
-     */
-    @Override
-    public List<Project> queryUnarchivedProjects(Project project) {
-        return projectDao.findUnarchivedProjects(project);
     }
 
 }

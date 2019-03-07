@@ -11,11 +11,20 @@ import org.apache.commons.lang3.StringUtils;
  * @author smile.jing
  * @version $Id: MeetingKind.java, v 0.1 Feb 24, 2019 9:21:41 PM smile.jing Exp $
  */
+/**
+ * 
+ * @author smile.jing
+ * @version $Id: MeetingKind.java, v 0.1 Mar 7, 2019 10:25:58 PM smile.jing Exp $
+ */
 public enum MeetingKind {
                          /** 立项会议 */
                          APPROVAL("APPROVAL", "立项会议"),
-                         /** 三重一大会议 */
-                         DIRECTORATE("DIRECTORATE", "三重一大会议");
+                         /** 董事会决议 */
+                         DIRECTORS("DIRECTORS", "董事会决议会"),
+                         /**党总支会议  */
+                         PARTY("PARTY", "党总支会议"),
+                         /** 董事会 */
+                         BOARD("BOARD", "董事会");
 
     MeetingKind(String code, String desc) {
         this.code = code;

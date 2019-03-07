@@ -22,13 +22,32 @@ var vue = new Vue({
 		modal1 : false,
 		statusItems : [],
 		users:[],
+		meetingKind:[],
 		project:{},
 		meetingReminds:[
 			{value:15,text:"会议开始前15分钟"},
 			{value:30,text:"会议开始前30分钟"},
 			{value:45,text:"会议开始前45分钟"},
 			{value:60,text:"会议开始前60分钟"}
-		]
+		],
+		ruleValidate: {
+			theme: [
+                { required: true, message: '会议主题不能为空', trigger: 'blur' }
+            ],
+            kind: [
+                { required: true, message: '会议类型不能为空', trigger: 'change' }
+            ],
+            place: [
+                { required: true, message: '会议地点不能为空', trigger: 'change' }
+            ],
+            content: [
+            	{ required: true, message: '会议内容不能为空', trigger: 'blur' }
+            ],
+            participantNo: [
+                { required: true, type: 'array', min: 1, message: '请选择参会人员', trigger: 'change' }
+            ]
+            
+        },
 	},
 	created : function() {
 		if(document.getElementById("projectId").value){
@@ -36,6 +55,7 @@ var vue = new Vue({
 		}
 		this.initDate();
 		this.findProject();
+		this.query(1);
 	},
 	filters:{
 		timeFilter:function(value){
@@ -45,6 +65,14 @@ var vue = new Vue({
 			for(var index in vue.statusItems){
 				if(value == vue.statusItems[index].value){
 					return vue.statusItems[index].text;
+				}
+			}
+			return "";
+		},
+		kindFilter:function(value){
+			for(var index in vue.meetingKind){
+				if(value == vue.meetingKind[index].value){
+					return vue.meetingKind[index].text;
 				}
 			}
 			return "";
@@ -63,6 +91,11 @@ var vue = new Vue({
 			})
 			this.$http.get("/combo/users").then(function(response) {
 				_self.users = response.data;
+			}, function(error) {
+				console.error(error);
+			})
+			this.$http.get("/combo/meetingKind").then(function(response) {
+				_self.meetingKind = response.data;
 			}, function(error) {
 				console.error(error);
 			})
@@ -125,43 +158,52 @@ var vue = new Vue({
 		 * 
 		 */
 		save : function() {
-			let self = this;
-			if(this.project.id){
-				this.addMeeting.projects.push(this.project);
-			}
-			if(this.addMeeting.id==null||this.addMeeting.id==''){
-				this.$http.post("/meeting",this.addMeeting).then(function(response){
-					if (response.data.success) {
-						self.$Message.info({
-							content : "创建会议成功",
-							onClose : function() {
-								self.query();
-								self.cancel();
-							}
-						});
-					} else {
-						self.$Message.error(response.data.errorMessage);
+			let _self = this;
+			this.$refs['entityDataForm'].validate((valid) => {
+				if(!valid){
+					this.$Message.error('校验失败,请完善登录信息!');
+					return false;
+				}else{
+					if(_self.project.id){
+						_self.addMeeting.projects.push(_self.project);
 					}
-				},function(error){
-					self.$Message.error(error.data.message);
-				})	
-			}else{
-				this.$http.put("/meeting",this.addMeeting).then(function(response){
-					if (response.data.success) {
-						self.$Message.info({
-							content : "更新会议成功",
-							onClose : function() {
-								self.query();
-								self.cancel();
+					_self.addMeeting.beginTime = _self.addMeeting.meetingTime[0];
+					_self.addMeeting.endTime = _self.addMeeting.meetingTime[1];
+					if(_self.addMeeting.id==null||_self.addMeeting.id==''){
+						_self.$http.post("/meeting",_self.addMeeting).then(function(response){
+							if (response.data.success) {
+								_self.$Message.info({
+									content : "创建会议成功",
+									onClose : function() {
+										_self.query();
+										_self.cancel();
+									}
+								});
+							} else {
+								_self.$Message.error(response.data.errorMessage);
 							}
-						});
-					} else {
-						self.$Message.error(response.data.errorMessage);
+						},function(error){
+							_self.$Message.error(error.data.message);
+						})	
+					}else{
+						_self.$http.put("/meeting",_self.addMeeting).then(function(response){
+							if (response.data.success) {
+								_self.$Message.info({
+									content : "更新会议成功",
+									onClose : function() {
+										_self.query();
+										_self.cancel();
+									}
+								});
+							} else {
+								_self.$Message.error(response.data.errorMessage);
+							}
+						},function(error){
+							_self.$Message.error(error.data.message);
+						})	
 					}
-				},function(error){
-					self.$Message.error(error.data.message);
-				})	
-			}
+				}
+			});
 			
 		},
 		

@@ -3,6 +3,8 @@
  */
 package com.smile.start.controller.project;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,8 +26,10 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -125,5 +129,17 @@ public class ApprovalController extends BaseController {
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         PageInfo<Project> result = projectService.queryPage(query);
         return result;
+    }
+
+    /**
+     * 查询项目附件
+     * @param id
+     * @param type
+     * @return
+     */
+    @PostMapping("/items/{id}/{type}")
+    @ResponseBody
+    public List<ProjectItem> queryItems(@PathVariable Long id, @PathVariable String type) {
+        return projectService.queryItems(id, ProjectItemType.getByCode(type));
     }
 }

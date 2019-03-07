@@ -31,7 +31,7 @@ public interface MeetingDao {
      * @return
      */
     @Insert("insert meeting (kind,theme,begin_time,end_time,status,place,content,remind,originator,participant) values(#{kind},#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{originator.id},#{participantNoList})")
-    @SelectKey(statement="select last_insert_id()", keyProperty="id", before=false, resultType=long.class)  
+    @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Meeting meeting);
 
     /**
@@ -57,7 +57,7 @@ public interface MeetingDao {
      */
     @Results(id = "meetingMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
                                           @Result(column = "participant", property = "participantNoList") })
-    @Select("<script>" + "select * from meeting where 1=1" + "<if test = 'status!=null'> and status = #{status}</if>"
+    @Select("<script>" + "select * from meeting where 1=1" + "<if test = 'status!=null'> and status = #{status}</if>" + "<if test = 'kind!=null'> and kind = #{kind}</if>"
             + "<if test = 'theme!=null'> and theme like concat('%',#{theme}, '%')</if>" + "<if test = 'beginTime!=null'> and begin_time &gt; #{beginTime}</if>"
             + "<if test = 'endTime!=null'> and begin_time &lt; #{endTime}</if>" + "<if test = 'launchId!=null'> and originator = #{launchId}</if>"
             + "<if test = 'partakeId!=null'> and participant like concat('%',#{partakeId}, '%')</if>" + "</script>")

@@ -25,14 +25,14 @@
 		<div id="app" class="login-con"> 
 			<card dis-hover title="欢迎登录">
 				<i-form ref="loginForm" :model="form" :rules="ruleValidate"  @keydown.enter.native="login">
-				   <form-item prop="userName">
+				   <form-item prop="mobile">
 				     <i-input v-model="form.mobile" placeholder="请输入用户名">
 				       <span slot="prepend">
 				         <Icon :size="16" type="ios-person"></Icon>
 				       </span>
 				     </i-input>
 				   </form-item>
-				   <form-item prop="password">
+				   <form-item prop="passwd">
 				     <i-input type="password" v-model="form.passwd" placeholder="请输入密码">
 				       <span slot="prepend">
 				         <Icon :size="14" type="md-lock"></Icon>

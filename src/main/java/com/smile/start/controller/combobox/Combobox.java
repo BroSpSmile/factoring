@@ -11,6 +11,7 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FilingProgress;
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,13 +81,13 @@ public class Combobox extends BaseController {
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;
     }
-    
+
     /**
      * 审核结果
      * @return
      */
     @RequestMapping("auditResult")
-    public List<Item> getAuditResult(){
+    public List<Item> getAuditResult() {
         AuditResult[] enums = AuditResult.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
@@ -102,6 +103,18 @@ public class Combobox extends BaseController {
         List<User> users = userDao.findAll();
         List<Item> items = Lists.newArrayListWithCapacity(users.size());
         users.forEach(e -> items.add(new Item(String.valueOf(e.getId()), e.getUsername())));
+        return items;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/meetingKind")
+    public List<Item> getMeetingKind() {
+        MeetingKind[] enums = MeetingKind.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;
     }
 

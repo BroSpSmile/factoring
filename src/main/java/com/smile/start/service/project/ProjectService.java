@@ -9,7 +9,9 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectItem;
 
 /**
  * 项目服务
@@ -68,4 +70,11 @@ public interface ProjectService {
      * @return
      */
     List<Project> queryUnarchivedProjects(Project project);
+
+    /**
+     * 根据项目ID查询项目附件
+     * @param projectId
+     * @return
+     */
+    List<ProjectItem> queryItems(Long projectId, ProjectItemType type);
 }

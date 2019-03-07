@@ -16,11 +16,13 @@ var vue = new Vue({
 		phone:"",
 		statusItems : [],
 		projects:[],
+		meetingItems:[],
 		fileList:[]
 	},
 	created : function() {
 		this.initDate();
 		this.getMeeting();
+		
 	},
 	filters:{
 		timeFilter:function(value){
@@ -59,11 +61,12 @@ var vue = new Vue({
 			})
 		},
 		
+		/** 获取会议信息 */
 		getMeeting:function(){
 			let _self = this;
 			this.$http.get("/minutes/meeting/"+document.getElementById("meetingId").value).then(function(response) {
 				_self.meeting = response.data;
-				if(_self.meeting.kind=='DIRECTORATE'){
+				if(!_self.meeting.kind=='APPROVAL'){
 					let projects = [];
 					for (let index in _self.meeting.projects){
 						projects.push(_self.meeting.projects[index].id);
@@ -72,10 +75,22 @@ var vue = new Vue({
 					CKEDITOR.replace( 'myedit');
 					CKEDITOR.instances.myedit.setData(_self.meeting.minutes);
 				}
-				console.log(_self.meeting);
+				this.getItems();
 			}, function(error) {
 				console.error(error);
 			})
+		},
+		
+		/** 获取会议附件 */
+		getItems:function(){
+			let _self = this;
+			if(this.meeting.minutesKind == 'CUSTOM'){
+				this.$http.post("/approval/items/"+this.meeting.projects[0].id+"/INITIATE").then(function(response){
+					_self.meetingItems = response.data;
+				}, function(error) {
+					console.error(error);
+				});
+			}
 		},
 		
 		/**
@@ -83,7 +98,7 @@ var vue = new Vue({
 		 */
 		save:function(progress){
 			let meeting = JSON.parse(JSON.stringify(this.meeting));
-			if(meeting.kind=='DIRECTORATE'){
+			if(!meeting.kind=='APPROVAL'){
 				meeting.minutes = CKEDITOR.instances.myedit.getData();
 				let projects = [];
 				for(let index in meeting.projects){
@@ -91,6 +106,10 @@ var vue = new Vue({
 				}
 				meeting.projects = projects;
 			}else{
+				if(this.fileList === undefined || this.fileList.length == 0){
+					this.$Message.error("请上传立项文件");
+					return false;
+				}
 				for(let index in this.fileList){
 					let item={
 							projectId:this.meeting.projects[0].id,
@@ -98,6 +117,7 @@ var vue = new Vue({
 							itemName:this.fileList[index].name,
 							itemValue:this.fileList[index].response.data.fileId
 					}
+					meeting.minutesKind = 'CUSTOM';
 					meeting.projects[0].items = new Array();
 					meeting.projects[0].items.push(item);
 				}
@@ -157,6 +177,13 @@ var vue = new Vue({
 		 */
 		download:function(){
 			window.open("/minutes/download/"+this.meeting.id);
+		},
+		
+		/**
+		 * 下载文件
+		 */
+		downloadItem:function(item){
+			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
 		}
 	}
 });

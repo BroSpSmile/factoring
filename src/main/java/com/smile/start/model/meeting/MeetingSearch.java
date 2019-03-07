@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 
 /**
@@ -22,6 +23,9 @@ public class MeetingSearch implements Serializable {
 
     /** 会议状态 */
     private MeetingStatus     status;
+
+    /** 会议类型 */
+    private MeetingKind       kind;
 
     /** 会议主题 */
     private String            theme;
@@ -41,7 +45,34 @@ public class MeetingSearch implements Serializable {
     /** 参与者ID */
     private Long              partakeId;
 
-    
+    /** 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "{\"" + (status != null ? "status\":\"" + status + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
+               + (theme != null ? "theme\":\"" + theme + "\", \"" : "") + (beginTime != null ? "beginTime\":\"" + beginTime + "\", \"" : "")
+               + (endTime != null ? "endTime\":\"" + endTime + "\", \"" : "") + (type != null ? "type\":\"" + type + "\", \"" : "")
+               + (launchId != null ? "launchId\":\"" + launchId + "\", \"" : "") + (partakeId != null ? "partakeId\":\"" + partakeId : "") + "\"}  ";
+    }
+
+    /**
+     * Getter method for property <tt>kind</tt>.
+     * 
+     * @return property value of kind
+     */
+    public MeetingKind getKind() {
+        return kind;
+    }
+
+    /**
+     * Setter method for property <tt>kind</tt>.
+     * 
+     * @param kind value to be assigned to property kind
+     */
+    public void setKind(MeetingKind kind) {
+        this.kind = kind;
+    }
 
     /**
      * Getter method for property <tt>status</tt>.

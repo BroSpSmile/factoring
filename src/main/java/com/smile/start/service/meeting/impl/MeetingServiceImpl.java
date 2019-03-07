@@ -103,15 +103,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      */
     private List<Meeting> toMeeting(List<MeetingExt> meetingExts) {
         List<Meeting> meetings = Lists.newArrayListWithCapacity(meetingExts.size());
-        meetingExts.forEach(ext -> {
-            ext.setOriginator(userInfoService.getUserById(ext.getOriginator().getId()));
-            if (StringUtils.isNoneBlank(ext.getParticipantNoList())) {
-                for (Long id : getIds(ext.getParticipantNoList())) {
-                    ext.addParticipant(userInfoService.getUserById(id));
-                }
-            }
-            meetings.add(ext);
-        });
+        meetingExts.forEach(ext -> meetings.add(toMeeting(ext)));
         return meetings;
     }
 
@@ -197,7 +189,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     @Transactional
     public BaseResult saveMinutes(Meeting meeting) {
         int effect = meetingDao.saveMinutes(meeting);
-        if (MeetingKind.DIRECTORATE.equals(meeting.getKind())) {
+        if (!MeetingKind.APPROVAL.equals(meeting.getKind())) {
             if (effect > 0) {
                 for (Project project : meeting.getProjects()) {
                     ProjectMeeting pm = new ProjectMeeting();

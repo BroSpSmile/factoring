@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 
@@ -35,4 +36,13 @@ public interface ProjectItemDao {
      */
     @Select("select * from project_item where project_id = #{id}")
     List<ProjectItem> getItems(Project project);
+    
+    /**
+     * 
+     * @param projectId
+     * @param type
+     * @return
+     */
+    @Select("select * from project_item where project_id = #{projectId} and item_type = #{type}")
+    List<ProjectItem> getTypeItems(Long projectId,ProjectItemType type);
 }
