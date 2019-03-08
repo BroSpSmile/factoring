@@ -16,7 +16,7 @@ public enum ProjectItemType {
                              TUNEUP("TUNEUP", "尽调文件"),
 
                              /**  */
-                             PENDINGLOAN("PENDINGLOAN", "放款文件"),
+                             LOAN("LOAN", "放款文件"),
 
                              /** */
                              INITIATE("INITIATE", "立项纪要"),

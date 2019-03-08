@@ -59,6 +59,13 @@ public interface ProjectService {
     Project getProject(Long id);
 
     /**
+     * 获取项目明细信息
+     * @param id
+     * @return
+     */
+    Project getProjectDetail(Long id);
+
+    /**
      * 分页查询
      * @param page
      * @return

@@ -19,4 +19,18 @@ public interface FactoringService {
      * @return
      */
     BaseResult create(FactoringDetail detail);
+
+    /**
+     * 修改项目
+     * @param detail
+     * @return
+     */
+    BaseResult modify(FactoringDetail detail);
+
+    /**
+     * 根据ID查询项目明细
+     * @param projectId
+     * @return
+     */
+    FactoringDetail get(Long projectId);
 }

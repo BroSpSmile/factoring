@@ -1,5 +1,14 @@
 package com.smile.start.service.common.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
@@ -17,18 +26,11 @@ import com.smile.start.model.common.FlowStatusRole;
 import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.enums.FileFlowEnum;
 import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.enums.LoanFlowEnum;
 import com.smile.start.model.enums.TuneUpFlowEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -207,6 +209,15 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 return statusList;
             case FILE:
                 for (FileFlowEnum fileFlowEnum : FileFlowEnum.values()) {
+                    FlowStatusDTO flowStatus = new FlowStatusDTO();
+                    flowStatus.setRoleList(roleList);
+                    flowStatus.setFlowStatus(fileFlowEnum.getValue());
+                    flowStatus.setFlowStatusDesc(fileFlowEnum.getDesc());
+                    statusList.add(flowStatus);
+                }
+                return statusList;
+            case LOAN:
+                for (LoanFlowEnum fileFlowEnum : LoanFlowEnum.values()) {
                     FlowStatusDTO flowStatus = new FlowStatusDTO();
                     flowStatus.setRoleList(roleList);
                     flowStatus.setFlowStatus(fileFlowEnum.getValue());

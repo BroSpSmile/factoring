@@ -21,6 +21,7 @@ var vue = new Vue({
 				items:[]
 			}
 		},
+		changeFlag:false,
 		projects:[],
 		fileList:[]
 	},
@@ -35,6 +36,10 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/past/project").then(function(response){
 				_self.projects = response.data;
+				if(document.getElementById("projectId").value){
+					_self.loan.project.id  = parseInt(document.getElementById("projectId").value);
+					_self.changeFlag = true;
+				}
 			},function(error){
 				console.error(error);
 			});
@@ -104,12 +109,11 @@ var vue = new Vue({
 		},
 		
 		parser:function(value){
-			console.log(value);
 			value = ""+value;
 			return value.replace(/￥s?|(,*)/g, '')
 		},
 		
-		commit:function(){
+		save:function(){
 			if(this.loan.type=='OFFLINE'){
 				if(this.fileList === undefined || this.fileList.length == 0){
 					this.$Message.error("请上传尽调文件");
@@ -125,9 +129,36 @@ var vue = new Vue({
 					this.loan.project.items.push(item);
 				}
 			}
-			console.log(this.loan);
 			let _self = this;
 			this.$http.post("/loanApply",this.loan).then(function(response){
+				_self.$Message.info({
+					content : "申请成功",
+					onClose : function() {
+					}
+				});
+			},function(error){
+				_self.$Message.error(error);
+			})
+		},
+		
+		commit:function(){
+			if(this.loan.type=='OFFLINE'){
+				if(this.fileList === undefined || this.fileList.length == 0){
+					this.$Message.error("请上传尽调文件");
+					return false;
+				}
+				for(let index in this.fileList){
+					let item={
+							projectId:this.loan.project.id,
+							itemType:"LOAN",
+							itemName:this.fileList[index].name,
+							itemValue:this.fileList[index].response.data.fileId
+					}
+					this.loan.project.items.push(item);
+				}
+			}
+			let _self = this;
+			this.$http.post("/loanApply/commit",this.loan).then(function(response){
 				_self.$Message.info({
 					content : "保存成功",
 					onClose : function() {

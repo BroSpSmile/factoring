@@ -68,7 +68,7 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     @Transactional
     public BaseResult commit(Loan loan) {
         BaseResult result = this.save(loan);
-        loan.getProject().setProgress(Progress.PENDINGLOAN);
+        loan.getProject().setProgress(Progress.LOAN);
         result = projectService.turnover(loan.getProject());
         if (result.isSuccess()) {
             result = auditService.apply(loan.getProject(), loan.getUser());

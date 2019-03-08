@@ -29,7 +29,7 @@ public interface InstallmentDao {
      * @param installment
      * @return
      */
-    @Insert("insert into project_installment (factoring_detail_id,installment_type,installment_amount,installment_data,paied,invoice)"
+    @Insert("insert into project_installment (detail,type,amount,installment_date,paied,invoice)"
             + "values(#{detail.id},#{type},#{amount},#{installmentDate},#{paied},#{invoice})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Installment installment);
@@ -39,9 +39,9 @@ public interface InstallmentDao {
      * @param installment
      * @return
      */
-    @Update("<script>" + "update project_installment set id = #{id}" + "<if test = 'detail!=null and detail.id!=null'>,factoring_detail_id = #{detail.id}</if>"
-            + "<if test = 'type!=null'>,installment_type = #{type}</if>" + "<if test = 'amount!=null'>,installment_amount = #{amount}</if>"
-            + "<if test = 'installmentDate!=null'>,installment_data = #{installmentDate}</if>" + "<if test = 'paied!=null'>,paied = #{paied}</if>"
+    @Update("<script>" + "update project_installment set id = #{id}" + "<if test = 'detail!=null and detail.id!=null'>,detail = #{detail.id}</if>"
+            + "<if test = 'type!=null'>,type = #{type}</if>" + "<if test = 'amount!=null'>,amount = #{amount}</if>"
+            + "<if test = 'installmentDate!=null'>,installment_date = #{installmentDate}</if>" + "<if test = 'paied!=null'>,paied = #{paied}</if>"
             + "<if test = 'invoice!=null'>,invoice = #{invoice}</if>" + "where id = #{id}" + "</script>")
     int update(Installment installment);
 
@@ -52,13 +52,22 @@ public interface InstallmentDao {
      */
     @Delete("delete from project_installment where id = #{id}")
     int delete(Long id);
+    
+    /**
+     * deleteByType
+     * @param detailId
+     * @param type
+     * @return
+     */
+    @Delete("delete from project_installment where detail = #{detail.id} and type = #{type}")
+    int deleteByType(Installment installment);
 
     /**
      * 查询
      * @param detailId
      * @return
      */
-    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "factoring_detail_id", property = "detail.id") })
-    @Select("select * from project_installment where factoring_detail_id = #{detailId}")
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "detail", property = "detail.id") })
+    @Select("select * from project_installment where detail = #{detailId}")
     List<Installment> queryByDetail(Long detailId);
 }

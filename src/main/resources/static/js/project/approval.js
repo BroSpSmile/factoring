@@ -378,7 +378,7 @@ vue.tableColumns=[{
 					},
 					on: {
 						click: () => {
-							 vue.updateProject(param.row);
+							vue.toMenu("factoring",param.row.id);
 						}
 					}
 				}, '编辑'),

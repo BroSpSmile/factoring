@@ -7,12 +7,13 @@
 			<row>
 				<i-col span="22" offset="1">
 					<br>
-					<h2>新建项目</h2>
+					<h2 v-if="!detail.id">新建项目</h2>
+					<h2 v-if="detail.id">项目明细</h2>
 					<br>
 				</i-col>
 				<i-col span="16" offset="1">
-					<i-form :label-width="120" >
-						<form-item label="项目名称" prop="projectName">
+					<i-form :label-width="120" ref="entityDataForm" :rules="validata" :model="detail">
+						<form-item label="项目名称" prop="project.projectName">
 							 <i-input placeholder="输入项目名称"  v-model="detail.project.projectName"></i-input>
 						</form-item>
 						<form-item label="让与人" prop="creditor">
@@ -42,12 +43,14 @@
 						<row>
 							<i-col span="10">
 								<form-item label="应收账款受让款" prop="assignee">
-									 <input-number placeholder="输入应收账款受让款" min="0" :max="100000000000"  class="select-width-140" v-model="detail.assignee"></input-number>&nbsp;(万元)
+									 <input-number placeholder="输入应收账款受让款" min="0" :max="100000000000" 
+									 :formatter="formatter" :parser="parser" class="select-width-140" v-model="detail.assignee"></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 							<i-col span="10">
 								<form-item label="应收账款" prop="receivable">
-									 <input-number placeholder="输入应收账款" min="0" :max="100000000000"  class="select-width-140"  v-model="detail.receivable"></input-number>&nbsp;(万元)
+									 <input-number placeholder="输入应收账款" min="0" :max="100000000000" 
+									 :formatter="formatter" :parser="parser" class="select-width-140"  v-model="detail.receivable"></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 							<i-col span="4">
@@ -64,7 +67,8 @@
 							</i-col>
 							<i-col span="10">
 								<form-item label="保理费合计" prop="totalFactoringFee">
-									 <input-number placeholder="请输入保理费" min="0" :max="100000000000" readonly="true" class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(万元)
+									 <input-number placeholder="请输入保理费" min="0" :max="100000000000" 
+									 :formatter="formatter" :parser="parser" readonly="true" class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 						<!-- 	<i-col span="9">
@@ -76,7 +80,8 @@
 						<row v-for="(installment,index) in detail.factoringInstallments" :key="index">
 							<i-col span="10">
 								<form-item label="分期金额" prop="">
-									 <input-number placeholder="输入保理费分期金额" min="0" :max="100000000000" class="select-width-140" v-model="installment.amount" @on-blur="computeFee"></input-number>&nbsp;(万元)
+									 <input-number placeholder="输入保理费分期金额" min="0" :max="100000000000" :formatter="formatter" :parser="parser"
+									  class="select-width-140" v-model="installment.amount" @on-blur="computeFee"></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 							<i-col span="10">
@@ -107,11 +112,6 @@
 						</row> -->
 						<row>
 							<i-col span="10">
-								<form-item label="保理费到账日" prop="accountDay">
-									<date-picker type="date" placeholder="选择保理费到账日" v-model="detail.accountDay"></date-picker>
-								</form-item>
-							</i-col>
-							<i-col span="10">
 								<form-item label="收益率(/年)" prop="returnRate">
 									 <input-number placeholder="输入收益率"  v-model="detail.returnRate"></input-number>%
 								</form-item>
@@ -137,16 +137,16 @@
 							</i-col>
 						</row>
 						 -->
-						<form-item label="备注" prop="remark">
+						<form-item label="备注" prop="">
 							 <i-input placeholder="输入备注"  v-model="detail.remark"></i-input>
 						</form-item>
 						<row>
-							<i-col offset="4"><i-button type="success"  @click="commit">创建项目</i-button></i-col>
+							<i-col offset="4"><i-button type="success"  @click="commit">保存信息</i-button></i-col>
 						</row>
 	                </i-form>
                 </i-col>
 			</row>
-			<br><br>
+			<input th:value="${id}" id="projectId" style="display:none" ></input>	
 	    </div>
 	    <script src="js/project/factoring.js"></script>
 	</div>

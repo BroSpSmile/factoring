@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 /**
  * 项目明细
  * @author smile.jing
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class FactoringDetail implements Serializable {
     /**  */
-    private static final long serialVersionUID = -3549416431549274388L;
+    private static final long serialVersionUID      = -3549416431549274388L;
 
     /** 编号 */
     private Long              id;
@@ -45,7 +47,7 @@ public class FactoringDetail implements Serializable {
     private double            dropAmount;
 
     /** 放款分期信息 */
-    private List<Installment> loanInstallments;
+    private List<Installment> loanInstallments      = Lists.newArrayList();
 
     /** 转让年限 */
     private int               duration;
@@ -54,13 +56,13 @@ public class FactoringDetail implements Serializable {
     private Date              remittanceDay;
 
     /** 回款分期信息 */
-    private List<Installment> returnInstallments;
+    private List<Installment> returnInstallments    = Lists.newArrayList();
 
     /** 保理费合计 */
     private double            totalFactoringFee;
 
     /** 保理费分期信息 */
-    private List<Installment> factoringInstallments;
+    private List<Installment> factoringInstallments = Lists.newArrayList();;
 
     /** 收益率 */
     private double            returnRate;
@@ -82,6 +84,42 @@ public class FactoringDetail implements Serializable {
                + (returnInstallments != null ? "returnInstallments\":\"" + returnInstallments + "\", \"" : "") + "totalFactoringFee\":\"" + totalFactoringFee + "\", \""
                + (factoringInstallments != null ? "factoringInstallments\":\"" + factoringInstallments + "\", \"" : "") + "returnRate\":\"" + returnRate + "\", \""
                + (remark != null ? "remark\":\"" + remark : "") + "\"}  ";
+    }
+
+    /**
+     * 添加放款分期信息
+     * @param installment
+     * @return
+     */
+    public boolean addLoanInstallment(Installment installment) {
+        if (this.loanInstallments == null) {
+            this.loanInstallments = Lists.newArrayList();
+        }
+        return this.loanInstallments.add(installment);
+    }
+
+    /**
+     * 添加回款分期信息
+     * @param installment
+     * @return
+     */
+    public boolean addReturnInstallment(Installment installment) {
+        if (this.returnInstallments == null) {
+            this.returnInstallments = Lists.newArrayList();
+        }
+        return this.returnInstallments.add(installment);
+    }
+
+    /**
+     * 添加保理费分期信息
+     * @param installment
+     * @return
+     */
+    public boolean addFactoringInstallment(Installment installment) {
+        if (this.factoringInstallments == null) {
+            this.factoringInstallments = Lists.newArrayList();
+        }
+        return this.factoringInstallments.add(installment);
     }
 
     /**

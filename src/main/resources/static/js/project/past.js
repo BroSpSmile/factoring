@@ -11,6 +11,7 @@ var vue = new Vue({
 			projectModel:"RECOURSE_RIGHT"
 		},
 		modelFlag:"",
+		showMeeting:false,
 		pms:[],
 		projects:[],
 		changeFlag:false,
@@ -57,6 +58,7 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/past/project/"+projectId+"/meetings").then(function(response){
 				_self.pms = response.data;
+				_self.showMeeting = _self.pms.length>0;
 			},function(error){
 				console.error(error);
 			})

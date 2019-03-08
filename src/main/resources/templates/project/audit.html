@@ -8,7 +8,7 @@
 				<i-col span="22" offset="1">
 					<br><h2>{{auditTypeShow}}</h2><br>
 					<card dis-hover title="审核流程">
-						 <Steps :current="audit.step==-1?10000:audit.step">
+						 <Steps :current="audit.step==-1?10000:audit.step" size="small">
 						 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
 					    </Steps>
 					</card>
@@ -65,7 +65,7 @@
 			<modal v-model="modal1" title="审核通过"  mask-closable="false">
 				<div id="modalForm">
 					<i-form  :label-width="120" >
-						<form-item :label="auditTitle" v-if="audit.auditType =='TUNEUP' || audit.auditType=='LOAN' " >
+						<form-item :label="auditTitle" v-if="audit.auditType =='TUNEUP' && (audit.step==2||audit.step==3)" >
 							<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
 						        <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
 						    </Upload>

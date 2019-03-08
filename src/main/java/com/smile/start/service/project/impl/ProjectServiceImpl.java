@@ -32,6 +32,7 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.model.project.ProjectRecord;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.IdGenService;
 import com.smile.start.service.project.ProjectService;
 
@@ -52,6 +53,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     /** projectRecordDao */
     @Resource
     private ProjectRecordDao   projectRecordDao;
+
+    /** factoringService */
+    @Resource
+    private FactoringService   factoringService;
 
     /** 用户服务 */
     @Resource
@@ -167,6 +172,18 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         Project project = projectDao.get(id);
         List<ProjectItem> items = projectItemDao.getItems(project);
         project.setItems(items);
+        return project;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#getProjectDetail(java.lang.Long)
+     */
+    @Override
+    public Project getProjectDetail(Long id) {
+        Project project = this.getProject(id);
+        FactoringDetail detail = factoringService.get(id);
+        detail.setProject(project);
+        project.setDetail(detail);
         return project;
     }
 

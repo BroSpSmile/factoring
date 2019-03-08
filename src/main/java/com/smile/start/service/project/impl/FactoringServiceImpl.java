@@ -4,13 +4,18 @@
  */
 package com.smile.start.service.project.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.InstallmentType;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.FactoringDetail;
@@ -51,19 +56,60 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         project.setProgress(Progress.INIT);
         BaseResult result = projectService.initProject(detail.getProject());
         if (result.isSuccess()) {
-            long effect = factoringDetailDao.insert(detail);
-            for (Installment item : detail.getFactoringInstallments()) {
-                item.setDetail(detail);
-                installmentDao.insert(item);
-            }
-            if (effect > 0) {
-                result.setSuccess(true);
-            } else {
-                result.setErrorCode("VP00011001");
-                result.setErrorMessage("新增项目失败,请重试!");
-            }
+            factoringDetailDao.insert(detail);
+            result = updateInstallments(detail, detail.getFactoringInstallments());
         }
         return result;
     }
 
+    /** 
+     * @see com.smile.start.service.project.FactoringService#modify(com.smile.start.model.project.FactoringDetail)
+     */
+    @Override
+    @Transactional
+    public BaseResult modify(FactoringDetail detail) {
+        BaseResult result = projectService.updateProject(detail.getProject());
+        if (result.isSuccess()) {
+            factoringDetailDao.update(detail);
+            result = updateInstallments(detail, detail.getFactoringInstallments());
+        }
+        return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.FactoringService#get(java.lang.Long)
+     */
+    @Override
+    public FactoringDetail get(Long projectId) {
+        FactoringDetail detail = factoringDetailDao.getByProject(projectId);
+        List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+        for (Installment installment : installments) {
+            if (InstallmentType.FACTORING.equals(installment.getType())) {
+                detail.addFactoringInstallment(installment);
+            }
+            if (InstallmentType.RETURN.equals(installment.getType())) {
+                detail.addReturnInstallment(installment);
+            }
+            if (InstallmentType.LOAN.equals(installment.getType())) {
+                detail.addLoanInstallment(installment);
+            }
+        }
+        return detail;
+    }
+
+    @Transactional
+    private BaseResult updateInstallments(FactoringDetail detail, List<Installment> installments) {
+        if (!CollectionUtils.isEmpty(installments)) {
+            Installment query = new Installment();
+            query.setDetail(detail);
+            query.setType(installments.get(0).getType());
+            int effect = installmentDao.deleteByType(query);
+            for (Installment item : installments) {
+                item.setDetail(detail);
+                installmentDao.insert(item);
+            }
+            return toResult(effect);
+        }
+        return new BaseResult();
+    }
 }

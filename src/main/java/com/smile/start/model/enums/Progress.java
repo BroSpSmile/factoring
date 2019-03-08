@@ -36,9 +36,9 @@ public enum Progress {
                       /**  */
                       SIGN("SIGN", "已签署", 9),
                       /**  */
-                      PENDINGLOAN("PENDINGLOAN", "放款申请", 10),
+                      LOAN("LOAN", "放款申请", 10),
                       /**  已放款状态可提出归档申请，即待归档状态*/
-                      LOAN("LOAN", "已放款", 11),
+                      LOANED("LOANED", "已放款", 11),
                       /**  */
                       FILE_APPLY("FILE", "提出归档申请", 12),
                       /**  */
