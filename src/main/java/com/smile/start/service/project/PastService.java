@@ -4,7 +4,10 @@
  */
 package com.smile.start.service.project;
 
+import java.util.List;
+
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.Past;
 
 /**
@@ -19,4 +22,11 @@ public interface PastService {
      * @return
      */
     BaseResult save(Past past);
+
+    /**
+     * 获取已关联会议
+     * @param projectId
+     * @return
+     */
+    List<Meeting> getMeetings(Long projectId);
 }

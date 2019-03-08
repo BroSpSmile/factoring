@@ -5,6 +5,7 @@
 package com.smile.start.service.project.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
+import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectModel;
+import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.Past;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectMeeting;
@@ -32,11 +35,15 @@ import com.smile.start.service.project.ProjectService;
 public class PastServiceImpl extends AbstractService implements PastService {
     /** 项目服务 */
     @Resource
-    private ProjectService projectService;
+    private ProjectService    projectService;
 
     /** 会议服务 */
     @Resource
-    private MeetingService meetingService;
+    private MeetingService    meetingService;
+
+    /** pmDao */
+    @Resource
+    private ProjectMeetingDao pmDao;
 
     /** 
      * @see com.smile.start.service.project.PastService#save(com.smile.start.model.project.Past)
@@ -46,15 +53,30 @@ public class PastServiceImpl extends AbstractService implements PastService {
     public BaseResult save(Past past) {
         Project project = new Project();
         project.setId(past.getProjectId());
-        project.setModel(ProjectModel.valueOf(past.getProjectModel()));
         List<ProjectMeeting> pms = Lists.newArrayListWithCapacity(past.getMeetingIds().size());
         past.getMeetingIds().forEach(meeting -> pms.add(new ProjectMeeting(past.getProjectId(), meeting)));
-        project.setProgress(Progress.PASTMEETING);
-        BaseResult result = projectService.turnover(project);
+        BaseResult result = meetingService.relationMeeting(pms);
         if (result.isSuccess()) {
-            result = meetingService.relationMeeting(pms);
+            if (getMeetings(past.getProjectId()).size() > 2) {
+                //三重一大全部关联完成后更改项目状态
+                project.setProgress(Progress.PASTMEETING);
+            } else {
+                project.setProgress(Progress.LATERMEETING);
+            }
+
+            result = projectService.turnover(project);
         }
         return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.PastService#getMeetings(java.lang.Long)
+     */
+    @Override
+    public List<Meeting> getMeetings(Long projectId) {
+        List<Meeting> meetings = pmDao.findMeeting(projectId);
+        meetings = meetings.stream().filter(meeting -> !MeetingKind.APPROVAL.equals(meeting.getKind())).collect(Collectors.toList());
+        return meetings;
     }
 
 }

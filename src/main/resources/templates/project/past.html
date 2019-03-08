@@ -10,11 +10,11 @@
 					<h2>三重一大</h2>
 					<br>
 					<card dis-hover  padding="20">
-						<i-form :label-width="100">
+						<i-form :label-width="100" ref="entityDataForm" :rules="ruleValidate" :model="projectMeeting">
 							<row type="flex">
 								<i-col span="12" offset="1">
-									<form-item label="选择项目">
-										<i-select filterable v-model="projectMeeting.projectId" @on-change="changeProject">
+									<form-item label="项目" prop="projectId">
+										<i-select filterable v-model="projectMeeting.projectId" :disabled="changeFlag" @on-change="changeProject">
 											<i-option v-for="project in projects" :value="project.id">{{project.projectName}}</i-option>
 										</i-select>
 									</form-item>
@@ -22,22 +22,25 @@
 							</row>
 							<row type="flex">
 								<i-col span="12" offset="1">
-									<form-item label="选择关联会议">
-										<i-select filterable multiple v-model="projectMeeting.meetingIds" >
+									<form-item label="已关联会议">
+										<row>
+											<i-col span="6" v-for="pm in pms"><a>{{pm.theme}}</a></i-col>
+										</row>
+									</form-item>
+								</i-col>
+							</row>
+							<row type="flex">
+								<i-col span="12" offset="1">
+									<form-item label="选择关联会议" prop="meetingIds">
+										<i-select  multiple v-model="projectMeeting.meetingIds" >
 											<i-option v-for="meeting in meetings" :value="meeting.id">{{meeting.theme}}</i-option>
 										</i-select>
 									</form-item>
 								</i-col>
 							</row>
-							<form-item label="项目模式" v-if="!modelFlag">
-								<radio-group v-model="projectMeeting.projectModel">
-								 	<radio label="RECOURSE_RIGHT">有追索权模式</radio>
-								 	<radio label="DIS_RECOURSE_RIGHT">无追索权模式</radio>
-								 </radio-group>
-							</form-item>
 							<row type="flex">
 			                   	<i-col span="8" offset="1">
-			                       	<i-button type="success"  @click="past">提交审核</i-button>
+			                       	<i-button type="success"  @click="past">关联三重一大会议</i-button>
 			                        <i-button  @click="" style="margin-left: 8px">此步骤后补</i-button>
 			                   	</i-col>
 			            	</row>
@@ -45,6 +48,7 @@
 					</card>
 				</i-col>
 			</row>
+			<input th:value="${id}" id="projectId" style="display:none" ></input>	
 		</div>
 		<script src="js/project/past.js"></script>
 	</div>

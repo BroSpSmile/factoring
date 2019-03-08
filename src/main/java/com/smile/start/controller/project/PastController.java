@@ -10,7 +10,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.project.Past;
@@ -55,7 +58,10 @@ public class PastController extends BaseController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        LoggerUtils.info(logger, "立项申请项目ID={}", id);
+        model.addAttribute("id", id);
         return "project/past";
     }
 
@@ -85,6 +91,17 @@ public class PastController extends BaseController {
     }
 
     /**
+     * 已关联会议
+     * @param projectId
+     * @return
+     */
+    @GetMapping("/project/{projectId}/meetings")
+    @ResponseBody
+    List<Meeting> getMeetings(@PathVariable Long projectId) {
+        return pastService.getMeetings(projectId);
+    }
+
+    /**
      * 获取会议
      * @return
      */
@@ -92,6 +109,14 @@ public class PastController extends BaseController {
     @ResponseBody
     List<Meeting> getMeetings() {
         MeetingSearch search = new MeetingSearch();
-        return meetingService.getMeetings(search);
+        search.setKind(MeetingKind.BOARD);
+        List<Meeting> boards = meetingService.getMeetings(search);
+        search.setKind(MeetingKind.PARTY);
+        List<Meeting> partys = meetingService.getMeetings(search);
+        search.setKind(MeetingKind.DIRECTORS);
+        List<Meeting> directors = meetingService.getMeetings(search);
+        boards.addAll(partys);
+        boards.addAll(directors);
+        return boards;
     }
 }

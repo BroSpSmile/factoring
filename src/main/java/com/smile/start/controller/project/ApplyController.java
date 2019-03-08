@@ -24,7 +24,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.service.project.TuneupService;
 
 /**
- * 立项申请
+ * 尽调申请
  * @author smile.jing
  * @version $Id: ApplyController.java, v 0.1 Jan 26, 2019 5:16:31 PM smile.jing Exp $
  */
@@ -50,7 +50,7 @@ public class ApplyController extends BaseController {
     }
 
     /**
-     * 申请提价
+     * 提出申请
      * @param project
      * @return
      */
@@ -59,7 +59,7 @@ public class ApplyController extends BaseController {
     public BaseResult apply(HttpServletRequest request, @RequestBody Project project) {
         User user = getUserByToken(request);
         project.setUser(user);
-        LoggerUtils.info(logger, "立项申请project={}", FastJsonUtils.toJSONString(project));
+        LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(project));
         return tuneupService.tuneupApply(project);
     }
 }

@@ -15,7 +15,9 @@ var vue = new Vue({
 		fileList:[]
 	},
 	created : function() {
-		this.project.id = document.getElementById("applyId").value;
+		if(document.getElementById("applyId").value){
+			this.project.id = document.getElementById("applyId").value;
+		}
 	},
 	methods : {
 		/**

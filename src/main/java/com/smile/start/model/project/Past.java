@@ -23,16 +23,12 @@ public class Past implements Serializable {
     /** 会议列表 */
     private List<Long>        meetingIds;
 
-    /** 项目模式 */
-    private String            projectModel;
-
     /** 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (meetingIds != null ? "meetingIds\":\"" + meetingIds + "\", \"" : "")
-               + (projectModel != null ? "projectModel\":\"" + projectModel : "") + "\"}  ";
+        return "{\"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (meetingIds != null ? "meetingIds\":\"" + meetingIds : "") + "\"}  ";
     }
 
     /**
@@ -69,24 +65,6 @@ public class Past implements Serializable {
      */
     public void setMeetingIds(List<Long> meetingIds) {
         this.meetingIds = meetingIds;
-    }
-
-    /**
-     * Getter method for property <tt>projectModel</tt>.
-     * 
-     * @return property value of projectModel
-     */
-    public String getProjectModel() {
-        return projectModel;
-    }
-
-    /**
-     * Setter method for property <tt>projectModel</tt>.
-     * 
-     * @param projectModel value to be assigned to property projectModel
-     */
-    public void setProjectModel(String projectModel) {
-        this.projectModel = projectModel;
     }
 
 }

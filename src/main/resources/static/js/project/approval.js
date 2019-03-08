@@ -282,7 +282,7 @@ vue.tableColumns=[{
 							}
 						}, '项目尽调'):
 						h('span'),
-				param.row.progress=='INVESTIGATION'?
+				param.row.progress=='INVESTIGATION'||param.row.progress=='LATERMEETING'?
 						h('Button', {
 							props: {
 								size: "small",
@@ -297,7 +297,7 @@ vue.tableColumns=[{
 									vue.toMenu("past",param.row.id);
 								}
 							}
-						}, '发起会议'):
+						}, '三重一大'):
 						h('span'),
 				param.row.progress=='PASTMEETING'?
 						h('Button', {

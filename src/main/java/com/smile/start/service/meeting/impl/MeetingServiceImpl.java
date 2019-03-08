@@ -84,7 +84,9 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         search.setStatus(MeetingStatus.END);
         search.setBeginTime(DateUtil.addDays(new Date(), -90));
         List<MeetingExt> meetingExts = meetingDao.findByParam(search);
-        return toMeeting(meetingExts);
+        List<Meeting> meetings = Lists.newArrayListWithCapacity(meetingExts.size());
+        meetingExts.forEach(ext -> meetings.add(ext));
+        return meetings;
     }
 
     /** 

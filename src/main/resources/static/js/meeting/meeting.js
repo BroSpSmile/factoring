@@ -161,7 +161,7 @@ var vue = new Vue({
 			let _self = this;
 			this.$refs['entityDataForm'].validate((valid) => {
 				if(!valid){
-					this.$Message.error('校验失败,请完善登录信息!');
+					this.$Message.error('校验失败,请完善会议信息!');
 					return false;
 				}else{
 					if(_self.project.id){

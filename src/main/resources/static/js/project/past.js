@@ -11,8 +11,19 @@ var vue = new Vue({
 			projectModel:"RECOURSE_RIGHT"
 		},
 		modelFlag:"",
+		pms:[],
 		projects:[],
-		meetings:[]
+		changeFlag:false,
+		meetings:[],
+		ruleValidate: {
+			projectId: [
+            	{ required: true,  message: '项目不能为空'}
+            ],
+			meetingIds: [
+                { required: true, type: 'array', min: 1, message: '请选择三重一大会议', trigger: 'change' }
+            ]
+            
+        }
 	},
 	created:function(){
 		this.initData();
@@ -25,11 +36,27 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/past/project").then(function(response){
 				_self.projects = response.data;
+				if(document.getElementById("projectId").value){
+					_self.projectMeeting.projectId  = parseInt(document.getElementById("projectId").value);
+					_self.changeFlag = true;
+				}
 			},function(error){
 				console.error(error);
 			});
 			this.$http.get("/past/meeting").then(function(response){
 				_self.meetings = response.data;
+			},function(error){
+				console.error(error);
+			});
+			if(document.getElementById("projectId").value){
+				this.getMeetings(document.getElementById("projectId").value)
+			}
+		},
+		
+		getMeetings:function(projectId){
+			let _self = this;
+			this.$http.get("/past/project/"+projectId+"/meetings").then(function(response){
+				_self.pms = response.data;
 			},function(error){
 				console.error(error);
 			})
@@ -40,20 +67,29 @@ var vue = new Vue({
 		 */
 		past:function(){
 			let self = this;
-			this.$http.post("/past", this.projectMeeting).then(function(response) {
-				if (response.data.success) {
-					self.$Message.info({
-						content : "保存成功",
-						onClose : function() {
-							
+			this.$refs['entityDataForm'].validate((valid) => {
+				if(!valid){
+					this.$Message.error('校验失败,请完善信息!');
+					return false;
+				}else{
+					self.$http.post("/past", self.projectMeeting).then(function(response) {
+						if (response.data.success) {
+							self.$Message.info({
+								content : "保存成功",
+								onClose : function() {
+									self.initData();
+								}
+							});
+						} else {
+							self.$Message.error(response.data.errorMessage);
 						}
+					}, function(error) {
+						self.$Message.error(error.data.message);
 					});
-				} else {
-					self.$Message.error(response.data.errorMessage);
 				}
-			}, function(error) {
-				self.$Message.error(error.data.message);
 			});
+			
+			
 		},
 		
 		/**
@@ -64,6 +100,7 @@ var vue = new Vue({
 				if(this.projects[index].id==projectId){
 					this.projectMeeting.projectModel = this.projects[index].model;
 					this.modelFlag = this.projects[index].model;
+					this.getMeetings(projectId);
 				}
 			}
 		}

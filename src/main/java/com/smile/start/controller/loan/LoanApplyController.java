@@ -5,8 +5,10 @@
 package com.smile.start.controller.loan;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.loan.Loan;
 import com.smile.start.service.loan.LoanService;
@@ -39,7 +42,10 @@ public class LoanApplyController extends BaseController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        LoggerUtils.info(logger, "立项申请项目ID={}", id);
+        model.addAttribute("id", id);
         return "loan/apply";
     }
 
@@ -71,7 +77,10 @@ public class LoanApplyController extends BaseController {
      */
     @PostMapping("/commit")
     @ResponseBody
-    public BaseResult commit(@RequestBody Loan loan) {
+    public BaseResult commit(HttpServletRequest request, @RequestBody Loan loan) {
+        User user = getUserByToken(request);
+        loan.setUser(user);
+        LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(loan));
         return loanService.commit(loan);
     }
 }

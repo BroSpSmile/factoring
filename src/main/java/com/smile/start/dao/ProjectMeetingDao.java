@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.ProjectMeeting;
 
 /**
@@ -26,7 +27,7 @@ public interface ProjectMeetingDao {
      */
     @Insert("insert into project_meeting (project_id,meeting_id) values(#{projectId},#{meetingId})")
     long insert(ProjectMeeting projectMeeting);
-    
+
     /**
      * 查询关联会议
      * @param pm
@@ -34,4 +35,12 @@ public interface ProjectMeetingDao {
      */
     @Select("select * from project_meeting where project_id=#{projectId} and meeting_id=#{meetingId}")
     List<ProjectMeeting> find(ProjectMeeting pm);
+
+    /**
+     * 查询项目已关联会议
+     * @param projectId
+     * @return
+     */
+    @Select("select t1.* from meeting t1 inner join project_meeting t2 on t1.id = t2.meeting_id where t2.project_id = #{projectId}")
+    List<Meeting> findMeeting(Long projectId);
 }
