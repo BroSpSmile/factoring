@@ -11,11 +11,13 @@ var vue = new Vue({
 		auditType:[],
 		auditResult:[],
 		modal1:false,
+		modal2:false,
 		fileList:[],
 		record:{
 			items:[]
 		},
 		showAuditButton:false,
+		nowStep:0,
 		tableColumns:[]
 	},
 	created : function() {
@@ -88,6 +90,7 @@ var vue = new Vue({
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
 					_self.audit = response.data.data;
+					_self.nowStep = _self.audit.step;
 					_self.showAuditButton = response.data.success;
 				},function(error){
 					console.log(error);
@@ -99,9 +102,19 @@ var vue = new Vue({
 		 * 
 		 */
 		openPass:function(){
+			this.audit.remark = "";
+			this.audit.step = this.nowStep;
 			this.modal1 = true;
 		},
 		
+		/**
+		 * 
+		 */
+		openReject:function(){
+			this.audit.remark = "";
+			this.audit.step = this.nowStep;
+			this.modal2 = true;
+		},
 		/**
 		 * 审核成功
 		 */
@@ -127,7 +140,30 @@ var vue = new Vue({
 						content : "审核成功",
 						onClose : function() {
 							_self.cancel();
-							window.close();
+							_self.getAudit(document.getElementById("auditId").value);
+						}
+					});
+				} else {
+					_self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				_self.$Message.error(response.data.errorMessage);
+			})
+		},
+		
+		/**
+		 * 审核驳回
+		 */
+		reject:function(){
+			let _self = this;
+			this.record.audit = this.audit;
+			this.$http.put("/audit",this.record).then(function(response){
+				if (response.data.success) {
+					_self.$Message.info({
+						content : "驳回成功",
+						onClose : function() {
+							_self.cancel();
+							_self.getAudit(document.getElementById("auditId").value);
 						}
 					});
 				} else {
@@ -140,6 +176,7 @@ var vue = new Vue({
 		
 		cancel:function(){
 			this.modal1 = false;
+			this.modal2 = false;
 		},
 		
 		/**

@@ -177,10 +177,14 @@ var vue = new Vue({
 		},
 		
 		/**
-		 * 立项会申请
+		 * 跳转菜单
 		 */
-		apply:function(projectId){
-			window.open("meeting?id="+projectId,"_blank"); 
+		toMenu:function(menu,projectId){
+			if(projectId){
+				window.open(menu+"?id="+projectId);
+			}else{
+				window.open(menu);
+			}
 		},
 		
 		/**
@@ -188,29 +192,6 @@ var vue = new Vue({
 		 */
 		tuneup:function(projectId){
 			window.open("apply?id="+projectId,"_blank"); 
-		},
-		
-		/**
-		 * 审核会议
-		 */
-		meeting:function(){
-			window.open("meeting");
-		},
-		
-		contract:function(){
-			window.open("contractInfo");
-		},
-		
-		contractSign:function(){
-			window.open("contractSign");
-		},
-		
-		loanApply:function(){
-			window.open("loanApply");
-		},
-		
-		filingProject:function(){
-			window.open("filingProject");
 		},
 
 		/**
@@ -279,7 +260,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.apply(param.row.id);
+									vue.toMenu("meeting",param.row.id);
 								}
 							}
 						}, '发起立项会'):
@@ -296,7 +277,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.tuneup(param.row.id);
+									vue.toMenu("apply",param.row.id);
 								}
 							}
 						}, '项目尽调'):
@@ -313,7 +294,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.meeting();
+									vue.toMenu("past",param.row.id);
 								}
 							}
 						}, '发起会议'):
@@ -330,7 +311,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.contract();
+									vue.toMenu("contractInfo",param.row.id);
 								}
 							}
 						}, '合同草拟'):
@@ -347,7 +328,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.contractSign();
+									vue.toMenu("contractSign",param.row.id);
 								}
 							}
 						}, '合同签署'):
@@ -364,7 +345,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.loanApply();
+									 vue.toMenu("loanApply",param.row.id);
 								}
 							}
 						}, '放款'):
@@ -381,7 +362,7 @@ vue.tableColumns=[{
 							},
 							on: {
 								click: () => {
-									 vue.filingProject();
+									vue.toMenu("filingApply",param.row.id);
 								}
 							}
 						}, '归档'):

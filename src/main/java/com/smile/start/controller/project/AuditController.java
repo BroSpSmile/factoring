@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -91,5 +92,20 @@ public class AuditController extends BaseController {
         record.setAuditor(user);
         LoggerUtils.info(logger, "项目审核数据={}", FastJsonUtils.toJSONString(record));
         return auditService.pass(record);
+    }
+
+    /**
+     * 审核驳回
+     * @param request
+     * @param record
+     * @return
+     */
+    @PutMapping
+    @ResponseBody
+    public BaseResult reject(HttpServletRequest request, @RequestBody AuditRecord record) {
+        User user = getUserByToken(request);
+        record.setAuditor(user);
+        LoggerUtils.info(logger, "项目审核数据={}", FastJsonUtils.toJSONString(record));
+        return auditService.reject(record);
     }
 }

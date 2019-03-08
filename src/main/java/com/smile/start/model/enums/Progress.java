@@ -12,23 +12,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author smile.jing
  * @version $Id: Progress.java, v 0.1 Jan 8, 2019 9:10:26 PM smile.jing Exp $
  */
-/**
- * 
- * @author smile.jing
- * @version $Id: Progress.java, v 0.1 Mar 7, 2019 10:57:46 AM smile.jing Exp $
- */
-/**
- * 
- * @author smile.jing
- * @version $Id: Progress.java, v 0.1 Mar 7, 2019 10:57:48 AM smile.jing Exp $
- */
-/**
- * 
- * @author smile.jing
- * @version $Id: Progress.java, v 0.1 Mar 7, 2019 10:57:51 AM smile.jing Exp $
- */
 public enum Progress {
-
                       /** 项目创建 */
                       INIT("INIT", "项目创建", 0),
                       /** 发起立项 */
