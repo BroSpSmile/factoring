@@ -68,11 +68,12 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
      */
     @Override
-    public PageInfo<Meeting> search(PageRequest<MeetingSearch> search) {
+    public PageInfo<MeetingExt> search(PageRequest<MeetingSearch> search) {
         PageHelper.startPage(search.getPageNum(), search.getPageSize(), "id desc");
         List<MeetingExt> meetingExts = meetingDao.findByParam(search.getCondition());
+        meetingExts.forEach(ext->toMeeting(ext));
         //4. 根据返回的集合，创建PageInfo对象
-        PageInfo<Meeting> result = new PageInfo<>(toMeeting(meetingExts));
+        PageInfo<MeetingExt> result = new PageInfo<>(meetingExts);
         return result;
     }
 
@@ -98,16 +99,6 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         return toMeeting(ext);
     }
 
-    /**
-     * 转换为meeting
-     * @param meetingExts
-     * @return
-     */
-    private List<Meeting> toMeeting(List<MeetingExt> meetingExts) {
-        List<Meeting> meetings = Lists.newArrayListWithCapacity(meetingExts.size());
-        meetingExts.forEach(ext -> meetings.add(toMeeting(ext)));
-        return meetings;
-    }
 
     /**
      * 
@@ -199,7 +190,8 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                     pm.setProjectId(project.getId());
                     List<ProjectMeeting> result = projectMeetingDao.find(pm);
                     if (result.size() > 0) {
-                        throw new RuntimeException("当前项目已关联此会议纪要");
+                        projectMeetingDao.delete(pm);
+                        // throw new RuntimeException("当前项目已关联此会议纪要");
                     }
                     long peffect = projectMeetingDao.insert(pm);
                     if (peffect < 0) {

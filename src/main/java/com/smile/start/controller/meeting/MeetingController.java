@@ -26,7 +26,6 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingStatus;
-import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.service.meeting.MeetingService;
@@ -65,7 +64,7 @@ public class MeetingController extends BaseController {
     */
     @PostMapping(value = "/query")
     @ResponseBody
-    public PageInfo<Meeting> query(HttpServletRequest request, @RequestBody PageRequest<MeetingSearch> search) {
+    public PageInfo<MeetingExt> query(HttpServletRequest request, @RequestBody PageRequest<MeetingSearch> search) {
         List<String> types = search.getCondition().getType();
         for (String type : types) {
             if (StringUtils.equals(type, "launch")) {
