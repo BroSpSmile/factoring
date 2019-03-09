@@ -34,7 +34,7 @@ public interface FlowConfigDao {
      * @param flowStatus
      * @return
      */
-    @Insert("insert into flow_status (serial_no,flow_serial_no,flow_status,flow_status_desc) values (#{serialNo},#{flowSerialNo},#{flowStatus},#{flowStatusDesc})")
+    @Insert("insert into flow_status (serial_no,flow_serial_no,flow_status,flow_status_desc,role_serial_no) values (#{serialNo},#{flowSerialNo},#{flowStatus},#{flowStatusDesc},#{roleSerialNo})")
     long insertFlowStatus(FlowStatus flowStatus);
 
     /**
@@ -60,6 +60,14 @@ public interface FlowConfigDao {
      */
     @Select("select * from flow_config where id = #{id}")
     FlowConfig get(Long id);
+
+    /**
+     * 根据流程类型查询，此方法用于新增校验用，一个类型只能存在一条记录
+     * @param flowType
+     * @return
+     */
+    @Select("select * from flow_config where flow_type = #{flowType}")
+    List<FlowConfig> findByFlowType(Integer flowType);
 
     /**
      * 根据类型获取流程配置
@@ -90,7 +98,8 @@ public interface FlowConfigDao {
      * @param flowConfigSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from flow_config where 1=1 " + "<if test = 'flowName!=null'> and flow_name like CONCAT('%',#{flowName},'%')</if>"
+    @Select("<script>" + "select * from flow_config fc where 1=1 "
+            + "<if test = 'flowName!=null'> and flow_name like CONCAT('%',#{flowName},'%')</if>"
             + "<if test = 'flowType!=null'> and flow_type = #{flowType}</if>" + "</script>")
     List<FlowConfig> findByParam(FlowConfigSearchDTO flowConfigSearchDTO);
 

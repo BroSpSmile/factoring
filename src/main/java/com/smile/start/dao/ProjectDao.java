@@ -98,11 +98,13 @@ public interface ProjectDao {
      * @param project
      * @return
      */
-    @Results(id = "findByParamMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
-    @Select("<script>" + "select * from factoring_project where 1=1 " + "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
-            + "<if test = 'kind!=null'> and kind = #{kind}</if>" + "<if test = 'projectName!=null'> and project_name = #{projectName}</if>"
-            + "<if test = 'user!=null'> and person = #{user.id}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if>"
-            + "<if test = 'progresses!=null'> and progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach>"
+    @Results(id = "findByParamMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id"),
+                                              @Result(column = "username", property = "user.username")})
+    @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id "
+            + "where 1=1 " + "<if test = 'projectId!=null'> and t1.project_id = #{projectId}</if>"
+            + "<if test = 'kind!=null'> and t1.kind = #{kind}</if>" + "<if test = 'projectName!=null'> and t1.project_name = #{projectName}</if>"
+            + "<if test = 'user!=null'> and t1.person = #{user.id}</if>" + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
+            + "<if test = 'progresses!=null'> and t1.progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach>"
             + "</if></script>")
     List<Project> findByParam(Project project);
 

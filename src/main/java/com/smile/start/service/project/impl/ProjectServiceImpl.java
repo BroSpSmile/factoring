@@ -16,11 +16,9 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.dao.ProjectRecordDao;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
@@ -48,31 +46,27 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** 项目DAO */
     @Resource
-    private ProjectDao         projectDao;
+    private ProjectDao       projectDao;
 
     /** projectRecordDao */
     @Resource
-    private ProjectRecordDao   projectRecordDao;
+    private ProjectRecordDao projectRecordDao;
 
     /** factoringService */
     @Resource
-    private FactoringService   factoringService;
+    private FactoringService factoringService;
 
     /** 用户服务 */
     @Resource
-    private UserInfoService    userInfoService;
+    private UserInfoService  userInfoService;
 
     /** 项目附件DAO */
     @Resource
-    private ProjectItemDao     projectItemDao;
-
-    /** factoringDetailDao */
-    @Resource
-    private FactoringDetailDao factoringDetailDao;
+    private ProjectItemDao   projectItemDao;
 
     /** Id生成服务 */
     @Resource
-    private IdGenService       idGenService;
+    private IdGenService     idGenService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -247,18 +241,8 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      * @param project
      */
     private void setDetail(Project project) {
-        project.setUser(getUser(project.getUser().getId()));
-        FactoringDetail detail = factoringDetailDao.getByProject(project.getId());
+        FactoringDetail detail = factoringService.get(project.getId());
         project.setDetail(detail);
-    }
-
-    /**
-     * 获取用户
-     * @param id
-     * @return
-     */
-    private User getUser(Long id) {
-        return userInfoService.getUserById(id);
     }
 
 }

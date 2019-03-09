@@ -15,9 +15,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ProjectModel {
 	/** 有追索权模式 */
-	RECOURSE_RIGHT("RECOURSE_RIGHT", "有追索权模式"),
+	RECOURSE_RIGHT("RECOURSE_RIGHT", "有"),
 	/** 无追索权模式 */
-	DIS_RECOURSE_RIGHT("DIS_RECOURSE_RIGHT", "无追索权模式");
+	DIS_RECOURSE_RIGHT("DIS_RECOURSE_RIGHT", "无");
 
 	ProjectModel(String code, String desc) {
 		this.code = code;

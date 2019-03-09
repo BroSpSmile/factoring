@@ -25,7 +25,7 @@ public interface MeetingService {
      * @param search
      * @return
      */
-    PageInfo<Meeting> search(PageRequest<MeetingSearch> search);
+    PageInfo<MeetingExt> search(PageRequest<MeetingSearch> search);
 
     /**
      * 获取会议

@@ -7,9 +7,9 @@
 		<card dis-hover title="搜索条件" style="width:100%">
 			<p>
 				<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
-					<form-item label="流程名称" prop="flowName">
+					<!--<form-item label="流程名称" prop="flowName">
 						<i-input placeholder="输入流程名称" class="inputw" v-model="formInline.flowName"></i-input>
-					</form-item>
+					</form-item>-->
 					<form-item label="流程类型" prop="flowType">
 						<i-select class="inputw" v-model="formInline.flowType" clearable>
 							<i-option :value="2">尽调审核流程</i-option>
@@ -47,22 +47,22 @@
 							<i-option :value="4">归档审核流程</i-option>
 						</i-select>
 					</form-item>
-					<form-item label="流程名称" prop="flowName">
+					<!--<form-item label="流程名称" prop="flowName">
 						<i-input placeholder="输入流程名称" v-model="addForm.flowName"></i-input>
-					</form-item>
+					</form-item>-->
 					<form-item label="状态配置">
-						<Row v-for="item in addForm.statusList">
-							<Col span="50">
+						<row v-for="item in addForm.statusList">
+							<i-col span="6">
 								{{item.flowStatusDesc}}
-							</Col>
-							<Col span="4" offset="1">
-							<i-select class="inputw" v-model="item.checkedRoleList" clearable multiple>
-								<i-option v-for="role in item.roleList" :value="role.serialNo">
-									{{ role.roleName }}
-								</i-option>
-							</i-select>
-							</Col>
-						</Row>
+							</i-col>
+							<i-col offset="1" style="float: right;">
+								<i-select class="inputw" v-model="item.roleSerialNo" clearable>
+									<i-option v-for="role in item.roleList" :value="role.serialNo">
+										{{ role.roleName }}
+									</i-option>
+								</i-select>
+							</i-col>
+						</row>
 					</form-item>
 				</i-form>
 			</div>

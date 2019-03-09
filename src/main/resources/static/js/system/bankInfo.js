@@ -1,11 +1,11 @@
 /**
- * 流程配置
+ * 银行信息
  */
-common.pageName = "flowConfig";
+common.pageName = "bankInfo";
 common.openName = [ '8' ];
 
 var vue = new Vue({
-    el : '#flowConfig',
+    el : '#bankInfo',
     data : {
         formInline:{
             type:[]
@@ -16,12 +16,19 @@ var vue = new Vue({
             pageSize : 10
         },
         addForm : {
-            flowName : "",
-            statusList:[]
+            bankFullName : "",
+            bankShortName : "",
+            bankAccount : ""
         },
         ruleValidate: {
-            flowType: [
-                { required: true, message: '流程类型不能为空', trigger: 'change', type:'number'}
+            bankFullName: [
+                { required: true, message: '银行全称不能为空', trigger: 'blur' }
+            ],
+            bankShortName: [
+                { required: true, message: '银行简称不能为空', trigger: 'blur'}
+            ],
+            bankAccount: [
+                { required: true, message: '银行账号不能为空', trigger: 'blur'}
             ]
         },
         pageInfo:{},
@@ -41,7 +48,7 @@ var vue = new Vue({
             this.queryParam.pageNum = page;
             var _self = this;
             _self.queryParam.condition = _self.formInline;
-            this.$http.post("/flowConfig/list", _self.queryParam).then(
+            this.$http.post("/bankInfo/list", _self.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
@@ -49,24 +56,25 @@ var vue = new Vue({
                 })
         },
         /**
-         * 新增流程配置
+         * 新增银行信息
          */
-        addFlow : function() {
+        addBank : function() {
             this.modal1 = true;
             this.addForm = {
-                flowName : "",
-            	statusList:[]
+                bankFullName : "",
+                bankShortName : "",
+                bankAccount : ""
             };
         },
         /**
-         * 保存流程配置
+         * 保存银行信息
          */
-        saveFlow : function() {
+        saveBank : function() {
             let self = this;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
                     if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
-                        this.$http.post("/flowConfig", this.addForm).then(function (response) {
+                        this.$http.post("/bankInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
                                     content: "保存成功",
@@ -82,7 +90,7 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     } else {
-                        this.$http.put("/flowConfig", this.addForm).then(function (response) {
+                        this.$http.put("/bankInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
                                     content: "更新成功",
@@ -102,39 +110,22 @@ var vue = new Vue({
             });
         },
         /**
-         * 获取状态列表
-         */
-        getStatusList:function(value) {
-        	if(value !== undefined) {
-                let self = this;
-                this.$http.get("/flowConfig/status/" + value).then(function(response){
-                    if (response.data.success) {
-                        self.addForm.statusList = response.data.values;
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                },function(error){
-                    self.$Message.error(error.data.message);
-                })
-            }
-        },
-        /**
          * 删除警告
          */
         deleteWarn:function(id){
             this.$Modal.confirm({
                 title: '删除提示',
-                content: '<p>确认是否删除当前流程配置</p>',
+                content: '<p>确认是否删除当前银行</p>',
                 onOk: () => {
-                this.deleteFlow(id);
-        },
-            onCancel: () => {}
-        })
+                    this.deleteBank(id);
+                },
+                onCancel: () => {}
+            })
         },
         /** 删除流程配置 */
-        deleteFlow:function(id){
+        deleteBank:function(id){
             let self = this;
-            this.$http.delete("/flowConfig/" + id).then(function(response){
+            this.$http.delete("/bankInfo/" + id).then(function(response){
                 if (response.data.success) {
                     self.$Message.info({
                         content : "删除成功",
@@ -151,11 +142,11 @@ var vue = new Vue({
             })
         },
         /**
-         * 更新流程配置
+         * 更新银行信息
          */
-        updateFlow : function(id){
+        updateBank : function(id){
             let self = this;
-            this.$http.get("/flowConfig/" + id).then(function(response){
+            this.$http.get("/bankInfo/" + id).then(function(response){
                 if (response.data.success) {
                     self.addForm = response.data.data;
                 } else {
@@ -181,21 +172,6 @@ var vue = new Vue({
         reset: function () {
             this.$refs['searchForm'].resetFields();
         },
-        /**
-         * 流程类型
-         */
-        getFlowTypeDesc : function(value){
-            if(value === 1) {
-                return "合同审核流程";
-            } else if(value === 2) {
-                return "尽调审核流程";
-            }else if(value === 3) {
-                return "放款审核流程";
-            }else if(value === 4) {
-                return "归档审核流程";
-            }
-            return "";
-        },
         /** 分页 */
         pageChange : function(page){
             this.query();
@@ -205,15 +181,16 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '流程类型',
-        key: 'projectMode',
-        align: 'left',
-        render:(h,param)=> {
-            return h('span', vue.getFlowTypeDesc(param.row.flowType));
-        }
+        title: '银行全称',
+        key: 'bankFullName',
+        align: 'left'
     },{
-        title: '创建时间',
-        key: 'gmtCreate',
+        title: '银行简称',
+        key: 'bankShortName',
+        align: 'left'
+    },{
+        title: '银行账号',
+        key: 'bankAccount',
         align: 'left'
     },{
         title: '操作',
@@ -232,7 +209,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                        vue.updateFlow(param.row.id);
+                        vue.updateBank(param.row.id);
         }
         }
         }, '编辑'),

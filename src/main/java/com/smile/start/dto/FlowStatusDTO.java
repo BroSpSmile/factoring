@@ -37,6 +37,11 @@ public class FlowStatusDTO implements Serializable {
     private String flowStatusDesc;
 
     /**
+     * 角色业务流水
+     */
+    private String roleSerialNo;
+
+    /**
      * 选中角色列表
      */
     private List<String> checkedRoleList;
@@ -92,6 +97,14 @@ public class FlowStatusDTO implements Serializable {
 
     public void setFlowStatusDesc(String flowStatusDesc) {
         this.flowStatusDesc = flowStatusDesc;
+    }
+
+    public String getRoleSerialNo() {
+        return roleSerialNo;
+    }
+
+    public void setRoleSerialNo(String roleSerialNo) {
+        this.roleSerialNo = roleSerialNo;
     }
 
     public List<AuthRoleInfoDTO> getRoleList() {
