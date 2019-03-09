@@ -82,16 +82,18 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
     @Override
     public FactoringDetail get(Long projectId) {
         FactoringDetail detail = factoringDetailDao.getByProject(projectId);
-        List<Installment> installments = installmentDao.queryByDetail(detail.getId());
-        for (Installment installment : installments) {
-            if (InstallmentType.FACTORING.equals(installment.getType())) {
-                detail.addFactoringInstallment(installment);
-            }
-            if (InstallmentType.RETURN.equals(installment.getType())) {
-                detail.addReturnInstallment(installment);
-            }
-            if (InstallmentType.LOAN.equals(installment.getType())) {
-                detail.addLoanInstallment(installment);
+        if (null != detail) {
+            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+            for (Installment installment : installments) {
+                if (InstallmentType.FACTORING.equals(installment.getType())) {
+                    detail.addFactoringInstallment(installment);
+                }
+                if (InstallmentType.RETURN.equals(installment.getType())) {
+                    detail.addReturnInstallment(installment);
+                }
+                if (InstallmentType.LOAN.equals(installment.getType())) {
+                    detail.addLoanInstallment(installment);
+                }
             }
         }
         return detail;

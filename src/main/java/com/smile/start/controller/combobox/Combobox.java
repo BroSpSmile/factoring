@@ -14,6 +14,8 @@ import com.smile.start.model.enums.FilingProgress;
 import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProjectModel;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -118,4 +120,15 @@ public class Combobox extends BaseController {
         return items;
     }
 
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/projectModel")
+    public List<Item> getProjectModel() {
+        ProjectModel[] enums = ProjectModel.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
 }
