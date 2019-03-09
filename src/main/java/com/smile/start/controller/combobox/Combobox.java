@@ -126,4 +126,15 @@ public class Combobox extends BaseController {
         return items;
     }
 
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/projectModel")
+    public List<Item> getProjectModel() {
+        ProjectModel[] enums = ProjectModel.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
 }
