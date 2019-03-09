@@ -6,10 +6,10 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.project.ProjectMeeting;
 
@@ -35,6 +35,14 @@ public interface ProjectMeetingDao {
      */
     @Select("select * from project_meeting where project_id=#{projectId} and meeting_id=#{meetingId}")
     List<ProjectMeeting> find(ProjectMeeting pm);
+    
+    /**
+     * 删除会议
+     * @param pm
+     * @return
+     */
+    @Delete("delete from project_meeting where project_id=#{projectId} and meeting_id=#{meetingId}")
+    int delete(ProjectMeeting pm);
 
     /**
      * 查询项目已关联会议

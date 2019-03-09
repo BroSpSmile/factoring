@@ -25,7 +25,8 @@ var vue = new Vue({
 		},
 		pageInfo:{},
 		modal1 : false,
-		statusItems : []
+		statusItems : [],
+		models:[]
 	},
 	created : function() {
 		this.initDate();
@@ -41,7 +42,31 @@ var vue = new Vue({
 				_self.statusItems = response.data;
 			}, function(error) {
 				console.error(error);
+			});
+			this.$http.get("/combo/projectModel").then(function(response) {
+				_self.models = response.data;
+			}, function(error) {
+				console.error(error);
 			})
+		},
+		
+		/**
+		 * 翻译
+		 */
+		toModelName:function(value){
+			for(let index in this.models){
+				if(this.models[index].value == value){
+					return this.models[index].text;
+				}
+			}
+			return "";
+		},
+		
+		toBoolean:function(value){
+			if(value){
+				return "是";
+			}
+			return "否";
 		},
 		
 		/**
@@ -211,28 +236,175 @@ vue.tableColumns=[{
 	    width: 50,
 	    render: (h, params) => {
 	    	return h('div', {
-                props: {
-                    row: params.row
-                },
-                domProps:{
-                	innerHTML:'<span>让与人:'+params.row.detail.creditor+'</span>&nbsp;&nbsp;<span>债务人:'+params.row.detail.debtor+
-                	'</span>&nbsp;&nbsp;<span>基础合同:'+params.row.detail.baseContract+'</span>&nbsp;&nbsp;<br><span>签署日期:'+moment(params.row.detail.signDate).format('YYYY-MM-DD HH:mm')+
-                	'</span>&nbsp;&nbsp;<span>应收账款受让款:'+params.row.detail.assignee+'</span>&nbsp;&nbsp;<span>应收账款:'+params.row.detail.receivable+'</span>'
-                }
-            })
+	    		style:{
+	    			fontSize:'13px'
+	    		}
+	    	},[
+	    		h('Row',{},[
+	    			h('Col',{
+	    				props:{span:24}
+	    			},[
+	    				h('span',{style:{color:'#2db7f5'}},'基础合同:'),
+	    				h('span',{},params.row.detail.baseContract)
+	    			])
+	    		]),
+	    		h('Divider',{props:{size:'small'}}),
+	    		h('Row',{},[
+	    			h('Col',{
+	    				props:{span:6}
+	    			},[
+	    				h('span',{style:{color:'#2db7f5'}},'签署日期:'),
+	    				h('span',{},moment(params.row.detail.signDate).format('YYYY-MM-DD'))
+	    			]),
+	    			h('Col',{
+	    				props:{span:6}
+	    			},[
+	    				h('span',{style:{color:'#2db7f5'}},'合同回款日:'),
+	    				h('span',{},moment(params.row.detail.remittanceDay).format('YYYY-MM-DD'))
+	    			]),
+	    			h('Col',{
+	    				props:{span:6}
+	    			},[
+	    				h('span',{style:{color:'#2db7f5'}},'收益率:'),
+	    				h('span',{},params.row.detail.returnRate+"%")
+	    			])
+	    		]),
+	    		params.row.detail.loanInstallments.length < 1?
+	    				h('div'):
+	    				h('div',{},[
+	    					h('Divider',{props:{size:'small'}}),
+	    					h('Row',{},[
+	    						h('Col',{},[
+	    							h('span',{style:{color:'#2db7f5'}},'已投放金额:'),
+	    							h('span',{},params.row.detail.dropAmount)
+	    						])
+	    					]),
+	    					h('br'),
+	    					h('Row',{},[
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已投放金额(万元)')]),
+	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'放款日')]),
+	    					]),
+	    					params.row.detail.factoringInstallments.map(item=>{
+	    						return h('Row',{},[
+	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
+	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))])
+	    						])
+	    					})
+	    				]),
+				params.row.detail.returnInstallments.length < 1?
+	    				h('div'):
+	    				h('div',{},[
+	    					h('Divider',{props:{size:'small'}}),
+	    					h('Row',{},[
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'回款金额(万元)')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已回款')]),
+	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'实际回款日')])
+	    					]),
+	    					params.row.detail.factoringInstallments.map(item=>{
+	    						return h('Row',{},[
+	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
+	    							h('Col',{props:{span:4}},[h('span',{},vue.toBoolean(item.paied))]),
+	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))])
+	    						])
+	    					})
+	    				]),
+				params.row.detail.factoringInstallments.length < 1?
+	    				h('div'):
+	    				h('div',{},[
+	    					h('Divider',{props:{size:'small'}}),
+	    					h('Row',{},[
+	    						h('Col',{},[
+	    							h('span',{style:{color:'#2db7f5'}},'保理费合计:'),
+	    							h('span',{},"￥"+params.row.detail.totalFactoringFee+"万元")
+	    						])
+	    					]),
+	    					h('br'),
+	    					h('Row',{},[
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'保理费分期金额(万元)')]),
+	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'保理费到账日(前)')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已开发票')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已支付')])
+	    					]),
+	    					params.row.detail.factoringInstallments.map(item=>{
+	    						return h('Row',{},[
+	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
+	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))]),
+	    							h('Col',{props:{span:4}},[h('span',{},item.invoice==null?'否':item.invoice)]),
+	    							h('Col',{props:{span:4}},[h('span',{},vue.toBoolean(item.paied))])
+	    						])
+	    					})
+	    				]),
+	    				h('Divider',{props:{size:'small'}}),
+	    		h('Row',{},[
+	    			h('Col',{
+	    				props:{span:24}
+	    			},[
+	    				h('span',{style:{color:'#2db7f5'}},'备注:'),
+	    				h('span',{},params.row.detail.remark)
+	    			])
+	    		]),
+	    	])
 	    }
 	},{
         title: '项目编号',
         key: 'projectId',
-        align: 'center'
+        align: 'center',
+        width:125
     },{
         title: '项目名称',
         key: 'projectName',
         align: 'center'
     },{
+        title: '让与人',
+        key: 'detail.creditor',
+        align: 'center',
+        render:(h,param)=>{
+        	return h('span',param.row.detail.creditor)
+        }
+    },{
+        title: '债务人',
+        key: 'detail.debtor',
+        align: 'center',
+        render:(h,param)=>{
+        	return h('span',param.row.detail.debtor)
+        }
+    },{
+        title: '追索权',
+        key: 'projectName',
+        align: 'center',
+        width:60,
+        render:(h,param)=>{
+        	return h('span',vue.toModelName(param.row.model))
+        }
+    },{
+        title: '应收账款受让款(万元)',
+        key: 'projectName',
+        align: 'center',
+        width:100,
+        render:(h,param)=>{
+        	return h('span',param.row.detail.assignee)
+        }
+    },{
+        title: '应收账款(万元)',
+        key: 'projectName',
+        align: 'center',
+        width:100,
+        render:(h,param)=>{
+        	return h('span',param.row.detail.receivable)
+        }
+    },{
+        title: '转让期限年',
+        key: 'projectName',
+        align: 'center',
+        width:60,
+        render:(h,param)=>{
+        	return h('span',param.row.detail.duration)
+        }
+    },{
         title: '项目负责人',
         key: 'user',
         align: 'center',
+        width:90,
         render:(h,param)=>{
         	return h('span',param.row.user.username)
         }
@@ -246,6 +418,7 @@ vue.tableColumns=[{
     },{
     	title: '操作',
     	align: 'center',
+    	width:120,
         render:(h,param)=>{
         	return h('div', [
         		param.row.progress=='INIT'?

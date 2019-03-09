@@ -41,6 +41,13 @@ var vue = new Vue({
 			}else{
 				return "";
 			}
+		},
+		canUpload:function(){
+			if(this.fileList&& this.fileList.length>0){
+				return true;
+			}else{
+				return false;
+			}
 		}
 	},
 	methods : {
@@ -66,15 +73,15 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/minutes/meeting/"+document.getElementById("meetingId").value).then(function(response) {
 				_self.meeting = response.data;
-				if(!_self.meeting.kind=='APPROVAL'){
+				//if(_self.meeting.kind=='APPROVAL'){
 					let projects = [];
 					for (let index in _self.meeting.projects){
 						projects.push(_self.meeting.projects[index].id);
 					}
 					_self.meeting.projects = projects;
-					CKEDITOR.replace( 'myedit');
-					CKEDITOR.instances.myedit.setData(_self.meeting.minutes);
-				}
+//					CKEDITOR.replace( 'myedit');
+//					CKEDITOR.instances.myedit.setData(_self.meeting.minutes);
+			//	}
 				this.getItems();
 			}, function(error) {
 				console.error(error);
@@ -83,14 +90,24 @@ var vue = new Vue({
 		
 		/** 获取会议附件 */
 		getItems:function(){
-			let _self = this;
-			if(this.meeting.minutesKind == 'CUSTOM'){
-				this.$http.post("/approval/items/"+this.meeting.projects[0].id+"/INITIATE").then(function(response){
-					_self.meetingItems = response.data;
-				}, function(error) {
-					console.error(error);
-				});
+			this.meetingItems  = [];
+			if(this.meeting.minutes){
+				let minutes = this.meeting.minutes.split("|");
+				let item={
+						itemValue:minutes[0],
+						itemName:minutes[1]
+				}
+				this.meetingItems.push(item);
 			}
+//			let _self = this;
+//			if(this.meeting.minutesKind == 'CUSTOM'){
+//				console.log(this.meeting.projects);
+//				this.$http.post("/approval/items/"+this.meeting.projects[0]+"/INITIATE").then(function(response){
+//					_self.meetingItems = response.data;
+//				}, function(error) {
+//					console.error(error);
+//				});
+//			}
 		},
 		
 		/**
@@ -98,38 +115,46 @@ var vue = new Vue({
 		 */
 		save:function(progress){
 			let meeting = JSON.parse(JSON.stringify(this.meeting));
-			if(!meeting.kind=='APPROVAL'){
-				meeting.minutes = CKEDITOR.instances.myedit.getData();
+//			if(meeting.kind!='APPROVAL'){
+//				meeting.minutes = CKEDITOR.instances.myedit.getData();
+//				let projects = [];
+//				for(let index in meeting.projects){
+//					projects.push({id:meeting.projects[index]});
+//				}
+//				meeting.projects = projects;
+//			}else{
+				if(this.fileList === undefined || this.fileList.length == 0){
+					this.$Message.error("请上传会议纪要文件");
+					return false;
+				}
 				let projects = [];
 				for(let index in meeting.projects){
 					projects.push({id:meeting.projects[index]});
 				}
 				meeting.projects = projects;
-			}else{
-				if(this.fileList === undefined || this.fileList.length == 0){
-					this.$Message.error("请上传立项文件");
-					return false;
-				}
 				for(let index in this.fileList){
-					let item={
-							projectId:this.meeting.projects[0].id,
-							itemType:"INITIATE",
-							itemName:this.fileList[index].name,
-							itemValue:this.fileList[index].response.data.fileId
+					if(meeting.kind=='APPROVAL'){
+						let item={
+								projectId:meeting.projects[0].id,
+								itemType:"INITIATE",
+								itemName:this.fileList[index].name,
+								itemValue:this.fileList[index].response.data.fileId
+						}
+						meeting.projects[0].items = new Array();
+						meeting.projects[0].items.push(item);
+						meeting.projects[0].progress = progress;
 					}
 					meeting.minutesKind = 'CUSTOM';
-					meeting.projects[0].items = new Array();
-					meeting.projects[0].items.push(item);
+					meeting.minutes= this.fileList[index].response.data.fileId+"|"+this.fileList[index].name;
 				}
-				meeting.projects[0].progress = progress;
-			}
+			//}
 			let self = this;
 			this.$http.post("/minutes",meeting).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
 						content : "创建会议成功",
 						onClose : function() {
-							
+							self.getMeeting();
 						}
 					});
 				} else {

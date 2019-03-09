@@ -72,8 +72,11 @@
 								<i-button type="success" size="small" ghost @click="createMninutes(meeting)">创建会议纪要</i-button>
 							</span>
 							<span v-if="(meeting.status=='MEETING'||meeting.status=='END') && meeting.minutesKind">
-								<i-button type="info" size="small" ghost @click="createMninutes(meeting)">查看会议纪要</i-button>
-							</span>
+								<i-button type="info" size="small" ghost @click="createMninutes(meeting)">编辑会议</i-button>
+								<span v-if="meeting.minutes">&nbsp;&nbsp;&nbsp;&nbsp;
+									<i-button type="text" size="small">会议纪要:</i-button>
+									<i-button type="dashed" size="small" @click="downloadItem(meeting.minutes)">{{meeting.minutes.split("|")[1]}}</i-button>
+								</span>
 						</card>
 						<br>
 					</p>

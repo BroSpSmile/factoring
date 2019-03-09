@@ -24,6 +24,7 @@ var vue = new Vue({
 		users:[],
 		meetingKind:[],
 		project:{},
+		meetingItems:[],
 		meetingReminds:[
 			{value:15,text:"会议开始前15分钟"},
 			{value:30,text:"会议开始前30分钟"},
@@ -236,6 +237,14 @@ var vue = new Vue({
 		
 		createMninutes:function(meeting){
 			window.open("minutes?id="+meeting.id,"_blank");
+		},
+		
+		/**
+		 * 下载文件
+		 */
+		downloadItem:function(item){
+			let ss = item.split("|");
+			window.open("/file?fileId="+ss[0]+"&fileName="+ss[1]);
 		}
 	}
 });
