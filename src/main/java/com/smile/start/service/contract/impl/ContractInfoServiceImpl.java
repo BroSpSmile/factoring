@@ -116,6 +116,20 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         return contractInfoDTO;
     }
 
+    /**
+     * 根据项目主键获取合同信息
+     * @param projectId
+     * @return
+     */
+    @Override
+    public ContractInfoDTO getByProjectId(Long projectId) {
+        final ContractInfo contractInfo = contractInfoDao.getByProjectId(projectId);
+        if(contractInfo == null) {
+            return null;
+        }
+        return get(contractInfo.getId());
+    }
+
     @Override
     public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
         final PageInfo<ContractBaseInfoDTO> result = new PageInfo<>();
