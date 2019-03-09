@@ -136,7 +136,6 @@ var vue = new Vue({
                     self.$Message.info({
                         content : "提交审核成功",
                         onClose : function() {
-                            self.query();
                             self.cancel();
                         }
                     });

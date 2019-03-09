@@ -239,7 +239,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             AuditFlow flow = new AuditFlow();
             flow.setStep(statu.getFlowStatus());
             flow.setDesc(statu.getFlowStatusDesc());
-            flow.setRole(roleInfoService.getBySerialNo(statu.getCheckedRoleList().get(0)));
+            flow.setRole(roleInfoService.getBySerialNo(statu.getRoleSerialNo()));
             //查询审核记录
             AuditRecord record = auditRecordDao.getLast(audit.getId(), statu.getFlowStatusDesc());
             if (null != record) {

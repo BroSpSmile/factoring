@@ -5,7 +5,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.dao.*;
+import com.smile.start.dto.*;
+import com.smile.start.model.common.FlowStatus;
+import com.smile.start.model.enums.*;
+import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditRecord;
+import com.smile.start.service.auth.RoleInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -13,24 +19,6 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.ContractAttachDao;
-import com.smile.start.dao.ContractAuditRecordDao;
-import com.smile.start.dao.ContractExtendInfoDao;
-import com.smile.start.dao.ContractInfoDao;
-import com.smile.start.dao.ContractReceivableAgreementDao;
-import com.smile.start.dao.ContractReceivableConfirmationDao;
-import com.smile.start.dao.ContractSignListDao;
-import com.smile.start.dao.ProjectDao;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.ContractAttachDTO;
-import com.smile.start.dto.ContractAuditDTO;
-import com.smile.start.dto.ContractAuditRecordDTO;
-import com.smile.start.dto.ContractAuditSearchDTO;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignDTO;
-import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
@@ -41,8 +29,6 @@ import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractReceivableAgreement;
 import com.smile.start.model.contract.ContractReceivableConfirmation;
 import com.smile.start.model.contract.ContractSignList;
-import com.smile.start.model.enums.ContractAttachTypeEnum;
-import com.smile.start.model.enums.ContractStatusEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.auth.UserInfoService;
@@ -81,7 +67,22 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ProjectDao                        projectDao;
 
     @Resource
+    private AuditDao                          auditDao;
+
+    @Resource
+    private AuditRecordDao                    auditRecordDao;
+
+    @Resource
+    private UserDao                           userDao;
+
+    @Resource
+    private FlowConfigDao                     flowConfigDao;
+
+    @Resource
     private UserInfoService                   userInfoService;
+
+    @Resource
+    private RoleInfoService                   roleInfoService;
 
     @Resource
     private ContractInfoMapper                contractInfoMapper;
@@ -280,20 +281,51 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void submitAudit(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
         contractInfo.setStatus(ContractStatusEnum.APPLY.getValue());
         contractInfoDao.update(contractInfo);
 
+        final LoginUser loginUser = LoginHandler.getLoginUser();
+        Audit audit = new Audit();
+        //TODO 查询数据库次数太多，可能影响性能
+        audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
+        audit.setProject(projectDao.get(contractInfo.getProjectId()));
+        audit.setCreateTime(new Date());
+        audit.setAuditType(AuditType.CONTRACT);
+        ContractStatusEnum currentStatus = ContractStatusEnum.fromValue(contractInfo.getStatus());
+        //状态合法性校验
+        if (currentStatus == null) {
+            throw new ValidateException("合同状态非法，status = " + contractInfo.getStatus());
+        }
+        audit.setStep(currentStatus.getNextStatus().getValue());
+        //获取审核流程
+        final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
+                contractInfo.getStatus() + 1);
+        audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
+        long effect = auditDao.insert(audit);
+
         //保存审核记录
-        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
-        contractAuditRecord.setOperationType(1);
-        contractAuditRecord.setOperationTime(new Date());
-        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-        contractAuditRecordDao.insert(contractAuditRecord);
+        AuditRecord record = new AuditRecord();
+        record.setStatus("成功");
+        record.setRemark("申请成功");
+        record.setType("发起审核");
+        record.setAudit(audit);
+        record.setAuditor(audit.getApplicant());
+        record.setResult(AuditResult.APPLY);
+        record.setStatus(record.getResult().getDesc());
+        record.setAuditTime(new Date());
+        auditRecordDao.insert(record);
+
+//        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
+//        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
+//        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
+//        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
+//        contractAuditRecord.setOperationType(1);
+//        contractAuditRecord.setOperationTime(new Date());
+//        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
+//        contractAuditRecordDao.insert(contractAuditRecord);
     }
 
     /**
