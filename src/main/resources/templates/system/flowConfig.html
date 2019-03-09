@@ -51,18 +51,18 @@
 						<i-input placeholder="输入流程名称" v-model="addForm.flowName"></i-input>
 					</form-item>-->
 					<form-item label="状态配置">
-						<Row v-for="item in addForm.statusList">
-							<Col span="50">
+						<row v-for="item in addForm.statusList">
+							<i-col span="6">
 								{{item.flowStatusDesc}}
-							</Col>
-							<Col span="4" offset="1">
-							<i-select class="inputw" v-model="item.roleSerialNo" clearable>
-								<i-option v-for="role in item.roleList" :value="role.serialNo">
-									{{ role.roleName }}
-								</i-option>
-							</i-select>
-							</Col>
-						</Row>
+							</i-col>
+							<i-col offset="1" style="float: right;">
+								<i-select class="inputw" v-model="item.roleSerialNo" clearable>
+									<i-option v-for="role in item.roleList" :value="role.serialNo">
+										{{ role.roleName }}
+									</i-option>
+								</i-select>
+							</i-col>
+						</row>
 					</form-item>
 				</i-form>
 			</div>
