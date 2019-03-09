@@ -22,7 +22,7 @@ public enum AuditType {
                        LOAN("LOAN", "放款审核"),
 
                        /**  */
-                       FILLING("FILLING", "归档审核");
+                       FILE("FILE", "归档审核");
 
     AuditType(String code, String desc) {
         this.code = code;

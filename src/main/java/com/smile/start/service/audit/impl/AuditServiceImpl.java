@@ -191,6 +191,21 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     public Audit getAudit(Long id) {
         Audit audit = auditDao.get(id);
+        genAudit(audit);
+        return audit;
+    }
+
+    /**
+     * @see com.smile.start.service.audit.AuditService#getAudit(java.lang.Long)
+     */
+    @Override
+    public Audit getAuditByProjectFlowAndType(Long id,String type) {
+        Audit audit = auditDao.getByProjectAndType(id,type);
+        genAudit(audit);
+        return audit;
+    }
+
+    private void genAudit(Audit audit) {
         User applicant = userInfoService.getUserById(audit.getApplicant().getId());
         audit.setApplicant(applicant);
         Project project = projectService.getProject(audit.getProject().getId());
@@ -204,7 +219,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         }
         audit.setRecords(records);
         audit.setFlows(getFlows(audit));
-        return audit;
     }
 
     /**

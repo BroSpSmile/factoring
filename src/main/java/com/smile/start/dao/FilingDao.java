@@ -22,7 +22,7 @@ public interface FilingDao {
      * @param filingApplyInfo
      * @return
      */
-    @Insert("insert into filing_apply_info (project_id,applicant,apply_time,filing_list_str,progress) values (#{projectId},#{applicant},#{applyTime},#{filingListStr},#{progress})")
+    @Insert("insert into filing_apply_info (project,applicant,apply_time,filing_list_str,progress) values (#{project},#{applicant},#{applyTime},#{filingListStr},#{progress})")
     long insert(FilingApplyInfo filingApplyInfo);
 
     /**
@@ -33,7 +33,7 @@ public interface FilingDao {
      */
     @Update("<script>" + "update filing_apply_info" + " set id=#{id}"
             + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
-            + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where project_id=#{projectId} "
+            + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where project=#{project} "
             + "</script>")
     int update(FilingApplyInfo filingApplyInfo);
 
@@ -56,22 +56,22 @@ public interface FilingDao {
     FilingApplyInfo get(Long id);
 
     /**
-     * 根据项目ID获取归档申请信息
+     * 根据项目ID 主键  获取归档申请信息
      *
-     * @param projectId
+     * @param project
      * @return
      */
-    @Select("select * from filing_apply_info where project_id=#{projectId}")
-    List<FilingApplyInfo> findByProjectId(String projectId);
+    @Select("select * from filing_apply_info where project=#{project}")
+    List<FilingApplyInfo> findByProjectId(Long project);
 
     /**
-     * 根据项目ID获取归档申请信息文件信息
+     * 根据项目ID主键  获取归档申请信息文件信息
      *
-     * @param projectId
-     * @return
+     * @param project project.id
+     * @return 归档文件信息
      */
-    @Select("select * from filing_file_item where project_id=#{projectId}")
-    List<FilingFileItem> findItemByProjectId(String projectId);
+    @Select("select * from filing_file_item where project=#{project}")
+    List<FilingFileItem> findItemByProjectId(Long project);
 
     /**
      * 查询全部项目
@@ -84,10 +84,10 @@ public interface FilingDao {
     /**
      * 分页查询
      *
-     * @param filingApplyInfo
-     * @return
+     * @param filingApplyInfo 归档信息查询条件
+     * @return 归档信息
      */
-    @Select("<script>" + "select * from filing_apply_info where 1=1 " + "<if test = 'projectId!=null'> and project_id = #{projectId}</if>"
+    @Select("<script>" + "select * from filing_apply_info where 1=1 " + "<if test = 'projectId!=null'> and project = #{project}</if>"
             + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
             + "<if test = 'filingListStr!=null'> and filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
     List<FilingApplyInfo> findByParam(FilingApplyInfo filingApplyInfo);
@@ -98,16 +98,16 @@ public interface FilingDao {
      * @param item
      * @return
      */
-    @Insert("insert filing_file_item (project_id,item_type,item_name,item_value) values(#{projectId},#{itemType},#{itemName},#{itemValue})")
+    @Insert("insert filing_file_item (project,item_type,item_name,item_value) values(#{project},#{itemType},#{itemName},#{itemValue})")
     long insertFileItem(FilingFileItem item);
 
     /**
      * 删除归档申请文件
      *
-     * @param projectId
+     * @param project
      * @return
      */
-    @Delete("delete from filing_file_item  where project_id = #{projectId}")
-    int delFileItemByProjectId(String projectId);
+    @Delete("delete from filing_file_item  where project = #{project}")
+    int delFileItemByProjectId(Long project);
 
 }

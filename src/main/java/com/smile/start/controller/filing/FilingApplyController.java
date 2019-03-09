@@ -6,11 +6,13 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.FilingProgress;
+import com.smile.start.model.enums.AuditResult;
+import com.smile.start.model.enums.FilingSubProgress;
 import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditRecord;
+import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.filing.FilingService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,12 @@ public class FilingApplyController extends BaseController {
     private FilingService filingService;
 
     /**
+     * auditService
+     */
+    @Resource
+    private AuditService auditService;
+
+    /**
      * 归档申请页面
      *
      * @return
@@ -54,27 +62,6 @@ public class FilingApplyController extends BaseController {
     /**
      * 归档申请保存
      *
-     * @param projectId
-     * @return
-     */
-    @GetMapping(value = "/{projectId}")
-    @ResponseBody
-    public SingleResult<FilingApplyInfo> findByProjectId(@PathVariable String projectId) {
-        LoggerUtils.info(logger, "查询请求参数 projectId ={}", projectId);
-        SingleResult<FilingApplyInfo> result = new SingleResult<FilingApplyInfo>();
-        result.setSuccess(true);
-        FilingApplyInfo filingApplyInfo = filingService.findByProjectId(projectId);
-        if (StringUtils.isNotBlank(filingApplyInfo.getFilingListStr())) {
-            filingApplyInfo.setFilingList(filingApplyInfo.getFilingListStr().split(","));
-        }
-        //filingApplyInfo.setApplyTime(filingApplyInfo.getApplyTime());
-        result.setData(filingApplyInfo);
-        return result;
-    }
-
-    /**
-     * 归档申请保存
-     *
      * @param filingApplyInfo
      * @return
      */
@@ -82,13 +69,23 @@ public class FilingApplyController extends BaseController {
     @ResponseBody
     public BaseResult save(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
         User user = getUserByToken(request);
-        if (null != user) {
-            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
-        }
-        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE_APPLY.getCode());
+        genFilingApplyInfo(filingApplyInfo, user);
+        filingApplyInfo.setProgress(FilingSubProgress.FILE_TOBE_APPLY);
         LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        checkAndSetAuditField(filingApplyInfo, user);
         return filingService.addFilingApply(filingApplyInfo);
+    }
+
+    /**
+     * 归档申请打回保存
+     *
+     * @param filingApplyInfo
+     * @return
+     */
+    @PostMapping("/rejectAndSave")
+    @ResponseBody
+    public BaseResult rejectAndSave(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
+        return save(request, filingApplyInfo);
     }
 
     /**
@@ -101,78 +98,30 @@ public class FilingApplyController extends BaseController {
     @ResponseBody
     public BaseResult commit(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
         User user = getUserByToken(request);
+        genFilingApplyInfo(filingApplyInfo, user);
+        filingApplyInfo.setProgress(FilingSubProgress.FILE_APPLY);
+        LoggerUtils.info(logger, "归档申请: filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
+        checkAndSetAuditField(filingApplyInfo, user);
+        return filingService.addFilingApply(filingApplyInfo);
+    }
+
+    private void checkAndSetAuditField(FilingApplyInfo filingApplyInfo, User user) {
+        if (null == filingApplyInfo.getRecord()) {
+            filingApplyInfo.setRecord(new AuditRecord());
+        }
+        filingApplyInfo.getRecord().setAuditor(user);
+        filingApplyInfo.getRecord().setAuditTime(new Date());
+        filingApplyInfo.getRecord().setResult(AuditResult.APPLY);
+        filingApplyInfo.getRecord().setRemark("申请成功");
+        if (null == filingApplyInfo.getAudit()) {
+            filingApplyInfo.setAudit(new Audit());
+        }
+    }
+
+    private void genFilingApplyInfo(FilingApplyInfo filingApplyInfo, User user) {
         if (null != user) {
             filingApplyInfo.setApplicant(String.valueOf(user.getId()));
         }
         filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE_LEGAL_AUDIT.getCode());
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        return filingService.addFilingApply(filingApplyInfo);
-    }
-
-    /**
-     * 归档申请审核
-     *
-     * @param filingApplyInfo
-     * @return
-     */
-    @PostMapping("/audit")
-    @ResponseBody
-    public BaseResult audit(@RequestBody FilingApplyInfo filingApplyInfo) {
-        //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE_OFFICER.getCode());
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        return filingService.updateFilingApply(filingApplyInfo, false);
-    }
-
-    /**
-     * 归档申请打回
-     *
-     * @param filingApplyInfo
-     * @return
-     */
-    @PostMapping("/reject")
-    @ResponseBody
-    public BaseResult reject(@RequestBody FilingApplyInfo filingApplyInfo) {
-        //filingApplyInfo.setApplyTime(new Date());
-        if (StringUtils.isBlank(filingApplyInfo.getProgress())) {
-            filingApplyInfo.setProgress(FilingProgress.FILE_LEGAL_AUDIT.getCode());
-        }
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        return filingService.updateFilingApply(filingApplyInfo, false);
-    }
-
-    /**
-     * 归档申请打回保存
-     *
-     * @param filingApplyInfo
-     * @return
-     */
-    @PostMapping("/rejectAndSave")
-    @ResponseBody
-    public BaseResult rejectAndSave(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
-        User user = getUserByToken(request);
-        if (null != user) {
-            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
-        }
-        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE_APPLY.getCode());
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        return filingService.addFilingApply(filingApplyInfo);
-    }
-
-    /**
-     * 归档申请完成
-     *
-     * @param filingApplyInfo
-     * @return
-     */
-    @PostMapping("/complete")
-    @ResponseBody
-    public BaseResult complete(@RequestBody FilingApplyInfo filingApplyInfo) {
-        //filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
-        filingApplyInfo.setProgress(FilingProgress.FILE_COMPLETE.getCode());
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        return filingService.updateFilingApply(filingApplyInfo, false);
     }
 }

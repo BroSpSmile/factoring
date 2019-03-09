@@ -8,12 +8,7 @@ import com.google.common.collect.Lists;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dao.UserDao;
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.AuditResult;
-import com.smile.start.model.enums.AuditType;
-import com.smile.start.model.enums.FilingProgress;
-import com.smile.start.model.enums.MeetingKind;
-import com.smile.start.model.enums.MeetingStatus;
-import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,6 +52,19 @@ public class Combobox extends BaseController {
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;
     }
+	
+	    /**
+     * 项目归档申请
+     * @return
+     */
+    @RequestMapping("/filingSubProgress")
+    public List<Item> getFilingSubProgress() {
+        FilingSubProgress[] enums = FilingSubProgress.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
 
     /**
      * 

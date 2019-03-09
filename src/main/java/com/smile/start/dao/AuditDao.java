@@ -43,6 +43,14 @@ public interface AuditDao {
     int updateRole(Audit audit);
 
     /**
+     * 更新角色
+     * @param audit
+     * @return
+     */
+    @Update("update audit set step =#{step} , role = #{role.serialNo}, applicant = #{applicant.id} where id = #{id}")
+    int updateRoleAndApplicant(Audit audit);
+
+    /**
      * 条件查询
      * @param audit
      * @return
@@ -58,7 +66,7 @@ public interface AuditDao {
     List<Audit> query(AuditParam param);
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
@@ -66,4 +74,15 @@ public interface AuditDao {
                                       @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
     @Select("select * from audit where id = #{id}")
     Audit get(Long id);
+
+    /**
+     *
+     * @param project
+     * @param type
+     * @return
+     */
+    @Results(id = "getByProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
+        @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
+    @Select("select * from audit where project = #{project} and audit_type= #{type}")
+    Audit getByProjectAndType(Long project,String type);
 }

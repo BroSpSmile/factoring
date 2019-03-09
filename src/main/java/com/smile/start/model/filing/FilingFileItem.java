@@ -23,9 +23,9 @@ public class FilingFileItem implements Serializable {
     private Long id;
 
     /**
-     * 项目编号
+     * 项目编号 db 主键
      */
-    private String projectId;
+    private long project;
 
     /**
      * 附件类型
@@ -47,7 +47,7 @@ public class FilingFileItem implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"projectId\":\"" + projectId + "\", \"itemType\":\"" + itemType + "\", \"itemName\":\"" + itemName + "\", \"itemValue\":\"" + itemValue
+        return "{\"id\":\"" + id + "\", \"project\":\"" + project + "\", \"itemType\":\"" + itemType + "\", \"itemName\":\"" + itemName + "\", \"itemValue\":\"" + itemValue
                 + "\"}  ";
     }
 
@@ -74,8 +74,8 @@ public class FilingFileItem implements Serializable {
      *
      * @return property value of projectId
      */
-    public String getProjectId() {
-        return projectId;
+    public long getProject() {
+        return project;
     }
 
     /**
@@ -83,8 +83,8 @@ public class FilingFileItem implements Serializable {
      *
      * @param projectId value to be assigned to property projectId
      */
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setProject(long projectId) {
+        this.project = projectId;
     }
 
     /**

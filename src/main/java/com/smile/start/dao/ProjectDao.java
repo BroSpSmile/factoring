@@ -43,12 +43,12 @@ public interface ProjectDao {
     /**
      * 更新
      *
-     * @param projectId
+     * @param id
      * @param progress
      * @return
      */
-    @Update("update factoring_project set progress = #{progress} where project_id = #{projectId}")
-    int updateProjectProgress(String projectId, String progress);
+    @Update("update factoring_project set progress = #{progress} where id = #{id}")
+    int updateProjectProgress(Long id, String progress);
 
     /**
      * 删除
