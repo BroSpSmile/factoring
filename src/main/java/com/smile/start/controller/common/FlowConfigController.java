@@ -3,6 +3,7 @@ package com.smile.start.controller.common;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.*;
+import com.smile.start.exception.ValidateException;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
@@ -67,6 +68,9 @@ public class FlowConfigController extends BaseController {
             result.setSuccess(true);
             result.setErrorMessage("新增流程配置成功");
             return result;
+        } catch (ValidateException e) {
+            logger.error(e.getMessage(), e);
+            return toResult(e);
         } catch (Exception e) {
             logger.error("新增流程配置失败", e);
             return toResult(e);

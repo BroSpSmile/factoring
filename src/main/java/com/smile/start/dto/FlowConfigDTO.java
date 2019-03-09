@@ -45,12 +45,12 @@ public class FlowConfigDTO implements Serializable {
     /**
      * 创建时间
      */
-    private Date gmtCreate;
+    private String gmtCreate;
 
     /**
      * 修改时间
      */
-    private Date gmtModify;
+    private String gmtModify;
 
     /**
      * 状态列表
@@ -105,19 +105,19 @@ public class FlowConfigDTO implements Serializable {
         this.modifyUser = modifyUser;
     }
 
-    public Date getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtModify() {
+    public String getGmtModify() {
         return gmtModify;
     }
 
-    public void setGmtModify(Date gmtModify) {
+    public void setGmtModify(String gmtModify) {
         this.gmtModify = gmtModify;
     }
 

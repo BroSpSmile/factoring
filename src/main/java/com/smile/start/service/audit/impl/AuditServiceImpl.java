@@ -97,7 +97,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setStep(step.getFlowStatus());
         //获取审核流程
         AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-        role.setSerialNo(step.getCheckedRoleList().get(0));
+        role.setSerialNo(step.getRoleSerialNo());
         audit.setRole(role);
         long effect = auditDao.insert(audit);
         addApplyRecord(audit);

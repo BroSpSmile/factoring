@@ -20,9 +20,6 @@ var vue = new Vue({
             statusList:[]
         },
         ruleValidate: {
-            flowName: [
-                { required: true, message: '流程名称不能为空', trigger: 'blur' }
-            ],
             flowType: [
                 { required: true, message: '流程类型不能为空', trigger: 'change', type:'number'}
             ]
@@ -208,17 +205,16 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '流程名称',
-        key: 'flowName',
-        align: 'left'
-    },
-    {
         title: '流程类型',
         key: 'projectMode',
         align: 'left',
         render:(h,param)=> {
             return h('span', vue.getFlowTypeDesc(param.row.flowType));
         }
+    },{
+        title: '创建时间',
+        key: 'gmtCreate',
+        align: 'left'
     },{
         title: '操作',
             align: 'center',

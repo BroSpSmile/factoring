@@ -36,6 +36,11 @@ public class FlowStatus implements Serializable {
      */
     private String flowStatusDesc;
 
+    /**
+     * 角色业务流水
+     */
+    private String roleSerialNo;
+
     public Long getId() {
         return id;
     }
@@ -74,5 +79,13 @@ public class FlowStatus implements Serializable {
 
     public void setFlowStatusDesc(String flowStatusDesc) {
         this.flowStatusDesc = flowStatusDesc;
+    }
+
+    public String getRoleSerialNo() {
+        return roleSerialNo;
+    }
+
+    public void setRoleSerialNo(String roleSerialNo) {
+        this.roleSerialNo = roleSerialNo;
     }
 }
