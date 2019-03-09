@@ -80,11 +80,10 @@ public interface ContractInfoDao {
      * @return
      */
     @Select("<script>"
-            + "select distinct ci.*,fp.project_name from auth_user_role_info uri,flow_status fs,flow_status_role fsr,contract_info ci,factoring_project fp "
+            + "select distinct ci.*,fp.project_name from auth_user_role_info uri,flow_status fs,contract_info ci,factoring_project fp "
             + "where uri.user_serial_no = #{userSerialNo} "
             + "and ci.project_id = fp.id "
-            + "and fsr.role_serial_no = uri.role_serial_no "
-            + "and fs.serial_no = fsr.status_serial_no "
+            + "and fs.role_serial_no = uri.role_serial_no "
             + "and ci.status = fs.flow_status "
             + "<if test = 'contractCode!=null'> and ci.contract_code like CONCAT('%',#{contractCode},'%')</if>"
             + "<if test = 'contractName!=null'> and ci.contract_name like CONCAT('%',#{contractName},'%')</if>"
