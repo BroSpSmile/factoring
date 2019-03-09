@@ -103,12 +103,11 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
             Installment query = new Installment();
             query.setDetail(detail);
             query.setType(installments.get(0).getType());
-            int effect = installmentDao.deleteByType(query);
+            installmentDao.deleteByType(query);
             for (Installment item : installments) {
                 item.setDetail(detail);
                 installmentDao.insert(item);
             }
-            return toResult(effect);
         }
         return new BaseResult();
     }

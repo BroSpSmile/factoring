@@ -1,7 +1,6 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,47 +9,47 @@ import java.util.List;
  * @since 1.8
  */
 public class FlowConfigDTO implements Serializable {
-    private static final long serialVersionUID = -6555693113320252827L;
+    private static final long   serialVersionUID = -6555693113320252827L;
 
     /**
      * 主键
      */
-    private Long id;
+    private Long                id;
 
     /**
      * 业务流水
      */
-    private String serialNo;
+    private String              serialNo;
 
     /**
      * 流程名称
      */
-    private String flowName;
+    private String              flowName;
 
     /**
      * 流程类型：1、合同；2、项目
      */
-    private Integer flowType;
+    private Integer             flowType;
 
     /**
      * 创建人
      */
-    private String createUser;
+    private String              createUser;
 
     /**
      * 修改人
      */
-    private String modifyUser;
+    private String              modifyUser;
 
     /**
      * 创建时间
      */
-    private String gmtCreate;
+    private String              gmtCreate;
 
     /**
      * 修改时间
      */
-    private String gmtModify;
+    private String              gmtModify;
 
     /**
      * 状态列表
