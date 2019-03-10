@@ -14,9 +14,9 @@ var vue = new Vue({
             applyType: '归档申请',
             applicant: '',
             applyTime: '',
-            projectId: 0,
+            project: 0,
             filingList: [],
-            progress: '',
+            progress: 'FILE_TOBE_APPLY',
             items: []
         },
         fileList: [],
@@ -24,7 +24,7 @@ var vue = new Vue({
         projectUrl: 'filingProject?type=0'
     },
     created: function () {
-        this.filingInfo.projectId = document.getElementById("projectId").value;
+        this.filingInfo.project = document.getElementById("projectId").value;
         this.initDate();
     },
     methods: {
@@ -33,7 +33,7 @@ var vue = new Vue({
          */
         initDate: function () {
             var _self = this;
-            this.$http.get("/filingApply/" + this.filingInfo.projectId).then(function (response) {
+            this.$http.get("/filingAudit/" + this.filingInfo.project).then(function (response) {
                 if (response.data.success) {
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.filingInfo = response.data.data;
@@ -168,7 +168,7 @@ var vue = new Vue({
             }
             for (let index in this.fileList) {
                 let item = {
-                    projectId: this.filingInfo.projectId,
+                    project: this.filingInfo.project,
                     itemType: "FILE",
                     itemName: this.fileList[index].name,
                     itemValue: this.fileList[index].response.data.fileId

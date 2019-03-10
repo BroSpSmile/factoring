@@ -1,6 +1,10 @@
 package com.smile.start.model.filing;
 
+import com.smile.start.model.enums.FilingSubProgress;
+import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +27,8 @@ public class FilingApplyInfo implements Serializable {
 
     private String applyTime;
 
+    private long project;
+
     private String projectId;
 
     private String projectName;
@@ -31,16 +37,48 @@ public class FilingApplyInfo implements Serializable {
 
     private String filingListStr;
 
-    /**
-     * 归档进度
-     * 0:待归档；1：提出申请；2：法务风控审核；3:归档完成
-     */
-    private String progress = "0";
+    private FilingSubProgress progress;
 
     /**
      * 归档附件
      */
     private List<FilingFileItem> items;
+
+    /**
+     * 当前审批信息
+     */
+    private AuditRecord record;
+
+//    private Integer rejectStep;
+
+    /**
+     * 审核对象
+     */
+    private Audit audit;
+
+    public AuditRecord getRecord() {
+        return record;
+    }
+
+    public void setRecord(AuditRecord record) {
+        this.record = record;
+    }
+
+//    public Integer getRejectStep() {
+//        return rejectStep;
+//    }
+//
+//    public void setRejectStep(Integer rejectStep) {
+//        this.rejectStep = rejectStep;
+//    }
+
+    public Audit getAudit() {
+        return audit;
+    }
+
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
     public Integer getId() {
         return id;
@@ -72,6 +110,14 @@ public class FilingApplyInfo implements Serializable {
 
     public void setApplyTime(String applyTime) {
         this.applyTime = applyTime;
+    }
+
+    public long getProject() {
+        return project;
+    }
+
+    public void setProject(long project) {
+        this.project = project;
     }
 
     public String getProjectId() {
@@ -111,11 +157,11 @@ public class FilingApplyInfo implements Serializable {
         this.items = items;
     }
 
-    public String getProgress() {
+    public FilingSubProgress getProgress() {
         return progress;
     }
 
-    public void setProgress(String progress) {
+    public void setProgress(FilingSubProgress progress) {
         this.progress = progress;
     }
 
@@ -138,7 +184,7 @@ public class FilingApplyInfo implements Serializable {
     @Override
     public String toString() {
         return "{\"id\":\"" + id + "\", \"applyType\":\"" + applyType + "\", \"applicant\":\"" + applicant +
-                "\", \"applyTime\":\"" + applyTime + "\", \"projectId\":\"" + projectId + "\", \"filingList\":\"" +
+                "\", \"applyTime\":\"" + applyTime + "\", \"project\":\"" + project + "\", \"filingList\":\"" +
                 filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
                 "\", \"items\":\"" + items
                 + "\"}  ";

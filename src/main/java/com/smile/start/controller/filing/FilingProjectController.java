@@ -11,7 +11,9 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.filing.FilingService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @description：归档申请，项目查询
@@ -35,10 +39,11 @@ public class FilingProjectController extends BaseController {
     @Resource
     private ProjectService projectService;
 
-//    @GetMapping
-//    public String index() {
-//        return "filing/project";
-//    }
+    /**
+     * 项目服务
+     */
+    @Resource
+    private FilingService filingService;
 
     /**
      *
@@ -53,53 +58,6 @@ public class FilingProjectController extends BaseController {
     }
 
     /**
-     * 新增项目
-     *
-     * @param project
-     * @return
-     */
-    @PostMapping
-    @ResponseBody
-    public BaseResult add(@RequestBody Project project) {
-        project.setKind(ProjectKind.FACTORING);
-        project.setProgress(Progress.INIT);
-        LoggerUtils.info(logger, "新增项目请求参数={}", FastJsonUtils.toJSONString(project));
-        return projectService.initProject(project);
-    }
-
-    /**
-     * 更新项目
-     * @param project
-     * @return
-     */
-    @PutMapping
-    @ResponseBody
-    public BaseResult edit(@RequestBody Project project) {
-        LoggerUtils.info(logger, "修改项目请求参数={}", FastJsonUtils.toJSONString(project));
-        try {
-            return projectService.updateProject(project);
-        } catch (RuntimeException e) {
-            return toResult(e);
-        }
-    }
-
-    /**
-     * 删除项目
-     * @param id
-     * @return
-     */
-    @DeleteMapping(value = "/{id}")
-    @ResponseBody
-    public BaseResult delete(@PathVariable Long id) {
-        try {
-            LoggerUtils.info(logger, "删除项目id={}", id);
-            return projectService.delete(id);
-        } catch (RuntimeException e) {
-            return toResult(e);
-        }
-    }
-
-    /**
      * 分页查询
      * @param query
      * @return
@@ -109,6 +67,13 @@ public class FilingProjectController extends BaseController {
     public PageInfo<Project> queryByParam(@RequestBody PageRequest<Project> query) {
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         PageInfo<Project> result = projectService.queryPage(query);
+        List<Project> projectList = result.getList();
+        projectList.stream().forEach(project -> project.setSubProgress(getSubProgress(project)));
         return result;
+    }
+
+    private String getSubProgress(Project project) {
+        Optional<FilingApplyInfo> opt = Optional.ofNullable(filingService.findByProjectId(project.getId()));
+        return opt.isPresent() ? opt.get().getProgress().getCode() : "";
     }
 }

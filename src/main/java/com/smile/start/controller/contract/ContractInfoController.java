@@ -1,10 +1,13 @@
 package com.smile.start.controller.contract;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dto.*;
 import com.smile.start.model.base.ListResult;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,21 +39,29 @@ public class ContractInfoController extends BaseController {
     @Resource
     private ContractInfoService contractInfoService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String index() {
-        return "contract/contractInfo";
+    /**
+     * 从项目列表中点击 合同草拟 跳转页面
+     * @param request
+     * @param model
+     * @return
+     */
+    @GetMapping
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        model.addAttribute("projectId", id);
+        return "contract/contractInfoAdd";
     }
 
     /**
      *
-     * @param id
+     * @param projectId
      * @return
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{projectId}")
     @ResponseBody
-    public SingleResult<ContractInfoDTO> get(@PathVariable Long id) {
+    public SingleResult<ContractInfoDTO> get(@PathVariable Long projectId) {
         try {
-            ContractInfoDTO contractInfoDTO = contractInfoService.get(id);
+            ContractInfoDTO contractInfoDTO = contractInfoService.getByProjectId(projectId);
             SingleResult<ContractInfoDTO> result = new SingleResult<>();
             result.setSuccess(true);
             result.setData(contractInfoDTO);
@@ -64,8 +75,7 @@ public class ContractInfoController extends BaseController {
     @PostMapping(value = "/list")
     @ResponseBody
     public PageInfo<ContractBaseInfoDTO> list(@RequestBody PageRequest<ContractInfoSearchDTO> searchDTO) {
-        PageInfo<ContractBaseInfoDTO> contractInfoList = contractInfoService.findAll(searchDTO);
-        return contractInfoList;
+        return contractInfoService.findAll(searchDTO);
     }
 
     /**

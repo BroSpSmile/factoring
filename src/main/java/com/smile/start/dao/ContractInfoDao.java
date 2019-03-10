@@ -29,6 +29,14 @@ public interface ContractInfoDao {
 
     /**
      *
+     * @param projectId
+     * @return
+     */
+    @Select("select * from contract_info where project_id = #{projectId}")
+    ContractInfo getByProjectId(Long projectId);
+
+    /**
+     *
      * @param serialNo
      * @return
      */

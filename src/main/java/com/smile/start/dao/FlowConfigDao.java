@@ -123,4 +123,13 @@ public interface FlowConfigDao {
      */
     @Delete("delete from flow_status_role where flow_serial_no = #{flowSerialNo}")
     void deleteStatusRole(String flowSerialNo);
+
+    /**
+     * 根据流程类型、状态值获取对应状态配置信息
+     * @param flowType
+     * @param flowStatus
+     * @return
+     */
+    @Select("select fs.* from flow_config fc,flow_status fs where fc.serial_no = fs.flow_serial_no and fc.flow_type = #{arg0} and fs.flow_status = #{arg1}")
+    FlowStatus findByFlowTypeAndStatus(Integer flowType, Integer flowStatus);
 }

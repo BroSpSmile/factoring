@@ -23,7 +23,9 @@ public enum AuditResult {
                          REJECTED("REJECTED", "驳回"),
 
                          /**  */
-                         WAIT("WAIT", "待审核");
+                         WAIT("WAIT", "待审核"),
+                         /**  */
+                         COMPLETE("COMPLETE", "完成");
 
     AuditResult(String code, String desc) {
         this.code = code;

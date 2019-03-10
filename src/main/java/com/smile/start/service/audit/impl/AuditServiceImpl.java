@@ -191,6 +191,21 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     public Audit getAudit(Long id) {
         Audit audit = auditDao.get(id);
+        genAudit(audit);
+        return audit;
+    }
+
+    /**
+     * @see com.smile.start.service.audit.AuditService#getAudit(java.lang.Long)
+     */
+    @Override
+    public Audit getAuditByProjectFlowAndType(Long id,String type) {
+        Audit audit = auditDao.getByProjectAndType(id,type);
+        genAudit(audit);
+        return audit;
+    }
+
+    private void genAudit(Audit audit) {
         User applicant = userInfoService.getUserById(audit.getApplicant().getId());
         audit.setApplicant(applicant);
         Project project = projectService.getProject(audit.getProject().getId());
@@ -204,7 +219,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         }
         audit.setRecords(records);
         audit.setFlows(getFlows(audit));
-        return audit;
     }
 
     /**
@@ -239,7 +253,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             AuditFlow flow = new AuditFlow();
             flow.setStep(statu.getFlowStatus());
             flow.setDesc(statu.getFlowStatusDesc());
-            flow.setRole(roleInfoService.getBySerialNo(statu.getCheckedRoleList().get(0)));
+            flow.setRole(roleInfoService.getBySerialNo(statu.getRoleSerialNo()));
             //查询审核记录
             AuditRecord record = auditRecordDao.getLast(audit.getId(), statu.getFlowStatusDesc());
             if (null != record) {

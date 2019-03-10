@@ -20,6 +20,13 @@ public interface ContractInfoService {
     ContractInfoDTO get(Long id);
 
     /**
+     * 根据项目主键获取合同信息
+     * @param projectId
+     * @return
+     */
+    ContractInfoDTO getByProjectId(Long projectId);
+
+    /**
      * 分页查询
      * @param page
      * @return

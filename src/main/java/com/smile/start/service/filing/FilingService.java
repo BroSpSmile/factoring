@@ -1,14 +1,15 @@
 package com.smile.start.service.filing;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.filing.FilingApplyInfo;
+import com.smile.start.model.project.AuditRecord;
 
 public interface FilingService {
 
     /**
-     * 新增归档申请
      *
      * @param filingApplyInfo
      * @return
@@ -43,6 +44,6 @@ public interface FilingService {
      * @param projectId
      * @return
      */
-    FilingApplyInfo findByProjectId(String projectId);
+    FilingApplyInfo findByProjectId(Long projectId);
 
 }

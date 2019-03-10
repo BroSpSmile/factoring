@@ -17,22 +17,13 @@ public enum FilingProgress {
      * 已放款状态可提出归档申请，即待归档状态
      */
     LOAN("LOAN", "待归档", 11),
+
     /**
      *
      */
-    FILE_APPLY("FILE_APPLY", "提出归档申请", 12),
-    /**
-     *
-     */
-    FILE_LEGAL_AUDIT("FILE_LEGAL_AUDIT", "法务分控审核", 13),
-    /**
-     *
-     */
-    FILE_OFFICER("FILE_OFFICER", "办公室专员归档", 14),
-    /**
-     *
-     */
-    FILE_COMPLETE("FILE_COMPLETE", "归档完成", 15);
+    FILE("FILE", "归档申请", 12),
+
+    FILE_COMPLETE("FILE_COMPLETE", "归档完成", 13);
 
     FilingProgress(String code, String desc, int index) {
         this.code = code;

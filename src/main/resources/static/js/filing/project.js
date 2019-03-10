@@ -48,12 +48,8 @@ var vue = new Vue({
                     //     }
                     // }
                 } else {
-                    for (let index in this.statusItems) {
-                        if (index == 0 || index == 1) {
-                            //归档审核菜单只能查看审批中的
-                            this.statusItems.shift();
-                        }
-                    }
+                    this.statusItems.shift();
+                    this.statusItems.pop();
                 }
                 this.search();
             }, function (error) {
@@ -134,21 +130,21 @@ var vue = new Vue({
         /**
          * 归档申请
          */
-        apply: function (projectId) {
-            window.open("filingApply?type=" + this.queryType + "&id=" + projectId, "_self");
+        apply: function (project_id) {
+            window.open("filingApply?type=" + this.queryType + "&id=" + project_id, "_self");
         },
 
         /**
          * 归档审批
          */
-        audit: function (projectId) {
-            window.open("filingAudit?type=" + this.queryType + "&id=" + projectId, "_self");
+        audit: function (project_id) {
+            window.open("filingAudit?type=" + this.queryType + "&id=" + project_id, "_self");
         },
         /**
          * 归档审批查看
          */
-        view: function (projectId) {
-            window.open("filingAudit?type=" + this.queryType + "&view=true&id=" + projectId, "_self");
+        view: function (project_id) {
+            window.open("filingAudit?type=" + this.queryType + "&view=true&id=" + project_id, "_self");
         }
     }
 });
@@ -181,7 +177,7 @@ vue.tableColumns = [
         title: '操作',
         align: 'center',
         render: (h, param) => {
-            if (param.row.progress == 'LOAN' || param.row.progress == 'FILE_APPLY') {
+            if (param.row.progress == 'LOAN') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('span') : h('Button', {
                         props: {
@@ -194,12 +190,12 @@ vue.tableColumns = [
                         },
                         on: {
                             click: () => {
-                                vue.apply(param.row.projectId);
+                                vue.apply(param.row.id);
                             }
                         }
                     }, '归档申请')
                 ])
-            } else if (param.row.progress == 'FILE_LEGAL_AUDIT') {
+            } else if (param.row.progress == 'FILE') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('Button', {
                         props: {
@@ -212,7 +208,7 @@ vue.tableColumns = [
                         },
                         on: {
                             click: () => {
-                                vue.audit(param.row.projectId);
+                                vue.audit(param.row.id);
                             }
                         }
                     }, '归档审核') : h('span'), h('Button', {
@@ -226,10 +222,11 @@ vue.tableColumns = [
                         },
                         on: {
                             click: () => {
-                                vue.view(param.row.projectId);
+                                vue.view(param.row.id);
                             }
                         }
                     }, '审核详情')]);
+
             } else if (param.row.progress == 'FILE_OFFICER') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('Button', {
@@ -273,7 +270,7 @@ vue.tableColumns = [
                         },
                         on: {
                             click: () => {
-                                vue.view(param.row.projectId);
+                                vue.view(param.row.id);
                             }
                         }
                     }, '审核详情')]);
