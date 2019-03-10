@@ -11,6 +11,7 @@ import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.auth.RoleInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +72,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private AuditRecordDao                    auditRecordDao;
+
+    @Resource
+    private ProjectItemDao                    projectItemDao;
 
     @Resource
     private UserDao                           userDao;
@@ -183,8 +187,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreement.setContractSerialNo(contractSerialNo);
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
-        //保险附件
-        insertAttachList(contractInfoDTO.getAttachList(), contractSerialNo);
+        //附件合同
+        insertAttachList(contractInfoDTO);
         return contractInfoDao.insert(contractInfo);
     }
 
@@ -222,7 +226,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //更新附件信息
         contractAttachDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        insertAttachList(contractInfoDTO.getAttachList(), contractInfo.getSerialNo());
+        insertAttachList(contractInfoDTO);
     }
 
     /**
@@ -246,16 +250,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     /**
      * 插入附件信息
-     * @param attachList
-     * @param contractSerialNo
+     * @param contractInfoDTO
      */
-    private void insertAttachList(List<ContractAttachDTO> attachList, String contractSerialNo) {
-        if (!CollectionUtils.isEmpty(attachList)) {
-            attachList.forEach(e -> {
-                e.setSerialNo(SerialNoGenerator.generateSerialNo("CA", 5));
-                e.setContractSerialNo(contractSerialNo);
-                e.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
-                contractAttachDao.insert(contractInfoMapper.dto2do(e));
+    private void insertAttachList(ContractInfoDTO contractInfoDTO) {
+        if (!CollectionUtils.isEmpty(contractInfoDTO.getAttachList())) {
+            contractInfoDTO.getAttachList().forEach(e -> {
+                ProjectItem projectItem = new ProjectItem();
+                projectItem.setProjectId(contractInfoDTO.getProject().getId());
+                projectItem.setItemType(ProjectItemType.CONTRACT);
+                projectItem.setItemName(e.getAttachName());
+                projectItem.setItemValue(e.getFileId());
+                projectItemDao.insert(projectItem);
             });
         }
     }
@@ -294,12 +299,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         audit.setProject(projectDao.get(contractInfo.getProjectId()));
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
-        ContractStatusEnum currentStatus = ContractStatusEnum.fromValue(contractInfo.getStatus());
-        //状态合法性校验
-        if (currentStatus == null) {
-            throw new ValidateException("合同状态非法，status = " + contractInfo.getStatus());
-        }
-        audit.setStep(currentStatus.getNextStatus().getValue());
+        audit.setStep(ContractStatusEnum.APPLY.getValue());
         //获取审核流程
         final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
                 contractInfo.getStatus() + 1);

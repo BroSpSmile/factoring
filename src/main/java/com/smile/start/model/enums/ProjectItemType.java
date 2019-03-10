@@ -22,7 +22,10 @@ public enum ProjectItemType {
                              INITIATE("INITIATE", "立项纪要"),
 
                              /** */
-                             FILE("FILE", "归档文件");
+                             FILE("FILE", "归档文件"),
+
+                             /** */
+                             CONTRACT("CONTRACT", "合同文件");
 
     ProjectItemType(String code, String desc) {
         this.code = code;
