@@ -4,8 +4,6 @@ import com.smile.start.model.enums.FilingSubProgress;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,27 +15,27 @@ import java.util.List;
  * @version: $
  */
 public class FilingApplyInfo implements Serializable {
-    private static final long serialVersionUID = 371278758555526014L;
+    private static final long    serialVersionUID = 371278758555526014L;
 
-    private Integer id;
+    private Integer              id;
 
-    private String applyType;
+    private String               applyType;
 
-    private String applicant;
+    private String               applicant;
 
-    private String applyTime;
+    private String               applyTime;
 
-    private long project;
+    private long                 project;
 
-    private String projectId;
+    private String               projectId;
 
-    private String projectName;
+    private String               projectName;
 
-    private String[] filingList;
+    private String[]             filingList;
 
-    private String filingListStr;
+    private String               filingListStr;
 
-    private FilingSubProgress progress;
+    private FilingSubProgress    progress;
 
     /**
      * 归档附件
@@ -47,14 +45,14 @@ public class FilingApplyInfo implements Serializable {
     /**
      * 当前审批信息
      */
-    private AuditRecord record;
+    private AuditRecord          record;
 
-//    private Integer rejectStep;
+    //    private Integer rejectStep;
 
     /**
      * 审核对象
      */
-    private Audit audit;
+    private Audit                audit;
 
     public AuditRecord getRecord() {
         return record;
@@ -64,13 +62,13 @@ public class FilingApplyInfo implements Serializable {
         this.record = record;
     }
 
-//    public Integer getRejectStep() {
-//        return rejectStep;
-//    }
-//
-//    public void setRejectStep(Integer rejectStep) {
-//        this.rejectStep = rejectStep;
-//    }
+    //    public Integer getRejectStep() {
+    //        return rejectStep;
+    //    }
+    //
+    //    public void setRejectStep(Integer rejectStep) {
+    //        this.rejectStep = rejectStep;
+    //    }
 
     public Audit getAudit() {
         return audit;
@@ -183,10 +181,7 @@ public class FilingApplyInfo implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"applyType\":\"" + applyType + "\", \"applicant\":\"" + applicant +
-                "\", \"applyTime\":\"" + applyTime + "\", \"project\":\"" + project + "\", \"filingList\":\"" +
-                filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress +
-                "\", \"items\":\"" + items
-                + "\"}  ";
+        return "{\"id\":\"" + id + "\", \"applyType\":\"" + applyType + "\", \"applicant\":\"" + applicant + "\", \"applyTime\":\"" + applyTime + "\", \"project\":\"" + project
+               + "\", \"filingList\":\"" + filingList + "\", \"filingListStr\":\"" + filingListStr + "\", \"progress\":\"" + progress + "\", \"items\":\"" + items + "\"}  ";
     }
 }

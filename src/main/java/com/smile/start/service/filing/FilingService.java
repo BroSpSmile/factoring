@@ -1,11 +1,9 @@
 package com.smile.start.service.filing;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.filing.FilingApplyInfo;
-import com.smile.start.model.project.AuditRecord;
 
 public interface FilingService {
 
@@ -23,14 +21,12 @@ public interface FilingService {
      */
     BaseResult updateFilingApply(FilingApplyInfo filingApplyInfo, boolean isUpdateItem);
 
-
     /**
      * 删除档申请
      * @param id
      * @return
      */
     BaseResult delete(Long id);
-
 
     /**
      * 分页查询
