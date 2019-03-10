@@ -16,18 +16,148 @@ public enum Step {
                   APPROVAL(0, "立项") {
 
                       /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return null;
+                      }
+
+                      /** 
                        * @see com.smile.start.model.enums.Step#next()
                        */
                       @Override
                       public Step next() {
-                          return null;
+                          return TUNEUP;
                       }
+
+                  },
+                  TUNEUP(1, "尽调") {
 
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
                        */
                       @Override
                       public Step prev() {
+                          return APPROVAL;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return MEETING;
+                      }
+
+                  },
+                  MEETING(2, "三重一大") {
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return TUNEUP;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return DRAWUP;
+                      }
+
+                  },
+                  DRAWUP(3, "合同拟定") {
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return MEETING;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return SIGN;
+                      }
+
+                  },
+                  SIGN(4, "签署") {
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return DRAWUP;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return LOAN;
+                      }
+
+                  },
+                  LOAN(5, "放款") {
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return SIGN;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return FILE;
+                      }
+
+                  },
+                  FILE(6, "归档") {
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return LOAN;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return END;
+                      }
+
+                  },
+                  END(7, "完结") {
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return FILE;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
                           return null;
                       }
 
@@ -86,11 +216,12 @@ public enum Step {
      * 上一步
      * @return
      */
-    public abstract Step next();
+    public abstract Step prev();
 
     /**
-     * 下一步
+     * 下一步步
      * @return
      */
-    public abstract Step prev();
+    public abstract Step next();
+
 }

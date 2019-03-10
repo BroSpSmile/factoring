@@ -11,7 +11,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.Update;
 
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.StepRecord;
 
@@ -27,15 +30,34 @@ public interface ProjectStepDao {
      * @param record
      * @return
      */
-    @Insert("insert into project_step (project_id,progress,status,create_time) values(#{project.id},#{progress},#{status},#{createTime})")
+    @Insert("insert into project_step (project_id,step,status,create_time) values(#{project.id},#{progress},#{status},#{createTime})")
+    @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(StepRecord record);
+
+    /**
+     * 
+     * @param record
+     * @return
+     */
+    @Update("update project_step set step = #{step}<if test='audit!=null'>, audit = #{audit.id}</if>,modify_time = #{modifyTime} where id = #{id}")
+    int update(StepRecord record);
+
+    /**
+     * 
+     * @param projectId
+     * @param step
+     * @return
+     */
+    @Select("select * from project_step where project_id = #{projectId} and step = #{step}")
+    StepRecord getStep(Long projectId, Step step);
 
     /**
      * 
      * @param project
      * @return
      */
-    @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id") })
-    @Select("select * from project_step where project_id = #{project.id}")
+    @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id"),
+                                        @Result(column = "audit", property = "audit.id") })
+    @Select("select * from project_step where project_id = #{id}")
     List<StepRecord> query(Project project);
 }

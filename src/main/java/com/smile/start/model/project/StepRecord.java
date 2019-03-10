@@ -7,7 +7,7 @@ package com.smile.start.model.project;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.StepStatus;
 
 /**
@@ -27,13 +27,19 @@ public class StepRecord implements Serializable {
     private Project           project;
 
     /** 当前流程 */
-    private Progress          progress;
+    private Step              step;
 
     /** 流程状态 */
-    private StepStatus    status;
+    private StepStatus        status;
+
+    /** 审核记录 */
+    private Audit             audit;
 
     /** 创建时间 */
     private Date              createTime;
+
+    /** 修改时间 */
+    private Date              modifyTime;
 
     /** 
      * @see java.lang.Object#toString()
@@ -41,8 +47,8 @@ public class StepRecord implements Serializable {
     @Override
     public String toString() {
         return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (project != null ? "project\":\"" + project + "\", \"" : "")
-               + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (status != null ? "status\":\"" + status + "\", \"" : "")
-               + (createTime != null ? "createTime\":\"" + createTime : "") + "\"}  ";
+               + (step != null ? "step\":\"" + step + "\", \"" : "") + (status != null ? "status\":\"" + status + "\", \"" : "")
+               + (createTime != null ? "createTime\":\"" + createTime + "\", \"" : "") + (modifyTime != null ? "modifyTime\":\"" + modifyTime : "") + "\"}  ";
     }
 
     /**
@@ -82,21 +88,21 @@ public class StepRecord implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>progress</tt>.
+     * Getter method for property <tt>step</tt>.
      * 
-     * @return property value of progress
+     * @return property value of step
      */
-    public Progress getProgress() {
-        return progress;
+    public Step getStep() {
+        return step;
     }
 
     /**
-     * Setter method for property <tt>progress</tt>.
+     * Setter method for property <tt>step</tt>.
      * 
-     * @param progress value to be assigned to property progress
+     * @param step value to be assigned to property step
      */
-    public void setProgress(Progress progress) {
-        this.progress = progress;
+    public void setStep(Step step) {
+        this.step = step;
     }
 
     /**
@@ -133,6 +139,42 @@ public class StepRecord implements Serializable {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    /**
+     * Getter method for property <tt>modifyTime</tt>.
+     * 
+     * @return property value of modifyTime
+     */
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    /**
+     * Setter method for property <tt>modifyTime</tt>.
+     * 
+     * @param modifyTime value to be assigned to property modifyTime
+     */
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    /**
+     * Getter method for property <tt>audit</tt>.
+     * 
+     * @return property value of audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
+
+    /**
+     * Setter method for property <tt>audit</tt>.
+     * 
+     * @param audit value to be assigned to property audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
     }
 
 }

@@ -33,7 +33,7 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.project.ProjectService;
 
 /**
- * 
+ * 保理项目
  * @author smile.jing
  * @version $Id: ApprovalController.java, v 0.1 Jan 13, 2019 9:32:21 PM smile.jing Exp $
  */

@@ -52,11 +52,11 @@ public class Combobox extends BaseController {
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;
     }
-	
-	    /**
-     * 项目归档申请
-     * @return
-     */
+
+    /**
+    * 项目归档申请
+    * @return
+    */
     @RequestMapping("/filingSubProgress")
     public List<Item> getFilingSubProgress() {
         FilingSubProgress[] enums = FilingSubProgress.values();
@@ -64,7 +64,6 @@ public class Combobox extends BaseController {
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;
     }
-
 
     /**
      * 
@@ -135,6 +134,18 @@ public class Combobox extends BaseController {
         ProjectModel[] enums = ProjectModel.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 项目步骤
+     * @return
+     */
+    @RequestMapping("/steps")
+    public List<Item> getSteps() {
+        Step[] enums = Step.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.name(), e.getName())));
         return items;
     }
 }

@@ -26,7 +26,8 @@ var vue = new Vue({
 		pageInfo:{},
 		modal1 : false,
 		statusItems : [],
-		models:[]
+		models:[],
+		steps:[]
 	},
 	created : function() {
 		this.initDate();
@@ -47,7 +48,12 @@ var vue = new Vue({
 				_self.models = response.data;
 			}, function(error) {
 				console.error(error);
-			})
+			});
+			this.$http.get("/combo/steps").then(function(response) {
+				_self.steps = response.data;
+			}, function(error) {
+				console.error(error);
+			});
 		},
 		
 		/**
@@ -57,6 +63,18 @@ var vue = new Vue({
 			for(let index in this.models){
 				if(this.models[index].value == value){
 					return this.models[index].text;
+				}
+			}
+			return "";
+		},
+		
+		/**
+		 * 翻译
+		 */
+		toStepName:function(value){
+			for(let index in this.steps){
+				if(this.steps[index].value == value){
+					return this.steps[index].text;
 				}
 			}
 			return "";
@@ -440,44 +458,25 @@ vue.tableColumns=[{
 							h('div',{},[
 								h('Steps',{
 									props:{
-										current:-1
+										current:param.row.step
 									}
 								},[
-									h('Step',{
-										props:{
-											title:'立项',
-											content:'2019-08-05'
-										}
-									}),
-									h('Step',{props:{title:'尽调'}}),
-									h('Step',{
-										props:{
-											title:'三重一大',
-											content:'待补,滞留3天',
-											status:'error'
-										}
-									}),
-									h('Step',{props:{title:'合同拟定'}}),
-									h('Step',{props:{title:'签署'}}),
-									h('Step',{props:{title:'放款'}}),
-									h('Step',{props:{title:'归档'}}),
-									h('Step',{
-										props:{
-											title:'完结',
-											content:'2019-08-05'
-										},
+									param.row.records.map(item=>{
+										return h('Step',{
+											props:{
+												title:vue.toStepName(item.step),
+												content:item.modifyTime==null?'':moment(item.modifyTime).format('YYYY-MM-DD')
+											}
+										})
 									})
-								]),
-								h('Row',[
-									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'error',size:'small',ghost:true}},'后补')]),
-									h('Col',{props:{span:3}},[h('a','已完结')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
-									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')])
 								])
+//								,
+//								h('Row',[
+//									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
+//									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
+//									h('Col',{props:{span:3}},[h('Button',{props:{type:'error',size:'small',ghost:true}},'后补')]),
+//									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')])
+//								])
 							])
 						])
 					])

@@ -30,6 +30,7 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.IdGenService;
 import com.smile.start.service.project.ProjectService;
@@ -50,7 +51,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** projectRecordDao */
     @Resource
-    private ProjectStepDao projectRecordDao;
+    private ProjectStepDao   projectRecordDao;
 
     /** factoringService */
     @Resource
@@ -67,6 +68,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     /** Id生成服务 */
     @Resource
     private IdGenService     idGenService;
+
+    /** 流程引擎 */
+    @Resource
+    private ProcessEngine    processEngine;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -229,7 +234,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     private BaseResult addRecord(Project project) {
         StepRecord record = new StepRecord();
         record.setProject(project);
-        record.setProgress(project.getProgress());
+        //record.setProgress(project.getProgress());
         record.setStatus(StepStatus.COMPLETED);
         record.setCreateTime(new Date());
         long effect = projectRecordDao.insert(record);
@@ -242,6 +247,8 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      */
     private void setDetail(Project project) {
         FactoringDetail detail = factoringService.get(project.getId());
+        List<StepRecord> records = processEngine.getRecords(project);
+        project.setRecords(records);
         project.setDetail(detail);
     }
 

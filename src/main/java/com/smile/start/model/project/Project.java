@@ -41,8 +41,15 @@ public class Project implements Serializable {
     /** 当前进度 */
     private Progress          progress;
 
+    /** 当前步骤 */
+    private Integer           step;
+
+    /** 流程历史 */
+    private List<StepRecord>  records;
+
     /** 子流程进度 */
-    private String          subProgress;
+    @Deprecated
+    private String            subProgress;
 
     /** 项目模式 */
     private ProjectModel      model;
@@ -50,24 +57,8 @@ public class Project implements Serializable {
     /** 项目附件 */
     private List<ProjectItem> items;
 
-    /** all进度 */
-    private List<String>      progresses;
-
     /** 项目明细 */
     private FactoringDetail   detail;
-
-    /** 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "{\"id\":\"" + id + "\", \"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
-               + (projectName != null ? "projectName\":\"" + projectName + "\", \"" : "") + (user != null ? "user\":\"" + user + "\", \"" : "")
-            + (subProgress != null ? "subProgress\":\"" + subProgress + "\", \"" : "")
-            + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
-               + (items != null ? "items\":\"" + items + "\", \"" : "") + (progresses != null ? "progresses\":\"" + progresses + "\", \"" : "")
-               + (detail != null ? "detail\":\"" + detail : "") + "\"}  ";
-    }
 
     /**
      * Getter method for property <tt>id</tt>.
@@ -177,10 +168,56 @@ public class Project implements Serializable {
         this.progress = progress;
     }
 
+    /**
+     * Getter method for property <tt>step</tt>.
+     * 
+     * @return property value of step
+     */
+    public Integer getStep() {
+        return step;
+    }
+
+    /**
+     * Setter method for property <tt>step</tt>.
+     * 
+     * @param step value to be assigned to property step
+     */
+    public void setStep(Integer step) {
+        this.step = step;
+    }
+
+    /**
+     * Getter method for property <tt>records</tt>.
+     * 
+     * @return property value of records
+     */
+    public List<StepRecord> getRecords() {
+        return records;
+    }
+
+    /**
+     * Setter method for property <tt>records</tt>.
+     * 
+     * @param records value to be assigned to property records
+     */
+    public void setRecords(List<StepRecord> records) {
+        this.records = records;
+    }
+
+    /**
+     * Getter method for property <tt>subProgress</tt>.
+     * 
+     * @return property value of subProgress
+     */
     public String getSubProgress() {
         return subProgress;
     }
 
+    /**
+     * Setter method for property <tt>subProgress</tt>.
+     * 
+     * @param subProgress value to be assigned to property subProgress
+     */
     public void setSubProgress(String subProgress) {
         this.subProgress = subProgress;
     }
@@ -219,24 +256,6 @@ public class Project implements Serializable {
      */
     public void setItems(List<ProjectItem> items) {
         this.items = items;
-    }
-
-    /**
-     * Getter method for property <tt>progresses</tt>.
-     * 
-     * @return property value of progresses
-     */
-    public List<String> getProgresses() {
-        return progresses;
-    }
-
-    /**
-     * Setter method for property <tt>progresses</tt>.
-     * 
-     * @param progresses value to be assigned to property progresses
-     */
-    public void setProgresses(List<String> progresses) {
-        this.progresses = progresses;
     }
 
     /**

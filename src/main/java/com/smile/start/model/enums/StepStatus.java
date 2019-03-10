@@ -11,15 +11,23 @@ import org.apache.commons.lang3.StringUtils;
  * @author smile.jing
  * @version $Id: ProgressStatus.java, v 0.1 Mar 2, 2019 9:12:40 PM smile.jing Exp $
  */
+/**
+ * 
+ * @author smile.jing
+ * @version $Id: StepStatus.java, v 0.1 Mar 11, 2019 12:01:09 AM smile.jing Exp $
+ */
 public enum StepStatus {
-                            /**  */
-                            LATER("LATER", "后补"),
+                        /**  */
+                        LATER("LATER", "后补"),
 
-                            /**  */
-                            COMPLETED("COMPLETED", "已完成"),
+                        /**  */
+                        BEGIN("BEGIN", "未开始"),
 
-                            /**  */
-                            PROCESSING("PROCESSING", "处理中");
+                        /**  */
+                        COMPLETED("COMPLETED", "已完成"),
+
+                        /**  */
+                        PROCESSING("PROCESSING", "处理中");
 
     StepStatus(String code, String desc) {
         this.code = code;
