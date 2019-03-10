@@ -8,14 +8,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProgressStatus;
+import com.smile.start.model.enums.StepStatus;
 
 /**
- * 项目记录
+ * 项目步骤记录
  * @author smile.jing
  * @version $Id: ProjectRecord.java, v 0.1 Mar 3, 2019 10:37:46 PM smile.jing Exp $
  */
-public class ProjectRecord implements Serializable {
+public class StepRecord implements Serializable {
 
     /** UID */
     private static final long serialVersionUID = -4454241868223583328L;
@@ -30,7 +30,7 @@ public class ProjectRecord implements Serializable {
     private Progress          progress;
 
     /** 流程状态 */
-    private ProgressStatus    status;
+    private StepStatus    status;
 
     /** 创建时间 */
     private Date              createTime;
@@ -104,7 +104,7 @@ public class ProjectRecord implements Serializable {
      * 
      * @return property value of status
      */
-    public ProgressStatus getStatus() {
+    public StepStatus getStatus() {
         return status;
     }
 
@@ -113,7 +113,7 @@ public class ProjectRecord implements Serializable {
      * 
      * @param status value to be assigned to property status
      */
-    public void setStatus(ProgressStatus status) {
+    public void setStatus(StepStatus status) {
         this.status = status;
     }
 

@@ -18,16 +18,16 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectItemDao;
-import com.smile.start.dao.ProjectRecordDao;
+import com.smile.start.dao.ProjectStepDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProgressStatus;
+import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
-import com.smile.start.model.project.ProjectRecord;
+import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.project.FactoringService;
@@ -50,7 +50,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
 
     /** projectRecordDao */
     @Resource
-    private ProjectRecordDao projectRecordDao;
+    private ProjectStepDao projectRecordDao;
 
     /** factoringService */
     @Resource
@@ -227,10 +227,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      * @return
      */
     private BaseResult addRecord(Project project) {
-        ProjectRecord record = new ProjectRecord();
+        StepRecord record = new StepRecord();
         record.setProject(project);
         record.setProgress(project.getProgress());
-        record.setStatus(ProgressStatus.COMPLETED);
+        record.setStatus(StepStatus.COMPLETED);
         record.setCreateTime(new Date());
         long effect = projectRecordDao.insert(record);
         return toResult(effect);

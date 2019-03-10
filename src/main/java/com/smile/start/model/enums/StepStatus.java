@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author smile.jing
  * @version $Id: ProgressStatus.java, v 0.1 Mar 2, 2019 9:12:40 PM smile.jing Exp $
  */
-public enum ProgressStatus {
+public enum StepStatus {
                             /**  */
                             LATER("LATER", "后补"),
 
@@ -21,7 +21,7 @@ public enum ProgressStatus {
                             /**  */
                             PROCESSING("PROCESSING", "处理中");
 
-    ProgressStatus(String code, String desc) {
+    StepStatus(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -32,9 +32,9 @@ public enum ProgressStatus {
      * @param code
      * @return
      */
-    public ProgressStatus getByCode(String code) {
-        ProgressStatus[] values = ProgressStatus.values();
-        for (ProgressStatus value : values) {
+    public StepStatus getByCode(String code) {
+        StepStatus[] values = StepStatus.values();
+        for (StepStatus value : values) {
             if (StringUtils.equals(code, value.code)) {
                 return value;
             }

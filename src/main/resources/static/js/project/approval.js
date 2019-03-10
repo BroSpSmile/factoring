@@ -89,8 +89,10 @@ var vue = new Vue({
 					function(response) {
 						let data = response.data;
 						for(let index in data.list){
-							data.list[index].creditor = data.list[index].detail.creditor;
-							data.list[index].debtor = data.list[index].detail.debtor;
+							try{
+								data.list[index].creditor = data.list[index].detail.creditor;
+								data.list[index].debtor = data.list[index].detail.debtor;
+							}catch(e){}
 						}
 						self.pageInfo = data;
 					}, function(error) {
@@ -438,15 +440,9 @@ vue.tableColumns=[{
 							h('div',{},[
 								h('Steps',{
 									props:{
-										current:8
+										current:-1
 									}
 								},[
-									h('Step',{
-										props:{
-											title:'创建',
-											content:'2019-08-05'
-										},
-									}),
 									h('Step',{
 										props:{
 											title:'立项',
@@ -464,7 +460,13 @@ vue.tableColumns=[{
 									h('Step',{props:{title:'合同拟定'}}),
 									h('Step',{props:{title:'签署'}}),
 									h('Step',{props:{title:'放款'}}),
-									h('Step',{props:{title:'归档'}})
+									h('Step',{props:{title:'归档'}}),
+									h('Step',{
+										props:{
+											title:'完结',
+											content:'2019-08-05'
+										},
+									})
 								]),
 								h('Row',[
 									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),

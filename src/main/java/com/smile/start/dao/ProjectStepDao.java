@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import com.smile.start.model.project.Project;
-import com.smile.start.model.project.ProjectRecord;
+import com.smile.start.model.project.StepRecord;
 
 /**
  * ProjectRecordDao
@@ -21,14 +21,14 @@ import com.smile.start.model.project.ProjectRecord;
  * @version $Id: ProjectRecordDao.java, v 0.1 Mar 3, 2019 10:52:19 PM smile.jing Exp $
  */
 @Mapper
-public interface ProjectRecordDao {
+public interface ProjectStepDao {
     /**
      * 
      * @param record
      * @return
      */
-    @Insert("insert into project_record (project_id,progress,status,create_time) values(#{project.id},#{progress},#{status},#{createTime})")
-    long insert(ProjectRecord record);
+    @Insert("insert into project_step (project_id,progress,status,create_time) values(#{project.id},#{progress},#{status},#{createTime})")
+    long insert(StepRecord record);
 
     /**
      * 
@@ -36,6 +36,6 @@ public interface ProjectRecordDao {
      * @return
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id") })
-    @Select("select * from project_record where project_id = #{project.id}")
-    List<ProjectRecord> query(Project project);
+    @Select("select * from project_step where project_id = #{project.id}")
+    List<StepRecord> query(Project project);
 }
