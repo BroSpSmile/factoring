@@ -87,7 +87,12 @@ var vue = new Vue({
 			self.queryParam.condition = self.formInline;
 			this.$http.post("/approval/query", self.queryParam).then(
 					function(response) {
-						self.pageInfo = response.data;
+						let data = response.data;
+						for(let index in data.list){
+							data.list[index].creditor = data.list[index].detail.creditor;
+							data.list[index].debtor = data.list[index].detail.debtor;
+						}
+						self.pageInfo = data;
 					}, function(error) {
 						self.$Message.error(error.data.message);
 					})
@@ -353,21 +358,21 @@ vue.tableColumns=[{
     },{
         title: '项目名称',
         key: 'projectName',
+        width:125,
+        tooltip:true,
         align: 'center'
     },{
         title: '让与人',
-        key: 'detail.creditor',
-        align: 'center',
-        render:(h,param)=>{
-        	return h('span',param.row.detail.creditor)
-        }
+        key: 'creditor',
+        width:150,
+        tooltip:true,
+        align: 'center'
     },{
         title: '债务人',
-        key: 'detail.debtor',
-        align: 'center',
-        render:(h,param)=>{
-        	return h('span',param.row.detail.debtor)
-        }
+        key: 'debtor',
+        width:150,
+        tooltip:true,
+        align: 'center'
     },{
         title: '追索权',
         key: 'projectName',
@@ -380,7 +385,7 @@ vue.tableColumns=[{
         title: '应收账款受让款(万元)',
         key: 'projectName',
         align: 'center',
-        width:100,
+        width:80,
         render:(h,param)=>{
         	return h('span',param.row.detail.assignee)
         }
@@ -388,7 +393,7 @@ vue.tableColumns=[{
         title: '应收账款(万元)',
         key: 'projectName',
         align: 'center',
-        width:100,
+        width:80,
         render:(h,param)=>{
         	return h('span',param.row.detail.receivable)
         }
@@ -418,161 +423,86 @@ vue.tableColumns=[{
     },{
     	title: '操作',
     	align: 'center',
-    	width:120,
+    	width:80,
         render:(h,param)=>{
         	return h('div', [
-        		param.row.progress=='INIT'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("meeting",param.row.id);
-								}
-							}
-						}, '发起立项会'):
-						h('span'),
-				param.row.progress=='APPROVAL'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("apply",param.row.id);
-								}
-							}
-						}, '项目尽调'):
-						h('span'),
-				param.row.progress=='INVESTIGATION'||param.row.progress=='LATERMEETING'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("past",param.row.id);
-								}
-							}
-						}, '三重一大'):
-						h('span'),
-				param.row.progress=='PASTMEETING'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("contractInfo",param.row.id);
-								}
-							}
-						}, '合同草拟'):
-						h('span'),
-				param.row.progress=='DRAWUP'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("contractSign",param.row.id);
-								}
-							}
-						}, '合同签署'):
-						h('span'),
-				param.row.progress=='SIGN'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									 vue.toMenu("loanApply",param.row.id);
-								}
-							}
-						}, '放款'):
-						h('span'),
-				param.row.progress=='LOAN'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "info",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									vue.toMenu("filingApply",param.row.id);
-								}
-							}
-						}, '归档'):
-						h('span'),
-				h('Button', {
-					props: {
-						size: "small",
-						type: "warning",
-						ghost:true
-					},
-					style: {
-						marginRight: '5px'
-					},
-					on: {
-						click: () => {
-							vue.toMenu("factoring",param.row.id);
+				h('Poptip',{props:{trigger:'click',placement:'right',width:'900'}},[
+					h('Button',{props:{size:'small',type:'info',ghost:true}},[
+						'进度',
+						h('Icon',{props:{type:'ios-information-circle'}})
+					]),
+					h('div',{props:{},slot:'content'},[
+						h('Card',{},[
+							h('p',{slot:'title'},param.row.projectName),
+							h('p',{slot:'extra'},"项目编号:"+param.row.projectId),
+							h('div',{},[
+								h('Steps',{
+									props:{
+										current:8
+									}
+								},[
+									h('Step',{
+										props:{
+											title:'创建',
+											content:'2019-08-05'
+										},
+									}),
+									h('Step',{
+										props:{
+											title:'立项',
+											content:'2019-08-05'
+										}
+									}),
+									h('Step',{props:{title:'尽调'}}),
+									h('Step',{
+										props:{
+											title:'三重一大',
+											content:'待补,滞留3天',
+											status:'error'
+										}
+									}),
+									h('Step',{props:{title:'合同拟定'}}),
+									h('Step',{props:{title:'签署'}}),
+									h('Step',{props:{title:'放款'}}),
+									h('Step',{props:{title:'归档'}})
+								]),
+								h('Row',[
+									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'error',size:'small',ghost:true}},'后补')]),
+									h('Col',{props:{span:3}},[h('a','已完结')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')]),
+									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')])
+								])
+							])
+						])
+					])
+				]),
+				h('Dropdown',{
+					props:{},
+					on:{
+						'on-click':(value)=>{
+							vue.toMenu(value,param.row.id);
 						}
 					}
-				}, '编辑'),
-				param.row.progress=='INIT'?
-						h('Button', {
-							props: {
-								size: "small",
-								type: "error",
-								ghost:true
-							},
-							style: {
-								marginRight: '5px'
-							},
-							on: {
-								click: () => {
-									 vue.deleteWarn(param.row.id);
-								}
-							}
-						}, '删除'):
-						h('span')
-				
+				},[
+					h('Button',{props:{size:'small',type:'warning',ghost:true}},[
+						'操作',
+						h('Icon',{props:{type:'ios-arrow-down'}})
+					]),
+					h('DropdownMenu',{slot:'list'},[
+						h('DropdownItem',{props:{name:'factoring'}},'编辑'),
+						param.row.progress=='INIT'?h('DropdownItem',{props:{name:'meeting'}},'立项会'):h('span'),
+						param.row.progress=='APPROVAL'?h('DropdownItem',{props:{name:'apply'}},'尽调'):h('span'),
+						param.row.progress=='INVESTIGATION'||param.row.progress=='LATERMEETING'?h('DropdownItem',{props:{name:'past'}},'三重一大'):h('span'),
+						param.row.progress=='PASTMEETING'?h('DropdownItem',{props:{name:'contractInfo'}},'合同拟定'):h('span'),
+						param.row.progress=='DRAWUP'?h('DropdownItem',{props:{name:'contractSign'}},'签署'):h('span'),
+						param.row.progress=='SIGN'?h('DropdownItem',{props:{name:'loanApply'}},'放款'):h('span'),
+						param.row.progress=='LOAN'?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
+					])
+				])
 			])
         }
     }
