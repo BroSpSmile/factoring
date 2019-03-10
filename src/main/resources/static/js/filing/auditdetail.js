@@ -11,11 +11,16 @@ var vue = new Vue({
             applyType: '归档申请',
             applicant: '',
             applyTime: '',
-            projectId: 0,
+            project: 0,
             filingList: [],
             progress: '',
-            items: []
+            items: [],
+            record: {
+                result: 'PASS',
+                remark: '',
+            },
         },
+        user: {},
         rejectModal: false,
         rejectForm: {
             progress: '',
@@ -30,9 +35,13 @@ var vue = new Vue({
         content: ['', '', '', ''],
         steps: [],
         projectUrl: 'filingProject',
+        tableColumns: [],
+        records: [],
+        audit: {},
+        auditResult: [],
     },
     created: function () {
-        this.filingInfo.projectId = document.getElementById("projectId").value;
+        this.filingInfo.project = document.getElementById("projectId").value;
         this.projectUrl = this.projectUrl + '?type=' + document.getElementById("type").value;
 
         let isView = document.getElementById("isView").value;
@@ -47,14 +56,37 @@ var vue = new Vue({
          * 初始化数据
          */
         initDate: function () {
-            var _self = this;
-            this.$http.get("/filingApply/" + this.filingInfo.projectId).then(function (response) {
+            let _self = this;
+            this.$http.get("/filingAudit/" + this.filingInfo.project).then(function (response) {
                 if (response.data.success) {
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.filingInfo = response.data.data;
                         _self.filingInfo.applyType = '归档申请';
-                        _self.setAllProgresses();
+                        _self.getCurUser();
+                    }
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                console.error(error);
+            });
+            this.$http.get("/combo/auditResult").then(function (response) {
+                _self.auditResult = response.data;
+            }, function (error) {
+                console.error(error);
+            })
+        },
 
+        /**
+         * 初始化数据
+         */
+        getCurUser: function () {
+            var _self = this;
+            this.$http.get("/filingAudit/user").then(function (response) {
+                if (response.data.success) {
+                    if (null != response.data.data && 'null' != response.data.data) {
+                        _self.user = response.data.data;
+                        _self.setAllProgresses();
                     }
                 } else {
                     self.$Message.error(response.data.errorMessage);
@@ -63,40 +95,61 @@ var vue = new Vue({
                 console.error(error);
             })
         },
+
         /**
          * 设置步骤
          */
         setAllProgresses: function () {
             let _self = this;
             let progresses = [];
-            this.$http.get("/combo/filingProgress").then(function (response) {
+            this.$http.get("/combo/filingSubProgress").then(function (response) {
                 _self.allProgresses = response.data;
+
+                //审批信息
+                _self.audit = _self.filingInfo.audit;
+                this.step = _self.audit.step;
+
+                //审核历史
+                //let records = _self.audit.records;
+                //_self.records = _self.audit.records;
+
+                //审核流程状态
+                let flows = _self.audit.flows;
+                //_self.flows = _self.audit.flows;
+
                 //去除第一个待归档状态
                 _self.allProgresses.shift();
+                if (this.step == -1) {
+                    this.step = this.allProgresses.length
+                }
                 for (let i = 0; i < this.allProgresses.length; i++) {
                     let stepObj = new Object();
                     if (i == 0) {
                         stepObj.content = _self.filingInfo.applicant + ' ' + _self.filingInfo.applyTime;
+                    } else if (this.step == i) {
+                        stepObj.content = _self.user.username;
                     } else {
                         stepObj.content = '';
                     }
                     stepObj.title = this.allProgresses[i].text;
                     _self.steps.push(stepObj);
                 }
-                _self.setProgresses();
-                if (_self.filingInfo.progress == 'FILE_LEGAL_AUDIT') {
-                    this.step = 1;
-                    _self.steps[1].content = '高育良';
-                } else if (_self.filingInfo.progress == 'FILE_OFFICER') {
-                    this.step = 2;
-                    _self.steps[1].content = '高育良';
-                    _self.steps[2].content = '丁义珍';
+
+                //总计的步骤数-2 为倒数第二个元素的index
+                if (this.step == _self.allProgresses.length - 2) {
                     this.isLastAuditStep = true;
-                } else if (_self.filingInfo.progress == 'FILE_COMPLETE') {
-                    _self.steps[1].content = '高育良';
-                    _self.steps[2].content = '丁义珍';
-                    this.step = 3;
                 }
+
+                for (let i = 0; i < this.step; i++) {
+                    let flow = flows[i];
+                    if (flow && i != 0) {
+                        _self.steps[i].content = flow.user == null ? flow.role.roleName : flow.user.username
+                    }
+
+                }
+
+
+                _self.setProgresses();
             }, function (error) {
                 console.error(error);
             })
@@ -106,24 +159,24 @@ var vue = new Vue({
          * 设置步骤
          */
         setProgresses: function () {
-            let index = 0;
             //this.progresses.concat(this.allProgresses);
             for (let k in this.allProgresses) {
                 this.progresses.push(this.allProgresses[k]);
             }
-            for (let j in this.progresses) {
-                if (this.progresses[j].value == this.filingInfo.progress) {
-                    index = j;
-                    break;
-                }
-            }
-            let length = this.progresses.length
-            for (let i = length; i > index; i--) {
+            let length = this.progresses.length;
+            for (let i = length; i > this.step; i--) {
                 this.progresses.pop();
             }
             this.progresses.reverse();
         },
-
+        auditResultText: function (value) {
+            for (let index in this.auditResult) {
+                if (value == this.auditResult[index].value) {
+                    return this.auditResult[index].text;
+                }
+            }
+            return "";
+        },
         download: function (fileId, fileName) {
             //TODO
             console.debug(fileId);
@@ -140,10 +193,11 @@ var vue = new Vue({
          * 审核通过
          */
         auditPass: function () {
-            let self = this;
-            this.$http.post("/filingApply/audit", this.filingInfo).then(function (response) {
+            let _self = this;
+
+            this.$http.post("/filingAudit/audit", _self.filingInfo).then(function (response) {
                 if (response.data.success) {
-                    self.$Message.info({
+                    _self.$Message.info({
                         content: "提交成功",
                         onClose: function () {
                             window.close();
@@ -151,10 +205,10 @@ var vue = new Vue({
                     });
                     window.open(this.projectUrl, "_self");
                 } else {
-                    self.$Message.error(response.data.errorMessage);
+                    _self.$Message.error(response.data.errorMessage);
                 }
             }, function (error) {
-                self.$Message.error(error);
+                _self.$Message.error(error);
             })
         },
 
@@ -162,7 +216,8 @@ var vue = new Vue({
          * 审核驳回弹框
          */
         auditRejectModel: function () {
-            this.rejectModal = true;
+            let _self = this;
+            _self.rejectModal = true;
             this.rejectForm = {
                 progress: '',
                 reason: '',
@@ -183,11 +238,14 @@ var vue = new Vue({
          * 审核驳回
          */
         auditReject: function () {
-            let self = this;
-            this.filingInfo.progress = this.rejectForm.progress;
-            this.$http.post("/filingApply/reject", this.filingInfo).then(function (response) {
+            let _self = this;
+            _self.filingInfo.progress = _self.rejectForm.progress;
+            _self.filingInfo.record.remark = _self.rejectForm.reason;
+            _self.filingInfo.record.result = 'REJECTED';
+
+            _self.$http.post("/filingAudit/reject", _self.filingInfo).then(function (response) {
                 if (response.data.success) {
-                    self.$Message.info({
+                    _self.$Message.info({
                         content: "归档申请驳回成功",
                         onClose: function () {
                             window.close();
@@ -195,10 +253,10 @@ var vue = new Vue({
                     });
                     window.open(this.projectUrl, "_self");
                 } else {
-                    self.$Message.error(response.data.errorMessage);
+                    _self.$Message.error(response.data.errorMessage);
                 }
             }, function (error) {
-                self.$Message.error(error);
+                _self.$Message.error(error);
             })
         },
         /**
@@ -206,7 +264,8 @@ var vue = new Vue({
          */
         filingComplete: function () {
             let self = this;
-            this.$http.post("/filingApply/complete", this.filingInfo).then(function (response) {
+            self.filingInfo.record.result = 'COMPLETE';
+            this.$http.post("/filingAudit/complete", this.filingInfo).then(function (response) {
                 if (response.data.success) {
                     self.$Message.info({
                         content: "归档完成",
@@ -226,52 +285,42 @@ var vue = new Vue({
         cancel: function () {
             window.open(this.projectUrl, "_self");
         },
-        commit: function () {
-            if (this.fileList === undefined || this.fileList.length == 0) {
-                this.$Message.error("请上传尽调文件");
-                return false;
-            }
-            for (let index in this.fileList) {
-                let item = {
-                    projectId: this.project.id,
-                    itemType: "TUNEUP",
-                    itemName: this.fileList[index].name,
-                    itemValue: this.fileList[index].response.data.fileId
-                }
-                this.project.items.push(item);
-            }
-            console.log(this.project);
-            let self = this;
-            this.$http.post("/filingApply", this.project).then(function (response) {
-                if (response.data.success) {
-                    self.$Message.info({
-                        content: "立项申请成功",
-                        onClose: function () {
-                            window.close();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                self.$Message.error(error);
-            })
-        },
-        genFilingInfo: function () {
-            if (this.fileList === undefined || this.fileList.length == 0) {
-                this.$Message.error("请上传归档文件");
-                return false;
-            }
-            for (let index in this.fileList) {
-                let item = {
-                    projectId: this.filingInfo.projectId,
-                    itemType: "TUNEUP",
-                    itemName: this.fileList[index].name,
-                    itemValue: this.fileList[index].response.data.fileId
-                }
-                this.filingInfo.items.push(item);
-            }
-            console.log(this.filingInfo);
-        },
+
     }
 });
+vue.tableColumns = [
+    {
+        title: '操作类型',
+        key: 'type',
+        align: 'center'
+    }, {
+        title: '操作人',
+        key: 'auditor.username',
+        align: 'center',
+        render: (h, param) => {
+            return h('span', param.row.auditor.username)
+        }
+    }, {
+        title: '执行状态',
+        key: 'result',
+        align: 'center',
+        render: (h, param) => {
+            return h('span', vue.auditResultText(param.row.result))
+        }
+    }, {
+        title: '操作时间',
+        key: 'auditTime',
+        align: 'center',
+        render: (h, param) => {
+            return h('span', moment(param.row.auditTime).format('YYYY-MM-DD HH:mm:ss'))
+        }
+    }, {
+        title: '备注',
+        key: 'remark',
+        align: 'center'
+    }, {
+        title: '执行结果',
+        key: 'status',
+        align: 'center'
+    }
+];

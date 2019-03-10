@@ -56,4 +56,12 @@ public interface AuditService {
      * @return
      */
     Audit getAudit(Long id);
+
+    /**
+     * 获取审核明细
+     * @param id
+     * @param type
+     * @return
+     */
+    Audit getAuditByProjectFlowAndType(Long id,String type);
 }

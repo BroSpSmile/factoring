@@ -41,6 +41,9 @@ public class Project implements Serializable {
     /** 当前进度 */
     private Progress          progress;
 
+    /** 子流程进度 */
+    private String          subProgress;
+
     /** 项目模式 */
     private ProjectModel      model;
 
@@ -60,7 +63,8 @@ public class Project implements Serializable {
     public String toString() {
         return "{\"id\":\"" + id + "\", \"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
                + (projectName != null ? "projectName\":\"" + projectName + "\", \"" : "") + (user != null ? "user\":\"" + user + "\", \"" : "")
-               + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
+            + (subProgress != null ? "subProgress\":\"" + subProgress + "\", \"" : "")
+            + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
                + (items != null ? "items\":\"" + items + "\", \"" : "") + (progresses != null ? "progresses\":\"" + progresses + "\", \"" : "")
                + (detail != null ? "detail\":\"" + detail : "") + "\"}  ";
     }
@@ -171,6 +175,14 @@ public class Project implements Serializable {
      */
     public void setProgress(Progress progress) {
         this.progress = progress;
+    }
+
+    public String getSubProgress() {
+        return subProgress;
+    }
+
+    public void setSubProgress(String subProgress) {
+        this.subProgress = subProgress;
     }
 
     /**
