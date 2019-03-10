@@ -15,6 +15,7 @@ import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
+import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -65,9 +66,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractAuditRecordDao            contractAuditRecordDao;
 
     @Resource
-    private ProjectDao                        projectDao;
-
-    @Resource
     private AuditDao                          auditDao;
 
     @Resource
@@ -90,6 +88,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private AuditService                      auditService;
+
+    @Resource
+    private ProjectService                    projectService;
 
     @Resource
     private ContractInfoMapper                contractInfoMapper;
@@ -133,7 +134,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfoDTO.setAttachList(attachList);
         }
 
-        final Project project = projectDao.get(contractInfo.getProjectId());
+        final Project project = projectService.getProject(contractInfo.getProjectId());
         contractInfoDTO.setProject(project);
         return contractInfoDTO;
     }
@@ -180,7 +181,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
         contractInfo.setContractCode(project.getProjectId() + "-1");
 
         //保存签署清单
@@ -221,7 +222,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
-        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
         contractInfo.setContractCode(project.getProjectId() + "-1");
         contractInfoDao.update(contractInfo);
 
@@ -318,7 +319,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         }
         //TODO 查询数据库次数太多，可能影响性能
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
-        audit.setProject(projectDao.get(contractInfo.getProjectId()));
+        audit.setProject(projectService.getProject(contractInfo.getProjectId()));
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
         audit.setStep(ContractStatusEnum.APPLY.getValue());
@@ -343,15 +344,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setStatus(record.getResult().getDesc());
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
-
-//        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-//        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-//        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-//        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
-//        contractAuditRecord.setOperationType(1);
-//        contractAuditRecord.setOperationTime(new Date());
-//        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-//        contractAuditRecordDao.insert(contractAuditRecord);
     }
 
     /**
@@ -391,15 +383,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Audit audit = auditService.getAudit(contractAuditDTO.getAuditId());
         LoginUser loginUser = LoginHandler.getLoginUser();
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
-        audit.setProject(projectDao.get(contractInfo.getProjectId()));
+        Project project = projectService.getProject(contractInfo.getProjectId());
+        audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
 
         //审核通过
         if (contractAuditDTO.getOperationType() == 1) {
             contractInfo.setStatus(currentStatus.getNextStatus().getValue());
-            //如果审核完成通知办公室
+            //如果审核完成，则直接将合同状态更新为完成，流转到办公室人员，并修改项目状态为拟定合同
             if (currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
+                contractInfo.setStatus(ContractStatusEnum.FINISH.getValue());
                 //TODO 调用通知接口
             }
 
@@ -446,16 +440,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
 
-        //保存审核记录
-//        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-//        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-//        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-//        contractAuditRecord.setOperationStatus(currentStatus.getNextStatus().getDesc());
-//        contractAuditRecord.setOperationType(contractAuditDTO.getOperationType());
-//        contractAuditRecord.setOperationTime(new Date());
-//        contractAuditRecord.setRemark(contractAuditDTO.getRemark());
-//        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-//        contractAuditRecordDao.insert(contractAuditRecord);
+        //更新项目状态
+        project.setProgress(Progress.DRAWUP);
+        projectService.turnover(project);
     }
 
     /**
