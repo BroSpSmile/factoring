@@ -24,7 +24,6 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.ContractAttach;
 import com.smile.start.model.contract.ContractAuditRecord;
 import com.smile.start.model.contract.ContractExtendInfo;
 import com.smile.start.model.contract.ContractInfo;
@@ -116,9 +115,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 
         //获取合同附件
-        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(),
-                ProjectItemType.CONTRACT);
-        if(!CollectionUtils.isEmpty(attachs)) {
+        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.CONTRACT);
+        if (!CollectionUtils.isEmpty(attachs)) {
             List<ContractAttachDTO> attachList = Lists.newArrayList();
             attachs.forEach(e -> {
                 ContractAttachDTO attachDTO = new ContractAttachDTO();
@@ -144,7 +142,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public ContractInfoDTO getByProjectId(Long projectId) {
         final ContractInfo contractInfo = contractInfoDao.getByProjectId(projectId);
-        if(contractInfo == null) {
+        if (contractInfo == null) {
             return null;
         }
         return get(contractInfo.getId());
@@ -290,10 +288,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public void delete(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
         contractInfo.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
-//        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-//        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-//        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-//        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        //        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        //        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        //        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        //        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDao.update(contractInfo);
     }
 
@@ -317,10 +315,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         audit.setAuditType(AuditType.CONTRACT);
         audit.setStep(ContractStatusEnum.APPLY.getValue());
         //获取审核流程
-        final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
-                contractInfo.getStatus() + 1);
+        final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(), contractInfo.getStatus() + 1);
         audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
-        long effect = auditDao.insert(audit);
+        auditDao.insert(audit);
 
         //保存审核记录
         AuditRecord record = new AuditRecord();
@@ -334,14 +331,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
 
-//        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-//        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-//        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-//        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
-//        contractAuditRecord.setOperationType(1);
-//        contractAuditRecord.setOperationTime(new Date());
-//        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-//        contractAuditRecordDao.insert(contractAuditRecord);
+        //        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
+        //        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
+        //        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
+        //        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
+        //        contractAuditRecord.setOperationType(1);
+        //        contractAuditRecord.setOperationTime(new Date());
+        //        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
+        //        contractAuditRecordDao.insert(contractAuditRecord);
     }
 
     /**
