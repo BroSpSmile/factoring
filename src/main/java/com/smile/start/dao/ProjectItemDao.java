@@ -26,7 +26,7 @@ public interface ProjectItemDao {
      * @param iterm
      * @return
      */
-    @Insert("insert project_item (project_id,item_type,item_name,item_value) values(#{projectId},#{itemType},#{itemName},#{itemValue})")
+    @Insert("insert project_item (project_id,item_type,item_name,item_value,attach_type) values(#{projectId},#{itemType},#{itemName},#{itemValue},#{attachType})")
     long insert(ProjectItem iterm);
 
     /**

@@ -33,6 +33,12 @@ public class ProjectItem implements Serializable {
     /** 附件文件id */
     private String            itemValue;
 
+    /**
+     * 此字段只有itemType是合同时才生效
+     * 附件类型：1、标准；2、自定义
+     */
+    private Integer           attachType;
+
     /** 
      * @see java.lang.Object#toString()
      */
@@ -132,4 +138,11 @@ public class ProjectItem implements Serializable {
         this.itemValue = itemValue;
     }
 
+    public Integer getAttachType() {
+        return attachType;
+    }
+
+    public void setAttachType(Integer attachType) {
+        this.attachType = attachType;
+    }
 }

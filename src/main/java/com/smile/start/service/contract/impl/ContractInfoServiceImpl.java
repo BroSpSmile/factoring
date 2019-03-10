@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.google.common.collect.Lists;
 import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.model.common.FlowStatus;
@@ -113,8 +114,22 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setContractReceivableConfirmation(contractInfoMapper.do2dto(contractReceivableConfirmation));
         final List<ContractSignList> signList = contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
-        final List<ContractAttach> attachList = contractAttachDao.findByContractSerialNo(contractInfo.getSerialNo());
-        contractInfoDTO.setAttachList(contractInfoMapper.doList2dtoListAttach(attachList));
+
+        //获取合同附件
+        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(),
+                ProjectItemType.CONTRACT);
+        if(!CollectionUtils.isEmpty(attachs)) {
+            List<ContractAttachDTO> attachList = Lists.newArrayList();
+            attachs.forEach(e -> {
+                ContractAttachDTO attachDTO = new ContractAttachDTO();
+                attachDTO.setContractSerialNo(contractInfo.getSerialNo());
+                attachDTO.setAttachType(e.getAttachType());
+                attachDTO.setAttachName(e.getItemName());
+                attachDTO.setFileId(e.getItemValue());
+                attachList.add(attachDTO);
+            });
+            contractInfoDTO.setAttachList(attachList);
+        }
 
         final Project project = projectDao.get(contractInfo.getProjectId());
         contractInfoDTO.setProject(project);
@@ -256,7 +271,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         if (!CollectionUtils.isEmpty(contractInfoDTO.getAttachList())) {
             contractInfoDTO.getAttachList().forEach(e -> {
                 ProjectItem projectItem = new ProjectItem();
-                projectItem.setProjectId(contractInfoDTO.getProject().getId());
+                projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
+                projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
                 projectItem.setItemType(ProjectItemType.CONTRACT);
                 projectItem.setItemName(e.getAttachName());
                 projectItem.setItemValue(e.getFileId());
