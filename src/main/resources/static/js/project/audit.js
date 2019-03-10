@@ -16,6 +16,8 @@ var vue = new Vue({
 		record:{
 			items:[]
 		},
+        contractAudit : {
+        },
 		showAuditButton:false,
 		nowStep:0,
 		tableColumns:[]
@@ -173,7 +175,30 @@ var vue = new Vue({
 				_self.$Message.error(response.data.errorMessage);
 			})
 		},
-		
+        /**
+         * 合同审核通过
+         * @param id
+         */
+        contractPass : function() {
+            let self = this;
+            self.contractAudit.operationType = 1;
+            self.contractAudit.projectId = self.audit.project.id;
+            self.contractAudit.auditId = self.audit.id;
+            self.$http.post("/contractAudit/audit", self.contractAudit).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "审核成功",
+                        onClose : function() {
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
+        },
 		cancel:function(){
 			this.modal1 = false;
 			this.modal2 = false;
