@@ -311,7 +311,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDao.update(contractInfo);
 
         final LoginUser loginUser = LoginHandler.getLoginUser();
-        Audit audit = new Audit();
+        //此处先从数据库中查询是否有记录，当驳回到拟定状态时需要做更新，不能直接插入
+        Audit audit = auditService.getAuditByProjectFlowAndType(contractInfo.getProjectId(), AuditType.CONTRACT.getCode());
+        if(audit == null) {
+            audit = new Audit();
+        }
         //TODO 查询数据库次数太多，可能影响性能
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
         audit.setProject(projectDao.get(contractInfo.getProjectId()));
@@ -322,7 +326,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
                 contractInfo.getStatus() + 1);
         audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
-        long effect = auditDao.insert(audit);
+        if(audit.getId() == null) {
+            long effect = auditDao.insert(audit);
+        } else {
+            auditDao.updateRole(audit);
+        }
 
         //保存审核记录
         AuditRecord record = new AuditRecord();
@@ -408,7 +416,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         } else {
             //默认驳回到上一状态
             Integer rejectStatus;
-            if (contractAuditDTO.getRejectStatus() != null && contractAuditDTO.getRejectStatus() != 0) {
+            if (contractAuditDTO.getRejectStatus() != null) {
                 rejectStatus = contractAuditDTO.getRejectStatus();
             } else {
                 rejectStatus = currentStatus.getDefaultRejectStatus().getValue();

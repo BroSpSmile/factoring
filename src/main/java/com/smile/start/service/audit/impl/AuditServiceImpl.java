@@ -201,7 +201,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     public Audit getAuditByProjectFlowAndType(Long id,String type) {
         Audit audit = auditDao.getByProjectAndType(id,type);
-        genAudit(audit);
+        if(audit != null) {
+            genAudit(audit);
+        }
         return audit;
     }
 
