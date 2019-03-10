@@ -33,8 +33,7 @@ public class ContractSignController extends BaseController {
     @PostMapping(value = "/list")
     @ResponseBody
     public PageInfo<ContractBaseInfoDTO> list(@RequestBody PageRequest<ContractInfoSearchDTO> searchDTO) {
-        PageInfo<ContractBaseInfoDTO> contractInfoList = contractInfoService.findAll(searchDTO);
-        return contractInfoList;
+        return contractInfoService.findAll(searchDTO);
     }
 
     @PostMapping(value = "/save")
