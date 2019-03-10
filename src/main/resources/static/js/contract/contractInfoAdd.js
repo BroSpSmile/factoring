@@ -30,7 +30,8 @@ var vue = new Vue({
         fileList : [],
         showResult:false,
         modal1:false,
-        panelOpen : "0"
+        panelOpen : "0",
+        isDisable : false
     },
     created : function() {
         this.initData();
@@ -80,19 +81,23 @@ var vue = new Vue({
         saveContract : function() {
             let self = this;
             this.genFileInfo();
+            this.isDisable = true;
             if(this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === ""){
                 this.$http.post("/contractInfo", this.addForm).then(function(response) {
                     if (response.data.success) {
                         self.$Message.info({
                             content : "保存成功",
                             onClose : function() {
+                                self.isDisable = false;
                                 self.cancel();
                             }
                         });
                     } else {
+                        self.isDisable = false;
                         self.$Message.error(response.data.errorMessage);
                     }
                 }, function(error) {
+                    self.isDisable = false;
                     self.$Message.error(error.data.message);
                 });
             }else{
@@ -101,13 +106,16 @@ var vue = new Vue({
                         self.$Message.info({
                             content : "更新成功",
                             onClose : function() {
+                                self.isDisable = false;
                                 self.cancel();
                             }
                         });
                     } else {
+                        self.isDisable = false;
                         self.$Message.error(response.data.errorMessage);
                     }
                 }, function(error) {
+                    self.isDisable = false;
                     self.$Message.error(error.data.message);
                 });
             }
