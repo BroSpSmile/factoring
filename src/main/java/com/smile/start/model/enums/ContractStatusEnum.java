@@ -84,10 +84,21 @@ public enum ContractStatusEnum {
             return null;
         }
     },
-    NOTIFY_OFFICE(7, "通知办公室") {
+//    NOTIFY_OFFICE(7, "通知办公室") {
+//        @Override
+//        public ContractStatusEnum getNextStatus() {
+//            return SIGN;
+//        }
+//
+//        @Override
+//        public ContractStatusEnum getDefaultRejectStatus() {
+//            return null;
+//        }
+//    },
+    SIGN(7, "签署") {
         @Override
         public ContractStatusEnum getNextStatus() {
-            return SIGN;
+            return null;
         }
 
         @Override
@@ -95,18 +106,7 @@ public enum ContractStatusEnum {
             return null;
         }
     },
-    SIGN(8, "签署") {
-        @Override
-        public ContractStatusEnum getNextStatus() {
-            return null;
-        }
-
-        @Override
-        public ContractStatusEnum getDefaultRejectStatus() {
-            return null;
-        }
-    },
-    SIGN_FINISH(9, "签署完成") {
+    SIGN_FINISH(8, "签署完成") {
         @Override
         public ContractStatusEnum getNextStatus() {
             return null;
