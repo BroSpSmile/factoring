@@ -13,7 +13,9 @@ import com.smile.start.model.enums.*;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.ProjectItem;
+import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
+import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +26,6 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.ContractAuditRecord;
 import com.smile.start.model.contract.ContractExtendInfo;
 import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractReceivableAgreement;
@@ -65,9 +66,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractAuditRecordDao            contractAuditRecordDao;
 
     @Resource
-    private ProjectDao                        projectDao;
-
-    @Resource
     private AuditDao                          auditDao;
 
     @Resource
@@ -87,6 +85,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private RoleInfoService                   roleInfoService;
+
+    @Resource
+    private AuditService                      auditService;
+
+    @Resource
+    private ProjectService                    projectService;
 
     @Resource
     private ContractInfoMapper                contractInfoMapper;
@@ -115,8 +119,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 
         //获取合同附件
-        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.CONTRACT);
-        if (!CollectionUtils.isEmpty(attachs)) {
+        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(),
+                ProjectItemType.CONTRACT);
+        if(!CollectionUtils.isEmpty(attachs)) {
             List<ContractAttachDTO> attachList = Lists.newArrayList();
             attachs.forEach(e -> {
                 ContractAttachDTO attachDTO = new ContractAttachDTO();
@@ -129,7 +134,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfoDTO.setAttachList(attachList);
         }
 
-        final Project project = projectDao.get(contractInfo.getProjectId());
+        final Project project = projectService.getProject(contractInfo.getProjectId());
         contractInfoDTO.setProject(project);
         return contractInfoDTO;
     }
@@ -142,7 +147,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public ContractInfoDTO getByProjectId(Long projectId) {
         final ContractInfo contractInfo = contractInfoDao.getByProjectId(projectId);
-        if (contractInfo == null) {
+        if(contractInfo == null) {
             return null;
         }
         return get(contractInfo.getId());
@@ -176,7 +181,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
         contractInfo.setContractCode(project.getProjectId() + "-1");
 
         //保存签署清单
@@ -217,7 +222,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
-        final Project project = projectDao.get(contractInfoDTO.getBaseInfo().getProjectId());
+        final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
         contractInfo.setContractCode(project.getProjectId() + "-1");
         contractInfoDao.update(contractInfo);
 
@@ -288,10 +293,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public void delete(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
         contractInfo.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
-        //        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDao.update(contractInfo);
     }
 
@@ -307,38 +312,38 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDao.update(contractInfo);
 
         final LoginUser loginUser = LoginHandler.getLoginUser();
-        Audit audit = new Audit();
+        //此处先从数据库中查询是否有记录，当驳回到拟定状态时需要做更新，不能直接插入
+        Audit audit = auditService.getAuditByProjectFlowAndType(contractInfo.getProjectId(), AuditType.CONTRACT.getCode());
+        if(audit == null) {
+            audit = new Audit();
+        }
         //TODO 查询数据库次数太多，可能影响性能
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
-        audit.setProject(projectDao.get(contractInfo.getProjectId()));
+        audit.setProject(projectService.getProject(contractInfo.getProjectId()));
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
         audit.setStep(ContractStatusEnum.APPLY.getValue());
         //获取审核流程
-        final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(), contractInfo.getStatus() + 1);
+        final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
+                contractInfo.getStatus() + 1);
         audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
-        auditDao.insert(audit);
+        if(audit.getId() == null) {
+            long effect = auditDao.insert(audit);
+        } else {
+            auditDao.updateRole(audit);
+        }
 
         //保存审核记录
         AuditRecord record = new AuditRecord();
         record.setStatus("成功");
         record.setRemark("申请成功");
-        record.setType("发起审核");
+        record.setType("提出申请");
         record.setAudit(audit);
         record.setAuditor(audit.getApplicant());
         record.setResult(AuditResult.APPLY);
         record.setStatus(record.getResult().getDesc());
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
-
-        //        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-        //        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-        //        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-        //        contractAuditRecord.setOperationStatus(ContractStatusEnum.APPLY.getDesc());
-        //        contractAuditRecord.setOperationType(1);
-        //        contractAuditRecord.setOperationTime(new Date());
-        //        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-        //        contractAuditRecordDao.insert(contractAuditRecord);
     }
 
     /**
@@ -364,40 +369,80 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void audit(ContractAuditDTO contractAuditDTO) {
-        final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractAuditDTO.getContractSerialNo());
+        final ContractInfo contractInfo = contractInfoDao.getByProjectId(contractAuditDTO.getProjectId());
         ContractStatusEnum currentStatus = ContractStatusEnum.fromValue(contractInfo.getStatus());
         //状态合法性校验
         if (currentStatus == null) {
             throw new ValidateException("合同状态非法，status = " + contractInfo.getStatus());
         }
 
+        //保存审核记录
+        AuditRecord record = new AuditRecord();
+
+        //审核流程信息
+        Audit audit = auditService.getAudit(contractAuditDTO.getAuditId());
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
+        Project project = projectService.getProject(contractInfo.getProjectId());
+        audit.setProject(project);
+        audit.setCreateTime(new Date());
+        audit.setAuditType(AuditType.CONTRACT);
+
         //审核通过
         if (contractAuditDTO.getOperationType() == 1) {
             contractInfo.setStatus(currentStatus.getNextStatus().getValue());
-            //如果审核完成通知办公室
+            //如果审核完成，则直接将合同状态更新为完成，流转到办公室人员，并修改项目状态为拟定合同
             if (currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
+                contractInfo.setStatus(ContractStatusEnum.FINISH.getValue());
                 //TODO 调用通知接口
             }
+
+            //状态流转到下一级
+            audit.setStep(currentStatus.getNextStatus().getValue());
+            record.setType(currentStatus.getNextStatus().getDesc());
+            record.setStatus(currentStatus.getNextStatus().getDesc() + "通过");
+            record.setResult(AuditResult.PASS);
+            //获取审核流程
+            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
+                    contractInfo.getStatus());
+            audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
+            auditDao.updateRole(audit);
         } else {
             //默认驳回到上一状态
-            if (contractAuditDTO.getRejectStatus() != null && contractAuditDTO.getRejectStatus() != 0) {
-                contractInfo.setStatus(contractAuditDTO.getRejectStatus());
+            Integer rejectStatus;
+            if (contractAuditDTO.getRejectStatus() != null) {
+                rejectStatus = contractAuditDTO.getRejectStatus();
             } else {
-                contractInfo.setStatus(currentStatus.getDefaultRejectStatus().getValue());
+                rejectStatus = currentStatus.getDefaultRejectStatus().getValue();
             }
+            contractInfo.setStatus(rejectStatus);
+
+            //如果驳回到 提出申请 状态，则直接将合同状态改为 拟定，这样业务专员才可以重新修改合同信息
+            if(contractInfo.getStatus() == ContractStatusEnum.APPLY.getValue()) {
+                contractInfo.setStatus(ContractStatusEnum.NEW.getValue());
+            }
+            audit.setStep(contractInfo.getStatus());
+            record.setType(currentStatus.getNextStatus().getDesc());
+            record.setStatus("驳回至" + ContractStatusEnum.fromValue(rejectStatus).getDesc());
+            record.setResult(AuditResult.REJECTED);
+            //获取审核流程
+            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.CONTRACT.getValue(),
+                    contractInfo.getStatus());
+            audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
+            auditDao.updateRole(audit);
         }
         contractInfoDao.update(contractInfo);
 
         //保存审核记录
-        ContractAuditRecord contractAuditRecord = new ContractAuditRecord();
-        contractAuditRecord.setSerialNo(SerialNoGenerator.generateSerialNo("CAR", 5));
-        contractAuditRecord.setContractSerialNo(contractInfo.getSerialNo());
-        contractAuditRecord.setOperationStatus(currentStatus.getNextStatus().getDesc());
-        contractAuditRecord.setOperationType(contractAuditDTO.getOperationType());
-        contractAuditRecord.setOperationTime(new Date());
-        contractAuditRecord.setRemark(contractAuditDTO.getRemark());
-        contractAuditRecord.setOperationUser(LoginHandler.getLoginUser().getUsername());
-        contractAuditRecordDao.insert(contractAuditRecord);
+        record.setRemark(contractAuditDTO.getRemark());
+        record.setAudit(audit);
+        record.setAuditor(audit.getApplicant());
+        record.setAuditTime(new Date());
+        auditRecordDao.insert(record);
+
+        //更新项目状态
+        project.setProgress(Progress.DRAWUP);
+        projectService.turnover(project);
     }
 
     /**

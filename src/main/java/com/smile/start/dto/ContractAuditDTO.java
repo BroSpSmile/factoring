@@ -12,9 +12,14 @@ public class ContractAuditDTO implements Serializable {
     private static final long serialVersionUID = 4922651289142083963L;
 
     /**
-     * 合同业务流水
+     * 项目ID
      */
-    private String contractSerialNo;
+    private Long projectId;
+
+    /**
+     * 审核ID
+     */
+    private Long auditId;
 
     /**
      * 操作类型：1、审核通过；2、审核驳回
@@ -31,12 +36,20 @@ public class ContractAuditDTO implements Serializable {
      */
     private String remark;
 
-    public String getContractSerialNo() {
-        return contractSerialNo;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setContractSerialNo(String contractSerialNo) {
-        this.contractSerialNo = contractSerialNo;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getAuditId() {
+        return auditId;
+    }
+
+    public void setAuditId(Long auditId) {
+        this.auditId = auditId;
     }
 
     public Integer getOperationType() {
@@ -66,10 +79,10 @@ public class ContractAuditDTO implements Serializable {
     @Override
     public String toString() {
         return "ContractAuditDTO{" +
-            "contractSerialNo='" + contractSerialNo + '\'' +
-            ", operationType=" + operationType +
-            ", rejectStatus=" + rejectStatus +
-            ", remark='" + remark + '\'' +
-            '}';
+                "projectId=" + projectId +
+                ", operationType=" + operationType +
+                ", rejectStatus=" + rejectStatus +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

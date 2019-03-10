@@ -50,7 +50,8 @@ var vue = new Vue({
         modal1:false,
         roleList:[],
         organizationalList:[],
-        model10: []
+        model10: [],
+        isDisable : false
     },
     created : function() {
         this.initData();
@@ -122,6 +123,7 @@ var vue = new Vue({
          */
         saveUser : function() {
             let self = this;
+            this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
                     if(this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === ""){
@@ -157,6 +159,8 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     }
+                } else {
+                    this.isDisable = false;
                 }
             });
         },

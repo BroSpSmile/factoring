@@ -29,7 +29,8 @@ var vue = new Vue({
         showResult:false,
         modal1:false,
         organizationalList:[],
-        model11: ''
+        model11: '',
+        isDisable : false
     },
     created : function() {
         this.query();
@@ -81,6 +82,7 @@ var vue = new Vue({
          */
         saveOrganizational : function() {
             let self = this;
+            this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
                     if (this.addForm.id === undefined || this.addForm.id === null || this.addForm.id === "") {
@@ -116,6 +118,8 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     }
+                } else {
+                    self.isDisable = false;
                 }
             });
         },

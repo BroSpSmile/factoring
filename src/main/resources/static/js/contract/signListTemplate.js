@@ -2,7 +2,7 @@
  * 签署清单信息
  */
 common.pageName = "signListTemplate";
-common.openName = [ '3' ];
+common.openName = [ '8' ];
 
 var vue = new Vue({
     el : '#signListTemplate',

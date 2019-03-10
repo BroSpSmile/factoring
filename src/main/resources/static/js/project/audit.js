@@ -16,6 +16,8 @@ var vue = new Vue({
 		record:{
 			items:[]
 		},
+        contractAudit : {
+        },
 		showAuditButton:false,
 		nowStep:0,
 		tableColumns:[]
@@ -89,6 +91,7 @@ var vue = new Vue({
 			if(id){
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
+					console.log(response.data)
 					_self.audit = response.data.data;
 					_self.nowStep = _self.audit.step;
 					_self.showAuditButton = response.data.success;
@@ -156,24 +159,70 @@ var vue = new Vue({
 		 */
 		reject:function(){
 			let _self = this;
-			this.record.audit = this.audit;
-			this.$http.put("/audit",this.record).then(function(response){
-				if (response.data.success) {
-					_self.$Message.info({
-						content : "驳回成功",
-						onClose : function() {
-							_self.cancel();
-							_self.getAudit(document.getElementById("auditId").value);
-						}
-					});
-				} else {
-					_self.$Message.error(response.data.errorMessage);
-				}
-			},function(error){
-				_self.$Message.error(response.data.errorMessage);
-			})
+			//非合同审核驳回
+			if(this.audit.auditType !== 'CONTRACT') {
+                this.record.audit = this.audit;
+                this.$http.put("/audit", this.record).then(function (response) {
+                    if (response.data.success) {
+                        _self.$Message.info({
+                            content: "驳回成功",
+                            onClose: function () {
+                                _self.cancel();
+                                _self.getAudit(document.getElementById("auditId").value);
+                            }
+                        });
+                    } else {
+                        _self.$Message.error(response.data.errorMessage);
+                    }
+                }, function (error) {
+                    _self.$Message.error(response.data.errorMessage);
+                })
+            } else {
+                _self.contractAudit.operationType = 2;
+                _self.contractAudit.projectId = _self.audit.project.id;
+                _self.contractAudit.auditId = _self.audit.id;
+                _self.contractAudit.remark = _self.record.remark;
+                _self.contractAudit.rejectStatus = _self.audit.step;
+                _self.$http.post("/contractAudit/audit", _self.contractAudit).then(function(response) {
+                    if (response.data.success) {
+                        _self.$Message.info({
+                            content : "驳回成功",
+                            onClose : function() {
+                                _self.cancel();
+                            }
+                        });
+                    } else {
+                        _self.$Message.error(response.data.errorMessage);
+                    }
+                }, function(error) {
+                    _self.$Message.error(error.data.message);
+                });
+			}
 		},
-		
+        /**
+         * 合同审核通过
+         * @param id
+         */
+        contractPass : function() {
+            let self = this;
+            self.contractAudit.operationType = 1;
+            self.contractAudit.projectId = self.audit.project.id;
+            self.contractAudit.auditId = self.audit.id;
+            self.$http.post("/contractAudit/audit", self.contractAudit).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "审核成功",
+                        onClose : function() {
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
+        },
 		cancel:function(){
 			this.modal1 = false;
 			this.modal2 = false;

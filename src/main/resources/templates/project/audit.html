@@ -48,12 +48,18 @@
 								</i-col>
 							</row>
 							<form-item label="附件查看">
-								<div  v-for="item in audit.project.items" v-if="item.itemType==audit.auditType"><icon type="ios-attach" ></icon><a @click="downloadItem(item)">{{item.itemName}}</a></div>
+								<div  v-for="item in audit.project.items" v-if="item.itemType==audit.auditType">
+									<Tag type="border" color="primary" style="width: 80px;" v-if="item.attachType == 1">标准模板</Tag>
+									<Tag type="border" color="warning" style="width: 80px;" v-if="item.attachType == 2">自定义模板</Tag>
+									<icon type="ios-attach" ></icon>
+									<a @click="downloadItem(item)">{{item.itemName}}</a>
+								</div>
 							</form-item>
 							<row type="flex" v-if="showAuditButton">
 			                    <i-col span="12" offset="2">
-			                        	<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
-			                            <i-button type="error"  icon="ios-close" @click="openReject" style="margin-left: 8px">驳回</i-button>
+                                    <i-button type="success" v-if="audit.auditType != 'CONTRACT'" icon="ios-checkmark" @click="openPass">通过</i-button>
+                                    <i-button type="success" v-if="audit.auditType == 'CONTRACT'" icon="ios-checkmark" @click="contractPass">通过</i-button>
+                                    <i-button type="error" icon="ios-close" @click="openReject" style="margin-left: 8px">驳回</i-button>
 			                    </i-col>
 	                		</row>
 						</i-form>

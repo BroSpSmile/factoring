@@ -8,6 +8,7 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.TokenDao;
 import com.smile.start.dao.UserDao;
 import com.smile.start.dto.*;
+import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
@@ -124,6 +125,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
+        final User oldUser = userDao.getByMobile(authUserInfoDTO.getMobile());
+        if(oldUser != null) {
+            throw new ValidateException("用户手机号已存在");
+        }
         String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
         authUserInfoDTO.setSerialNo(serialNo);
         final User user = userInfoMapper.dto2do(authUserInfoDTO);

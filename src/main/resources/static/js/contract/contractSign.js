@@ -9,7 +9,7 @@ var vue = new Vue({
     data : {
         formInline:{
             type : [],
-            status : 8
+            status : 6
         },
         queryParam : {
             condition : {},
@@ -22,12 +22,25 @@ var vue = new Vue({
         pageInfo:{},
         tableColumns:[],
         showResult:false,
-        modal1:false
+        modal1:false,
+        projectList : []
     },
     created : function() {
+        this.initData();
         this.query();
     },
     methods : {
+        /**
+         * 初始化数据
+         */
+        initData : function() {
+            this.$http.get("/past/project").then(function(response){
+                self.projectList = response.data;
+                console.log(response.data)
+            },function(error){
+                console.error(error);
+            });
+        },
         /**
          * 查询
          */

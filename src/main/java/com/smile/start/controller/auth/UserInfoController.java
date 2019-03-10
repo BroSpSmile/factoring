@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.exception.ValidateException;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
@@ -59,8 +60,7 @@ public class UserInfoController extends BaseController {
     @PostMapping(value = "/list")
     @ResponseBody
     public PageInfo<AuthUserInfoDTO> list(@RequestBody PageRequest<UserSearchDTO> userSearch) {
-        PageInfo<AuthUserInfoDTO> userList = userInfoService.findAll(userSearch);
-        return userList;
+        return userInfoService.findAll(userSearch);
     }
 
     /**
@@ -77,6 +77,9 @@ public class UserInfoController extends BaseController {
             result.setSuccess(true);
             result.setErrorMessage("新增用户成功");
             return result;
+        } catch (ValidateException e) {
+            logger.error(e.getMessage(), e);
+            return toResult(e);
         } catch (Exception e) {
             logger.error("新增用户信息失败", e);
             return toResult(e);
