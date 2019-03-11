@@ -10,7 +10,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smile.start.event.FlowEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -80,6 +83,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     /** 项目服务 */
     @Resource
     private ProjectService     projectService;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
 
     /** 
      * @see com.smile.start.service.audit.AuditService#apply(com.smile.start.model.project.Project, com.smile.start.model.auth.User)
@@ -164,8 +171,24 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             role.setSerialNo(StringUtils.EMPTY);
             audit.setRole(role);
         }
-        auditDao.updateRole(audit);
-        return addAuditRecord(record);
+        try {
+            auditDao.updateRole(audit);
+            return addAuditRecord(record);
+        } finally {
+            //注册监听，变更项目表
+            if (AuditType.FILE == audit.getAuditType() && 0 == audit.getStep()) {
+                register(audit);
+            }
+        }
+    }
+
+    /**
+     * 流程变更事件注册
+     *
+     * @param audit
+     */
+    private void register(Audit audit) {
+        applicationContext.publishEvent(new FlowEvent(this, audit));
     }
 
     /** 

@@ -32,9 +32,11 @@ public interface FilingDao {
      * @return
      */
     @Update("<script>" + "update filing_apply_info" + " set id=#{id}"
-            + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
-            + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where project=#{project} "
-            + "</script>")
+        + "<if test = 'applicant!=null'>,applicant = #{applicant}</if>" +
+        "<if test = 'applyTime!=null'> , apply_time = #{applyTime}</if>"
+        + "<if test = 'filingListStr!=null'> , filing_list_str = #{filingListStr}</if>" +
+        "<if test = 'progress!=null'> , progress = #{progress}</if>" + " where project=#{project} "
+        + "</script>")
     int update(FilingApplyInfo filingApplyInfo);
 
     /**
@@ -70,8 +72,8 @@ public interface FilingDao {
      * @param project project.id
      * @return 归档文件信息
      */
-    @Select("select * from filing_file_item where project=#{project}")
-    List<FilingFileItem> findItemByProjectId(Long project);
+    @Select("select * from project_item where project_id=#{project} and item_type = #{itemType}")
+    List<FilingFileItem> findItemByProjectId(Long project, String itemType);
 
     /**
      * 查询全部项目
@@ -87,9 +89,12 @@ public interface FilingDao {
      * @param filingApplyInfo 归档信息查询条件
      * @return 归档信息
      */
-    @Select("<script>" + "select * from filing_apply_info where 1=1 " + "<if test = 'projectId!=null'> and project = #{project}</if>"
-            + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" + "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
-            + "<if test = 'filingListStr!=null'> and filing_list_str = #{filingListStr}</if>" + "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
+    @Select("<script>" + "select * from filing_apply_info where 1=1 " +
+        "<if test = 'projectId!=null'> and project = #{project}</if>"
+        + "<if test = 'applicant!=null'> and applicant = #{applicant}</if>" +
+        "<if test = 'applyTime!=null'> and apply_time = #{applyTime}</if>"
+        + "<if test = 'filingListStr!=null'> and filing_list_str = #{filingListStr}</if>" +
+        "<if test = 'progress!=null'> and progress = #{progress}</if></script>")
     List<FilingApplyInfo> findByParam(FilingApplyInfo filingApplyInfo);
 
     /**
@@ -98,7 +103,7 @@ public interface FilingDao {
      * @param item
      * @return
      */
-    @Insert("insert filing_file_item (project,item_type,item_name,item_value) values(#{project},#{itemType},#{itemName},#{itemValue})")
+    @Insert("insert project_item (project_id,item_type,item_name,item_value) values(#{project},#{itemType},#{itemName},#{itemValue})")
     long insertFileItem(FilingFileItem item);
 
     /**
@@ -107,7 +112,7 @@ public interface FilingDao {
      * @param project
      * @return
      */
-    @Delete("delete from filing_file_item  where project = #{project}")
-    int delFileItemByProjectId(Long project);
+    @Delete("delete from project_item  where project_id = #{project} and item_type = #{itemType}")
+    int delFileItemByProjectId(Long project, String itemType);
 
 }

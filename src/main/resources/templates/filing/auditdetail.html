@@ -8,16 +8,12 @@
             <i-col span="22" offset="1">
                 <br><h2>审核进度</h2><br>
                 <card dis-hover title="审核流程">
-                    <Steps :current="step">
+                    <!--Steps :current="step">
                         <Step v-for="item in steps" :title="item.title" :content="item.content"></Step>
-                        <!--Step :title="steps[0].title" :content="steps[0].content"></Step>
-                        <Step :title="steps[1].title" :content="steps[1].content"></Step>
-                        <Step :title="steps[2].title" :content="steps[2].content"></Step>
-                        <Step :title="steps[3].title" :content="steps[3].content"></Step-->
-                    </Steps>
-                    <!--Steps :current="audit.step==-1?10000:audit.step" size="small">
-                        <Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
                     </Steps-->
+                    <Steps :current="audit.step==-1?10000:audit.step" size="small">
+                        <Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
+                    </Steps>
                 </card>
                 </br>
                 <card dis-hover title="申请详情">

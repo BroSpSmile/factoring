@@ -41,7 +41,7 @@ public enum Progress {
                       LOANED("LOANED", "已放款", 11),
                       /**  */
                       FILE("FILE", "归档申请", 12),
-                      FILE_COMPLETE("FILE_COMPLETE", "归档完成", 13);
+                      FILED("FILED", "归档完成", 13);
 
     Progress(String code, String desc, int index) {
         this.code = code;
@@ -90,6 +90,19 @@ public enum Progress {
             return progress;
         }
         return getByIndex(progress.getIndex() + 1);
+    }
+
+    /**
+     * 获取上一流程
+     *
+     * @param progress
+     * @return
+     */
+    public static Progress last(Progress progress) {
+        if (progress.getIndex() == 0) {
+            return progress;
+        }
+        return getByIndex(progress.getIndex() - 1);
     }
 
     /**

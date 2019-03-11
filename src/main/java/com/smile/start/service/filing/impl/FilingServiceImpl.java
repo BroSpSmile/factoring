@@ -3,10 +3,7 @@ package com.smile.start.service.filing.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.dao.AuditDao;
-import com.smile.start.dao.AuditRecordDao;
-import com.smile.start.dao.FilingDao;
-import com.smile.start.dao.ProjectDao;
+import com.smile.start.dao.*;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowStatusDTO;
@@ -19,6 +16,7 @@ import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
+import com.smile.start.model.project.AuditRecordItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
@@ -31,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -71,6 +70,12 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
      */
     @Resource
     private AuditRecordDao auditRecordDao;
+
+    /**
+     * auditRecordItemDao
+     */
+    @Resource
+    private AuditRecordItemDao auditRecordItemDao;
 
     /**
      * 文件服务
@@ -147,7 +152,6 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
                         return addAuditResult;
                     }
                 }
-
             }
         }
 
@@ -162,7 +166,28 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (AuditResult.APPLY == record.getResult()) {
             record.setStatus(FilingSubProgress.getByIndex(audit.getStep()).getDesc());
         }
-        auditRecordDao.insert(record);
+        long effect = auditRecordDao.insert(record);
+
+        //add :仅为适配翔总流程，文件记录到流程表里，but，原始文件表也要保存，因为归档流程处理暂存 实现不同
+        /**
+         if (effect > 0) {
+         List<FilingFileItem> filingFileItems = filingApplyInfo.getItems();
+         List<AuditRecordItem> items = null;
+         if (null != filingFileItems) {
+         items = new ArrayList<AuditRecordItem>();
+         for (FilingFileItem filingFileItem : filingFileItems) {
+         AuditRecordItem item = new AuditRecordItem();
+         item.setRecord(record);
+         item.setId(filingFileItem.getId());
+         item.setItemName(filingFileItem.getItemName());
+         item.setItemValue(filingFileItem.getItemValue());
+         auditRecordItemDao.insert(item);
+         }
+         }
+         } else {
+         throw new RuntimeException("新增审核记录失败");
+         }
+         */
     }
 
     @Override
@@ -234,7 +259,8 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             LoggerUtils.info(logger, "删除归档申请影响行effect={}", effect);
 
             //删除归档文件 in db
-            long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProject());
+            long effectDelItem =
+                filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
 
             //更新项目状态为待归档状态即 已放款状态
             long updateProjectEffect = updateProject(filingApplyInfo);
@@ -250,7 +276,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         } finally {
             //删除文件
             if (null != filingApplyInfo) {
-                List<FilingFileItem> items = filingDao.findItemByProjectId(filingApplyInfo.getProject());
+                List<FilingFileItem> items = filingDao.findItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
                 for (FilingFileItem item : items) {
                     LoggerUtils.info(logger, "删除文件ID={}", item.getItemValue());
                     fileService.delete(item.getItemValue());
@@ -279,7 +305,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (null != filingApplyInfos && !filingApplyInfos.isEmpty()) {
             filingApplyInfo = filingApplyInfos.get(0);
 
-            List<FilingFileItem> items = filingDao.findItemByProjectId(project);
+            List<FilingFileItem> items = filingDao.findItemByProjectId(project, Progress.FILE.getCode());
             filingApplyInfo.setItems(items);
         }
         Project projectObj = projectDao.get(project);
@@ -319,7 +345,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
 
         if (isUpdateItem) {
-            filingDao.delFileItemByProjectId(filingApplyInfo.getProject());
+            filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
             for (FilingFileItem item : filingApplyInfo.getItems()) {
                 filingDao.insertFileItem(item);
             }
@@ -330,7 +356,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
         Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_COMPLETE) ?
-            Progress.FILE_COMPLETE :
+            Progress.FILED :
             Progress.FILE;
 
         if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {

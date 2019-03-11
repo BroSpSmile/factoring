@@ -16,14 +16,14 @@ public enum FilingProgress {
     /**
      * 已放款状态可提出归档申请，即待归档状态
      */
-    LOAN("LOAN", "待归档", 11),
+    LOANED("LOANED", "待归档", 11),
 
     /**
      *
      */
     FILE("FILE", "归档申请", 12),
 
-    FILE_COMPLETE("FILE_COMPLETE", "归档完成", 13);
+    FILED("FILED", "归档完成", 13);
 
     FilingProgress(String code, String desc, int index) {
         this.code = code;
