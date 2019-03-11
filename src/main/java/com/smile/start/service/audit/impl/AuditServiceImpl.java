@@ -35,6 +35,7 @@ import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditFlow;
 import com.smile.start.model.project.AuditParam;
@@ -46,6 +47,7 @@ import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FlowConfigService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -87,6 +89,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Autowired
     private ApplicationContext applicationContext;
 
+    /**  */
+    @Resource
+    private ProcessEngine      processEngine;
 
     /** 
      * @see com.smile.start.service.audit.AuditService#apply(com.smile.start.model.project.Project, com.smile.start.model.auth.User)
@@ -135,14 +140,14 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         if (null != nextStep) {
             audit.setStep(nextStep.getFlowStatus());
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(nextStep.getCheckedRoleList().get(0));
+            role.setSerialNo(nextStep.getRoleSerialNo());
             audit.setRole(role);
         } else {
             audit.setStep(-1);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
             role.setSerialNo(StringUtils.EMPTY);
             audit.setRole(role);
-            turnover(audit.getProject());
+            turnover(audit.getProject(), audit);
         }
         auditDao.updateRole(audit);
         return addAuditRecord(record);
@@ -163,7 +168,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             record.setStatus("驳回至" + nextStep.getFlowStatusDesc());
             audit.setStep(nextStep.getFlowStatus());
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(nextStep.getCheckedRoleList().get(0));
+            role.setSerialNo(nextStep.getRoleSerialNo());
             audit.setRole(role);
         } else {
             audit.setStep(-1);
@@ -222,9 +227,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
      * @see com.smile.start.service.audit.AuditService#getAudit(java.lang.Long)
      */
     @Override
-    public Audit getAuditByProjectFlowAndType(Long id,String type) {
-        Audit audit = auditDao.getByProjectAndType(id,type);
-        if(audit != null) {
+    public Audit getAuditByProjectFlowAndType(Long id, String type) {
+        Audit audit = auditDao.getByProjectAndType(id, type);
+        if (audit != null) {
             genAudit(audit);
         }
         return audit;
@@ -334,10 +339,12 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
      * @param project
      * @return
      */
-    private BaseResult turnover(Project project) {
+    private BaseResult turnover(Project project, Audit audit) {
         project.setItems(Collections.emptyList());
         project.setProgress(Progress.getByIndex(project.getProgress().getIndex() + 1));
-        return projectService.turnover(project);
+        processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
+        BaseResult result = processEngine.next(project);
+        return result;
     }
 
 }
