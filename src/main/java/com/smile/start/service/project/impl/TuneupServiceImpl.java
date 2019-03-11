@@ -7,12 +7,17 @@ package com.smile.start.service.project.impl;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 import com.smile.start.service.project.TuneupService;
 
@@ -32,16 +37,21 @@ public class TuneupServiceImpl extends AbstractService implements TuneupService 
     @Resource
     private AuditService   auditService;
 
+    /** processEngine */
+    @Resource
+    private ProcessEngine  processEngine;
+
     /** 
      * @see com.smile.start.service.project.TuneupService#tuneupApply(com.smile.start.model.project.Project)
      */
     @Override
+    @Transactional
     public BaseResult tuneupApply(Project project) {
         project.setProgress(Progress.TUNEUP);
-        BaseResult result = projectService.turnover(project);
-        if (result.isSuccess()) {
-            result = auditService.apply(project, project.getUser());
-        }
+        project.setStep(1);
+        processEngine.next(project);
+        SingleResult<Audit> auditResult = auditService.apply(project, project.getUser());
+        BaseResult result = processEngine.changeStatus(project, StepStatus.PROCESSING, auditResult.getData());
         return result;
     }
 

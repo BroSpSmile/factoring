@@ -446,7 +446,7 @@ vue.tableColumns=[{
     	width:80,
         render:(h,param)=>{
         	return h('div', [
-				h('Poptip',{props:{trigger:'click',placement:'right',width:'900'}},[
+				h('Poptip',{props:{trigger:'click',placement:'right',width:'1400'}},[
 					h('Button',{props:{size:'small',type:'info',ghost:true}},[
 						'进度',
 						h('Icon',{props:{type:'ios-information-circle'}})

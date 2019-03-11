@@ -30,7 +30,7 @@ public interface ProjectStepDao {
      * @param record
      * @return
      */
-    @Insert("insert into project_step (project_id,step,status,create_time) values(#{project.id},#{progress},#{status},#{createTime})")
+    @Insert("insert into project_step (project_id,step,status,create_time) values(#{project.id},#{step},#{status},#{createTime})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(StepRecord record);
 
@@ -39,7 +39,11 @@ public interface ProjectStepDao {
      * @param record
      * @return
      */
-    @Update("update project_step set step = #{step}<if test='audit!=null'>, audit = #{audit.id}</if>,modify_time = #{modifyTime} where id = #{id}")
+    @Update("<script>"
+            + "update project_step set step = #{step},status=#{status}"
+            + "<if test='audit!=null'>, audit_id = #{audit.id}</if>,"
+            + "modify_time = #{modifyTime} where id = #{id}"
+            + "</script>")
     int update(StepRecord record);
 
     /**

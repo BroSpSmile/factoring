@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
-import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectStepDao;
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.StepStatus;
@@ -23,6 +23,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.engine.ProcessEngine;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 实现
@@ -36,9 +37,9 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     @Resource
     private ProjectStepDao stepDao;
 
-    /** projectDao */
+    /** projectService */
     @Resource
-    private ProjectDao     projectDao;
+    private ProjectService projectService;
 
     /** 
      * @see com.smile.start.service.engine.ProcessEngine#getRecords(com.smile.start.model.project.Project)
@@ -56,16 +57,23 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     @Override
     @Transactional
     public SingleResult<StepRecord> next(Project project) {
-        StepRecord record = new StepRecord();
-        record.setProject(project);
-        record.setStatus(StepStatus.BEGIN);
-        record.setStep(Step.getStep(project.getStep()));
-        record.setCreateTime(new Date());
-        long effect = stepDao.insert(record);
-        SingleResult<StepRecord> result = new SingleResult<StepRecord>();
-        result.setSuccess(effect > 0);
-        result.setData(record);
-        return result;
+        project.setStep(project.getStep() + 1);
+        BaseResult updataResult = projectService.turnover(project);
+        if (updataResult.isSuccess()) {
+            StepRecord record = new StepRecord();
+            record.setProject(project);
+            record.setStatus(StepStatus.BEGIN);
+            record.setStep(Step.getStep(project.getStep()));
+            record.setCreateTime(new Date());
+            long effect = stepDao.insert(record);
+            SingleResult<StepRecord> result = new SingleResult<StepRecord>();
+            result.setSuccess(effect > 0);
+            result.setData(record);
+            return result;
+        } else {
+            throw new RuntimeException("更新项目状态失败");
+        }
+
     }
 
     /** 
@@ -100,6 +108,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
      * @see com.smile.start.service.engine.ProcessEngine#changeStatus(com.smile.start.model.project.Project, com.smile.start.model.enums.StepStatus, com.smile.start.model.project.Audit)
      */
     @Override
+    @Transactional
     public SingleResult<StepRecord> changeStatus(Project project, StepStatus status, Audit audit) {
         StepRecord record = stepDao.getStep(project.getId(), Step.getStep(project.getStep()));
         if (null != audit) {

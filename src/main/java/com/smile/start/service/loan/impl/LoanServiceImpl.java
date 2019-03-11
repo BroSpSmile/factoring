@@ -12,12 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.smile.start.dao.LoanDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.LoanType;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.loan.Loan;
+import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.loan.LoanService;
 import com.smile.start.service.project.ProjectService;
 
@@ -36,6 +41,10 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     /** projectService */
     @Resource
     private ProjectService projectService;
+
+    /** processEngine */
+    @Resource
+    private ProcessEngine  processEngine;
 
     /** auditService */
     @Resource
@@ -68,10 +77,13 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     @Transactional
     public BaseResult commit(Loan loan) {
         BaseResult result = this.save(loan);
-        loan.getProject().setProgress(Progress.LOAN);
-        result = projectService.turnover(loan.getProject());
         if (result.isSuccess()) {
-            result = auditService.apply(loan.getProject(), loan.getUser());
+            Project project = loan.getProject();
+            project.setProgress(Progress.LOAN);
+            project.setStep(7);
+            SingleResult<Audit> auditResult = auditService.apply(project, loan.getUser());
+            processEngine.changeStatus(project, StepStatus.COMPLETED, auditResult.getData());
+            processEngine.next(project);
         }
         return result;
     }
