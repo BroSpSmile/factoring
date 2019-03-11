@@ -26,6 +26,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
@@ -33,6 +34,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectMeeting;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.project.ProjectService;
 
@@ -64,6 +66,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     @Resource
     private UserInfoService   userInfoService;
 
+    /** 流程引擎 */
+    @Resource
+    private ProcessEngine     processEngine;
+
     /** 
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
      */
@@ -71,7 +77,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     public PageInfo<MeetingExt> search(PageRequest<MeetingSearch> search) {
         PageHelper.startPage(search.getPageNum(), search.getPageSize(), "id desc");
         List<MeetingExt> meetingExts = meetingDao.findByParam(search.getCondition());
-        meetingExts.forEach(ext->toMeeting(ext));
+        meetingExts.forEach(ext -> toMeeting(ext));
         //4. 根据返回的集合，创建PageInfo对象
         PageInfo<MeetingExt> result = new PageInfo<>(meetingExts);
         return result;
@@ -98,7 +104,6 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         MeetingExt ext = meetingDao.get(id);
         return toMeeting(ext);
     }
-
 
     /**
      * 
@@ -140,7 +145,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         if (effect > 0 && MeetingKind.APPROVAL.equals(meeting.getKind())) {
             for (Project project : meeting.getProjects()) {
                 project.setProgress(Progress.INITIATE);
-                projectService.turnover(project);
+                processEngine.changeStatus(project, StepStatus.PROCESSING);
                 ProjectMeeting pm = new ProjectMeeting();
                 pm.setMeetingId(meeting.getId());
                 pm.setProjectId(project.getId());
@@ -201,7 +206,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         } else {
             Project project = meeting.getProjects().get(0);
-            projectService.turnover(project);
+            project.setProgress(Progress.APPROVAL);
+            project.setStep(0);
+            processEngine.changeStatus(project, StepStatus.COMPLETED);
+            processEngine.next(project);
         }
         return new BaseResult();
     }

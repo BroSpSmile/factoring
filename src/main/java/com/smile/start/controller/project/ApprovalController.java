@@ -25,9 +25,7 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectItemType;
-import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.project.ProjectService;
@@ -76,8 +74,6 @@ public class ApprovalController extends BaseController {
     @PostMapping
     @ResponseBody
     public BaseResult add(HttpServletRequest request, @RequestBody Project project) {
-        project.setKind(ProjectKind.FACTORING);
-        project.setProgress(Progress.INIT);
         User user = getUserByToken(request);
         project.setUser(user);
         LoggerUtils.info(logger, "新增项目请求参数={}", FastJsonUtils.toJSONString(project));

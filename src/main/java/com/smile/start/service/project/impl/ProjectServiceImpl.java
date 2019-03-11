@@ -4,7 +4,6 @@
  */
 package com.smile.start.service.project.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,8 +21,8 @@ import com.smile.start.dao.ProjectStepDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
@@ -80,15 +79,13 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Transactional
     public BaseResult initProject(Project project) {
         project.setProjectId(idGenService.genId(project.getKind()));
+        project.setStep(-1);
+        project.setKind(ProjectKind.FACTORING);
+        project.setProgress(Progress.INIT);
         long effect = projectDao.insert(project);
         LoggerUtils.info(logger, "新增项目影响行effect={}", effect);
-        BaseResult result = new BaseResult();
-        if (effect > 0) {
-            result.setSuccess(true);
-        } else {
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增项目失败,请重试!");
-        }
+        BaseResult result = toResult(effect);
+        processEngine.next(project);
         return result;
     }
 
@@ -128,7 +125,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Transactional
     public BaseResult turnover(Project project) {
         int effect = projectDao.update(project);
-        addRecord(project);
         LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
         if (!CollectionUtils.isEmpty(project.getItems())) {
             for (ProjectItem item : project.getItems()) {
@@ -224,21 +220,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         //4. 根据返回的集合，创建PageInfo对象
         PageInfo<Project> page = new PageInfo<>(projects);
         return page.getList();
-    }
-
-    /**
-     * 添加项目记录
-     * @param project
-     * @return
-     */
-    private BaseResult addRecord(Project project) {
-        StepRecord record = new StepRecord();
-        record.setProject(project);
-        //record.setProgress(project.getProgress());
-        record.setStatus(StepStatus.COMPLETED);
-        record.setCreateTime(new Date());
-        long effect = projectRecordDao.insert(record);
-        return toResult(effect);
     }
 
     /**

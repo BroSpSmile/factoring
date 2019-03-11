@@ -166,6 +166,7 @@ var vue = new Vue({
 					return false;
 				}else{
 					if(_self.project.id){
+						_self.addMeeting.projects = [];
 						_self.addMeeting.projects.push(_self.project);
 					}
 					_self.addMeeting.beginTime = _self.addMeeting.meetingTime[0];
