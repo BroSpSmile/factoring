@@ -165,27 +165,6 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             record.setStatus(FilingSubProgress.getByIndex(audit.getStep()).getDesc());
         }
         auditRecordDao.insert(record);
-
-        //add :仅为适配翔总流程，文件记录到流程表里，but，原始文件表也要保存，因为归档流程处理暂存 实现不同
-        /**
-         if (effect > 0) {
-         List<FilingFileItem> filingFileItems = filingApplyInfo.getItems();
-         List<AuditRecordItem> items = null;
-         if (null != filingFileItems) {
-         items = new ArrayList<AuditRecordItem>();
-         for (FilingFileItem filingFileItem : filingFileItems) {
-         AuditRecordItem item = new AuditRecordItem();
-         item.setRecord(record);
-         item.setId(filingFileItem.getId());
-         item.setItemName(filingFileItem.getItemName());
-         item.setItemValue(filingFileItem.getItemValue());
-         auditRecordItemDao.insert(item);
-         }
-         }
-         } else {
-         throw new RuntimeException("新增审核记录失败");
-         }
-         */
     }
 
     @Override
@@ -214,11 +193,6 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             result.setErrorMessage("归档审批失败,请重试!");
         }
         if (result.isSuccess() && null != record) {
-            //流程实际上是三部，但是页面显示四步，专员完成后实际就是结束
-            if (filingApplyInfo.getProgress() == FilingSubProgress.FILE_COMPLETE) {
-                filingApplyInfo.setProgress(FilingSubProgress.FILE_OFFICER);
-            }
-
             Audit audit = auditDao.getByProjectAndType(filingApplyInfo.getProject(), AuditType.FILE.getCode());
             updateAuditStep(filingApplyInfo, audit, getStep(filingApplyInfo.getProgress()));
 
@@ -233,7 +207,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
                 record.setStatus("驳回至" + FilingSubProgress.getByIndex(audit.getStep() + 1).getDesc());
             }
             if (AuditResult.COMPLETE == record.getResult()) {
-                record.setStatus(FilingSubProgress.FILE_COMPLETE.getDesc());
+                record.setStatus(Progress.FILED.getDesc());
             }
             auditRecordDao.insert(record);
         }
@@ -334,9 +308,6 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
     }
 
     private int update(FilingApplyInfo filingApplyInfo, boolean isUpdateItem) {
-        if (filingApplyInfo.getProgress() == FilingSubProgress.FILE_OFFICER) {
-            filingApplyInfo.setProgress(FilingSubProgress.FILE_COMPLETE);
-        }
         int effect = filingDao.update(filingApplyInfo);
 
         LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
@@ -352,10 +323,10 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
     }
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
-        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_COMPLETE) ? Progress.FILED : Progress.FILE;
+        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_OFFICER) ? Progress.FILED : Progress.FILE;
 
         if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
-            progress = Progress.LOAN;
+            progress = Progress.LOANED;
         }
         long updateProjectEffect = projectDao.updateProjectProgress(filingApplyInfo.getProject(), progress.getCode());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
@@ -366,7 +337,8 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (null != step) {
             audit.setStep(step.getFlowStatus());
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(step.getCheckedRoleList().get(0));
+            //role.setSerialNo(step.getCheckedRoleList().get(0));
+            role.setSerialNo(step.getRoleSerialNo());
             audit.setRole(role);
         } else {
             //审批流程已结束
@@ -412,7 +384,8 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
             //获取审核流程
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(step.getCheckedRoleList().get(0));
+            //role.setSerialNo(step.getCheckedRoleList().get(0));
+            role.setSerialNo(step.getRoleSerialNo());
             audit.setRole(role);
         }
         return audit;

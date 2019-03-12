@@ -29,11 +29,7 @@ public enum FilingSubProgress {
     /**
      *
      */
-    FILE_OFFICER("FILE_OFFICER", "办公室专员归档", 3),
-    /**
-     *
-     */
-    FILE_COMPLETE("FILE_COMPLETE", "归档完成", 4);
+    FILE_OFFICER("FILE_OFFICER", "办公室专员归档", 3);
 
     FilingSubProgress(String code, String desc, int index) {
         this.code = code;
