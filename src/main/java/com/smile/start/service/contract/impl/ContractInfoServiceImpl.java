@@ -389,14 +389,21 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //审核通过
         if (contractAuditDTO.getOperationType() == 1) {
             contractInfo.setStatus(currentStatus.getNextStatus().getValue());
-            //如果审核完成，则直接将合同状态更新为完成，流转到办公室人员，并修改项目状态为拟定合同
-            if (currentStatus.getNextStatus() == ContractStatusEnum.FINISH) {
+            //如果集团正总审核完成，则直接将合同状态更新为完成，流转到办公室人员，并修改项目状态为拟定合同
+            if (currentStatus.getNextStatus() == ContractStatusEnum.GENERAL_MANAGER_AUDIT) {
                 contractInfo.setStatus(ContractStatusEnum.FINISH.getValue());
-                //TODO 调用通知接口
+
+                //状态流转到下一级
+                audit.setStep(ContractStatusEnum.SIGN.getValue());
+
+                //更新项目状态
+                project.setProgress(Progress.DRAWUP);
+                projectService.turnover(project);
+            } else {
+                //状态流转到下一级
+                audit.setStep(currentStatus.getNextStatus().getValue());
             }
 
-            //状态流转到下一级
-            audit.setStep(currentStatus.getNextStatus().getValue());
             record.setType(currentStatus.getNextStatus().getDesc());
             record.setStatus(currentStatus.getNextStatus().getDesc() + "通过");
             record.setResult(AuditResult.PASS);
@@ -435,10 +442,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setAuditor(audit.getApplicant());
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
-
-        //更新项目状态
-        project.setProgress(Progress.DRAWUP);
-        projectService.turnover(project);
     }
 
     /**
