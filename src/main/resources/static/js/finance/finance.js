@@ -184,74 +184,17 @@ var vue = new Vue({
         },
 
         /**
-         * 更新项目
+         * 取消
          */
-        updateProject:function(project){
-            this.addForm = project;
-            this.modal1 = true;
-        },
-
-        /**
-         * 删除警告
-         */
-        deleteWarn:function(id){
-            this.$Modal.confirm({
-                title: '删除提示',
-                content: '<p>确认是否删除当前项目</p>',
-                onOk: () => {
-                this.deleteProject(id);
-        },
-            onCancel: () => {
-            }
-        })
-        },
-
-        /** 删除项目 */
-        deleteProject:function(id){
-            let self = this;
-            this.$http.delete("/approval/"+id).then(function(response){
-                if (response.data.success) {
-                    self.$Message.info({
-                        content : "删除成功",
-                        onClose : function() {
-                            self.query();
-                            self.cancel();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            },function(error){
-                self.$Message.error(error.data.errorMessage);
-            })
+        cancel : function() {
+            this.modal1 = false;
         },
 
         /**
          * 跳转菜单
          */
-        toMenu:function(menu,projectId){
-            if(projectId){
-                window.open(menu+"?id="+projectId);
-            }else{
-                window.open(menu);
-            }
-        },
-
-        /**
-         * 尽调审核
-         */
-        tuneup:function(projectId){
-            window.open("apply?id="+projectId,"_blank");
-        },
-
-        /**
-         * 取消保存
-         */
-        cancel : function() {
-            this.modal1 = false;
-            if(this.addForm.projectId==''){
-                this.$refs['entityDataForm'].resetFields();
-            }
+        operate : function(projectId){
+            this.modal1 = true;
         }
     }
 });
@@ -336,7 +279,7 @@ vue.tableColumns=[{
 						},
 						on: {
 							click: () => {
-								vue.updateContract(param.row.id);
+								vue.operate(param.row.id);
 							}
 						}
 					}, '登记')

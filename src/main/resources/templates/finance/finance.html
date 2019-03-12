@@ -40,20 +40,24 @@
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 			</card>
 			
-			<!-- 新增项目 -->
-			<modal v-model="modal1" title="新增项目"  mask-closable="false">
+			<!-- 财务操作页面 -->
+			<modal v-model="modal1" title="财务操作"  mask-closable="false">
 				<div id="modalForm">
-					<i-form ref="entityDataForm"  :model="addForm" :label-width="120" >
-						<form-item label="项目编号" prop="projectId" v-if="addForm.projectId!=''">
-							 <i-input placeholder="输入项目名称"  v-model="addForm.projectId"></i-input>
-						</form-item>
-						<form-item label="项目名称" prop="projectName">
-							 <i-input placeholder="输入项目名称"  v-model="addForm.projectName"></i-input>
-						</form-item>
-						<form-item label="业务负责人" prop="person">
-							 <i-input placeholder="输入业务负责人"  v-model="addForm.person"></i-input>
-						</form-item>
-					</i-form>
+					<card dis-hover title="放款">
+						<p>
+
+						</p>
+					</card>
+					<card dis-hover title="保理费">
+						<p>
+
+						</p>
+					</card>
+					<card dis-hover title="本金">
+						<p>
+
+						</p>
+					</card>
 				</div>
 				<div slot="footer">
 		            <i-button type="primary"  @click="saveProject" style="margin-left: 8px">确定</i-button>
