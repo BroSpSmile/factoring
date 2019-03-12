@@ -5,7 +5,6 @@ import com.smile.start.dao.ProjectDao;
 import com.smile.start.event.FlowEvent;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class FlowListener {
     /**
      * logger
      */
-    public Logger logger = LoggerFactory.getLogger(getClass());
+    public Logger      logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 项目DAO
@@ -44,8 +43,7 @@ public class FlowListener {
             Project project = audit.getProject();
             Optional<Project> opt = Optional.ofNullable(audit.getProject());
             if (opt.isPresent()) {
-                long updateProjectEffect =
-                    projectDao.updateProjectProgress(project.getId(), Progress.last(project.getProgress()).getCode());
+                long updateProjectEffect = projectDao.updateProjectProgress(project.getId(), Progress.last(project.getProgress()).getCode());
                 LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
             }
         }

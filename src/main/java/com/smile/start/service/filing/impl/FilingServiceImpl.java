@@ -16,7 +16,6 @@ import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
-import com.smile.start.model.project.AuditRecordItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,57 +41,57 @@ import java.util.List;
 @Service
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
-    private static final FlowTypeEnum FLOW_TYPE = FlowTypeEnum.valueOf(Progress.FILE.name());
+    private static final FlowTypeEnum FLOW_TYPE  = FlowTypeEnum.valueOf(Progress.FILE.name());
 
-    private static final AuditType AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
+    private static final AuditType    AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
 
     /**
      * 归档DAO
      */
     @Resource
-    private FilingDao filingDao;
+    private FilingDao                 filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao                projectDao;
 
     /**
      * auditDao
      */
     @Resource
-    private AuditDao auditDao;
+    private AuditDao                  auditDao;
 
     /**
      * auditRecordDao
      */
     @Resource
-    private AuditRecordDao auditRecordDao;
+    private AuditRecordDao            auditRecordDao;
 
     /**
      * auditRecordItemDao
      */
     @Resource
-    private AuditRecordItemDao auditRecordItemDao;
+    private AuditRecordItemDao        auditRecordItemDao;
 
     /**
      * 文件服务
      */
     @Resource
-    private FileService fileService;
+    private FileService               fileService;
 
     /**
      * 用户服务
      */
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService           userInfoService;
 
     /**
      * flowConfigService
      */
     @Resource
-    private FlowConfigService flowConfigService;
+    private FlowConfigService         flowConfigService;
 
     @Override
     @Transactional
@@ -166,7 +164,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (AuditResult.APPLY == record.getResult()) {
             record.setStatus(FilingSubProgress.getByIndex(audit.getStep()).getDesc());
         }
-        long effect = auditRecordDao.insert(record);
+        auditRecordDao.insert(record);
 
         //add :仅为适配翔总流程，文件记录到流程表里，but，原始文件表也要保存，因为归档流程处理暂存 实现不同
         /**
@@ -259,8 +257,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             LoggerUtils.info(logger, "删除归档申请影响行effect={}", effect);
 
             //删除归档文件 in db
-            long effectDelItem =
-                filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
+            long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
 
             //更新项目状态为待归档状态即 已放款状态
             long updateProjectEffect = updateProject(filingApplyInfo);
@@ -355,15 +352,12 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
     }
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
-        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_COMPLETE) ?
-            Progress.FILED :
-            Progress.FILE;
+        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_COMPLETE) ? Progress.FILED : Progress.FILE;
 
         if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
             progress = Progress.LOAN;
         }
-        long updateProjectEffect =
-            projectDao.updateProjectProgress(filingApplyInfo.getProject(), progress.getCode());
+        long updateProjectEffect = projectDao.updateProjectProgress(filingApplyInfo.getProject(), progress.getCode());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
         return updateProjectEffect;
     }
