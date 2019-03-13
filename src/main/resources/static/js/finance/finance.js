@@ -14,9 +14,7 @@ var vue = new Vue({
             progress : null
         },
         addForm : {
-            projectId : "",
-            projectName : "",
-            person : ""
+
         },
         queryParam : {
             condition : {},
@@ -26,8 +24,19 @@ var vue = new Vue({
         pageInfo:{},
         modal1 : false,
         statusItems : [],
-        models:[],
-        steps:[]
+        project : {
+            projectId : "",
+            detail : {
+                loanInstallments : []
+            }
+        },
+        loanInstallment : {
+            amount : 0,
+            detail : {
+                id : 0
+            },
+            installmentDate : ""
+        }
     },
     created : function() {
         this.initDate();
@@ -106,6 +115,7 @@ var vue = new Vue({
             this.$http.post("/approval/query", self.queryParam).then(
                 function(response) {
                     let data = response.data;
+                    console.log(data)
                     for(let index in data.list){
                         try{
                             data.list[index].creditor = data.list[index].detail.creditor;
@@ -136,51 +146,32 @@ var vue = new Vue({
         reset:function(){
             this.$refs['searchForm'].resetFields();
         },
-
-        /**
-         * 新增项目
-         */
-        addProject : function() {
-            window.open("factoring","_blank");
-        },
-
-        /** 保存项目 */
-        saveProject : function() {
+        /** 保存放款信息 */
+        saveLoanInstallment : function() {
             let self = this;
-            if(this.addForm.id==null||this.addForm.id==""){
-                this.$http.post("/approval", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
+            this.loanInstallment.detail.id = this.project.detail.id;
+            this.$http.post("/finance/saveLoanInstallment", this.loanInstallment).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "保存成功",
+                        onClose : function() {
+                            self.project.detail.loanInstallments.push(self.loanInstallment);
+                            console.log(self.project.detail)
+                            self.loanInstallment = {
+                                amount : 0,
+                                    detail : {
+                                    id : 0
+                                },
+                                installmentDate : ""
                             }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/approval", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
-                            }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
-
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
         },
 
         /**
@@ -193,8 +184,48 @@ var vue = new Vue({
         /**
          * 跳转菜单
          */
-        operate : function(projectId){
+        operate : function(project) {
             this.modal1 = true;
+            this.project = project;
+        },
+        /**
+         * 文件上传成功
+         */
+        uploadSuccess: function (response, file, fileList) {
+            // this.fileList = fileList;
+            // console.log(fileList);
+        },
+        /**
+         * 文件上传失败
+         */
+        uploadError: function (error, file, fileList) {
+            // this.fileList = fileList;
+            // console.log(error);
+        },
+        removeFile: function (file, fileList) {
+            this.fileList = fileList;
+            console.log(file);
+            let fileId = file.response.data.fileId;
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+        },
+        genFileInfo: function () {
+            for (let index in this.fileList) {
+                let item = {
+                    attachName: this.fileList[index].name,
+                    fileId: this.fileList[index].response.data.fileId
+                };
+                this.addForm.attachList.push(item);
+            }
+            return true;
         }
     }
 });
@@ -279,7 +310,7 @@ vue.tableColumns=[{
 						},
 						on: {
 							click: () => {
-								vue.operate(param.row.id);
+								vue.operate(param.row);
 							}
 						}
 					}, '登记')
