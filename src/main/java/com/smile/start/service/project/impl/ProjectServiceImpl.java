@@ -28,7 +28,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
-import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.common.FileService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.IdGenService;
@@ -56,10 +56,6 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Resource
     private FactoringService factoringService;
 
-    /** 用户服务 */
-    @Resource
-    private UserInfoService  userInfoService;
-
     /** 项目附件DAO */
     @Resource
     private ProjectItemDao   projectItemDao;
@@ -71,6 +67,10 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     /** 流程引擎 */
     @Resource
     private ProcessEngine    processEngine;
+
+    /** 文件服务 */
+    @Resource
+    private FileService      fileService;
 
     /**
      * @see com.smile.start.service.project.ProjectService#initProject(com.smile.start.model.project.Project)
@@ -209,6 +209,17 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Override
     public List<ProjectItem> queryItems(Long projectId, ProjectItemType type) {
         return projectItemDao.getTypeItems(projectId, type);
+    }
+
+    /** 
+     * @see com.smile.start.service.project.ProjectService#deleteItem(com.smile.start.model.project.ProjectItem)
+     */
+    @Override
+    public BaseResult deleteItem(ProjectItem item) {
+        int effect = projectItemDao.delete(item);
+        boolean success = fileService.delete(item.getItemValue());
+        LoggerUtils.info(logger, "删除文件结果:{}", success);
+        return toResult(effect);
     }
 
     /** 

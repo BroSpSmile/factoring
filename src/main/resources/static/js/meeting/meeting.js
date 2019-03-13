@@ -108,7 +108,7 @@ var vue = new Vue({
 		findProject:function(){
 			let _self = this;
 			if(this.project.id){
-				this.$http.get("/approval/"+this.project.id).then(function(response){
+				this.$http.get("/project/"+this.project.id).then(function(response){
 					_self.project = response.data;
 					if(_self.project){
 						_self.addMeeting.theme = _self.project.projectName+"立项会";

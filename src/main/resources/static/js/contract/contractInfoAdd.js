@@ -45,7 +45,7 @@ var vue = new Vue({
             let projectId = document.getElementById("projectId").value;
 
             //获取项目信息
-            self.$http.get("/approval/" + projectId).then(function(response){
+            self.$http.get("/project/" + projectId).then(function(response){
                 self.project = response.data;
 
                 //获取合同信息

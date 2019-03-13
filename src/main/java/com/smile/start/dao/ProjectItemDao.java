@@ -6,6 +6,7 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,6 +29,14 @@ public interface ProjectItemDao {
      */
     @Insert("insert project_item (project_id,item_type,item_name,item_value,attach_type) values(#{projectId},#{itemType},#{itemName},#{itemValue},#{attachType})")
     long insert(ProjectItem iterm);
+    
+    /**
+     * 
+     * @param item
+     * @return
+     */
+    @Delete("delete from project_item where id = #{id}")
+    int delete(ProjectItem item);
 
     /**
      * 获取

@@ -1,7 +1,7 @@
 /**
  * 菜单信息
  */
-common.pageName = "approval";
+common.pageName = "project";
 common.openName = [ '1' ];
 
 var vue = new Vue({
@@ -9,7 +9,6 @@ var vue = new Vue({
 	data : {
 		project : {
 			id : 0,
-			model : "RECOURSE_RIGHT",
 			items:[]
 		},
 		fileList:[]
@@ -17,9 +16,22 @@ var vue = new Vue({
 	created : function() {
 		if(document.getElementById("applyId").value){
 			this.project.id = document.getElementById("applyId").value;
+			this.getProject(this.project.id);
 		}
 	},
 	methods : {
+		/**
+		 * 获取项目
+		 */
+		getProject:function(id){
+			let _self = this;
+			this.$http.get("/project/"+id).then(function(response){
+				_self.project = response.data;
+			},function(error){
+				console.error(error);
+			})
+		},
+		
 		/**
 		 * 文件上传成功
 		 */
@@ -80,6 +92,27 @@ var vue = new Vue({
 				self.$Message.error(error);
 			})
 			
+		},
+		
+		/**
+		 * 下载文件
+		 */
+		downloadItem:function(item){
+			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
+		},
+		
+		deleteLoadItem:function(item,index){
+			let _self = this;
+			this.$http.delete("/project/items",item).then(function(response){
+				if (response.data.success) {
+					_self.project.items.splice(index, 1);
+					_self.$Message.info("删除成功");
+				} else {
+					_self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				_self.$Message.error(error.data.errorMessage);
+			})
 		}
 	}
 });

@@ -20,7 +20,8 @@ var vue = new Vue({
         },
 		showAuditButton:false,
 		nowStep:0,
-		tableColumns:[]
+		tableColumns:[],
+		isLastFileStep: false,
 	},
 	created : function() {
 		this.initDate();
@@ -91,7 +92,6 @@ var vue = new Vue({
 			if(id){
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
-					console.log(response.data)
 					_self.audit = response.data.data;
 					_self.nowStep = _self.audit.step;
 					_self.showAuditButton = response.data.success;

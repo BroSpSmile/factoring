@@ -100,7 +100,7 @@ var vue = new Vue({
                 self.formInline.person = null;
             }
             self.queryParam.condition = self.formInline;
-            this.$http.post("/approval/query", self.queryParam).then(
+            this.$http.post("/project/query", self.queryParam).then(
                 function (response) {
                     self.pageInfo = response.data;
                 }, function (error) {
@@ -177,7 +177,7 @@ vue.tableColumns = [
         title: '操作',
         align: 'center',
         render: (h, param) => {
-            if (param.row.progress == 'LOAN') {
+            if (param.row.progress == 'LOANED') {
                 return h('div', [
                     "1" == document.getElementById("type").value ? h('span') : h('Button', {
                         props: {
@@ -227,37 +227,7 @@ vue.tableColumns = [
                         }
                     }, '审核详情')]);
 
-            } else if (param.row.progress == 'FILE_OFFICER') {
-                return h('div', [
-                    "1" == document.getElementById("type").value ? h('Button', {
-                        props: {
-                            size: "small",
-                            type: "warning"
-                        },
-                        style: {
-                            marginRight: '5px'
-                        },
-                        on: {
-                            click: () => {
-                                vue.audit(param.row.projectId);
-                            }
-                        }
-                    }, '归档审核') : h('span'), h('Button', {
-                        props: {
-                            size: "small",
-                            type: "info",
-							ghost:true
-                        },
-                        style: {
-                            marginRight: '5px'
-                        },
-                        on: {
-                            click: () => {
-                                vue.view(param.row.projectId);
-                            }
-                        }
-                    }, '审核详情')]);
-            } else if (param.row.progress == 'FILE_COMPLETE') {
+            } else if (param.row.progress == 'FILED') {
                 return h('div', [
                     h('Button', {
                         props: {

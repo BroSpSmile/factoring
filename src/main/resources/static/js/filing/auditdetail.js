@@ -62,7 +62,8 @@ var vue = new Vue({
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.filingInfo = response.data.data;
                         _self.filingInfo.applyType = '归档申请';
-                        _self.getCurUser();
+                        //_self.getCurUser();//modify :适配景总流程，屏蔽
+                        _self.setAllProgresses();//modify :适配景总流程，屏蔽
                     }
                 } else {
                     self.$Message.error(response.data.errorMessage);
@@ -86,7 +87,8 @@ var vue = new Vue({
                 if (response.data.success) {
                     if (null != response.data.data && 'null' != response.data.data) {
                         _self.user = response.data.data;
-                        _self.setAllProgresses();
+
+                        //_self.setAllProgresses();//modify : 适配景总流程，屏蔽
                     }
                 } else {
                     self.$Message.error(response.data.errorMessage);
@@ -109,47 +111,46 @@ var vue = new Vue({
                 _self.audit = _self.filingInfo.audit;
                 this.step = _self.audit.step;
 
-                //审核历史
-                //let records = _self.audit.records;
-                //_self.records = _self.audit.records;
+                // //审核历史
+                // //let records = _self.audit.records;
+                // //_self.records = _self.audit.records;
+                //
+                // //审核流程状态
+                // let flows = _self.audit.flows;
+                // //_self.flows = _self.audit.flows;
+                //
+                // //去除第一个待归档状态
+                // _self.allProgresses.shift();
+                // if (this.step == -1) {
+                //     this.step = this.allProgresses.length
+                // }
+                // for (let i = 0; i < this.allProgresses.length; i++) {
+                //     let stepObj = new Object();
+                //     if (i == 0) {
+                //         stepObj.content = _self.filingInfo.applicant + ' ' + _self.filingInfo.applyTime;
+                //     } else if (this.step == i) {
+                //         stepObj.content = _self.user.username;
+                //     } else {
+                //         stepObj.content = '';
+                //     }
+                //     stepObj.title = this.allProgresses[i].text;
+                //     _self.steps.push(stepObj);
+                // }
+                //
+                // //总计的步骤数-2 为倒数第二个元素的index
+                // if (this.step == _self.allProgresses.length - 2) {
+                //     this.isLastAuditStep = true;
+                // }
+                //
+                // for (let i = 0; i < this.step; i++) {
+                //     let flow = flows[i];
+                //     if (flow && i != 0) {
+                //         _self.steps[i].content = flow.user == null ? flow.role.roleName : flow.user.username
+                //     }
+                //
+                // }
 
-                //审核流程状态
-                let flows = _self.audit.flows;
-                //_self.flows = _self.audit.flows;
-
-                //去除第一个待归档状态
-                _self.allProgresses.shift();
-                if (this.step == -1) {
-                    this.step = this.allProgresses.length
-                }
-                for (let i = 0; i < this.allProgresses.length; i++) {
-                    let stepObj = new Object();
-                    if (i == 0) {
-                        stepObj.content = _self.filingInfo.applicant + ' ' + _self.filingInfo.applyTime;
-                    } else if (this.step == i) {
-                        stepObj.content = _self.user.username;
-                    } else {
-                        stepObj.content = '';
-                    }
-                    stepObj.title = this.allProgresses[i].text;
-                    _self.steps.push(stepObj);
-                }
-
-                //总计的步骤数-2 为倒数第二个元素的index
-                if (this.step == _self.allProgresses.length - 2) {
-                    this.isLastAuditStep = true;
-                }
-
-                for (let i = 0; i < this.step; i++) {
-                    let flow = flows[i];
-                    if (flow && i != 0) {
-                        _self.steps[i].content = flow.user == null ? flow.role.roleName : flow.user.username
-                    }
-
-                }
-
-
-                _self.setProgresses();
+                //_self.setProgresses();//modify : 审批页面 弹框使用，适配景总流程，屏蔽
             }, function (error) {
                 console.error(error);
             })

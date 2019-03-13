@@ -41,6 +41,11 @@ public class Project implements Serializable {
     /** 当前进度 */
     private Progress          progress;
 
+    /**
+     * all进度 add by xioutman  有用 别删了
+     */
+    private List<String>      progresses;
+
     /** 当前步骤 */
     private Integer           step;
 
@@ -166,6 +171,14 @@ public class Project implements Serializable {
      */
     public void setProgress(Progress progress) {
         this.progress = progress;
+    }
+
+    public List<String> getProgresses() {
+        return progresses;
+    }
+
+    public void setProgresses(List<String> progresses) {
+        this.progresses = progresses;
     }
 
     /**

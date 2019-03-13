@@ -1,7 +1,7 @@
 /**
  * 菜单信息
  */
-common.pageName = "approval";
+common.pageName = "project";
 common.openName = [ '1' ];
 
 var vue = new Vue({
@@ -103,7 +103,7 @@ var vue = new Vue({
 		query : function() {
 			let self = this;
 			self.queryParam.condition = self.formInline;
-			this.$http.post("/approval/query", self.queryParam).then(
+			this.$http.post("/project/query", self.queryParam).then(
 					function(response) {
 						let data = response.data;
 						for(let index in data.list){
@@ -148,7 +148,7 @@ var vue = new Vue({
 		saveProject : function() {
 			let self = this;
 			if(this.addForm.id==null||this.addForm.id==""){
-				this.$http.post("/approval", this.addForm).then(function(response) {
+				this.$http.post("/project", this.addForm).then(function(response) {
 					if (response.data.success) {
 						self.$Message.info({
 							content : "保存成功",
@@ -209,7 +209,7 @@ var vue = new Vue({
 		/** 删除项目 */
 		deleteProject:function(id){
 			let self = this;
-			this.$http.delete("/approval/"+id).then(function(response){
+			this.$http.delete("/project/"+id).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({
 						content : "删除成功",

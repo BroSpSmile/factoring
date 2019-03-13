@@ -6,6 +6,7 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -39,12 +40,17 @@ public interface ProjectStepDao {
      * @param record
      * @return
      */
-    @Update("<script>"
-            + "update project_step set step = #{step},status=#{status}"
-            + "<if test='audit!=null'>, audit_id = #{audit.id}</if>,"
-            + "modify_time = #{modifyTime} where id = #{id}"
-            + "</script>")
+    @Update("<script>" + "update project_step set step = #{step},status=#{status}" + "<if test='audit!=null'>, audit_id = #{audit.id}</if>,"
+            + "modify_time = #{modifyTime} where id = #{id}" + "</script>")
     int update(StepRecord record);
+
+    /**
+     * 删除当前步骤记录
+     * @param record
+     * @return
+     */
+    @Delete("delete from project_step where project_id =#{project.id} and step = #{step}")
+    int delete(StepRecord record);
 
     /**
      * 
