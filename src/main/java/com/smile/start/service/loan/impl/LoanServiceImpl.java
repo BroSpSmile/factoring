@@ -12,12 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.smile.start.dao.LoanDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.LoanType;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.loan.Loan;
-import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
@@ -81,9 +78,8 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
             Project project = loan.getProject();
             project.setProgress(Progress.LOAN);
             project.setStep(7);
-            SingleResult<Audit> auditResult = auditService.apply(project, loan.getUser());
-            processEngine.changeStatus(project, StepStatus.COMPLETED, auditResult.getData());
-            processEngine.next(project);
+            project.setUser(loan.getUser());
+            processEngine.next(project, true);
         }
         return result;
     }

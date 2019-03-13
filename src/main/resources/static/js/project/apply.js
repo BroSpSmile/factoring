@@ -11,12 +11,15 @@ var vue = new Vue({
 			id : 0,
 			items:[]
 		},
+		items:[],
+		audit:null,
 		fileList:[]
 	},
 	created : function() {
 		if(document.getElementById("applyId").value){
 			this.project.id = document.getElementById("applyId").value;
 			this.getProject(this.project.id);
+			this.getAudit(this.project.id);
 		}
 	},
 	methods : {
@@ -27,6 +30,19 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/project/"+id).then(function(response){
 				_self.project = response.data;
+				for(let index in _self.project.items){
+					_self.items.push(_self.project.items[index]);
+				}
+				_self.project.items = [];
+			},function(error){
+				console.error(error);
+			})
+		},
+		
+		getAudit:function(id){
+			let _self = this;
+			this.$http.get("/project/"+id+"/audit/TUNEUP").then(function(response){
+				_self.audit = response.data;
 			},function(error){
 				console.error(error);
 			})
@@ -67,6 +83,7 @@ var vue = new Vue({
 				this.$Message.error("请上传尽调文件");
 				return false;
 			}
+			this.project.items = [];
 			for(let index in this.fileList){
 				let item={
 						projectId:this.project.id,
@@ -101,6 +118,9 @@ var vue = new Vue({
 			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
 		},
 		
+		/**
+		 * 删除附件
+		 */
 		deleteLoadItem:function(item,index){
 			let _self = this;
 			this.$http.delete("/project/items",item).then(function(response){
@@ -113,6 +133,13 @@ var vue = new Vue({
 			},function(error){
 				_self.$Message.error(error.data.errorMessage);
 			})
+		},
+		
+		/**
+		 * 
+		 */
+		showAudit:function(audit){
+			window.open("/audit?id="+audit.id);
 		}
 	}
 });

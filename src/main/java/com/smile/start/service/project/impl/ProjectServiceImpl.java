@@ -85,7 +85,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         long effect = projectDao.insert(project);
         LoggerUtils.info(logger, "新增项目影响行effect={}", effect);
         BaseResult result = toResult(effect);
-        processEngine.next(project);
+        processEngine.next(project, false);
         return result;
     }
 
