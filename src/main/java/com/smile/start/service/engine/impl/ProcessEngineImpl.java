@@ -63,6 +63,11 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     @Transactional
     public SingleResult<StepRecord> next(Project project, Boolean needAudit) {
         this.changeStatus(project, StepStatus.COMPLETED);
+        SingleResult<Audit> auditResult = null;
+        if (needAudit) {
+            auditResult = auditService.apply(project, project.getUser());
+
+        }
         BaseResult updataResult = updateProject(project);
         if (updataResult.isSuccess()) {
             StepRecord record = new StepRecord();
@@ -70,11 +75,8 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
             record.setStatus(StepStatus.BEGIN);
             record.setStep(Step.getStep(project.getStep()));
             record.setCreateTime(new Date());
-            if (needAudit) {
-                SingleResult<Audit> auditResult = auditService.apply(project, project.getUser());
-                if (auditResult.isSuccess()) {
-                    record.setAudit(auditResult.getData());
-                }
+            if (null != auditResult && auditResult.isSuccess()) {
+                record.setAudit(auditResult.getData());
             }
             long effect = stepDao.insert(record);
             SingleResult<StepRecord> result = new SingleResult<StepRecord>();
