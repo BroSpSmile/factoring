@@ -33,7 +33,7 @@ public interface LoanDao {
             + "values(#{type},#{department.id},#{user.id},#{createTime},#{project.id},#{subscriptionAmount},#{payments},#{chineseAmount},#{accumulativeyments},"
             + "#{unpaid},#{paymentPurpose},#{payeeName},#{payeeBankName},#{payeeAccountNo},#{payerName},#{payerBankName},#{payerAccountNo})")
     long insert(Loan loan);
-    
+
     /**
      * 更新
      * @param loan
@@ -44,7 +44,7 @@ public interface LoanDao {
             + "unpaid = #{unpaid} ,payment_purpose = #{paymentPurpose},payee_name = #{payeeName} ,payee_bank_name = #{payeeBankName},"
             + "payee_account_no = #{payeeAccountNo} ,payer_name = #{payerName},payer_bank_name = #{payerBankName},payer_account_no =#{payerAccountNo} where id = #{id}")
     int update(Loan loan);
-    
+
     /**
      * 
      * @param loan
@@ -52,31 +52,37 @@ public interface LoanDao {
      */
     @Delete("delete from loan where id = #{id}")
     int delete(Long id);
-    
+
     /**
      * get
      * @param id
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "department", property = "department.id"),
-                                          @Result(column = "user", property = "user.id"), @Result(column = "project_id", property = "project.id") })
-    @Select("select * from load where id = #{id}")
+                                      @Result(column = "user", property = "user.id"), @Result(column = "project_id", property = "project.id") })
+    @Select("select * from loan where id = #{id}")
     Loan get(Long id);
-    
+
+    /**
+     * 
+     * @param projectId
+     * @return
+     */
+    @Results(id = "getByProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "department", property = "department.id"),
+                                               @Result(column = "user", property = "user.id"), @Result(column = "project_id", property = "project.id") })
+    @Select("select * from loan where project_id = #{projectId}")
+    Loan getByProject(Long projectId);
+
     /**
      * query
      * @param loan
      * @return
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "department", property = "department.id"),
-                                      @Result(column = "user", property = "user.id"), @Result(column = "project_id", property = "project.id") })
-    @Select("<script>"
-            + "select * from loan where 1=1 "
-            + "<if test='department!=null and department.id!=null'> and department = #{department.id}</if>"
-            + "<if test='user!=null and user.id!=null'> and user = #{user.id}</if>"
-            + "<if test='project!=null and project.id!=null'> and project_id = #{project.id}</if>"
+                                        @Result(column = "user", property = "user.id"), @Result(column = "project_id", property = "project.id") })
+    @Select("<script>" + "select * from loan where 1=1 " + "<if test='department!=null and department.id!=null'> and department = #{department.id}</if>"
+            + "<if test='user!=null and user.id!=null'> and user = #{user.id}</if>" + "<if test='project!=null and project.id!=null'> and project_id = #{project.id}</if>"
             + "<if test='payeeName!=null and payeeName!=\"\"'> and payee_name = #{payeeName}</if>"
-            + "<if test='payerName!=null and payerName!=\\\"\\\"'> and payer_name = #{payerName}</if>"
-            + "</script>")
+            + "<if test='payerName!=null and payerName!=\\\"\\\"'> and payer_name = #{payerName}</if>" + "</script>")
     List<Loan> query(Loan loan);
 }

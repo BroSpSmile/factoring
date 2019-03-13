@@ -33,7 +33,7 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
 
     /** loadDao */
     @Resource
-    private LoanDao        loadDao;
+    private LoanDao        loanDao;
 
     /** projectService */
     @Resource
@@ -63,7 +63,7 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
                 projectItemDao.insert(item);
             }
         }
-        long effect = loadDao.insert(loan);
+        long effect = loanDao.insert(loan);
         return toResult(effect);
     }
 
@@ -82,6 +82,14 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
             processEngine.next(project, true);
         }
         return result;
+    }
+
+    /** 
+     * @see com.smile.start.service.loan.LoanService#getLoan(com.smile.start.model.project.Project)
+     */
+    @Override
+    public Loan getLoan(Project project) {
+        return loanDao.getByProject(project.getId());
     }
 
 }

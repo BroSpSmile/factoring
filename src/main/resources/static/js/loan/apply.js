@@ -27,6 +27,7 @@ var vue = new Vue({
 	},
 	created : function() {
 		this.initData();
+		this.getLoan();
 	},
 	methods : {
 		/**
@@ -48,6 +49,21 @@ var vue = new Vue({
 			},function(error){
 				_self.$Message.error(error);
 			})
+		},
+		
+		/**
+		 * 获取项目信息
+		 */
+		getLoan:function(){
+			let id = document.getElementById("projectId").value;
+			let _self = this;
+			if(id){
+				this.$http.get("/loanApply/"+id).then(function(response){
+					_self.loan = response.data;
+				},function(error){
+					console.error(error);
+				})
+			}
 		},
 		
 		

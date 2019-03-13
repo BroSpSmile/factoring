@@ -22,6 +22,9 @@ public class Loan implements Serializable {
     /** UID */
     private static final long serialVersionUID = -5641828046068734162L;
 
+    /**  */
+    private Long              id;
+
     /** 申请类型 */
     private LoanType          type;
 
@@ -86,6 +89,24 @@ public class Loan implements Serializable {
                + (payeeBankName != null ? "payeeBankName\":\"" + payeeBankName + "\", \"" : "") + (payeeAccountNo != null ? "payeeAccountNo\":\"" + payeeAccountNo + "\", \"" : "")
                + (payerName != null ? "payerName\":\"" + payerName + "\", \"" : "") + (payerBankName != null ? "payerBankName\":\"" + payerBankName + "\", \"" : "")
                + (payerAccountNo != null ? "payerAccountNo\":\"" + payerAccountNo : "") + "\"}  ";
+    }
+
+    /**
+     * Getter method for property <tt>id</tt>.
+     * 
+     * @return property value of id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Setter method for property <tt>id</tt>.
+     * 
+     * @param id value to be assigned to property id
+     */
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
