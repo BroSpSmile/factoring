@@ -103,7 +103,7 @@ var vue = new Vue({
         query : function() {
             let self = this;
             self.queryParam.condition = self.formInline;
-            this.$http.post("/approval/query", self.queryParam).then(
+            this.$http.post("/project/query", self.queryParam).then(
                 function(response) {
                     let data = response.data;
                     for(let index in data.list){
