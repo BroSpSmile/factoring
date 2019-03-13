@@ -77,6 +77,23 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     }
 
     /** 
+     * @see com.smile.start.service.engine.ProcessEngine#prev(com.smile.start.model.project.Project)
+     */
+    @Override
+    public BaseResult prev(Project project) {
+        StepRecord record = new StepRecord();
+        record.setProject(project);
+        record.setStep(Step.getStep(project.getStep()));
+        int effect = stepDao.delete(record);
+        BaseResult result = toResult(effect);
+        if (result.isSuccess()) {
+            project.setStep(project.getStep() - 1);
+            result = projectService.turnover(project);
+        }
+        return result;
+    }
+
+    /** 
      * @see com.smile.start.service.engine.ProcessEngine#skip(com.smile.start.model.project.Project)
      */
     @Override
@@ -111,16 +128,19 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     @Transactional
     public SingleResult<StepRecord> changeStatus(Project project, StepStatus status, Audit audit) {
         StepRecord record = stepDao.getStep(project.getId(), Step.getStep(project.getStep()));
-        if (null != audit) {
-            record.setAudit(audit);
+        if (record != null) {
+            if (null != audit) {
+                record.setAudit(audit);
+            }
+            record.setStatus(status);
+            record.setModifyTime(new Date());
+            int effect = stepDao.update(record);
+            SingleResult<StepRecord> result = new SingleResult<StepRecord>();
+            result.setSuccess(effect > 0);
+            result.setData(record);
+            return result;
         }
-        record.setStatus(status);
-        record.setModifyTime(new Date());
-        int effect = stepDao.update(record);
-        SingleResult<StepRecord> result = new SingleResult<StepRecord>();
-        result.setSuccess(effect > 0);
-        result.setData(record);
-        return result;
+        return new SingleResult<StepRecord>();
     }
 
     /**

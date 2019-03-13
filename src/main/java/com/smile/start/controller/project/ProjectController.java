@@ -31,13 +31,13 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.project.ProjectService;
 
 /**
- * 保理项目
+ * 项目
  * @author smile.jing
  * @version $Id: ApprovalController.java, v 0.1 Jan 13, 2019 9:32:21 PM smile.jing Exp $
  */
 @Controller
-@RequestMapping("/approval")
-public class ApprovalController extends BaseController {
+@RequestMapping("/project")
+public class ProjectController extends BaseController {
 
     /** 项目服务 */
     @Resource
@@ -50,7 +50,7 @@ public class ApprovalController extends BaseController {
      */
     @GetMapping
     public String index() {
-        return "project/approval";
+        return "project/project";
     }
 
     /**
@@ -138,4 +138,17 @@ public class ApprovalController extends BaseController {
     public List<ProjectItem> queryItems(@PathVariable Long id, @PathVariable String type) {
         return projectService.queryItems(id, ProjectItemType.getByCode(type));
     }
+
+    /**
+     * 删除附件
+     * @param item
+     * @return
+     */
+    @DeleteMapping("items")
+    @ResponseBody
+    public BaseResult deleteItem(@RequestBody ProjectItem item) {
+        LoggerUtils.info(logger, "删除附件:{}", FastJsonUtils.toJSONString(item));
+        return projectService.deleteItem(item);
+    }
+
 }

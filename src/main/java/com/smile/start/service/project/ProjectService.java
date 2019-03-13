@@ -84,4 +84,11 @@ public interface ProjectService {
      * @return
      */
     List<ProjectItem> queryItems(Long projectId, ProjectItemType type);
+
+    /**
+     * 删除附件
+     * @param item
+     * @return
+     */
+    BaseResult deleteItem(ProjectItem item);
 }

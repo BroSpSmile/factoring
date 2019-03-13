@@ -1,7 +1,7 @@
 /**
  * 菜单信息
  */
-common.pageName = "approval";
+common.pageName = "project";
 common.openName = [ '1' ];
 
 var vue = new Vue({

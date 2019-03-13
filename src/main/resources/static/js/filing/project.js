@@ -100,7 +100,7 @@ var vue = new Vue({
                 self.formInline.person = null;
             }
             self.queryParam.condition = self.formInline;
-            this.$http.post("/approval/query", self.queryParam).then(
+            this.$http.post("/project/query", self.queryParam).then(
                 function (response) {
                     self.pageInfo = response.data;
                 }, function (error) {

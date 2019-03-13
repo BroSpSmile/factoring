@@ -92,12 +92,8 @@ var vue = new Vue({
 			if(id){
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
-					console.log(response.data)
 					_self.audit = response.data.data;
 					_self.nowStep = _self.audit.step;
-					if (_self.audit.auditType == 'FILE' & _self.nowStep == 2) {
-						_self.isLastFileStep = true;
-					}
 					_self.showAuditButton = response.data.success;
 				},function(error){
 					console.log(error);

@@ -6,6 +6,7 @@ package com.smile.start.service.engine;
 
 import java.util.List;
 
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.project.Audit;
@@ -32,6 +33,13 @@ public interface ProcessEngine {
      * @return 最新业务节点
      */
     SingleResult<StepRecord> next(Project project);
+
+    /**
+     * 回滚到上一业务节点，同时删除当前节点状态
+     * @param project
+     * @return
+     */
+    BaseResult prev(Project project);
 
     /**
      * 后补业务节点

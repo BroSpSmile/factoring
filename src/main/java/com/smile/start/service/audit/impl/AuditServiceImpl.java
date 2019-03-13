@@ -4,13 +4,12 @@
  */
 package com.smile.start.service.audit.impl;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.event.FlowEvent;
+import com.smile.start.event.AuditEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -35,7 +34,6 @@ import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditFlow;
 import com.smile.start.model.project.AuditParam;
@@ -47,7 +45,6 @@ import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FlowConfigService;
-import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -88,10 +85,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    /**  */
-    @Resource
-    private ProcessEngine      processEngine;
 
     /** 
      * @see com.smile.start.service.audit.AuditService#apply(com.smile.start.model.project.Project, com.smile.start.model.auth.User)
@@ -147,10 +140,13 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
             role.setSerialNo(StringUtils.EMPTY);
             audit.setRole(role);
-            turnover(audit.getProject(), audit);
         }
         auditDao.updateRole(audit);
-        return addAuditRecord(record);
+        BaseResult result = addAuditRecord(record);
+        if (result.isSuccess()) {
+            applicationContext.publishEvent(new AuditEvent(this, audit));
+        }
+        return result;
     }
 
     /** 
@@ -171,29 +167,18 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             role.setSerialNo(nextStep.getRoleSerialNo());
             audit.setRole(role);
         } else {
-            audit.setStep(-1);
+            audit.setStep(-2);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
             role.setSerialNo(StringUtils.EMPTY);
             audit.setRole(role);
         }
-        try {
-            auditDao.updateRole(audit);
-            return addAuditRecord(record);
-        } finally {
-            //注册监听，变更项目表
-            if (AuditType.FILE == audit.getAuditType() && 0 == audit.getStep()) {
-                register(audit);
-            }
+        auditDao.updateRole(audit);
+        BaseResult result = addAuditRecord(record);
+        if (result.isSuccess()) {
+            //发布审核事件
+            applicationContext.publishEvent(new AuditEvent(this, audit));
         }
-    }
-
-    /**
-     * 流程变更事件注册
-     *
-     * @param audit
-     */
-    private void register(Audit audit) {
-        applicationContext.publishEvent(new FlowEvent(this, audit));
+        return result;
     }
 
     /** 
@@ -332,19 +317,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             throw new RuntimeException("新增审核记录失败");
         }
 
-    }
-
-    /**
-     * 更新项目状态
-     * @param project
-     * @return
-     */
-    private BaseResult turnover(Project project, Audit audit) {
-        project.setItems(Collections.emptyList());
-        project.setProgress(Progress.getByIndex(project.getProgress().getIndex() + 1));
-        processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
-        BaseResult result = processEngine.next(project);
-        return result;
     }
 
 }

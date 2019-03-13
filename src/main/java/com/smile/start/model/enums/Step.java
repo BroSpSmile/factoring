@@ -225,7 +225,7 @@ public enum Step {
                        */
                       @Override
                       public Step prev() {
-                          return FILE;
+                          return FILE_AUDIT;
                       }
 
                       /** 
