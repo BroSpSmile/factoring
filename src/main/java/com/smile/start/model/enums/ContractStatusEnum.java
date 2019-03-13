@@ -65,7 +65,7 @@ public enum ContractStatusEnum {
     GENERAL_MANAGER_AUDIT(5, "集团正总审核") {
         @Override
         public ContractStatusEnum getNextStatus() {
-            return FINISH;
+            return SIGN;
         }
 
         @Override

@@ -178,12 +178,12 @@ var vue = new Vue({
                     _self.$Message.error(response.data.errorMessage);
                 })
             } else {
-                _self.contractAudit.operationType = 2;
-                _self.contractAudit.projectId = _self.audit.project.id;
-                _self.contractAudit.auditId = _self.audit.id;
-                _self.contractAudit.remark = _self.record.remark;
-                _self.contractAudit.rejectStatus = _self.audit.step;
-                _self.$http.post("/contractAudit/audit", _self.contractAudit).then(function(response) {
+                this.contractAudit.operationType = 2;
+                this.contractAudit.projectId = this.audit.project.id;
+                this.contractAudit.auditId = this.audit.id;
+                this.contractAudit.remark = this.record.remark;
+                this.contractAudit.rejectStatus = this.audit.step;
+                this.$http.post("/contractAudit/audit", this.contractAudit).then(function(response) {
                     if (response.data.success) {
                         _self.$Message.info({
                             content : "驳回成功",
@@ -205,10 +205,10 @@ var vue = new Vue({
          */
         contractPass : function() {
             let self = this;
-            self.contractAudit.operationType = 1;
-            self.contractAudit.projectId = self.audit.project.id;
-            self.contractAudit.auditId = self.audit.id;
-            self.$http.post("/contractAudit/audit", self.contractAudit).then(function(response) {
+            this.contractAudit.operationType = 1;
+            this.contractAudit.projectId = this.audit.project.id;
+            this.contractAudit.auditId = this.audit.id;
+            this.$http.post("/contractAudit/audit", this.contractAudit).then(function(response) {
                 if (response.data.success) {
                     self.$Message.info({
                         content : "审核成功",

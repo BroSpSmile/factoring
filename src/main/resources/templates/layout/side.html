@@ -3,7 +3,7 @@
 	<header th:fragment="side" >
 		<div id="side">
 			 <i-menu :active-name="activeName" :open-names="openName" >
-		        <submenu name="1">
+				 <submenu name="1">
 		            <template slot="title">
 		                我的业务
 		            </template>
@@ -17,9 +17,10 @@
 		                <menu-item name="1-5">业务立项</menu-item>
 		                <menu-item name="1-6">立项审核</menu-item> -->
 		            </menu-group>
-		        </submenu>
-		        <menu-item name="audits" to="/audits">业务审核</menu-item>
-		        <menu-item name="past" to="/past">三重一大</menu-item>
+				 </submenu>
+				 <menu-item name="audits" to="/audits">业务审核</menu-item>
+				 <menu-item name="past" to="/past">三重一大</menu-item>
+				 <menu-item name="finance" to="/finance">财务管理</menu-item>
 				 <menu-item name="contractSign" to="/contractSign">签署管理</menu-item>
 		        <!--<submenu name="3">
 		            <template slot="title">
@@ -62,12 +63,12 @@
 					<menu-item name="signListTemplate" to="/signListTemplate">签署清单模板</menu-item>
 					<menu-item name="bankInfo" to="/bankInfo">银行信息维护</menu-item>
 		        </submenu>
-		        <submenu name="9">
+		        <!--<submenu name="9">
 		            <template slot="title">
 		                财务管理
 		            </template>
 		            <menu-item name="financeOperate" to="/financeOperate">财务操作</menu-item>
-		        </submenu>
+		        </submenu>-->
 		    </i-menu>
 	    </div>
 
