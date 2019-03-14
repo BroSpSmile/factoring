@@ -68,9 +68,9 @@ public class ContractReceivableAgreement implements Serializable {
     private String spFax;
 
     /**
-     * 合同签署日期
+     * 签署日期
      */
-    private Date contractSignDate;
+    private Date signDate;
 
     public Long getId() {
         return id;
@@ -160,11 +160,11 @@ public class ContractReceivableAgreement implements Serializable {
         this.spFax = spFax;
     }
 
-    public Date getContractSignDate() {
-        return contractSignDate;
+    public Date getSignDate() {
+        return signDate;
     }
 
-    public void setContractSignDate(Date contractSignDate) {
-        this.contractSignDate = contractSignDate;
+    public void setSignDate(Date signDate) {
+        this.signDate = signDate;
     }
 }

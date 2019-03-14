@@ -262,7 +262,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spPostCode", contractReceivableAgreement.getSpPostCode());
         data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
         data.put("spFax", contractReceivableAgreement.getSpFax());
-        data.put("contractSignDate", DateUtil.format(contractReceivableAgreement.getContractSignDate(), DateUtil.chineseDtFormat));
+        data.put("contractSignDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
         return data;
     }
 
@@ -278,7 +278,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
-        final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
         contractInfoDao.update(contractInfo);
 
         //更新合同信息
@@ -364,10 +363,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public void delete(Long id) {
         ContractInfo contractInfo = contractInfoDao.get(id);
         contractInfo.setDeleteFlag(DeleteFlagEnum.DLETED.getValue());
-        //        contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        //        contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDao.update(contractInfo);
     }
 
