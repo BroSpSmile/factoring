@@ -348,13 +348,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private void insertAttachList(ContractInfoDTO contractInfoDTO) {
         if (!CollectionUtils.isEmpty(contractInfoDTO.getAttachList())) {
             contractInfoDTO.getAttachList().forEach(e -> {
-                ProjectItem projectItem = new ProjectItem();
-                projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
-                projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
-                projectItem.setItemType(ProjectItemType.CONTRACT);
-                projectItem.setItemName(e.getAttachName());
-                projectItem.setItemValue(e.getFileId());
-                projectItemDao.insert(projectItem);
+                if(e.getAttachType() == ContractAttachTypeEnum.USER_DEFINED.getValue()) {
+                    ProjectItem projectItem = new ProjectItem();
+                    projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
+                    projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
+                    projectItem.setItemType(ProjectItemType.CONTRACT);
+                    projectItem.setItemName(e.getAttachName());
+                    projectItem.setItemValue(e.getFileId());
+                    projectItemDao.insert(projectItem);
+                }
             });
         }
     }

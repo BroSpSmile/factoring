@@ -253,7 +253,7 @@
 									<row>
 										<i-col offset="1">
 											<form-item label="已添加合同附件文件" >
-												<Tag v-for="item in addForm.attachList" closable  @on-close="deleteFile(item.fileId)">
+												<Tag v-for="item in addForm.attachList" v-if="item.attachType == 2" closable  @on-close="deleteFile(item.fileId)">
 													{{item.attachName}}
 												</Tag>
 											</form-item>
