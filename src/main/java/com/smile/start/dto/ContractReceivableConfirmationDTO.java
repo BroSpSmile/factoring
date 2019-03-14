@@ -27,6 +27,11 @@ public class ContractReceivableConfirmationDTO implements Serializable {
     private String contractSerialNo;
 
     /**
+     * 确认函编号
+     */
+    private String confirmationCode;
+
+    /**
      * 让与人
      */
     private String assignor;
@@ -138,6 +143,14 @@ public class ContractReceivableConfirmationDTO implements Serializable {
 
     public void setContractSerialNo(String contractSerialNo) {
         this.contractSerialNo = contractSerialNo;
+    }
+
+    public String getConfirmationCode() {
+        return confirmationCode;
+    }
+
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
     }
 
     public String getAssignor() {

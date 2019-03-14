@@ -13,17 +13,17 @@
 								<div slot="content">
 									<row>
 										<i-col span="8">
-											<form-item label="项目编号:">
+											<form-item label="项目编号">
 												<span>{{project.projectId}}</span>
 											</form-item>
 										</i-col>
 										<i-col span="12" >
-											<form-item label="项目名称:">
+											<form-item label="项目名称">
 												<span>{{project.projectName}}</span>
 											</form-item>
 										</i-col>
 										<i-col span="8" >
-											<form-item label="项目模式:">
+											<form-item label="项目模式">
 												<span v-if="project.model == 'RECOURSE_RIGHT'">有追索权模式</span>
 												<span v-if="project.model == 'DIS_RECOURSE_RIGHT'">无追索权模式</span>
 											</form-item>
@@ -242,7 +242,7 @@
 											<i-input placeholder="请输入乙方传真" v-model="addForm.contractReceivableAgreement.spFax"></i-input>
 										</form-item>
 										<form-item label="合同签署日期" prop="contractReceivableAgreement.contractSignDate">
-											<i-input placeholder="请输入合同签署日期" v-model="addForm.contractReceivableAgreement.contractSignDate"></i-input>
+											<date-picker type="date" placeholder="请输入合同签署日期" v-model="addForm.contractReceivableAgreement.contractSignDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 								</div>

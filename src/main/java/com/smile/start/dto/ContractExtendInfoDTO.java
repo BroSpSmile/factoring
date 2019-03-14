@@ -27,6 +27,11 @@ public class ContractExtendInfoDTO implements Serializable {
     private String contractSerialNo;
 
     /**
+     * 合同编号
+     */
+    private String            contractCode;
+
+    /**
      * 乙方公司名称
      */
     private String spCompanyName;
@@ -154,6 +159,14 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setContractSerialNo(String contractSerialNo) {
         this.contractSerialNo = contractSerialNo;
+    }
+
+    public String getContractCode() {
+        return contractCode;
+    }
+
+    public void setContractCode(String contractCode) {
+        this.contractCode = contractCode;
     }
 
     public String getSpCompanyName() {

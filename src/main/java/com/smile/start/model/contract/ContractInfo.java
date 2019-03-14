@@ -33,11 +33,6 @@ public class ContractInfo implements Serializable {
     private String serialNo;
 
     /**
-     * 合同编号
-     */
-    private String contractCode;
-
-    /**
      * 合同名称
      */
     private String contractName;
@@ -96,14 +91,6 @@ public class ContractInfo implements Serializable {
 
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
-    }
-
-    public String getContractCode() {
-        return contractCode;
-    }
-
-    public void setContractCode(String contractCode) {
-        this.contractCode = contractCode;
     }
 
     public String getContractName() {

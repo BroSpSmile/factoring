@@ -17,7 +17,7 @@ public interface ContractReceivableAgreementDao {
      * @param contractReceivableAgreement
      * @return
      */
-    @Insert("insert into contract_receivable_agreement (serial_no,contract_serial_no,sp_name,sp_residence,sp_legal_person,sp_contact_address,sp_post_code,sp_telephone,sp_fax,contract_sign_date) values (#{serialNo},#{contractSerialNo},#{spName},#{spResidence},#{spLegalPerson},#{spContactAddress},#{spPostCode},#{spTelephone},#{spFax},#{contractSignDate})")
+    @Insert("insert into contract_receivable_agreement (serial_no,contract_serial_no,protocol_code,sp_name,sp_residence,sp_legal_person,sp_contact_address,sp_post_code,sp_telephone,sp_fax,contract_sign_date) values (#{serialNo},#{contractSerialNo},#{protocolCode},#{spName},#{spResidence},#{spLegalPerson},#{spContactAddress},#{spPostCode},#{spTelephone},#{spFax},#{contractSignDate})")
     long insert(ContractReceivableAgreement contractReceivableAgreement);
 
     /**

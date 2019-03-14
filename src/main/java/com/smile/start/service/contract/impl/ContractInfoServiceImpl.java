@@ -1,13 +1,20 @@
 package com.smile.start.service.contract.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.smile.start.commons.DateUtil;
+import com.smile.start.commons.DocUtil;
 import com.smile.start.dao.*;
 import com.smile.start.dto.*;
+import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.project.Audit;
@@ -15,6 +22,7 @@ import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
+import com.smile.start.service.common.FileService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +99,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ProjectService                    projectService;
+
+    @Resource
+    private FileService                       fileService;
 
     @Resource
     private ContractInfoMapper                contractInfoMapper;
@@ -181,7 +192,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
-        contractInfo.setContractCode(project.getProjectId() + "-1");
 
         //保存签署清单
         insertSignList(contractInfoDTO.getSignList(), contractSerialNo);
@@ -190,23 +200,65 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
         contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
         contractExtendInfo.setContractSerialNo(contractSerialNo);
+        contractExtendInfo.setContractCode(project.getProjectId() + "-1");
         contractExtendInfoDao.insert(contractExtendInfo);
 
         //保存应收账款转让确认函
         final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
         contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
         contractReceivableConfirmation.setContractSerialNo(contractSerialNo);
+        contractReceivableConfirmation.setConfirmationCode(project.getProjectId() + "-2");
         contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
 
         //保存应收账款转让登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
         contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
         contractReceivableAgreement.setContractSerialNo(contractSerialNo);
+        contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
         //附件合同
         insertAttachList(contractInfoDTO);
-        return contractInfoDao.insert(contractInfo);
+        Long contractId = contractInfoDao.insert(contractInfo);
+
+        //生成标准合同文件
+        try {
+            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
+            File file = DocUtil.createDoc(fileName,
+                    "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            if (file.exists()) {
+                final FileInfo upload = fileService.upload(file, fileName);
+                ProjectItem projectItem = new ProjectItem();
+                projectItem.setAttachType(ContractAttachTypeEnum.STANDARD.getValue());
+                projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
+                projectItem.setItemType(ProjectItemType.CONTRACT);
+                projectItem.setItemName(fileName);
+                projectItem.setItemValue(upload.getFileId());
+                projectItemDao.insert(projectItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contractId;
+    }
+
+    /**
+     * 构建登录协议模板数据
+     * @param contractReceivableAgreement
+     * @return
+     */
+    private Map<String, Object> buildTemplateData(ContractReceivableAgreement contractReceivableAgreement) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("protocolCode", contractReceivableAgreement.getProtocolCode());
+        data.put("spName", contractReceivableAgreement.getSpName());
+        data.put("spResidence", contractReceivableAgreement.getSpResidence());
+        data.put("spLegalPerson", contractReceivableAgreement.getSpLegalPerson());
+        data.put("spContactAddress", contractReceivableAgreement.getSpContactAddress());
+        data.put("spPostCode", contractReceivableAgreement.getSpPostCode());
+        data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
+        data.put("spFax", contractReceivableAgreement.getSpFax());
+        data.put("contractSignDate", DateUtil.format(contractReceivableAgreement.getContractSignDate(), DateUtil.chineseDtFormat));
+        return data;
     }
 
     /**
@@ -222,7 +274,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
-        contractInfo.setContractCode(project.getProjectId() + "-1");
         contractInfoDao.update(contractInfo);
 
         //更新合同信息
@@ -242,8 +293,33 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
 
         //更新附件信息
-        contractAttachDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+//        contractAttachDao.deleteByContractSerialNo(contractInfo.getSerialNo());
+        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(),
+                ProjectItemType.CONTRACT);
+        if(!CollectionUtils.isEmpty(typeItems)) {
+            typeItems.forEach(e -> projectItemDao.delete(e));
+        }
+//        projectItemDao.delete(contractInfo.getProjectId(), ProjectItemType.CONTRACT.getCode());
         insertAttachList(contractInfoDTO);
+
+        //生成标准合同文件
+        try {
+            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
+            File file = DocUtil.createDoc(fileName,
+                    "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            if (file.exists()) {
+                final FileInfo upload = fileService.upload(file, fileName);
+                ProjectItem projectItem = new ProjectItem();
+                projectItem.setAttachType(ContractAttachTypeEnum.STANDARD.getValue());
+                projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
+                projectItem.setItemType(ProjectItemType.CONTRACT);
+                projectItem.setItemName(fileName);
+                projectItem.setItemValue(upload.getFileId());
+                projectItemDao.insert(projectItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
