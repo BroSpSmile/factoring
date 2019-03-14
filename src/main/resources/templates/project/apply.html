@@ -13,6 +13,11 @@
 								<form-item label="项目名称:">
 									<span>{{project.projectName}}</span>
 								</form-item>
+								<form-item v-if="audit" label="当前审核进度:">
+									<i-button  v-if="audit.records[0].result=='REJECTED'" size="small" type="error" ghost @click="showAudit(audit)">{{audit.records[0].status}}</i-button>
+									&nbsp;&nbsp;&nbsp;<span>驳回原因:{{audit.records[0].remark}}</span>
+									<i-button  v-if="audit.records[0].result!='REJECTED'" size="small" type="primary" ghost @click="showAudit(audit)">{{audit.records[0].status}}</i-button>
+								</form-item>
 								<form-item label="尽调文件:">
 									<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
 								        <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
@@ -20,17 +25,17 @@
 								</form-item>
 								<form-item label="附件查看">
 									<row>
-										<i-col v-for="(item,index) in project.items" v-if="item.itemType=='TUNEUP'">
+										<i-col v-for="(item,index) in items" v-if="item.itemType=='TUNEUP'">
 											<icon type="md-attach" size="18"></icon>
 											<a @click="downloadItem(item)">{{item.itemName}}</a>&nbsp;&nbsp;
-											<i-button size="small" type="text" @click="deleteLoadItem(item,index)" ><icon type="md-close" size="18"></icon></i-button>
+											<i-button v-if="project.step ==1" size="small" type="text" @click="deleteLoadItem(item,index)" ><icon type="md-close" size="18"></icon></i-button>
 										</i-col>
 									</row>
 								</form-item>
-								<row type="flex">
+								<row type="flex" v-if="project.step ==1">
 				                   <i-col span="8" offset="1">
 				                       	<i-button type="success"  @click="commit">提交审核</i-button>
-				                        <i-button type=""   @click="" style="margin-left: 8px">此步骤后补</i-button>
+				                        <i-button type="" v-if="!audit"  @click="" style="margin-left: 8px">此步骤后补</i-button>
 				                   </i-col>
 				            	</row>
 							</i-form>

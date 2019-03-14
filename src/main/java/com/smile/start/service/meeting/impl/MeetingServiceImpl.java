@@ -208,8 +208,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             Project project = meeting.getProjects().get(0);
             project.setProgress(Progress.APPROVAL);
             project.setStep(0);
-            processEngine.changeStatus(project, StepStatus.COMPLETED);
-            processEngine.next(project);
+            processEngine.next(project, false);
         }
         return new BaseResult();
     }

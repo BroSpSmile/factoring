@@ -30,9 +30,10 @@ public interface ProcessEngine {
     /**
      * 流转下一业务节点
      * @param project
+     * @param needAudit
      * @return 最新业务节点
      */
-    SingleResult<StepRecord> next(Project project);
+    SingleResult<StepRecord> next(Project project, Boolean needAudit);
 
     /**
      * 回滚到上一业务节点，同时删除当前节点状态

@@ -22,6 +22,7 @@ import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 
@@ -36,6 +37,10 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     /** stepDao */
     @Resource
     private ProjectStepDao stepDao;
+
+    /** 审核服务 */
+    @Resource
+    private AuditService   auditService;
 
     /** projectService */
     @Resource
@@ -56,15 +61,23 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
      */
     @Override
     @Transactional
-    public SingleResult<StepRecord> next(Project project) {
-        project.setStep(project.getStep() + 1);
-        BaseResult updataResult = projectService.turnover(project);
+    public SingleResult<StepRecord> next(Project project, Boolean needAudit) {
+        this.changeStatus(project, StepStatus.COMPLETED);
+        SingleResult<Audit> auditResult = null;
+        if (needAudit) {
+            auditResult = auditService.apply(project, project.getUser());
+
+        }
+        BaseResult updataResult = updateProject(project);
         if (updataResult.isSuccess()) {
             StepRecord record = new StepRecord();
             record.setProject(project);
             record.setStatus(StepStatus.BEGIN);
             record.setStep(Step.getStep(project.getStep()));
             record.setCreateTime(new Date());
+            if (null != auditResult && auditResult.isSuccess()) {
+                record.setAudit(auditResult.getData());
+            }
             long effect = stepDao.insert(record);
             SingleResult<StepRecord> result = new SingleResult<StepRecord>();
             result.setSuccess(effect > 0);
@@ -106,7 +119,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         long effect = stepDao.insert(record);
         if (effect > 0) {
             project.setStep(project.getStep() + 1);
-            return this.next(project);
+            return this.next(project, false);
         } else {
             throw new RuntimeException("更新项目进度失败");
         }
@@ -174,5 +187,16 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         record.setStatus(StepStatus.BEGIN);
         record.setStep(step);
         return record;
+    }
+
+    /**
+     * 更新项目
+     * 
+     * @param project
+     * @return
+     */
+    private BaseResult updateProject(Project project) {
+        project.setStep(project.getStep() + 1);
+        return projectService.turnover(project);
     }
 }

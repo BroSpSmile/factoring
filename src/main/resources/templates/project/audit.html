@@ -57,9 +57,27 @@
 							</form-item>
 							<row type="flex" v-if="showAuditButton && audit.step > 0">
 			                    <i-col span="12" offset="2">
-                                    <i-button type="success" v-if="(audit.auditType != 'CONTRACT')" icon="ios-checkmark" @click="openPass">通过</i-button>
-                                    <i-button type="success" v-if="(audit.auditType == 'CONTRACT')&!isLastFileStep" icon="ios-checkmark" @click="contractPass">通过</i-button>
-                                    <i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+			                    	<div v-if="audit.auditType == 'CONTRACT'">
+	                                    <i-button type="success" v-if="!isLastFileStep" icon="ios-checkmark" @click="contractPass">通过</i-button>
+	                                    <i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+			                    	</div>
+			                    	<div v-if="audit.auditType == 'TUNEUP'">
+			                    		<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
+	                                    <i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+			                    	</div>
+			                    	<div v-if="audit.auditType == 'LOAN'">
+			                    		<div v-if="audit.step==7">
+			                    			<i-button type="info" icon="ios-link" @click="toLoan">财务放款</i-button>
+			                    		</div>
+			                    		<div v-if="audit.step!=7">
+			                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
+	                                    	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+			                    		</div>
+			                    	</div>
+			                    	<div v-if="audit.auditType == 'FILE'">
+		                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
+                                    	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+			                    	</div>
 			                    </i-col>
                                 <i-col span="6" offset="4">
                                     <i-button type="success" @click="openPass"  v-if="isLastFileStep">归档完成</i-button>

@@ -22,6 +22,7 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.loan.Loan;
+import com.smile.start.model.project.Project;
 import com.smile.start.service.loan.LoanService;
 
 /**
@@ -47,6 +48,19 @@ public class LoanApplyController extends BaseController {
         LoggerUtils.info(logger, "立项申请项目ID={}", id);
         model.addAttribute("id", id);
         return "loan/apply";
+    }
+
+    /**
+     * 根据项目ID获取项目放款信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Loan getLoan(@PathVariable Long id) {
+        Project project = new Project();
+        project.setId(id);
+        return loanService.getLoan(project);
     }
 
     /**

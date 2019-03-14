@@ -223,6 +223,14 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             });
         },
+        
+        /**
+         * 跳转财务放款
+         */
+        toLoan:function(){
+        	window.open("/finance");
+        },
+        
 		cancel:function(){
 			this.modal1 = false;
 			this.modal2 = false;

@@ -26,8 +26,10 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
+import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -42,6 +44,10 @@ public class ProjectController extends BaseController {
     /** 项目服务 */
     @Resource
     private ProjectService projectService;
+
+    /** 审核服务 */
+    @Resource
+    private AuditService   auditService;
 
     /**
      * 项目立项页
@@ -151,4 +157,15 @@ public class ProjectController extends BaseController {
         return projectService.deleteItem(item);
     }
 
+    /**
+     * 获取项目审核记录
+     * @param id
+     * @param type
+     * @return
+     */
+    @GetMapping(value = "/{id}/audit/{type}")
+    @ResponseBody
+    public Audit getProjectAudit(@PathVariable Long id, @PathVariable String type) {
+        return auditService.getAuditByProjectFlowAndType(id, type);
+    }
 }

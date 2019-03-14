@@ -34,6 +34,7 @@ import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditFlow;
 import com.smile.start.model.project.AuditParam;
@@ -92,30 +93,51 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     @Transactional
     public SingleResult<Audit> apply(Project project, User user) {
+        Audit audit = initAudit(project, user);
+        Audit extendAudit = auditDao.getByProjectAndType(project.getId(), audit.getAuditType().name());
+        SingleResult<Audit> result = new SingleResult<Audit>();
+        if (extendAudit != null) {
+            AuditRecord record = new AuditRecord();
+            record.setAudit(extendAudit);
+            record.setAuditor(audit.getApplicant());
+            this.pass(record);
+            result.setSuccess(true);
+            result.setData(extendAudit);
+        } else {
+            long effect = auditDao.insert(audit);
+            this.addApplyRecord(audit);
+            if (effect > 0) {
+                result.setData(audit);
+                return result;
+            } else {
+                result.setSuccess(false);
+                result.setErrorCode("VP00011001");
+                result.setErrorMessage("新增审核记录失败");
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 初始化审核流程
+     * @param project
+     * @param user
+     * @return
+     */
+    private Audit initAudit(Project project, User user) {
         Audit audit = new Audit();
         audit.setApplicant(user);
         audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setStep(0);
-        audit.setAuditType(AuditType.getByCode(project.getProgress().getCode()));
+        audit.setAuditType(AuditType.getByCode(Step.getStep(project.getStep()).name()));
         FlowStatusDTO step = nextStep(audit, toType(project.getProgress()), 1);
         audit.setStep(step.getFlowStatus());
         //获取审核流程
         AuthRoleInfoDTO role = new AuthRoleInfoDTO();
         role.setSerialNo(step.getRoleSerialNo());
         audit.setRole(role);
-        long effect = auditDao.insert(audit);
-        addApplyRecord(audit);
-        SingleResult<Audit> result = new SingleResult<Audit>();
-        if (effect > 0) {
-            result.setData(audit);
-            return result;
-        } else {
-            result.setSuccess(false);
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增失败,请重试!");
-            return result;
-        }
+        return audit;
     }
 
     /** 

@@ -6,6 +6,7 @@ package com.smile.start.service.loan;
 
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.loan.Loan;
+import com.smile.start.model.project.Project;
 
 /**
  * 放款服务
@@ -27,4 +28,11 @@ public interface LoanService {
      * @return
      */
     BaseResult commit(Loan loan);
+
+    /**
+     * 获取项目放款信息
+     * @param project
+     * @return
+     */
+    Loan getLoan(Project project);
 }

@@ -59,7 +59,6 @@ public class PastServiceImpl extends AbstractService implements PastService {
     public BaseResult save(Past past) {
         Project project = new Project();
         project.setId(past.getProjectId());
-        project.setStep(3);
         List<ProjectMeeting> pms = Lists.newArrayListWithCapacity(past.getMeetingIds().size());
         past.getMeetingIds().forEach(meeting -> pms.add(new ProjectMeeting(past.getProjectId(), meeting)));
         BaseResult result = meetingService.relationMeeting(pms);
@@ -67,8 +66,8 @@ public class PastServiceImpl extends AbstractService implements PastService {
             if (getMeetings(past.getProjectId()).size() > 2) {
                 //三重一大全部关联完成后更改项目状态
                 project.setProgress(Progress.PASTMEETING);
-                processEngine.changeStatus(project, StepStatus.COMPLETED);
-                processEngine.next(project);
+                project.setStep(3);
+                processEngine.next(project, false);
             } else {
                 project.setProgress(Progress.LATERMEETING);
                 processEngine.changeStatus(project, StepStatus.PROCESSING);

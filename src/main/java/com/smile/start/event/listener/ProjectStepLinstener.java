@@ -41,7 +41,7 @@ public class ProjectStepLinstener implements AuditListener {
             project.setItems(Collections.emptyList());
             if (audit.getStep() == -1) {//审核完结流转下一节点
                 processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
-                processEngine.next(project);
+                processEngine.next(project, false);
             } else if (audit.getStep() == 0 || audit.getStep() == -2) {//审核驳回流转
                 processEngine.prev(project);
             }

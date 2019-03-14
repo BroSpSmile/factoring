@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.StepStatus;
-import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
@@ -49,10 +46,7 @@ public class TuneupServiceImpl extends AbstractService implements TuneupService 
     public BaseResult tuneupApply(Project project) {
         project.setProgress(Progress.TUNEUP);
         project.setStep(1);
-        processEngine.next(project);
-        SingleResult<Audit> auditResult = auditService.apply(project, project.getUser());
-        BaseResult result = processEngine.changeStatus(project, StepStatus.PROCESSING, auditResult.getData());
-        return result;
+        return processEngine.next(project, true);
     }
 
 }
