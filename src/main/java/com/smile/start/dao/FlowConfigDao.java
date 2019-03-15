@@ -130,6 +130,6 @@ public interface FlowConfigDao {
      * @param flowStatus
      * @return
      */
-    @Select("select fs.* from flow_config fc,flow_status fs where fc.serial_no = fs.flow_serial_no and fc.flow_type = #{arg0} and fs.flow_status = #{arg1}")
+    @Select("select fs.* from flow_config fc,flow_status fs where fc.serial_no = fs.flow_serial_no and fc.flow_type = #{flowType} and fs.flow_status = #{flowStatus}")
     FlowStatus findByFlowTypeAndStatus(Integer flowType, Integer flowStatus);
 }
