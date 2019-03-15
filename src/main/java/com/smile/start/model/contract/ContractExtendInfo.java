@@ -2,6 +2,7 @@ package com.smile.start.model.contract;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 合同扩展信息
@@ -75,7 +76,7 @@ public class ContractExtendInfo implements Serializable {
     /**
      * 签署日期
      */
-    private String signDate;
+    private Date signDate;
 
     /**
      * 合同名称
@@ -234,11 +235,11 @@ public class ContractExtendInfo implements Serializable {
         this.obligor = obligor;
     }
 
-    public String getSignDate() {
+    public Date getSignDate() {
         return signDate;
     }
 
-    public void setSignDate(String signDate) {
+    public void setSignDate(Date signDate) {
         this.signDate = signDate;
     }
 

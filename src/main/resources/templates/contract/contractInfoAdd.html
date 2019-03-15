@@ -68,7 +68,7 @@
 											<i-input placeholder="请输入债务人" v-model="addForm.contractExtendInfo.obligor"></i-input>
 										</form-item>
 										<form-item label="签署日期" prop="contractExtendInfo.signDate">
-											<i-input placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate"></i-input>
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 										<form-item label="合同名称" prop="contractExtendInfo.contractName">
 											<i-input placeholder="请输入合同名称" v-model="addForm.contractExtendInfo.contractName"></i-input>

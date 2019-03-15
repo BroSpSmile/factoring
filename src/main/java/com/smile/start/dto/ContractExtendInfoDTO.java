@@ -2,6 +2,7 @@ package com.smile.start.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Joseph
@@ -29,7 +30,7 @@ public class ContractExtendInfoDTO implements Serializable {
     /**
      * 合同编号
      */
-    private String            contractCode;
+    private String contractCode;
 
     /**
      * 乙方公司名称
@@ -74,7 +75,7 @@ public class ContractExtendInfoDTO implements Serializable {
     /**
      * 签署日期
      */
-    private String signDate;
+    private Date signDate;
 
     /**
      * 合同名称
@@ -233,11 +234,11 @@ public class ContractExtendInfoDTO implements Serializable {
         this.obligor = obligor;
     }
 
-    public String getSignDate() {
+    public Date getSignDate() {
         return signDate;
     }
 
-    public void setSignDate(String signDate) {
+    public void setSignDate(Date signDate) {
         this.signDate = signDate;
     }
 

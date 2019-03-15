@@ -3,6 +3,7 @@ package com.smile.start.controller.contract;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.smile.start.dto.*;
 import com.smile.start.model.base.ListResult;
 import org.springframework.stereotype.Controller;
@@ -60,6 +61,7 @@ public class ContractInfoController extends BaseController {
     public SingleResult<ContractInfoDTO> get(@PathVariable Long projectId) {
         try {
             ContractInfoDTO contractInfoDTO = contractInfoService.getByProjectId(projectId);
+            logger.info(JSON.toJSONString(contractInfoDTO));
             SingleResult<ContractInfoDTO> result = new SingleResult<>();
             result.setSuccess(true);
             result.setData(contractInfoDTO);
