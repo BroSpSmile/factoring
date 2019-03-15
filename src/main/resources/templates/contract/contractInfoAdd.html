@@ -145,7 +145,7 @@
 											<i-input placeholder="请输入让与人" v-model="addForm.contractReceivableConfirmation.assignor"></i-input>
 										</form-item>
 										<form-item label="签署日期" prop="contractReceivableConfirmation.signDate">
-											<i-input placeholder="请输入签署日期" v-model="addForm.contractReceivableConfirmation.signDate"></i-input>
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableConfirmation.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 										<form-item label="债务人" prop="contractReceivableConfirmation.obligor">
 											<i-input placeholder="请输入债务人" v-model="addForm.contractReceivableConfirmation.obligor"></i-input>
@@ -242,7 +242,7 @@
 											<i-input placeholder="请输入乙方传真" v-model="addForm.contractReceivableAgreement.spFax"></i-input>
 										</form-item>
 										<form-item label="合同签署日期" prop="contractReceivableAgreement.signDate">
-											<date-picker type="date" placeholder="请输入合同签署日期" v-model="addForm.contractReceivableAgreement.signDate" format="yyyy-MM-dd"></date-picker>
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableAgreement.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 								</div>
