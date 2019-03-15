@@ -22,6 +22,7 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FileService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +99,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private FileService                       fileService;
+
+    @Resource
+    private ProcessEngine                     processEngine;
 
     @Resource
     private ContractInfoMapper                contractInfoMapper;
@@ -384,8 +388,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             audit = new Audit();
         }
         //TODO 查询数据库次数太多，可能影响性能
+        Project project = projectService.getProject(contractInfo.getProjectId());
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
-        audit.setProject(projectService.getProject(contractInfo.getProjectId()));
+        audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
         audit.setStep(ContractStatusEnum.APPLY.getValue());
@@ -409,6 +414,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setStatus(record.getResult().getDesc());
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
+
+        project.setStep(Step.DRAWUP_AUDIT.getIndex());
+        processEngine.next(project, false);
     }
 
     /**
@@ -463,9 +471,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 //状态流转到下一级
                 audit.setStep(ContractStatusEnum.SIGN.getValue());
 
-                //更新项目状态
+                //更新项目状态，后面优化去掉 TODO
                 project.setProgress(Progress.DRAWUP);
                 projectService.turnover(project);
+
+                project.setStep(Step.SIGN.getIndex());
+                processEngine.next(project, false);
             } else {
                 //状态流转到下一级
                 audit.setStep(currentStatus.getNextStatus().getValue());
