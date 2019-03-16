@@ -346,7 +346,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private void insertAttachList(ContractInfoDTO contractInfoDTO) {
         if (!CollectionUtils.isEmpty(contractInfoDTO.getAttachList())) {
             contractInfoDTO.getAttachList().forEach(e -> {
-                if (e.getAttachType() == ContractAttachTypeEnum.USER_DEFINED.getValue()) {
+                if (e.getAttachType() == null || e.getAttachType() == ContractAttachTypeEnum.USER_DEFINED.getValue()) {
                     ProjectItem projectItem = new ProjectItem();
                     projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
                     projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
