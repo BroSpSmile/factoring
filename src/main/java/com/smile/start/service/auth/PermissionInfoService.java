@@ -3,11 +3,8 @@ package com.smile.start.service.auth;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
-import com.smile.start.model.auth.Permission;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
-import org.apache.ibatis.annotations.Select;
-
 import java.util.List;
 
 /**
