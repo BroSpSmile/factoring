@@ -138,6 +138,8 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     }
+                } else {
+                    this.isDisable = false;
                 }
             });
         },

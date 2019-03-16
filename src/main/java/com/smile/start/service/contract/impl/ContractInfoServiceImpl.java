@@ -270,7 +270,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spPostCode", contractReceivableAgreement.getSpPostCode());
         data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
         data.put("spFax", contractReceivableAgreement.getSpFax());
-        data.put("contractSignDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("signDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
         return data;
     }
 
