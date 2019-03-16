@@ -65,7 +65,7 @@ public enum ContractStatusEnum {
     GENERAL_MANAGER_AUDIT(5, "集团正总审核") {
         @Override
         public ContractStatusEnum getNextStatus() {
-            return SIGN;
+            return FINISH;
         }
 
         @Override
@@ -83,7 +83,7 @@ public enum ContractStatusEnum {
         public ContractStatusEnum getDefaultRejectStatus() {
             return null;
         }
-    },
+    };
 //    NOTIFY_OFFICE(7, "通知办公室") {
 //        @Override
 //        public ContractStatusEnum getNextStatus() {
@@ -95,28 +95,28 @@ public enum ContractStatusEnum {
 //            return null;
 //        }
 //    },
-    SIGN(7, "签署") {
-        @Override
-        public ContractStatusEnum getNextStatus() {
-            return null;
-        }
-
-        @Override
-        public ContractStatusEnum getDefaultRejectStatus() {
-            return null;
-        }
-    },
-    SIGN_FINISH(8, "签署完成") {
-        @Override
-        public ContractStatusEnum getNextStatus() {
-            return null;
-        }
-
-        @Override
-        public ContractStatusEnum getDefaultRejectStatus() {
-            return null;
-        }
-    };
+//    SIGN(7, "签署") {
+//        @Override
+//        public ContractStatusEnum getNextStatus() {
+//            return null;
+//        }
+//
+//        @Override
+//        public ContractStatusEnum getDefaultRejectStatus() {
+//            return null;
+//        }
+//    },
+//    SIGN_FINISH(8, "签署完成") {
+//        @Override
+//        public ContractStatusEnum getNextStatus() {
+//            return null;
+//        }
+//
+//        @Override
+//        public ContractStatusEnum getDefaultRejectStatus() {
+//            return null;
+//        }
+//    };
 
     private int value;
     private String desc;
