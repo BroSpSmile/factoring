@@ -275,21 +275,32 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
 
         //获取用户权限信息
-        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByUserSerialNo(user.getSerialNo());
+        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findParentByUserSerialNo(user.getSerialNo());
         if (!CollectionUtils.isEmpty(permissionList)) {
             List<LoginUserPermission> userPermissionList = Lists.newArrayList();
             permissionList.forEach(e -> {
-                LoginUserPermission loginUserPermission = new LoginUserPermission();
-                loginUserPermission.setSerialNo(e.getSerialNo());
-                loginUserPermission.setPermissionCode(e.getPermissionCode());
-                loginUserPermission.setPermissionName(e.getPermissionName());
-                loginUserPermission.setPermissionType(e.getPermissionType());
-                loginUserPermission.setUrl(e.getUrl());
+                LoginUserPermission loginUserPermission = dto2LoginUserPermisson(e);
+                List<AuthPermissionInfoDTO> subList = permissionInfoService.findByParentSerialNo(e.getSerialNo());
+                List<LoginUserPermission> childrens = Lists.newArrayList();
+                if(!CollectionUtils.isEmpty(subList)) {
+                    subList.forEach(p -> childrens.add(dto2LoginUserPermisson(p)));
+                }
+                loginUserPermission.setChildrens(childrens);
                 userPermissionList.add(loginUserPermission);
             });
             loginUser.setPermissionList(userPermissionList);
         }
         return loginUser;
+    }
+
+    private LoginUserPermission dto2LoginUserPermisson(AuthPermissionInfoDTO authPermissionInfoDTO) {
+        LoginUserPermission loginUserPermission = new LoginUserPermission();
+        loginUserPermission.setSerialNo(authPermissionInfoDTO.getSerialNo());
+        loginUserPermission.setPermissionCode(authPermissionInfoDTO.getPermissionCode());
+        loginUserPermission.setPermissionName(authPermissionInfoDTO.getPermissionName());
+        loginUserPermission.setPermissionType(authPermissionInfoDTO.getPermissionType());
+        loginUserPermission.setUrl(authPermissionInfoDTO.getUrl());
+        return loginUserPermission;
     }
 
     /**

@@ -72,7 +72,7 @@ public interface PermissionDao {
     List<Permission> findByParam(PermissionSearchDTO permissionSearchDTO);
 
     /**
-     * 根据权限编号查询权限
+     * 根据用户编号查询权限
      * @param userSerialNo
      * @return
      */
@@ -87,6 +87,24 @@ public interface PermissionDao {
         "and ur.user_serial_no = u.serial_no " +
         "and u.serial_no = #{serialNo}")
     List<Permission> findByUserSerialNo(String userSerialNo);
+
+    /**
+     * 根据用户编号查询所有顶级权限
+     * @param userSerialNo
+     * @return
+     */
+    @Select("select * from auth_permission_info p," +
+            "auth_role_permission_info rp," +
+            "auth_user_info u," +
+            "auth_role_info r," +
+            "auth_user_role_info ur " +
+            "where p.serial_no = rp.permission_serial_no " +
+            "and rp.role_serial_no = r.serial_no " +
+            "and r.serial_no = ur.role_serial_no " +
+            "and ur.user_serial_no = u.serial_no " +
+            "and p.parent_serial_no = '' " +
+            "and u.serial_no = #{serialNo}")
+    List<Permission> findParentByUserSerialNo(String userSerialNo);
 
     /**
      * 根据父级权限编号查询权限
