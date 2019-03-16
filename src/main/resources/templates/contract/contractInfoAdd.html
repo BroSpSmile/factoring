@@ -5,7 +5,7 @@
 	<div layout:fragment="content">
 		<div id="contractInfoAdd">
 			<card dis-hover title="新增合同" style="width:100%">
-				<i-form ref="entityDataForm" :model="addForm" :label-width="150">
+				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="150">
 					<template>
 						<Collapse v-model="panelOpen" accordion>
 							<Panel name="0">
