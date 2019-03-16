@@ -42,7 +42,7 @@ public interface RoleDao {
      * @param role
      * @return
      */
-    @Update("update auth_role_info set role_name=#{roleName},role_desc=#{roleDesc},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update auth_role_info set role_code=#{roleCode},role_name=#{roleName},role_desc=#{roleDesc},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(Role role);
 
     /**
