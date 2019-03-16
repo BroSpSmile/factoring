@@ -65,6 +65,7 @@ var vue = new Vue({
          */
         addBank : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
                 bankFullName : "",
                 bankShortName : "",
@@ -165,6 +166,7 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             })
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存

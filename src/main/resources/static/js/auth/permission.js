@@ -80,6 +80,7 @@ var vue = new Vue({
          */
         addPermission : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
             this.getMenuList();
@@ -184,6 +185,7 @@ var vue = new Vue({
         updatePermission : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
             this.getMenuList();
         },
         changePermissionType : function(value) {
