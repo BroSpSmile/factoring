@@ -34,6 +34,7 @@ var vue = new Vue({
          * 初始化数据
          */
         initData : function() {
+            let self = this;
             this.$http.get("/past/project").then(function(response){
                 self.projectList = response.data;
                 console.log(response.data)
