@@ -87,8 +87,12 @@ public interface UserDao {
      * @param userSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0" + "<if test = 'username!=null'> and username = #{username}</if>"
-            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>" + "<if test = 'status!=null'> and status = #{status}</if>" + "</script>")
+    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0"
+            + "<if test = 'username!=null'> and username = #{username}</if>"
+            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
+            + "<if test = 'status!=null'> and status = #{status}</if>"
+            + "<if test = 'organizational!=null'> and serial_no in (select user_serial_no from auth_user_organizational where organizational_serial_no = #{organizational})</if>"
+            + "</script>")
     List<User> findByParam(UserSearchDTO userSearchDTO);
 
     /**
