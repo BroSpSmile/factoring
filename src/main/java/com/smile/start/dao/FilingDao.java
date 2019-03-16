@@ -39,6 +39,15 @@ public interface FilingDao {
         + "</script>")
     int update(FilingApplyInfo filingApplyInfo);
 
+
+    /**
+     * 更新
+     * @param project project.id
+     * @param progress
+     * @return
+     */
+    @Update("update filing_apply_info set progress = #{progress}  where project=#{project} ")
+    int updateProgress(Long project ,String progress);
     /**
      * 删除
      *
@@ -103,7 +112,7 @@ public interface FilingDao {
      * @param item
      * @return
      */
-    @Insert("insert project_item (project_id,item_type,item_name,item_value) values(#{project},#{itemType},#{itemName},#{itemValue})")
+    @Insert("insert project_item (project_id,item_type,item_name,item_value) values(#{projectId},#{itemType},#{itemName},#{itemValue})")
     long insertFileItem(FilingFileItem item);
 
     /**

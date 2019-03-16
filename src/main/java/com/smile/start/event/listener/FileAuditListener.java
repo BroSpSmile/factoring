@@ -1,9 +1,11 @@
 package com.smile.start.event.listener;
 
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.dao.FilingDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.event.AuditEvent;
 import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.FilingSubProgress;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 /**
  * 归档审核监听器
+ *
  * @author smile.jing
  * @version $Id: FileAuditListener.java, v 0.1 Mar 12, 2019 9:50:44 PM smile.jing Exp $
  */
@@ -26,7 +29,7 @@ public class FileAuditListener implements AuditListener {
     /**
      * logger
      */
-    public Logger      logger = LoggerFactory.getLogger(getClass());
+    public Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 项目DAO
@@ -34,7 +37,13 @@ public class FileAuditListener implements AuditListener {
     @Resource
     private ProjectDao projectDao;
 
-    /** 
+    /**
+     * 归档DAO
+     */
+    @Resource
+    private FilingDao filingDao;
+
+    /**
      * @see com.smile.start.event.listener.AuditListener#listener(com.smile.start.event.AuditEvent)
      */
     @Override
@@ -46,11 +55,16 @@ public class FileAuditListener implements AuditListener {
             Project project = audit.getProject();
             Optional<Project> opt = Optional.ofNullable(audit.getProject());
             if (opt.isPresent()) {
-                long updateProjectEffect = projectDao.updateProjectProgress(project.getId(), Progress.last(project.getProgress()).getCode());
+                long updateProjectEffect =
+                    projectDao.updateProjectProgress(project.getId(), Progress.last(project.getProgress()).getCode());
                 LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
+
+                //FILING表也需要相应变更
+                filingDao.updateProgress(project.getId(), FilingSubProgress.FILE_TOBE_APPLY.getCode());
             }
+
         }
-        //TODO FILING表也需要相应变更
+
     }
 
 }

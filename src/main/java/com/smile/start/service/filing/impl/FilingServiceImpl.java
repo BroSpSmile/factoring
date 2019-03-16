@@ -10,17 +10,18 @@ import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FileService;
 import com.smile.start.service.common.FlowConfigService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.filing.FilingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -41,63 +42,75 @@ import java.util.List;
 @Service
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
-    private static final FlowTypeEnum FLOW_TYPE  = FlowTypeEnum.valueOf(Progress.FILE.name());
+    private static final FlowTypeEnum FLOW_TYPE = FlowTypeEnum.valueOf(Progress.FILE.name());
 
-    private static final AuditType    AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
+    private static final AuditType AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
 
     /**
      * 归档DAO
      */
     @Resource
-    private FilingDao                 filingDao;
+    private FilingDao filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao                projectDao;
+    private ProjectDao projectDao;
 
     /**
      * auditDao
      */
     @Resource
-    private AuditDao                  auditDao;
+    private AuditDao auditDao;
 
     /**
      * auditRecordDao
      */
     @Resource
-    private AuditRecordDao            auditRecordDao;
+    private AuditRecordDao auditRecordDao;
 
     /**
-     * auditRecordItemDao
+     * stepDao
      */
     @Resource
-    private AuditRecordItemDao        auditRecordItemDao;
+    private ProjectStepDao stepDao;
 
     /**
      * 文件服务
      */
     @Resource
-    private FileService               fileService;
+    private FileService fileService;
 
     /**
      * 用户服务
      */
     @Resource
-    private UserInfoService           userInfoService;
+    private UserInfoService userInfoService;
 
     /**
      * flowConfigService
      */
     @Resource
-    private FlowConfigService         flowConfigService;
+    private FlowConfigService flowConfigService;
 
+    /**
+     *
+     */
+    @Resource
+    private ProcessEngine processEngine;
+
+    /**
+     * 该方法仅save 和 commit调用，流程审核走公共方法
+     *
+     * @param filingApplyInfo
+     * @return
+     */
     @Override
     @Transactional
     public BaseResult addFilingApply(FilingApplyInfo filingApplyInfo) {
         BaseResult result = new BaseResult();
-        result.setSuccess(false);
+        result.setSuccess(true);
         List<FilingApplyInfo> filingApplyInfos = filingDao.findByProjectId(filingApplyInfo.getProject());
         long effect = 0l;
         if (!CollectionUtils.isEmpty(filingApplyInfos) && filingApplyInfos.size() > 0) {
@@ -106,57 +119,85 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         } else {
             effect = add(filingApplyInfo);
         }
-
-        if (effect > 0) {
-            result.setSuccess(true);
-        } else {
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("归档申请失败,请重试!");
+        if (effect <= 0) {
+            throw new RuntimeException("归档申请失败!");
         }
 
         if (result.isSuccess() && !filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
-            //commit, 更新项目状态
-            long updateProjectEffect = updateProject(filingApplyInfo);
+            Project project = projectDao.get(filingApplyInfo.getProject());
+
+            //1.维护project_step表，ProjectStepLinstener在上一个step已经插入该表为begin状态
+            project.setStep(Step.FILE.getIndex());
+            processEngine.changeStatus(project, StepStatus.COMPLETED);
+
+            //2.更新项目表 step and progress
+            long updateProjectEffect = updateProject(filingApplyInfo, project);
             if (updateProjectEffect > 0) {
                 result.setSuccess(true);
             } else {
-                result.setErrorCode("VP00011001");
-                result.setErrorMessage("归档申请失败,更新项目进度失败,请重试!");
-                return result;
+                throw new RuntimeException("归档申请失败,更新项目进度失败!");
             }
 
-            Project project = projectDao.get(filingApplyInfo.getProject());
             if (null != project) {
-                User user = filingApplyInfo.getRecord().getAuditor();
                 Audit audit = auditDao.getByProjectAndType(project.getId(), AuditType.FILE.getCode());
-                if (null != audit) {
-                    //流程第一步，user为申请人
-                    //step 处理完之后的流程状态
-                    FlowStatusDTO step = getStep(filingApplyInfo.getProgress());
-                    audit.setApplicant(user);
+                audit = maintainAudit(filingApplyInfo, project, audit);
 
-                    //变更流程表
-                    updateAuditStep(filingApplyInfo, audit, step);
-                    addAuditRecord(filingApplyInfo, audit);
-                } else {
-                    //流程第一步,user为申请人, 这里需要变更
-                    audit = getAudit(project, user, filingApplyInfo.getProgress());
-
-                    //新增流程表
-                    SingleResult<Audit> addAuditResult = addAudit(audit);
-                    if (addAuditResult.isSuccess()) {
-                        addAuditRecord(filingApplyInfo, audit);
-                    } else {
-                        return addAuditResult;
-                    }
+                //4.维护project_step表，新增下一个步骤开始的step
+                //只有commit入口，其他情况走公共审批流程，流程step流转是如果是驳回至第一步，将会删除这个record
+                //每次commit时，都需要新增
+                if (addStepRecordForCommit(project, audit) <= 0) {
+                    throw new RuntimeException("归档申请失败,新增流程步骤记录失败!");
                 }
             }
         }
-
         return result;
     }
 
-    private void addAuditRecord(FilingApplyInfo filingApplyInfo, Audit audit) {
+    private Audit maintainAudit(FilingApplyInfo filingApplyInfo, Project project, Audit audit) {
+        User user = filingApplyInfo.getRecord().getAuditor();
+        if (null != audit) {
+            //流程第一步，user为申请人
+            //step 处理完之后的流程状态
+            FlowStatusDTO step = getStep(filingApplyInfo.getProgress());
+            audit.setApplicant(user);
+
+            //3.维护流程表
+            //3.1变更流程表
+            if (updateAuditStep(filingApplyInfo, audit, step) <= 0 || addAuditRecord(filingApplyInfo, audit) <= 0) {
+                throw new RuntimeException("归档申请失败,更新流程记录失败!");
+            }
+        } else {
+            //3.维护流程表
+            //流程第一步,user为申请人, 这里需要变更
+            audit = getAudit(project, user, filingApplyInfo.getProgress());
+            //3.1新增流程表
+            if (addAudit(audit) <= 0 || addAuditRecord(filingApplyInfo, audit) <= 0) {
+                throw new RuntimeException("归档申请失败,新增流程记录失败!");
+            }
+        }
+        return audit;
+    }
+
+    private long updateProject(FilingApplyInfo filingApplyInfo, Project project) {
+        Progress progress = getProgress(filingApplyInfo);
+        project.setProgress(progress);
+
+        //这里step已经+1
+        project.setStep(project.getStep() + 1);
+        return projectDao.update(project);
+    }
+
+    private long addStepRecordForCommit(Project project, Audit audit) {
+        StepRecord record = new StepRecord();
+        record.setProject(project);
+        record.setStatus(StepStatus.BEGIN);
+        record.setStep(Step.getStep(project.getStep()));
+        record.setCreateTime(new Date());
+        record.setAudit(audit);
+        return stepDao.insert(record);
+    }
+
+    private long addAuditRecord(FilingApplyInfo filingApplyInfo, Audit audit) {
         AuditRecord record = filingApplyInfo.getRecord();
         FlowStatusDTO step = getStep(FilingSubProgress.last(filingApplyInfo.getProgress()));
         record.setType(step.getFlowStatusDesc());
@@ -164,7 +205,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         if (AuditResult.APPLY == record.getResult()) {
             record.setStatus(FilingSubProgress.getByIndex(audit.getStep()).getDesc());
         }
-        auditRecordDao.insert(record);
+        return auditRecordDao.insert(record);
     }
 
     @Override
@@ -231,7 +272,8 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             LoggerUtils.info(logger, "删除归档申请影响行effect={}", effect);
 
             //删除归档文件 in db
-            long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
+            long effectDelItem =
+                filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
 
             //更新项目状态为待归档状态即 已放款状态
             long updateProjectEffect = updateProject(filingApplyInfo);
@@ -239,15 +281,15 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             if (effect > 0 && effectDelItem > 0 && updateProjectEffect > 0) {
                 result.setSuccess(true);
             } else {
-                result.setErrorCode("VP00011003");
-                result.setErrorMessage("删除归档申请失败,请重试!");
+                throw new RuntimeException("删除归档申请失败!");
             }
 
             return result;
         } finally {
             //删除文件
             if (null != filingApplyInfo) {
-                List<FilingFileItem> items = filingDao.findItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
+                List<FilingFileItem> items =
+                    filingDao.findItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
                 for (FilingFileItem item : items) {
                     LoggerUtils.info(logger, "删除文件ID={}", item.getItemValue());
                     fileService.delete(item.getItemValue());
@@ -309,31 +351,38 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
 
     private int update(FilingApplyInfo filingApplyInfo, boolean isUpdateItem) {
         int effect = filingDao.update(filingApplyInfo);
-
         LoggerUtils.info(logger, "修改归档申请，影响行effect={}", effect);
-
         if (isUpdateItem) {
             filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
             for (FilingFileItem item : filingApplyInfo.getItems()) {
                 filingDao.insertFileItem(item);
             }
         }
-
         return effect;
     }
 
     private long updateProject(FilingApplyInfo filingApplyInfo) {
-        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_OFFICER) ? Progress.FILED : Progress.FILE;
-
-        if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
-            progress = Progress.LOANED;
-        }
+        Progress progress = getProgress(filingApplyInfo);
         long updateProjectEffect = projectDao.updateProjectProgress(filingApplyInfo.getProject(), progress.getCode());
         LoggerUtils.info(logger, "更新项目状态，影响行effect={}", updateProjectEffect);
         return updateProjectEffect;
     }
 
-    private void updateAuditStep(FilingApplyInfo filingApplyInfo, Audit audit, FlowStatusDTO step) {
+    private Progress getProgress(FilingApplyInfo filingApplyInfo) {
+        Progress progress =
+            filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_OFFICER) ? Progress.FILED : Progress.FILE;
+
+        if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
+            progress = Progress.LOANED;
+        }
+        return progress;
+    }
+
+    public long addAudit(Audit audit) {
+        return auditDao.insert(audit);
+    }
+
+    private long updateAuditStep(FilingApplyInfo filingApplyInfo, Audit audit, FlowStatusDTO step) {
         if (null != step) {
             audit.setStep(step.getFlowStatus());
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -347,21 +396,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             role.setSerialNo(StringUtils.EMPTY);
             audit.setRole(role);
         }
-        auditDao.updateRoleAndApplicant(audit);
-    }
-
-    public SingleResult<Audit> addAudit(Audit audit) {
-        long effect = auditDao.insert(audit);
-        SingleResult<Audit> result = new SingleResult<Audit>();
-        if (effect > 0) {
-            result.setData(audit);
-            return result;
-        } else {
-            result.setSuccess(false);
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增失败,请重试!");
-            return result;
-        }
+        return auditDao.updateRoleAndApplicant(audit);
     }
 
     private Audit getAudit(Project project, User user, FilingSubProgress progress) {
