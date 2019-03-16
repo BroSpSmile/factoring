@@ -66,7 +66,7 @@ public interface RoleDao {
      * @param roleCode
      * @return
      */
-    @Select("select * from auth_role_info where role_code=#{roleCode}")
+    @Select("select * from auth_role_info where role_code=#{roleCode} and delete_flag = 0")
     Role findByRoleCode(String roleCode);
 
     /**
