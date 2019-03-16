@@ -1,10 +1,13 @@
 package com.smile.start.service.common.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.BankInfoDao;
 import com.smile.start.dto.BankInfoDTO;
 import com.smile.start.dto.BankInfoSearchDTO;
+import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.mapper.BankInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.BankInfo;
@@ -42,13 +45,15 @@ public class BankInfoServiceImpl implements BankInfoService {
      * @return
      */
     @Override
-    public PageInfo<BankInfoDTO> findAll(PageRequest<BankInfoSearchDTO> page) {
-        final PageInfo<BankInfoDTO> result = new PageInfo<>();
-        final List<BankInfo> bankList = bankInfoDao.findByParam(page.getCondition());
-        result.setTotal(bankList.size());
-        result.setPageSize(10);
-        result.setList(bankInfoMapper.doList2dtoList(bankList));
-        return result;
+    public PageInfo<BankInfoDTO> findAll(PageRequest<BankInfoSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<BankInfo> bankList = bankInfoDao.findByParam(pageRequest.getCondition());
+        PageInfo<BankInfoDTO> pageInfo = new PageInfo<>(bankInfoMapper.doList2dtoList(bankList));
+        Page page = (Page) bankList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**

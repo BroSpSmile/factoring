@@ -1,4 +1,4 @@
-package com.smile.start.model.contract;
+package com.smile.start.model.common;
 
 import java.io.Serializable;
 

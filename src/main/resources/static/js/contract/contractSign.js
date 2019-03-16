@@ -41,15 +41,19 @@ var vue = new Vue({
                 console.error(error);
             });
         },
+        /** 分页 */
+        pageChange : function(page){
+            this.queryParam.pageNum = page;
+            this.query();
+        },
         /**
          * 查询
          */
-        query : function(page){
+        query : function(){
             this.showResult=true;
-            this.queryParam.pageNum = page;
             var _self = this;
-            _self.queryParam.condition = _self.formInline;
-            this.$http.post("/contractSign/list", _self.queryParam).then(
+            this.queryParam.condition = this.formInline;
+            this.$http.post("/contractSign/list", this.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
@@ -60,9 +64,8 @@ var vue = new Vue({
          * 签署
          */
         sign : function(serialNo) {
-            console.log(serialNo)
             var self = this;
-            self.addForm.serialNo = serialNo;
+            this.addForm.serialNo = serialNo;
             this.$http.get("/contractInfo/signList/" + serialNo).then(function(response){
                 if (response.data.success) {
                     self.addForm.signList = response.data.values;
@@ -111,19 +114,33 @@ var vue = new Vue({
             });
         },
         /**
+         * 签署完成确认
+         */
+        signFinishWarn : function(serialNo){
+            this.$Modal.confirm({
+                title: '签署完成提示',
+                content: '<p>当前项目确定已完成签署？</p>',
+                onOk: () => {
+                    this.signFinish(serialNo);
+                },
+                onCancel: () => {}
+            })
+        },
+        /**
          * 签署完成
          */
-        signFinish : function() {
+        signFinish : function(serialNo) {
             let self = this;
-
+            this.addForm.serialNo = serialNo;
+            this.addForm.finished = true;
             //校验所有必须项是否已完成
-            for(index in self.addForm.signList) {
-                let sign = self.addForm.signList[index];
-                if(sign.isRequired === 1 && !sign.status) {
-                    self.$Message.error('带红星项全部完成才可以签署完成');
-                    return;
-                }
-            }
+            // for(index in self.addForm.signList) {
+            //     let sign = self.addForm.signList[index];
+            //     if(sign.isRequired === 1 && !sign.status) {
+            //         self.$Message.error('带红星项全部完成才可以签署完成');
+            //         return;
+            //     }
+            // }
 
             this.$http.post("/contractSign/save", this.addForm).then(function(response) {
                 if (response.data.success) {
@@ -140,7 +157,6 @@ var vue = new Vue({
             }, function(error) {
                 self.$Message.error(error.data.message);
             });
-            this.addForm.finished = true;
         },
         /**
          * 取消保存
@@ -153,10 +169,6 @@ var vue = new Vue({
          */
         reset: function () {
             this.$refs['searchForm'].resetFields();
-        },
-        /** 分页 */
-        pageChange : function(page){
-            this.query();
         },
         /**
          * 项目模式转换
@@ -207,8 +219,8 @@ var vue = new Vue({
 
 vue.tableColumns=[
     {
-        title: '合同编号',
-        key: 'contractCode',
+        title: '项目编号',
+        key: 'projectCode',
         align: 'left'
     },{
         title: '项目名称',
@@ -245,10 +257,10 @@ vue.tableColumns=[
                         },
                         on: {
                             click: () => {
-                            vue.sign(param.row.serialNo);
+                            vue.signFinishWarn(param.row.serialNo);
                         }
                     }
-                }, '签署')
+                }, '签署完成')
             ])
         }
     }

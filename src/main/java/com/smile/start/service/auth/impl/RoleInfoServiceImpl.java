@@ -1,11 +1,14 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.mapper.RoleInfoMapper;
 import com.smile.start.model.auth.*;
@@ -60,13 +63,15 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> page) {
-        final PageInfo<AuthRoleInfoDTO> result = new PageInfo<>();
-        final List<Role> roleList = roleDao.findByParam(page.getCondition());
-        result.setTotal(roleList.size());
-        result.setPageSize(10);
-        result.setList(roleInfoMapper.doList2dtoList(roleList));
-        return result;
+    public PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Role> roleList = roleDao.findByParam(pageRequest.getCondition());
+        PageInfo<AuthRoleInfoDTO> pageInfo = new PageInfo<>(roleInfoMapper.doList2dtoList(roleList));
+        Page page = (Page) roleList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**

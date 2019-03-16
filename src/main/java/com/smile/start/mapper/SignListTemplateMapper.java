@@ -1,7 +1,7 @@
 package com.smile.start.mapper;
 
 import com.smile.start.dto.SignListTemplateDTO;
-import com.smile.start.model.contract.SignListTemplate;
+import com.smile.start.model.common.SignListTemplate;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
 

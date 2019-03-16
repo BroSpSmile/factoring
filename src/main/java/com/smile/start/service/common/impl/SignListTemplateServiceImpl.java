@@ -1,5 +1,7 @@
-package com.smile.start.service.contract.impl;
+package com.smile.start.service.common.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.SignListTemplateDao;
@@ -7,8 +9,8 @@ import com.smile.start.dto.SignListTemplateDTO;
 import com.smile.start.dto.SignListTemplateSearchDTO;
 import com.smile.start.mapper.SignListTemplateMapper;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.SignListTemplate;
-import com.smile.start.service.contract.SignListTemplateService;
+import com.smile.start.model.common.SignListTemplate;
+import com.smile.start.service.common.SignListTemplateService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,13 +36,15 @@ public class SignListTemplateServiceImpl implements SignListTemplateService {
     }
 
     @Override
-    public PageInfo<SignListTemplateDTO> findAll(PageRequest<SignListTemplateSearchDTO> page) {
-        final PageInfo<SignListTemplateDTO> result = new PageInfo<>();
-        final List<SignListTemplate> doList = signListTemplateDao.findByParam(page.getCondition());
-        result.setTotal(doList.size());
-        result.setPageSize(10);
-        result.setList(signListTemplateMapper.doList2dtoList(doList));
-        return result;
+    public PageInfo<SignListTemplateDTO> findAll(PageRequest<SignListTemplateSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<SignListTemplate> signList = signListTemplateDao.findByParam(pageRequest.getCondition());
+        PageInfo<SignListTemplateDTO> pageInfo = new PageInfo<>(signListTemplateMapper.doList2dtoList(signList));
+        Page page = (Page) signList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     @Override

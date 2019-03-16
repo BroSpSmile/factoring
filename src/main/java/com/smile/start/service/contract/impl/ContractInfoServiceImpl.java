@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smile.start.commons.DateUtil;
@@ -22,6 +24,7 @@ import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FileService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,6 +103,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private FileService                       fileService;
 
     @Resource
+    private ProcessEngine                     processEngine;
+
+    @Resource
     private ContractInfoMapper                contractInfoMapper;
 
     /**
@@ -160,13 +166,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     }
 
     @Override
-    public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
-        final PageInfo<ContractBaseInfoDTO> result = new PageInfo<>();
-        final List<ContractInfo> doList = contractInfoDao.findByParam(page.getCondition());
-        result.setTotal(doList.size());
-        result.setPageSize(10);
-        result.setList(contractInfoMapper.doList2dtoListBase(doList));
-        return result;
+    public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<ContractInfo> contractList = contractInfoDao.findByParam(pageRequest.getCondition());
+        PageInfo<ContractBaseInfoDTO> pageInfo = new PageInfo<>(contractInfoMapper.doList2dtoListBase(contractList));
+        Page page = (Page) contractList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -262,7 +270,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spPostCode", contractReceivableAgreement.getSpPostCode());
         data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
         data.put("spFax", contractReceivableAgreement.getSpFax());
-        data.put("contractSignDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("signDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
         return data;
     }
 
@@ -384,8 +392,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             audit = new Audit();
         }
         //TODO 查询数据库次数太多，可能影响性能
+        Project project = projectService.getProject(contractInfo.getProjectId());
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
-        audit.setProject(projectService.getProject(contractInfo.getProjectId()));
+        audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.CONTRACT);
         audit.setStep(ContractStatusEnum.APPLY.getValue());
@@ -409,6 +418,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         record.setStatus(record.getResult().getDesc());
         record.setAuditTime(new Date());
         auditRecordDao.insert(record);
+
+        project.setStep(Step.DRAWUP_AUDIT.getIndex());
+        processEngine.next(project, false);
     }
 
     /**
@@ -463,9 +475,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 //状态流转到下一级
                 audit.setStep(ContractStatusEnum.SIGN.getValue());
 
-                //更新项目状态
+                //更新项目状态，后面优化去掉 TODO
                 project.setProgress(Progress.DRAWUP);
                 projectService.turnover(project);
+
+                project.setStep(Step.SIGN.getIndex());
+                processEngine.next(project, false);
             } else {
                 //状态流转到下一级
                 audit.setStep(currentStatus.getNextStatus().getValue());
@@ -537,14 +552,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
-            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
-        }
-
+//        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+//            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+//        }
         if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
             contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
             contractInfoDao.update(contractInfo);
+
+            Project project = projectService.getProject(contractInfo.getProjectId());
+            project.setStep(Step.LOAN.getIndex());
+            processEngine.next(project, false);
         }
     }
 }

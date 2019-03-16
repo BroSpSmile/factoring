@@ -34,15 +34,19 @@ var vue = new Vue({
         this.query();
     },
     methods : {
+        /** 分页 */
+        pageChange : function(page){
+            this.queryParam.pageNum = page;
+            this.query();
+        },
         /**
          * 查询
          */
-        query : function(page){
-            this.showResult=true;
-            this.queryParam.pageNum = page;
+        query : function(){
+            this.showResult = true;
             var _self = this;
-            _self.queryParam.condition = _self.formInline;
-            this.$http.post("/flowConfig/list", _self.queryParam).then(
+            this.queryParam.condition = this.formInline;
+            this.$http.post("/flowConfig/list", this.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
