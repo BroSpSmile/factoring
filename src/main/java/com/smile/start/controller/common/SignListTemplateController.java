@@ -1,4 +1,4 @@
-package com.smile.start.controller.contract;
+package com.smile.start.controller.common;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
@@ -8,7 +8,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.service.contract.SignListTemplateService;
+import com.smile.start.service.common.SignListTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,7 @@ public class SignListTemplateController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
-        return "contract/signListTemplate";
+        return "system/signListTemplate";
     }
 
     /**

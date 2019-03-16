@@ -1,10 +1,13 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.OrganizationalDao;
+import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.mapper.OrganizationalMapper;
@@ -52,14 +55,15 @@ public class OrganizationalServiceImpl implements OrganizationalService {
      * @return
      */
     @Override
-    public PageInfo<OrganizationalDTO> findAll(PageRequest<OrganizationalSearchDTO> page) {
-        final PageInfo<OrganizationalDTO> result = new PageInfo<>();
-        final List<Organizational> organizationalList = organizationalDao.findByParam(page.getCondition());
-        result.setTotal(organizationalList.size());
-        result.setPageSize(10);
-        List<OrganizationalDTO> organizationalDTOS = organizationalMapper.doList2dtoList(organizationalList);
-        result.setList(organizationalDTOS);
-        return result;
+    public PageInfo<OrganizationalDTO> findAll(PageRequest<OrganizationalSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Organizational> organizationalList = organizationalDao.findByParam(pageRequest.getCondition());
+        PageInfo<OrganizationalDTO> pageInfo = new PageInfo<>(organizationalMapper.doList2dtoList(organizationalList));
+        Page page = (Page) organizationalList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**

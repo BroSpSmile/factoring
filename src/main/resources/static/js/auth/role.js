@@ -44,16 +44,19 @@ var vue = new Vue({
         this.query();
 	},
 	methods : {
-		
+        /** 分页 */
+        pageChange : function(page){
+            this.queryParam.pageNum = page;
+            this.query();
+        },
 		/**
 		 * 查询
 		 */
-		query : function(page){
-			this.showResult=true;
-			this.queryParam.pageNum = page;
+		query : function(){
+			this.showResult = true;
 			var _self = this;
-            _self.queryParam.condition = _self.formInline;
-			this.$http.post("/role/list", _self.queryParam).then(
+            this.queryParam.condition = this.formInline;
+			this.$http.post("/role/list", this.queryParam).then(
 					function(response) {
                         _self.pageInfo = response.data;
 					}, function(error) {
@@ -219,10 +222,6 @@ var vue = new Vue({
             }
             //let choicesAll=this.$refs.permissionTree.getCheckedNodes; //方法的运用 getSelectedNodes也是如此用法
             //console.log(choicesAll);
-        },
-        /** 分页 */
-        pageChange : function(page){
-            this.query();
         }
 	}
 });

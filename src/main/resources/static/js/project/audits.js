@@ -13,7 +13,7 @@ var vue = new Vue({
 		queryParam : {
 			condition : {},
 			pageNum : 1,
-			pageSize : 10
+			pageSize : 5
 		},
 		pageInfo:{},
 		tableColumns:[]

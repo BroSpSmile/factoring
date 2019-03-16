@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
@@ -7,6 +9,7 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
@@ -56,13 +59,15 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> page) {
-        final PageInfo<AuthPermissionInfoDTO> result = new PageInfo<>();
-        final List<Permission> permissionList = permissionDao.findByParam(page.getCondition());
-        result.setTotal(permissionList.size());
-        result.setPageSize(10);
-        result.setList(permissionInfoMapper.doList2dtoList(permissionList));
-        return result;
+    public PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Permission> permissionList = permissionDao.findByParam(pageRequest.getCondition());
+        PageInfo<AuthPermissionInfoDTO> pageInfo = new PageInfo<>(permissionInfoMapper.doList2dtoList(permissionList));
+        Page page = (Page) permissionList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.Asserts;
@@ -81,18 +83,20 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthUserInfoDTO> findAll(PageRequest<UserSearchDTO> page) {
-        final PageInfo<AuthUserInfoDTO> result = new PageInfo<>();
-        final List<User> userList = userDao.findByParam(page.getCondition());
-        result.setTotal(userList.size());
-        result.setPageSize(10);
+    public PageInfo<AuthUserInfoDTO> findAll(PageRequest<UserSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<User> userList = userDao.findByParam(pageRequest.getCondition());
         List<AuthUserInfoDTO> authUserInfoDTOS = userInfoMapper.doList2dtoList(userList);
         authUserInfoDTOS.forEach(e -> {
             loadRoles(e);
             loadOrganizational(e);
         });
-        result.setList(authUserInfoDTOS);
-        return result;
+        PageInfo<AuthUserInfoDTO> pageInfo = new PageInfo<>(authUserInfoDTOS);
+        Page page = (Page) userList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
