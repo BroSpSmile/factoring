@@ -65,7 +65,7 @@ public interface ContractInfoDao {
      * @param contractInfoSearchDTO
      * @return
      */
-    @Select("<script>" + "select ci.*,fp.project_name from contract_info ci,factoring_project fp where ci.project_id = fp.id and delete_flag = 0 "
+    @Select("<script>" + "select ci.*,fp.project_id project_code,fp.project_name from contract_info ci,factoring_project fp where ci.project_id = fp.id and delete_flag = 0 "
             + "<if test = 'contractCode!=null'> and ci.contract_code like CONCAT('%',#{contractCode},'%')</if>"
             + "<if test = 'contractName!=null'> and ci.contract_name like CONCAT('%',#{contractName},'%')</if>"
             + "<if test = 'projectMode!=null'> and ci.project_mode = #{projectMode}</if>"

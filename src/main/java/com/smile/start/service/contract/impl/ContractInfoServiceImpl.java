@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smile.start.commons.DateUtil;
@@ -164,13 +166,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     }
 
     @Override
-    public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> page) {
-        final PageInfo<ContractBaseInfoDTO> result = new PageInfo<>();
-        final List<ContractInfo> doList = contractInfoDao.findByParam(page.getCondition());
-        result.setTotal(doList.size());
-        result.setPageSize(10);
-        result.setList(contractInfoMapper.doList2dtoListBase(doList));
-        return result;
+    public PageInfo<ContractBaseInfoDTO> findAll(PageRequest<ContractInfoSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<ContractInfo> contractList = contractInfoDao.findByParam(pageRequest.getCondition());
+        PageInfo<ContractBaseInfoDTO> pageInfo = new PageInfo<>(contractInfoMapper.doList2dtoListBase(contractList));
+        Page page = (Page) contractList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -548,14 +552,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
-            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
-        }
-
+//        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+//            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+//        }
         if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
             contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
             contractInfoDao.update(contractInfo);
+
+            Project project = projectService.getProject(contractInfo.getProjectId());
+            project.setStep(Step.LOAN.getIndex());
+            processEngine.next(project, true);
         }
     }
 }
