@@ -23,6 +23,11 @@ public class ContractInfo implements Serializable {
     private Long projectId;
 
     /**
+     * 项目编号
+     */
+    private String projectCode;
+
+    /**
      * 项目名称
      */
     private String projectName;
@@ -31,11 +36,6 @@ public class ContractInfo implements Serializable {
      * 业务流水
      */
     private String serialNo;
-
-    /**
-     * 合同编号
-     */
-    private String contractCode;
 
     /**
      * 合同名称
@@ -82,6 +82,14 @@ public class ContractInfo implements Serializable {
         this.projectId = projectId;
     }
 
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
     public String getProjectName() {
         return projectName;
     }
@@ -96,14 +104,6 @@ public class ContractInfo implements Serializable {
 
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
-    }
-
-    public String getContractCode() {
-        return contractCode;
-    }
-
-    public void setContractCode(String contractCode) {
-        this.contractCode = contractCode;
     }
 
     public String getContractName() {

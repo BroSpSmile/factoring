@@ -4,10 +4,14 @@
  */
 package com.smile.start.service.finance.impl;
 
+import com.smile.start.dao.InstallmentDao;
+import com.smile.start.model.enums.InstallmentType;
+import com.smile.start.model.project.Installment;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.finance.FinanceService;
+import javax.annotation.Resource;
 
 /**
  * 实现
@@ -17,4 +21,17 @@ import com.smile.start.service.finance.FinanceService;
 @Service
 public class FinanceServiceImpl extends AbstractService implements FinanceService {
 
+    @Resource
+    private InstallmentDao installmentDao;
+
+    /**
+     * 保存放款信息
+     * @param installment
+     * @return
+     */
+    @Override
+    public Long saveLoanInstallment(Installment installment) {
+        installment.setType(InstallmentType.LOAN);
+        return installmentDao.insert(installment);
+    }
 }

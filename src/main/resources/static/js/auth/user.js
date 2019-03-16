@@ -84,15 +84,19 @@ var vue = new Vue({
                 }
             )
         },
+        /** 分页 */
+        pageChange:function(page){
+            this.queryParam.pageNum = page;
+            this.query();
+        },
         /**
          * 查询
          */
-        query : function(page){
+        query : function(){
             this.showResult=true;
-            this.queryParam.pageNum = page;
             var _self = this;
-            _self.queryParam.condition = _self.formInline;
-            this.$http.post("/user/list", _self.queryParam).then(
+            this.queryParam.condition = this.formInline;
+            this.$http.post("/user/list", this.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
@@ -115,6 +119,7 @@ var vue = new Vue({
          */
         addUser : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
         },
@@ -202,6 +207,7 @@ var vue = new Vue({
         updateUser : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存
@@ -217,10 +223,6 @@ var vue = new Vue({
          */
         reset: function () {
             this.$refs['searchForm'].resetFields();
-        },
-        /** 分页 */
-        pageChange : function(page){
-            this.query();
         }
     }
 });

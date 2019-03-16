@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
@@ -60,13 +62,15 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> page) {
-        final PageInfo<AuthRoleInfoDTO> result = new PageInfo<>();
-        final List<Role> roleList = roleDao.findByParam(page.getCondition());
-        result.setTotal(roleList.size());
-        result.setPageSize(10);
-        result.setList(roleInfoMapper.doList2dtoList(roleList));
-        return result;
+    public PageInfo<AuthRoleInfoDTO> findAll(PageRequest<RoleSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Role> roleList = roleDao.findByParam(pageRequest.getCondition());
+        PageInfo<AuthRoleInfoDTO> pageInfo = new PageInfo<>(roleInfoMapper.doList2dtoList(roleList));
+        Page<Role> page = (Page<Role>) roleList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -107,6 +111,10 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public void update(AuthRoleInfoDTO authRoleInfoDTO) {
+        final Role oldRole = roleDao.findByRoleCode(authRoleInfoDTO.getRoleCode());
+        if(oldRole != null) {
+            Asserts.notTrue(authRoleInfoDTO.getId().equals(oldRole.getId()), "指定角色编号已经存在");
+        }
         final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);
         role.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();

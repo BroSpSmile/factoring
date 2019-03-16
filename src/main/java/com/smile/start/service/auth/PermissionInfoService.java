@@ -5,7 +5,6 @@ import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
-
 import java.util.List;
 
 /**
@@ -59,6 +58,13 @@ public interface PermissionInfoService {
     List<AuthPermissionInfoDTO> findByUserSerialNo(String userSerialNo);
 
     /**
+     * 查询指定用户顶级权限信息
+     * @param userSerialNo
+     * @return
+     */
+    List<AuthPermissionInfoDTO> findParentByUserSerialNo(String userSerialNo);
+
+    /**
      * 获取权限树
      * @param roleSerialNo
      * @return
@@ -71,4 +77,11 @@ public interface PermissionInfoService {
      * @return
      */
     List<AuthPermissionInfoDTO> findByParam(PermissionSearchDTO permissionSearchDTO);
+
+    /**
+     * 根据父级权限编号查询权限
+     * @param parentSerialNo
+     * @return
+     */
+    List<AuthPermissionInfoDTO> findByParentSerialNo(String parentSerialNo);
 }

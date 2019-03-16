@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.Asserts;
@@ -81,18 +83,20 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthUserInfoDTO> findAll(PageRequest<UserSearchDTO> page) {
-        final PageInfo<AuthUserInfoDTO> result = new PageInfo<>();
-        final List<User> userList = userDao.findByParam(page.getCondition());
-        result.setTotal(userList.size());
-        result.setPageSize(10);
+    public PageInfo<AuthUserInfoDTO> findAll(PageRequest<UserSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<User> userList = userDao.findByParam(pageRequest.getCondition());
         List<AuthUserInfoDTO> authUserInfoDTOS = userInfoMapper.doList2dtoList(userList);
         authUserInfoDTOS.forEach(e -> {
             loadRoles(e);
             loadOrganizational(e);
         });
-        result.setList(authUserInfoDTOS);
-        return result;
+        PageInfo<AuthUserInfoDTO> pageInfo = new PageInfo<>(authUserInfoDTOS);
+        Page<User> page = (Page<User>) userList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -126,7 +130,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional(rollbackFor = Exception.class)
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
         final User oldUser = userDao.getByMobile(authUserInfoDTO.getMobile());
-        if(oldUser != null) {
+        if (oldUser != null) {
             throw new ValidateException("用户手机号已存在");
         }
         String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
@@ -257,7 +261,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         //获取用户角色信息
         final List<AuthRoleInfoDTO> roleList = roleInfoService.findByUserSerialNo(user.getSerialNo());
-        if(!CollectionUtils.isEmpty(roleList)) {
+        if (!CollectionUtils.isEmpty(roleList)) {
             List<LoginUserRole> userRoleList = Lists.newArrayList();
             roleList.forEach(e -> {
                 LoginUserRole loginUserRole = new LoginUserRole();
@@ -271,21 +275,32 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
 
         //获取用户权限信息
-        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByUserSerialNo(user.getSerialNo());
-        if(!CollectionUtils.isEmpty(permissionList)) {
+        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findParentByUserSerialNo(user.getSerialNo());
+        if (!CollectionUtils.isEmpty(permissionList)) {
             List<LoginUserPermission> userPermissionList = Lists.newArrayList();
             permissionList.forEach(e -> {
-                LoginUserPermission loginUserPermission = new LoginUserPermission();
-                loginUserPermission.setSerialNo(e.getSerialNo());
-                loginUserPermission.setPermissionCode(e.getPermissionCode());
-                loginUserPermission.setPermissionName(e.getPermissionName());
-                loginUserPermission.setPermissionType(e.getPermissionType());
-                loginUserPermission.setUrl(e.getUrl());
+                LoginUserPermission loginUserPermission = dto2LoginUserPermisson(e);
+                List<AuthPermissionInfoDTO> subList = permissionInfoService.findByParentSerialNo(e.getSerialNo());
+                List<LoginUserPermission> childrens = Lists.newArrayList();
+                if(!CollectionUtils.isEmpty(subList)) {
+                    subList.forEach(p -> childrens.add(dto2LoginUserPermisson(p)));
+                }
+                loginUserPermission.setChildrens(childrens);
                 userPermissionList.add(loginUserPermission);
             });
             loginUser.setPermissionList(userPermissionList);
         }
         return loginUser;
+    }
+
+    private LoginUserPermission dto2LoginUserPermisson(AuthPermissionInfoDTO authPermissionInfoDTO) {
+        LoginUserPermission loginUserPermission = new LoginUserPermission();
+        loginUserPermission.setSerialNo(authPermissionInfoDTO.getSerialNo());
+        loginUserPermission.setPermissionCode(authPermissionInfoDTO.getPermissionCode());
+        loginUserPermission.setPermissionName(authPermissionInfoDTO.getPermissionName());
+        loginUserPermission.setPermissionType(authPermissionInfoDTO.getPermissionType());
+        loginUserPermission.setUrl(authPermissionInfoDTO.getUrl());
+        return loginUserPermission;
     }
 
     /**

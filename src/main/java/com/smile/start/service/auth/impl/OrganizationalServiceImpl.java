@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
@@ -29,7 +31,7 @@ import javax.annotation.Resource;
 public class OrganizationalServiceImpl implements OrganizationalService {
 
     @Resource
-    private OrganizationalDao organizationalDao;
+    private OrganizationalDao    organizationalDao;
 
     @Resource
     private OrganizationalMapper organizationalMapper;
@@ -52,14 +54,15 @@ public class OrganizationalServiceImpl implements OrganizationalService {
      * @return
      */
     @Override
-    public PageInfo<OrganizationalDTO> findAll(PageRequest<OrganizationalSearchDTO> page) {
-        final PageInfo<OrganizationalDTO> result = new PageInfo<>();
-        final List<Organizational> organizationalList = organizationalDao.findByParam(page.getCondition());
-        result.setTotal(organizationalList.size());
-        result.setPageSize(10);
-        List<OrganizationalDTO> organizationalDTOS = organizationalMapper.doList2dtoList(organizationalList);
-        result.setList(organizationalDTOS);
-        return result;
+    public PageInfo<OrganizationalDTO> findAll(PageRequest<OrganizationalSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Organizational> organizationalList = organizationalDao.findByParam(pageRequest.getCondition());
+        PageInfo<OrganizationalDTO> pageInfo = new PageInfo<>(organizationalMapper.doList2dtoList(organizationalList));
+        Page<Organizational> page = (Page<Organizational>) organizationalList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -78,7 +81,7 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         organizational.setCreateUser(loginUser.getSerialNo());
         organizational.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        if(organizational.getParentSerialNo() == null) {
+        if (organizational.getParentSerialNo() == null) {
             organizational.setParentSerialNo("");
         }
         return organizationalDao.insert(organizational);

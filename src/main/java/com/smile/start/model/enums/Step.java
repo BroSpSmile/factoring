@@ -144,7 +144,7 @@ public enum Step {
                       }
 
                   },
-                  LOAN(7, "放款") {
+                  LOAN(7, "放款申请") {
 
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
@@ -178,6 +178,25 @@ public enum Step {
                        */
                       @Override
                       public Step next() {
+                          return LOANEN;
+                      }
+
+                  },
+                  LOANEN(8, "放款操作") {
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return LOAN_AUDIT;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
                           return FILE;
                       }
 
@@ -196,7 +215,7 @@ public enum Step {
                        */
                       @Override
                       public Step next() {
-                          return END;
+                          return FILE_AUDIT;
                       }
 
                   },

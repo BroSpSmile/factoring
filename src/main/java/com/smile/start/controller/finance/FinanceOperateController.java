@@ -9,7 +9,9 @@ import javax.annotation.Resource;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
@@ -54,6 +56,26 @@ public class FinanceOperateController extends BaseController {
     public PageInfo<Project> queryByParam(@RequestBody PageRequest<Project> query) {
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         return projectService.queryPage(query);
+    }
+
+    /**
+     * 保存放款信息
+     * @param installment
+     * @return
+     */
+    @PostMapping("/saveLoanInstallment")
+    @ResponseBody
+    public BaseResult saveLoanInstallment(@RequestBody Installment installment) {
+        try {
+            financeService.saveLoanInstallment(installment);
+            BaseResult result = new BaseResult();
+            result.setSuccess(true);
+            result.setErrorMessage("保存放款成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("保存放款信息失败", e);
+            return toResult(e);
+        }
     }
 
 }

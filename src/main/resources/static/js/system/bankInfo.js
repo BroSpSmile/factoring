@@ -2,7 +2,7 @@
  * 银行信息
  */
 common.pageName = "bankInfo";
-common.openName = [ '8' ];
+common.openName = [ 'finance' ];
 
 var vue = new Vue({
     el : '#bankInfo',
@@ -41,15 +41,19 @@ var vue = new Vue({
         this.query();
     },
     methods : {
+        /** 分页 */
+        pageChange : function(page){
+            this.queryParam.pageNum = page;
+            this.query();
+        },
         /**
          * 查询
          */
-        query : function(page){
-            this.showResult=true;
-            this.queryParam.pageNum = page;
+        query : function(){
+            this.showResult = true;
             var _self = this;
-            _self.queryParam.condition = _self.formInline;
-            this.$http.post("/bankInfo/list", _self.queryParam).then(
+            this.queryParam.condition = this.formInline;
+            this.$http.post("/bankInfo/list", this.queryParam).then(
                 function(response) {
                     _self.pageInfo = response.data;
                 }, function(error) {
@@ -61,10 +65,12 @@ var vue = new Vue({
          */
         addBank : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
                 bankFullName : "",
                 bankShortName : "",
-                bankAccount : ""
+                bankAccount : "",
+                amount:0.00
             };
         },
         /**
@@ -160,6 +166,7 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             })
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存
@@ -175,10 +182,6 @@ var vue = new Vue({
          */
         reset: function () {
             this.$refs['searchForm'].resetFields();
-        },
-        /** 分页 */
-        pageChange : function(page){
-            this.query();
         }
     }
 });
@@ -196,6 +199,10 @@ vue.tableColumns=[
         title: '银行账号',
         key: 'bankAccount',
         align: 'left'
+    },{
+        title: '银行余额',
+        key: 'amount',
+        align: 'center'
     },{
         title: '操作',
             align: 'center',

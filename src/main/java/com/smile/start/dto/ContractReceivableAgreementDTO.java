@@ -1,6 +1,7 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Joseph
@@ -24,6 +25,11 @@ public class ContractReceivableAgreementDTO implements Serializable {
      * 合同流水
      */
     private String contractSerialNo;
+
+    /**
+     * 协议编号
+     */
+    private String protocolCode;
 
     /**
      * 乙方名称
@@ -61,9 +67,9 @@ public class ContractReceivableAgreementDTO implements Serializable {
     private String spFax;
 
     /**
-     * 合同签署日期
+     * 签署日期
      */
-    private String contractSignDate;
+    private Date signDate;
 
     public Long getId() {
         return id;
@@ -87,6 +93,14 @@ public class ContractReceivableAgreementDTO implements Serializable {
 
     public void setContractSerialNo(String contractSerialNo) {
         this.contractSerialNo = contractSerialNo;
+    }
+
+    public String getProtocolCode() {
+        return protocolCode;
+    }
+
+    public void setProtocolCode(String protocolCode) {
+        this.protocolCode = protocolCode;
     }
 
     public String getSpName() {
@@ -145,11 +159,11 @@ public class ContractReceivableAgreementDTO implements Serializable {
         this.spFax = spFax;
     }
 
-    public String getContractSignDate() {
-        return contractSignDate;
+    public Date getSignDate() {
+        return signDate;
     }
 
-    public void setContractSignDate(String contractSignDate) {
-        this.contractSignDate = contractSignDate;
+    public void setSignDate(Date signDate) {
+        this.signDate = signDate;
     }
 }

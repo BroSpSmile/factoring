@@ -31,7 +31,7 @@
 			</card>
 
 			<!-- 新增角色 -->
-			<modal v-model="modal1" title="新增角色"  mask-closable="false">
+			<modal v-model="modal1" title="新增角色" :mask-closable="false">
 				<div id="modalForm">
 					<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 						<form-item label="角色编号" prop="roleCode">

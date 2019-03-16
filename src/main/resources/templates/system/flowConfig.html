@@ -36,7 +36,7 @@
 		</card>
 
 		<!-- 新增流程配置 -->
-		<modal v-model="modal1" title="新增流程配置"  mask-closable="false">
+		<modal v-model="modal1" title="新增流程配置" :mask-closable="false">
 			<div id="modalForm">
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 					<form-item label="流程类型" prop="flowType">

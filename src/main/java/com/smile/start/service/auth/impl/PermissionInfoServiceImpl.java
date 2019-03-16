@@ -1,5 +1,7 @@
 package com.smile.start.service.auth.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
@@ -32,10 +34,10 @@ import javax.annotation.Resource;
 public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Resource
-    private PermissionDao permissionDao;
+    private PermissionDao        permissionDao;
 
     @Resource
-    private RoleDao roleDao;
+    private RoleDao              roleDao;
 
     @Resource
     private PermissionInfoMapper permissionInfoMapper;
@@ -56,13 +58,15 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      * @return
      */
     @Override
-    public PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> page) {
-        final PageInfo<AuthPermissionInfoDTO> result = new PageInfo<>();
-        final List<Permission> permissionList = permissionDao.findByParam(page.getCondition());
-        result.setTotal(permissionList.size());
-        result.setPageSize(10);
-        result.setList(permissionInfoMapper.doList2dtoList(permissionList));
-        return result;
+    public PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<Permission> permissionList = permissionDao.findByParam(pageRequest.getCondition());
+        PageInfo<AuthPermissionInfoDTO> pageInfo = new PageInfo<>(permissionInfoMapper.doList2dtoList(permissionList));
+        Page<Permission> page = (Page<Permission>) permissionList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**
@@ -81,7 +85,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         permission.setCreateUser(loginUser.getSerialNo());
         permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
         permission.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        if(permission.getParentSerialNo() == null) {
+        if (permission.getParentSerialNo() == null) {
             permission.setParentSerialNo("");
         }
         return permissionDao.insert(permission);
@@ -125,6 +129,17 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     /**
+     * 查询指定用户顶级权限信息
+     * @param userSerialNo
+     * @return
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findParentByUserSerialNo(String userSerialNo) {
+        final List<Permission> permissionList = permissionDao.findParentByUserSerialNo(userSerialNo);
+        return permissionInfoMapper.doList2dtoList(permissionList);
+    }
+
+    /**
      * 获取权限树
      * @param roleSerialNo
      * @return
@@ -151,19 +166,29 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     /**
+     * 根据父级权限编号查询权限
+     * @param parentSerialNo
+     * @return
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findByParentSerialNo(String parentSerialNo) {
+        return permissionInfoMapper.doList2dtoList(permissionDao.findByParentSerialNo(parentSerialNo));
+    }
+
+    /**
      * 递归获取组装树信息
      * @param parentTree
      * @return
      */
     private Tree getTree(Tree parentTree, List<String> checkedPermission) {
         final List<Permission> permissionList = permissionDao.findByParentSerialNo(parentTree.getSerialNo());
-        if(!CollectionUtils.isEmpty(permissionList)) {
+        if (!CollectionUtils.isEmpty(permissionList)) {
             List<Tree> children = Lists.newArrayList();
             permissionList.forEach(e -> {
                 Tree tree = new Tree();
                 tree.setTitle(e.getPermissionName());
                 tree.setSerialNo(e.getSerialNo());
-                if(checkedPermission.contains(e.getSerialNo())) {
+                if (checkedPermission.contains(e.getSerialNo())) {
                     tree.setChecked(true);
                 }
                 children.add(getTree(tree, checkedPermission));

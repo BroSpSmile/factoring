@@ -18,7 +18,7 @@ var vue = new Vue({
 		meetings:[],
 		ruleValidate: {
 			projectId: [
-            	{ required: true,  message: '项目不能为空'}
+            	{ required: true,  message: '项目不能为空',trigger: 'blur'}
             ],
 			meetingIds: [
                 { required: true, type: 'array', min: 1, message: '请选择三重一大会议', trigger: 'change' }
@@ -90,8 +90,24 @@ var vue = new Vue({
 					});
 				}
 			});
-			
-			
+		},
+		
+		skip:function(){
+			let _self = this;
+			this.$http.post("/past/"+_self.projectMeeting.projectId).then(function(response){
+				if (response.data.success) {
+					_self.$Message.info({
+						content : "保存成功",
+						onClose : function() {
+							window.close();
+						}
+					});
+				} else {
+					_self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				_self.$Message.error(error.data.message);
+			})
 		},
 		
 		/**

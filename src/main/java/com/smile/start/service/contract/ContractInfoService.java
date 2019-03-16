@@ -38,14 +38,14 @@ public interface ContractInfoService {
      * @param contractInfoDTO
      * @return
      */
-    Long insert(ContractInfoDTO contractInfoDTO);
+    Long insert(ContractInfoDTO contractInfoDTO) throws Exception;
 
     /**
      * 修改合同基本信息
      * @param contractInfoDTO
      * @return
      */
-    void update(ContractInfoDTO contractInfoDTO);
+    void update(ContractInfoDTO contractInfoDTO) throws Exception;
 
     /**
      * 删除合同信息

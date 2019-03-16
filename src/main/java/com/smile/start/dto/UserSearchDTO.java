@@ -13,6 +13,7 @@ public class UserSearchDTO implements Serializable {
     private String username;
     private String mobile;
     private Integer status;
+    private String organizational;
 
     public String getUsername() {
         return username;
@@ -38,12 +39,21 @@ public class UserSearchDTO implements Serializable {
         this.status = status;
     }
 
+    public String getOrganizational() {
+        return organizational;
+    }
+
+    public void setOrganizational(String organizational) {
+        this.organizational = organizational;
+    }
+
     @Override
     public String toString() {
         return "UserSearchDTO{" +
                 "username='" + username + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", status=" + status +
+                ", organizational='" + organizational + '\'' +
                 '}';
     }
 }

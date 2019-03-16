@@ -34,7 +34,7 @@
 		</card>
 
 		<!-- 新增签署清单 -->
-		<modal v-model="modal1" title="新增签署清单"  mask-closable="false">
+		<modal v-model="modal1" title="新增签署清单" :mask-closable="false">
 			<div id="modalForm">
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 					<form-item label="项目模式" prop="projectMode">
@@ -63,6 +63,6 @@
 			</div>
 		</modal>
 	</div>
-	<script src="js/contract/signListTemplate.js"></script>
+	<script src="js/system/signListTemplate.js"></script>
 </div>
 </html>

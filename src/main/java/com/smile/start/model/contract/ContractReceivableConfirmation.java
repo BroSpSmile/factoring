@@ -2,6 +2,7 @@ package com.smile.start.model.contract;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 合同应收账款转让登记协议
@@ -28,6 +29,11 @@ public class ContractReceivableConfirmation implements Serializable {
     private String contractSerialNo;
 
     /**
+     * 确认函编号
+     */
+    private String confirmationCode;
+
+    /**
      * 让与人
      */
     private String assignor;
@@ -35,7 +41,7 @@ public class ContractReceivableConfirmation implements Serializable {
     /**
      * 签署日期
      */
-    private String signDate;
+    private Date signDate;
 
     /**
      * 债务人
@@ -141,6 +147,14 @@ public class ContractReceivableConfirmation implements Serializable {
         this.contractSerialNo = contractSerialNo;
     }
 
+    public String getConfirmationCode() {
+        return confirmationCode;
+    }
+
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
+    }
+
     public String getAssignor() {
         return assignor;
     }
@@ -149,11 +163,11 @@ public class ContractReceivableConfirmation implements Serializable {
         this.assignor = assignor;
     }
 
-    public String getSignDate() {
+    public Date getSignDate() {
         return signDate;
     }
 
-    public void setSignDate(String signDate) {
+    public void setSignDate(Date signDate) {
         this.signDate = signDate;
     }
 

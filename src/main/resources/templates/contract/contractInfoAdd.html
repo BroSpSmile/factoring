@@ -5,7 +5,7 @@
 	<div layout:fragment="content">
 		<div id="contractInfoAdd">
 			<card dis-hover title="新增合同" style="width:100%">
-				<i-form ref="entityDataForm" :model="addForm" :label-width="150">
+				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="150">
 					<template>
 						<Collapse v-model="panelOpen" accordion>
 							<Panel name="0">
@@ -13,17 +13,17 @@
 								<div slot="content">
 									<row>
 										<i-col span="8">
-											<form-item label="项目编号:">
+											<form-item label="项目编号">
 												<span>{{project.projectId}}</span>
 											</form-item>
 										</i-col>
 										<i-col span="12" >
-											<form-item label="项目名称:">
+											<form-item label="项目名称">
 												<span>{{project.projectName}}</span>
 											</form-item>
 										</i-col>
 										<i-col span="8" >
-											<form-item label="项目模式:">
+											<form-item label="项目模式">
 												<span v-if="project.model == 'RECOURSE_RIGHT'">有追索权模式</span>
 												<span v-if="project.model == 'DIS_RECOURSE_RIGHT'">无追索权模式</span>
 											</form-item>
@@ -68,7 +68,7 @@
 											<i-input placeholder="请输入债务人" v-model="addForm.contractExtendInfo.obligor"></i-input>
 										</form-item>
 										<form-item label="签署日期" prop="contractExtendInfo.signDate">
-											<i-input placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate"></i-input>
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 										<form-item label="合同名称" prop="contractExtendInfo.contractName">
 											<i-input placeholder="请输入合同名称" v-model="addForm.contractExtendInfo.contractName"></i-input>
@@ -145,7 +145,7 @@
 											<i-input placeholder="请输入让与人" v-model="addForm.contractReceivableConfirmation.assignor"></i-input>
 										</form-item>
 										<form-item label="签署日期" prop="contractReceivableConfirmation.signDate">
-											<i-input placeholder="请输入签署日期" v-model="addForm.contractReceivableConfirmation.signDate"></i-input>
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableConfirmation.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 										<form-item label="债务人" prop="contractReceivableConfirmation.obligor">
 											<i-input placeholder="请输入债务人" v-model="addForm.contractReceivableConfirmation.obligor"></i-input>
@@ -241,8 +241,8 @@
 										<form-item label="传真" prop="contractReceivableAgreement.spFax">
 											<i-input placeholder="请输入乙方传真" v-model="addForm.contractReceivableAgreement.spFax"></i-input>
 										</form-item>
-										<form-item label="合同签署日期" prop="contractReceivableAgreement.contractSignDate">
-											<i-input placeholder="请输入合同签署日期" v-model="addForm.contractReceivableAgreement.contractSignDate"></i-input>
+										<form-item label="签署日期" prop="contractReceivableAgreement.signDate">
+											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableAgreement.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 								</div>
@@ -252,11 +252,10 @@
 								<div slot="content">
 									<row>
 										<i-col offset="1">
-											<form-item label="已添加合同附件文件" >
-												<Tag v-for="item in addForm.attachList" closable  @on-close="deleteFile(item.fileId)">
-													{{item.attachName}}
-												</Tag>
-											</form-item>
+											已添加合同附件文件
+											<Tag v-for="item in addForm.attachList" v-if="item.attachType == 2" closable  @on-close="deleteFile(item.fileId)">
+												{{item.attachName}}
+											</Tag>
 										</i-col>
 									</row>
 									<row>
@@ -278,15 +277,15 @@
 										<i-col span="1">
 											{{ index + 1 }}
 										</i-col>
-										<i-col span="3">
+										<i-col span="6">
 											<span v-if="item.type != 'add'">{{ item.signListName }}</span>
 											<i-input v-if="item.type == 'add'" placeholder="请输入签署清单名称" class="inputw" v-model="item.signListName"></i-input>
 										</i-col>
 										<i-col span="1" offset="1">
 											<Icon v-if="item.isRequired == 2" @click="handleRemove(index)" type="ios-remove-circle" style="color:#ed4014;cursor:pointer" size="20" />
-											<!--<i-button v-if="item.isRequired == 2" @click="handleRemove(index)" style="margin-left: 8px">删除</i-button>-->
 										</i-col>
 									</row>
+									<br/>
 									<row>
 										<i-col span="4">
 											<i-button type="dashed" @click="handleAdd" icon="md-add">添加清单</i-button>

@@ -34,7 +34,7 @@
 		</card>
 
 		<!-- 新增银行信息 -->
-		<modal v-model="modal1" title="新增银行信息"  mask-closable="false">
+		<modal v-model="modal1" title="新增银行信息" :mask-closable="false">
 			<div id="modalForm">
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 					<form-item label="银行全称" prop="bankFullName">
@@ -45,6 +45,10 @@
 					</form-item>
 					<form-item label="银行账号" prop="bankAccount">
 						<i-input placeholder="输入银行账号" v-model="addForm.bankAccount"></i-input>
+					</form-item>
+					<form-item label="银行余额" prop="amount">
+						<input-number placeholder="输入银行余额" :max="100000000000"  :min="0" class="select-width-180"   v-model="addForm.amount">
+											</input-number>&nbsp;元
 					</form-item>
 				</i-form>
 			</div>

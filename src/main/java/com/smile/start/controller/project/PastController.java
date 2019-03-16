@@ -24,10 +24,12 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.MeetingKind;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.project.Past;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.project.PastService;
 import com.smile.start.service.project.ProjectService;
@@ -48,6 +50,10 @@ public class PastController extends BaseController {
     /** 会议服务 */
     @Resource
     private MeetingService meetingService;
+
+    /** 流程引擎 */
+    @Resource
+    private ProcessEngine  processEngine;
 
     /** pastService */
     @Resource
@@ -72,9 +78,23 @@ public class PastController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult Saved(@RequestBody Past past) {
+    public BaseResult saved(@RequestBody Past past) {
         LoggerUtils.info(logger, "请求参数={}", FastJsonUtils.toJSONString(past));
         return pastService.save(past);
+    }
+
+    /**
+     * 跳过三重一大
+     * @param id
+     * @return
+     */
+    @PostMapping("/{id}")
+    @ResponseBody
+    public BaseResult skip(@PathVariable Long id) {
+        Project project = new Project();
+        project.setId(id);
+        project.setStep(Step.MEETING.getIndex());
+        return processEngine.skip(project);
     }
 
     /**

@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.smile.start.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -14,10 +17,6 @@ import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.FlowConfigDao;
-import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowConfigSearchDTO;
-import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.FlowConfigMapper;
 import com.smile.start.model.base.PageRequest;
@@ -89,13 +88,15 @@ public class FlowConfigServiceImpl implements FlowConfigService {
      * @return
      */
     @Override
-    public PageInfo<FlowConfigDTO> findAll(PageRequest<FlowConfigSearchDTO> page) {
-        final PageInfo<FlowConfigDTO> result = new PageInfo<>();
-        final List<FlowConfig> doList = flowConfigDao.findByParam(page.getCondition());
-        result.setTotal(doList.size());
-        result.setPageSize(10);
-        result.setList(flowConfigMapper.doList2dtoListConfig(doList));
-        return result;
+    public PageInfo<FlowConfigDTO> findAll(PageRequest<FlowConfigSearchDTO> pageRequest) {
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        final List<FlowConfig> flowList = flowConfigDao.findByParam(pageRequest.getCondition());
+        PageInfo<FlowConfigDTO> pageInfo = new PageInfo<>(flowConfigMapper.doList2dtoListConfig(flowList));
+        Page<FlowConfig> page = (Page<FlowConfig>) flowList;
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPageNum(pageRequest.getPageNum());
+        pageInfo.setPageSize(pageRequest.getPageSize());
+        return pageInfo;
     }
 
     /**

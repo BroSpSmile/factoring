@@ -4,6 +4,8 @@
  */
 package com.smile.start.service.finance;
 
+import com.smile.start.model.project.Installment;
+
 /**
  * 财务操作
  * @author Jacky
@@ -11,4 +13,10 @@ package com.smile.start.service.finance;
  */
 public interface FinanceService {
 
+    /**
+     * 保存放款信息
+     * @param installment
+     * @return
+     */
+    Long saveLoanInstallment(Installment installment);
 }

@@ -24,6 +24,23 @@ var vue = new Vue({
             attachList : [],
             projectMode : 1
         },
+        ruleValidate: {
+            'contractExtendInfo.receivableAssigneeMoney' : [
+                { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoney' : [
+                { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.contractReceivable' : [
+                { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignorAbligorReceivable' : [
+                { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoneyPaid' : [
+                { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ]
+        },
         pageInfo:{},
         tableColumns:[],
         project : {},
@@ -82,43 +99,49 @@ var vue = new Vue({
             let self = this;
             this.genFileInfo();
             this.isDisable = true;
-            if(this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === ""){
-                this.$http.post("/contractInfo", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
+            this.$refs.addForm.validate((valid) => {
+                if(valid) {
+                    if (this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === "") {
+                        this.$http.post("/contractInfo", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "保存成功",
+                                    onClose: function () {
+                                        self.isDisable = false;
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
                                 self.isDisable = false;
-                                self.cancel();
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.isDisable = false;
+                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        self.isDisable = false;
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.isDisable = false;
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/contractInfo", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
+                        this.$http.put("/contractInfo", this.addForm).then(function (response) {
+                            if (response.data.success) {
+                                self.$Message.info({
+                                    content: "更新成功",
+                                    onClose: function () {
+                                        self.isDisable = false;
+                                        self.cancel();
+                                    }
+                                });
+                            } else {
                                 self.isDisable = false;
-                                self.cancel();
+                                self.$Message.error(response.data.errorMessage);
                             }
+                        }, function (error) {
+                            self.isDisable = false;
+                            self.$Message.error(error.data.message);
                         });
-                    } else {
-                        self.isDisable = false;
-                        self.$Message.error(response.data.errorMessage);
                     }
-                }, function(error) {
-                    self.isDisable = false;
-                    self.$Message.error(error.data.message);
-                });
-            }
+                } else {
+                    this.isDisable = false;
+                }
+            });
         },
         /**
          * 提交审核警告
@@ -144,6 +167,7 @@ var vue = new Vue({
                     self.$Message.info({
                         content : "提交审核成功",
                         onClose : function() {
+                            self.isDisable = true;
                             self.cancel();
                         }
                     });

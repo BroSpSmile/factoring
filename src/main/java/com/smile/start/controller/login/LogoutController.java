@@ -48,6 +48,7 @@ public class LogoutController extends BaseController {
                 }
             }
         }
+        request.getSession().setAttribute(Constants.LOGIN_USER_SESSION_KEY, null);
         return "login";
     }
 }

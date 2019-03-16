@@ -27,7 +27,8 @@ var vue = new Vue({
 		modal1 : false,
 		statusItems : [],
 		models:[],
-		steps:[]
+		steps:[],
+		indexsteps:[]
 	},
 	created : function() {
 		this.initDate();
@@ -54,6 +55,11 @@ var vue = new Vue({
 			}, function(error) {
 				console.error(error);
 			});
+			this.$http.get("/combo/indexsteps").then(function(response) {
+				_self.indexsteps = response.data;
+			}, function(error) {
+				console.error(error);
+			});
 		},
 		
 		/**
@@ -77,6 +83,22 @@ var vue = new Vue({
 					return this.steps[index].text;
 				}
 			}
+			return "";
+		},
+		
+		/**
+		 * 翻译
+		 */
+		toIndexStepName:function(value){
+			for(let index in this.indexsteps){
+				if(this.indexsteps[index].value == value+""){
+					return this.indexsteps[index].text;
+				}
+			}
+			if(value==-1){
+				return "项目创建";
+			}
+
 			return "";
 		},
 		
@@ -225,6 +247,7 @@ var vue = new Vue({
 				self.$Message.error(error.data.errorMessage);
 			})
 		},
+		
 		
 		/**
 		 * 跳转菜单
@@ -402,7 +425,7 @@ vue.tableColumns=[{
         	return h('span',vue.toModelName(param.row.model))
         }
     },{
-        title: '应收账款受让款(万元)',
+        title: '受让款(万元)',
         key: 'projectName',
         align: 'center',
         width:80,
@@ -418,7 +441,7 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.receivable)
         }
     },{
-        title: '转让期限年',
+        title: '年限',
         key: 'projectName',
         align: 'center',
         width:60,
@@ -426,19 +449,18 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.duration)
         }
     },{
-        title: '项目负责人',
+        title: '负责人',
         key: 'user',
         align: 'center',
-        width:90,
         render:(h,param)=>{
         	return h('span',param.row.user.username)
         }
     },{
-        title: '当前进度',
+        title: '进度',
         key: 'progress',
         align: 'center',
         render:(h,param)=>{
-        	return h('span',vue.getProgress(param.row.progress));
+        	return h('span',vue.toIndexStepName(param.row.step));
         }
     },{
     	title: '操作',
@@ -495,13 +517,13 @@ vue.tableColumns=[{
 					]),
 					h('DropdownMenu',{slot:'list'},[
 						h('DropdownItem',{props:{name:'factoring'}},'编辑'),
-						param.row.progress=='INIT'?h('DropdownItem',{props:{name:'meeting'}},'立项会'):h('span'),
-						param.row.progress=='APPROVAL'?h('DropdownItem',{props:{name:'apply'}},'尽调'):h('span'),
-						param.row.progress=='INVESTIGATION'||param.row.progress=='LATERMEETING'?h('DropdownItem',{props:{name:'past'}},'三重一大'):h('span'),
-						param.row.progress=='PASTMEETING'?h('DropdownItem',{props:{name:'contractInfo'}},'合同拟定'):h('span'),
-						param.row.progress=='DRAWUP'?h('DropdownItem',{props:{name:'contractSign'}},'签署'):h('span'),
-						param.row.progress=='SIGN'?h('DropdownItem',{props:{name:'loanApply'}},'放款'):h('span'),
-						param.row.progress=='LOAN'?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
+						param.row.step==-1||param.row.step==0?h('DropdownItem',{props:{name:'meeting'}},'立项会'):h('span'),
+						param.row.step==1?h('DropdownItem',{props:{name:'apply'}},'尽调'):h('span'),
+						param.row.step==3?h('DropdownItem',{props:{name:'past'}},'三重一大'):h('span'),
+						param.row.step==4?h('DropdownItem',{props:{name:'contractInfo'}},'合同拟定'):h('span'),
+						param.row.step==6?h('DropdownItem',{props:{name:'contractSign'}},'签署'):h('span'),
+						param.row.step==7?h('DropdownItem',{props:{name:'loanApply'}},'放款'):h('span'),
+						param.row.step==9?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
 					])
 				])
 			])
