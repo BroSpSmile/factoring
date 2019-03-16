@@ -42,7 +42,7 @@
 		</card>
 
 		<!-- 新增用户 -->
-		<modal v-model="modal1" title="新增用户"  mask-closable="false">
+		<modal v-model="modal1" :mask-closable="false" title="新增用户">
 			<div id="modalForm">
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
 					<form-item label="用户名称" prop="username">
