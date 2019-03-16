@@ -111,6 +111,10 @@ public class RoleInfoServiceImpl implements RoleInfoService {
      */
     @Override
     public void update(AuthRoleInfoDTO authRoleInfoDTO) {
+        final Role oldRole = roleDao.findByRoleCode(authRoleInfoDTO.getRoleCode());
+        if(oldRole != null) {
+            Asserts.notTrue(authRoleInfoDTO.getId().equals(oldRole.getId()), "指定角色编号已经存在");
+        }
         final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);
         role.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
