@@ -31,9 +31,6 @@ var vue = new Vue({
             ],
             permissionType: [
                 { required: true, message: '权限类型不能为空', trigger: 'change', type:'number'}
-            ],
-            url: [
-                { required: true, message: '菜单路径不能为空', trigger: 'blur' }
             ]
         },
         pageInfo:{},
@@ -83,6 +80,7 @@ var vue = new Vue({
          */
         addPermission : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
             this.getMenuList();
@@ -187,6 +185,7 @@ var vue = new Vue({
         updatePermission : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
             this.getMenuList();
         },
         changePermissionType : function(value) {
@@ -222,7 +221,7 @@ vue.tableColumns=[
     },{
         title: '权限名称',
         key: 'permissionName',
-        align: 'center'
+        align: 'left'
     },{
         title: '权限类型',
         key: 'permissionType',

@@ -60,6 +60,7 @@ var vue = new Vue({
          */
         addOrganizational : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
             this.getOrganizationalList();
@@ -164,6 +165,7 @@ var vue = new Vue({
         updateOrganizational : function(organizational){
             this.addForm = organizational;
             this.modal1 = true;
+            this.isDisable = false;
             this.getOrganizationalList();
         },
         /**

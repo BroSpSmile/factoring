@@ -476,7 +476,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 project.setProgress(Progress.DRAWUP);
                 projectService.turnover(project);
 
-                project.setStep(Step.SIGN.getIndex());
+                project.setStep(Step.DRAWUP_AUDIT.getIndex());
                 processEngine.next(project, false);
             } else {
                 //状态流转到下一级
@@ -558,7 +558,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfoDao.update(contractInfo);
 
             Project project = projectService.getProject(contractInfo.getProjectId());
-            project.setStep(Step.LOAN.getIndex());
+            project.setStep(Step.SIGN.getIndex());
             processEngine.next(project, false);
         }
     }

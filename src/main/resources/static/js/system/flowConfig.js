@@ -58,6 +58,7 @@ var vue = new Vue({
          */
         addFlow : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
                 flowName : "",
             	statusList:[]
@@ -173,6 +174,7 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             })
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存

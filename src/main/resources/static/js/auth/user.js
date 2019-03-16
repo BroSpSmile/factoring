@@ -119,6 +119,7 @@ var vue = new Vue({
          */
         addUser : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
         },
@@ -206,6 +207,7 @@ var vue = new Vue({
         updateUser : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存

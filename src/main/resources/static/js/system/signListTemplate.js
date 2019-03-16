@@ -57,6 +57,7 @@ var vue = new Vue({
          */
         addSign : function() {
             this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
                 projectMode : 1,
                 isRequired : 1
@@ -143,6 +144,7 @@ var vue = new Vue({
         updateSign : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 取消保存

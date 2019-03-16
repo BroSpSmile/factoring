@@ -68,6 +68,7 @@ var vue = new Vue({
 		 */
 		addRole : function() {
 			this.modal1 = true;
+            this.isDisable = false;
             this.addForm = {
             };
 		},
@@ -155,6 +156,7 @@ var vue = new Vue({
         updateRole : function(user){
             this.addForm = user;
             this.modal1 = true;
+            this.isDisable = false;
         },
         /**
          * 权限配置
@@ -234,7 +236,7 @@ vue.tableColumns=[
     },{
         title: '角色名称',
         key: 'roleName',
-        align: 'center'
+        align: 'left'
     },{
         title: '描述',
         key: 'roleDesc',
