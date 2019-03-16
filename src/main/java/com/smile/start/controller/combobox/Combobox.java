@@ -148,4 +148,16 @@ public class Combobox extends BaseController {
         Stream.of(enums).forEach(e -> items.add(new Item(e.name(), e.getName())));
         return items;
     }
+
+    /**
+     * 
+     * @return
+     */
+    @RequestMapping("/indexsteps")
+    public List<Item> getStepValue() {
+        Step[] enums = Step.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(String.valueOf(e.getIndex()), e.getName())));
+        return items;
+    }
 }

@@ -56,13 +56,13 @@
 					<br>
 					<p v-for="meeting in pageInfo.list">
 						<card dis-hover :title="meeting.theme"  padding="20">
-							<span slot="extra">预定人 : {{meeting.originator.username}}</span>
+							<span slot="extra">预定人 : {{meeting.originator?meeting.originator.username:''}}</span>
 							会议类型 : {{meeting.kind|kindFilter}}<br>
 							会议地点 : {{meeting.place}}<br>
 							会议时间 : {{meeting.beginTime|timeFilter}}~{{meeting.endTime|timeFilter}}<br>
 							会议状态 : {{meeting.status|statusFilter}}<br>
 							会议内容 : {{meeting.content}}<br>
-							参会人员 : <span v-for="participant in meeting.participant">{{participant.username}} &nbsp;</span>
+							参会人员 : <span v-for="participant in meeting.participant">{{participant?participant.username:''}} &nbsp;</span>
 							<Divider size="small"></Divider>
 							<span v-if="meeting.status=='PLAN'">
 								<i-button type="warning" size="small" ghost @click="edit(meeting)">编辑</i-button>&nbsp;&nbsp;

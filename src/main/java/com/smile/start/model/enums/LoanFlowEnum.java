@@ -20,7 +20,7 @@ public enum LoanFlowEnum {
                           DEPARTMENT_AUDIT(1, "部门负责人审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_AUDIT;
+                                  return CHARGE_AUDIT;
                               }
 
                               @Override
@@ -28,10 +28,10 @@ public enum LoanFlowEnum {
                                   return APPLY;
                               }
                           },
-                          FORENSIC_AUDIT(2, "法务审核") {
+                          CHARGE_AUDIT(2, "债权负责人审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_AUDIT;
+                                  return FORENSIC_AUDIT;
                               }
 
                               @Override
@@ -39,7 +39,18 @@ public enum LoanFlowEnum {
                                   return DEPARTMENT_AUDIT;
                               }
                           },
-                          FINANCIAL_AUDIT(3, "财务审核") {
+                          FORENSIC_AUDIT(3, "法务审核") {
+                              @Override
+                              public LoanFlowEnum getNextStatus() {
+                                  return FINANCIAL_AUDIT;
+                              }
+
+                              @Override
+                              public LoanFlowEnum getDefaultRejectStatus() {
+                                  return CHARGE_AUDIT;
+                              }
+                          },
+                          FINANCIAL_AUDIT(4, "财务审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return FINANCIAL_MAIN_AUDIT;
@@ -50,7 +61,7 @@ public enum LoanFlowEnum {
                                   return FORENSIC_AUDIT;
                               }
                           },
-                          FINANCIAL_MAIN_AUDIT(4, "财务负责人审核") {
+                          FINANCIAL_MAIN_AUDIT(5, "财务负责人审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return VP_AUDIT;
@@ -61,7 +72,7 @@ public enum LoanFlowEnum {
                                   return FINANCIAL_AUDIT;
                               }
                           },
-                          VP_AUDIT(5, "集团副总审核") {
+                          VP_AUDIT(6, "集团副总审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return CEO_AUDIT;
@@ -72,18 +83,7 @@ public enum LoanFlowEnum {
                                   return FINANCIAL_MAIN_AUDIT;
                               }
                           },
-                          CEO_AUDIT(6, "集团正总审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return LOAN;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return VP_AUDIT;
-                              }
-                          },
-                          LOAN(7, "财务放款") {
+                          CEO_AUDIT(7, "集团正总审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return null;
@@ -91,7 +91,7 @@ public enum LoanFlowEnum {
 
                               @Override
                               public LoanFlowEnum getDefaultRejectStatus() {
-                                  return CEO_AUDIT;
+                                  return VP_AUDIT;
                               }
                           };
 
