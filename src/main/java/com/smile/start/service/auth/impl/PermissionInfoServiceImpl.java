@@ -9,7 +9,6 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.PermissionDao;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
@@ -35,10 +34,10 @@ import javax.annotation.Resource;
 public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Resource
-    private PermissionDao permissionDao;
+    private PermissionDao        permissionDao;
 
     @Resource
-    private RoleDao roleDao;
+    private RoleDao              roleDao;
 
     @Resource
     private PermissionInfoMapper permissionInfoMapper;
@@ -63,7 +62,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<Permission> permissionList = permissionDao.findByParam(pageRequest.getCondition());
         PageInfo<AuthPermissionInfoDTO> pageInfo = new PageInfo<>(permissionInfoMapper.doList2dtoList(permissionList));
-        Page page = (Page) permissionList;
+        Page<Permission> page = (Page<Permission>) permissionList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());
@@ -86,7 +85,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         permission.setCreateUser(loginUser.getSerialNo());
         permission.setSerialNo(SerialNoGenerator.generateSerialNo("P", 7));
         permission.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        if(permission.getParentSerialNo() == null) {
+        if (permission.getParentSerialNo() == null) {
             permission.setParentSerialNo("");
         }
         return permissionDao.insert(permission);
@@ -162,13 +161,13 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
      */
     private Tree getTree(Tree parentTree, List<String> checkedPermission) {
         final List<Permission> permissionList = permissionDao.findByParentSerialNo(parentTree.getSerialNo());
-        if(!CollectionUtils.isEmpty(permissionList)) {
+        if (!CollectionUtils.isEmpty(permissionList)) {
             List<Tree> children = Lists.newArrayList();
             permissionList.forEach(e -> {
                 Tree tree = new Tree();
                 tree.setTitle(e.getPermissionName());
                 tree.setSerialNo(e.getSerialNo());
-                if(checkedPermission.contains(e.getSerialNo())) {
+                if (checkedPermission.contains(e.getSerialNo())) {
                     tree.setChecked(true);
                 }
                 children.add(getTree(tree, checkedPermission));

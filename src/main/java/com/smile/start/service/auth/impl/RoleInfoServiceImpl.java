@@ -8,7 +8,6 @@ import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.RoleDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.RoleSearchDTO;
 import com.smile.start.mapper.RoleInfoMapper;
 import com.smile.start.model.auth.*;
@@ -67,7 +66,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<Role> roleList = roleDao.findByParam(pageRequest.getCondition());
         PageInfo<AuthRoleInfoDTO> pageInfo = new PageInfo<>(roleInfoMapper.doList2dtoList(roleList));
-        Page page = (Page) roleList;
+        Page<Role> page = (Page<Role>) roleList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());

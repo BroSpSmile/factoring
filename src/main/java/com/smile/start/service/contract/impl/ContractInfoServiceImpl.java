@@ -170,7 +170,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<ContractInfo> contractList = contractInfoDao.findByParam(pageRequest.getCondition());
         PageInfo<ContractBaseInfoDTO> pageInfo = new PageInfo<>(contractInfoMapper.doList2dtoListBase(contractList));
-        Page page = (Page) contractList;
+        Page<ContractInfo> page = (Page<ContractInfo>) contractList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());
@@ -228,8 +228,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //生成标准合同文件
         try {
             String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-            File file = DocUtil.createDoc(fileName,
-                    "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
             upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
@@ -281,7 +280,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(ContractInfoDTO contractInfoDTO) throws Exception{
+    public void update(ContractInfoDTO contractInfoDTO) throws Exception {
         final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
@@ -305,9 +304,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
 
         //更新附件信息，先批量删除再插入
-        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(),
-                ProjectItemType.CONTRACT);
-        if(!CollectionUtils.isEmpty(typeItems)) {
+        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.CONTRACT);
+        if (!CollectionUtils.isEmpty(typeItems)) {
             typeItems.forEach(e -> projectItemDao.delete(e));
         }
         insertAttachList(contractInfoDTO);
@@ -315,8 +313,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //生成标准合同文件
         try {
             String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
-            File file = DocUtil.createDoc(fileName,
-                    "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
             upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
@@ -349,7 +346,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private void insertAttachList(ContractInfoDTO contractInfoDTO) {
         if (!CollectionUtils.isEmpty(contractInfoDTO.getAttachList())) {
             contractInfoDTO.getAttachList().forEach(e -> {
-                if(e.getAttachType() == ContractAttachTypeEnum.USER_DEFINED.getValue()) {
+                if (e.getAttachType() == ContractAttachTypeEnum.USER_DEFINED.getValue()) {
                     ProjectItem projectItem = new ProjectItem();
                     projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
                     projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
@@ -552,9 +549,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-//        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
-//            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
-//        }
+        //        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+        //            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+        //        }
         if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
             contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());

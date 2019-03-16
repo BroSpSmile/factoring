@@ -7,7 +7,6 @@ import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.BankInfoDao;
 import com.smile.start.dto.BankInfoDTO;
 import com.smile.start.dto.BankInfoSearchDTO;
-import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.mapper.BankInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.BankInfo;
@@ -26,7 +25,7 @@ import java.util.List;
 public class BankInfoServiceImpl implements BankInfoService {
 
     @Resource
-    private BankInfoDao bankInfoDao;
+    private BankInfoDao    bankInfoDao;
 
     @Resource
     private BankInfoMapper bankInfoMapper;
@@ -49,7 +48,7 @@ public class BankInfoServiceImpl implements BankInfoService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<BankInfo> bankList = bankInfoDao.findByParam(pageRequest.getCondition());
         PageInfo<BankInfoDTO> pageInfo = new PageInfo<>(bankInfoMapper.doList2dtoList(bankList));
-        Page page = (Page) bankList;
+        Page<BankInfo> page = (Page<BankInfo>) bankList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());

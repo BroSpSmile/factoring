@@ -92,7 +92,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<FlowConfig> flowList = flowConfigDao.findByParam(pageRequest.getCondition());
         PageInfo<FlowConfigDTO> pageInfo = new PageInfo<>(flowConfigMapper.doList2dtoListConfig(flowList));
-        Page page = (Page) flowList;
+        Page<FlowConfig> page = (Page<FlowConfig>) flowList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());

@@ -92,7 +92,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             loadOrganizational(e);
         });
         PageInfo<AuthUserInfoDTO> pageInfo = new PageInfo<>(authUserInfoDTOS);
-        Page page = (Page) userList;
+        Page<User> page = (Page<User>) userList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());
@@ -130,7 +130,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional(rollbackFor = Exception.class)
     public Long insert(AuthUserInfoDTO authUserInfoDTO) {
         final User oldUser = userDao.getByMobile(authUserInfoDTO.getMobile());
-        if(oldUser != null) {
+        if (oldUser != null) {
             throw new ValidateException("用户手机号已存在");
         }
         String serialNo = SerialNoGenerator.generateSerialNo("U", 7);
@@ -261,7 +261,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         //获取用户角色信息
         final List<AuthRoleInfoDTO> roleList = roleInfoService.findByUserSerialNo(user.getSerialNo());
-        if(!CollectionUtils.isEmpty(roleList)) {
+        if (!CollectionUtils.isEmpty(roleList)) {
             List<LoginUserRole> userRoleList = Lists.newArrayList();
             roleList.forEach(e -> {
                 LoginUserRole loginUserRole = new LoginUserRole();
@@ -276,7 +276,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         //获取用户权限信息
         final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findByUserSerialNo(user.getSerialNo());
-        if(!CollectionUtils.isEmpty(permissionList)) {
+        if (!CollectionUtils.isEmpty(permissionList)) {
             List<LoginUserPermission> userPermissionList = Lists.newArrayList();
             permissionList.forEach(e -> {
                 LoginUserPermission loginUserPermission = new LoginUserPermission();

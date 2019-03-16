@@ -7,7 +7,6 @@ import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.OrganizationalDao;
-import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.mapper.OrganizationalMapper;
@@ -32,7 +31,7 @@ import javax.annotation.Resource;
 public class OrganizationalServiceImpl implements OrganizationalService {
 
     @Resource
-    private OrganizationalDao organizationalDao;
+    private OrganizationalDao    organizationalDao;
 
     @Resource
     private OrganizationalMapper organizationalMapper;
@@ -59,7 +58,7 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<Organizational> organizationalList = organizationalDao.findByParam(pageRequest.getCondition());
         PageInfo<OrganizationalDTO> pageInfo = new PageInfo<>(organizationalMapper.doList2dtoList(organizationalList));
-        Page page = (Page) organizationalList;
+        Page<Organizational> page = (Page<Organizational>) organizationalList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());
@@ -82,7 +81,7 @@ public class OrganizationalServiceImpl implements OrganizationalService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         organizational.setCreateUser(loginUser.getSerialNo());
         organizational.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        if(organizational.getParentSerialNo() == null) {
+        if (organizational.getParentSerialNo() == null) {
             organizational.setParentSerialNo("");
         }
         return organizationalDao.insert(organizational);

@@ -40,7 +40,7 @@ public class SignListTemplateServiceImpl implements SignListTemplateService {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
         final List<SignListTemplate> signList = signListTemplateDao.findByParam(pageRequest.getCondition());
         PageInfo<SignListTemplateDTO> pageInfo = new PageInfo<>(signListTemplateMapper.doList2dtoList(signList));
-        Page page = (Page) signList;
+        Page<SignListTemplate> page = (Page<SignListTemplate>) signList;
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPageNum(pageRequest.getPageNum());
         pageInfo.setPageSize(pageRequest.getPageSize());
