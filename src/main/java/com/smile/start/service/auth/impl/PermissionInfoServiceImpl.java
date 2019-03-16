@@ -129,6 +129,17 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     /**
+     * 查询指定用户顶级权限信息
+     * @param userSerialNo
+     * @return
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findParentByUserSerialNo(String userSerialNo) {
+        final List<Permission> permissionList = permissionDao.findParentByUserSerialNo(userSerialNo);
+        return permissionInfoMapper.doList2dtoList(permissionList);
+    }
+
+    /**
      * 获取权限树
      * @param roleSerialNo
      * @return
@@ -152,6 +163,16 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     @Override
     public List<AuthPermissionInfoDTO> findByParam(PermissionSearchDTO permissionSearchDTO) {
         return permissionInfoMapper.doList2dtoList(permissionDao.findByParam(permissionSearchDTO));
+    }
+
+    /**
+     * 根据父级权限编号查询权限
+     * @param parentSerialNo
+     * @return
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findByParentSerialNo(String parentSerialNo) {
+        return permissionInfoMapper.doList2dtoList(permissionDao.findByParentSerialNo(parentSerialNo));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.smile.start.model.login;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 登录用户菜单信息
@@ -35,6 +36,11 @@ public class LoginUserPermission implements Serializable {
      * 菜单访问地址
      */
     private String url;
+
+    /**
+     * 下级节点
+     */
+    private List<LoginUserPermission> childrens;
 
     public String getSerialNo() {
         return serialNo;
@@ -76,6 +82,14 @@ public class LoginUserPermission implements Serializable {
         this.url = url;
     }
 
+    public List<LoginUserPermission> getChildrens() {
+        return childrens;
+    }
+
+    public void setChildrens(List<LoginUserPermission> childrens) {
+        this.childrens = childrens;
+    }
+
     @Override
     public String toString() {
         return "LoginUserPermission{" +
@@ -84,6 +98,7 @@ public class LoginUserPermission implements Serializable {
                 ", permissionName='" + permissionName + '\'' +
                 ", permissionType=" + permissionType +
                 ", url='" + url + '\'' +
+                ", childrens=" + childrens +
                 '}';
     }
 }
