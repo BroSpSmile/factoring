@@ -67,6 +67,7 @@ public class FactoringController extends BaseController {
         Project project = projectService.getProjectDetail(id);
         FactoringDetail detail = project.getDetail();
         project.setDetail(null);
+        LoggerUtils.info(logger, "data:{}", FastJsonUtils.toJSONString(detail));
         return detail;
     }
 

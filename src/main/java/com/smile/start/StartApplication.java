@@ -1,5 +1,9 @@
 package com.smile.start;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -17,6 +21,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 @EnableScheduling
 public class StartApplication {
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 
     /**
      * 启动文件
