@@ -222,7 +222,7 @@ vue.tableColumns=[
     },{
         title: '权限名称',
         key: 'permissionName',
-        align: 'center'
+        align: 'left'
     },{
         title: '权限类型',
         key: 'permissionType',

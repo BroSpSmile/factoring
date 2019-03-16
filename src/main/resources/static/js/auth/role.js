@@ -234,7 +234,7 @@ vue.tableColumns=[
     },{
         title: '角色名称',
         key: 'roleName',
-        align: 'center'
+        align: 'left'
     },{
         title: '描述',
         key: 'roleDesc',
