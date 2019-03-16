@@ -20,7 +20,8 @@ public interface BankInfoDao {
      * @param bankInfo
      * @return
      */
-    @Insert("insert into bank_info (serial_no,bank_full_name,bank_short_name,bank_account) values (#{serialNo},#{bankFullName},#{bankShortName},#{bankAccount})")
+    @Insert("insert into bank_info (serial_no,bank_full_name,bank_short_name,bank_account,amount) "
+            + "values (#{serialNo},#{bankFullName},#{bankShortName},#{bankAccount},#{amount})")
     long insert(BankInfo bankInfo);
 
     /**
@@ -28,7 +29,8 @@ public interface BankInfoDao {
      * @param bankInfo
      * @return
      */
-    @Update("update bank_info set bank_full_name=#{bankFullName},bank_short_name=#{bankShortName},bank_account=#{bankAccount} where id=#{id}")
+    @Update("update bank_info set bank_full_name=#{bankFullName},bank_short_name=#{bankShortName},"
+            + "bank_account=#{bankAccount},amount=#{amount} where id=#{id}")
     int update(BankInfo bankInfo);
 
     /**
@@ -38,7 +40,6 @@ public interface BankInfoDao {
      */
     @Select("select * from bank_info where id = #{id}")
     BankInfo get(Long id);
-
 
     /**
      * 查询全部银行信息
@@ -53,11 +54,9 @@ public interface BankInfoDao {
      * @param bankInfoSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from bank_info where 1=1 "
-            + "<if test = 'bankFullName!=null'> and bank_full_name like CONCAT('%',#{bankFullName},'%')</if>"
+    @Select("<script>" + "select * from bank_info where 1=1 " + "<if test = 'bankFullName!=null'> and bank_full_name like CONCAT('%',#{bankFullName},'%')</if>"
             + "<if test = 'bankShortName!=null'> and bank_short_name like CONCAT('%',#{bankShortName},'%')</if>"
-            + "<if test = 'bankAccount!=null'> and bank_account like CONCAT('%',#{bankAccount},'%')</if>"
-            + "</script>")
+            + "<if test = 'bankAccount!=null'> and bank_account like CONCAT('%',#{bankAccount},'%')</if>" + "</script>")
     List<BankInfo> findByParam(BankInfoSearchDTO bankInfoSearchDTO);
 
     /**

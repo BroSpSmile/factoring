@@ -2,7 +2,7 @@
  * 银行信息
  */
 common.pageName = "bankInfo";
-common.openName = [ '8' ];
+common.openName = [ 'finance' ];
 
 var vue = new Vue({
     el : '#bankInfo',
@@ -64,7 +64,8 @@ var vue = new Vue({
             this.addForm = {
                 bankFullName : "",
                 bankShortName : "",
-                bankAccount : ""
+                bankAccount : "",
+                amount:0.00
             };
         },
         /**
@@ -196,6 +197,10 @@ vue.tableColumns=[
         title: '银行账号',
         key: 'bankAccount',
         align: 'left'
+    },{
+        title: '银行余额',
+        key: 'amount',
+        align: 'center'
     },{
         title: '操作',
             align: 'center',

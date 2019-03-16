@@ -77,7 +77,8 @@ public class BankInfoServiceImpl implements BankInfoService {
      */
     @Override
     public void update(BankInfoDTO bankInfoDTO) {
-        bankInfoDao.update(bankInfoMapper.dto2do(bankInfoDTO));
+        BankInfo bankInfo = bankInfoMapper.dto2do(bankInfoDTO);
+        bankInfoDao.update(bankInfo);
     }
 
     /**

@@ -66,7 +66,6 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         SingleResult<Audit> auditResult = null;
         if (needAudit) {
             auditResult = auditService.apply(project, project.getUser());
-
         }
         BaseResult updataResult = updateProject(project);
         if (updataResult.isSuccess()) {
@@ -117,8 +116,16 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         record.setStep(Step.getStep(project.getStep()));
         record.setCreateTime(new Date());
         long effect = stepDao.insert(record);
-        if (effect > 0) {
+        if (Step.TUNEUP.equals(Step.getStep(project.getStep()))) {
             project.setStep(project.getStep() + 1);
+            StepRecord recordAudit = new StepRecord();
+            recordAudit.setProject(project);
+            recordAudit.setStatus(StepStatus.LATER);
+            recordAudit.setStep(Step.getStep(project.getStep()));
+            recordAudit.setCreateTime(new Date());
+            stepDao.insert(record);
+        }
+        if (effect > 0) {
             return this.next(project, false);
         } else {
             throw new RuntimeException("更新项目进度失败");

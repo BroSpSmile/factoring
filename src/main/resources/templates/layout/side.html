@@ -19,8 +19,14 @@
 		            </menu-group>
 				 </submenu>
 				 <menu-item name="audits" to="/audits">业务审核</menu-item>
-				 <menu-item name="past" to="/past">三重一大</menu-item>
-				 <menu-item name="finance" to="/finance">财务管理</menu-item>
+				 <!-- <menu-item name="past" to="/past">三重一大</menu-item> -->
+				 <submenu name="finance">
+		            <template slot="title">
+		                财务
+		            </template>
+		            <menu-item name="finance" to="/finance">财务管理</menu-item>
+		            <menu-item name="bankInfo" to="/bankInfo">银行信息维护</menu-item>
+		        </submenu>
 				 <menu-item name="contractSign" to="/contractSign">签署管理</menu-item>
 		        <!--<submenu name="3">
 		            <template slot="title">
@@ -29,13 +35,13 @@
 		            <menu-item name="contractInfo" to="/contractInfo">保理合同拟定</menu-item>
 		            <menu-item name="contractAudit" to="/contractAudit">保理合同审核</menu-item>
 		            <menu-item name="contractSign" to="/contractSign">保理合同签署</menu-item>
-				</submenu>-->
+				</submenu>
 		        <submenu name="4">
 		            <template slot="title">
 		                放款
 		            </template>
 		            <menu-item name="loanApply" to="/loanApply">放款申请</menu-item>
-		        </submenu>
+		        </submenu>-->
 		        <submenu name="5">
 		            <template slot="title">
 		                归档管理
@@ -61,7 +67,6 @@
 					<menu-item name="organizational" to="/organizational">组织架构管理</menu-item>
 					<menu-item name="flowConfig" to="/flowConfig">流程审核配置</menu-item>
 					<menu-item name="signListTemplate" to="/signListTemplate">签署清单模板</menu-item>
-					<menu-item name="bankInfo" to="/bankInfo">银行信息维护</menu-item>
 		        </submenu>
 		        <!--<submenu name="9">
 		            <template slot="title">
