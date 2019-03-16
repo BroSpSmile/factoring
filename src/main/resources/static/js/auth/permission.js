@@ -31,9 +31,6 @@ var vue = new Vue({
             ],
             permissionType: [
                 { required: true, message: '权限类型不能为空', trigger: 'change', type:'number'}
-            ],
-            url: [
-                { required: true, message: '菜单路径不能为空', trigger: 'blur' }
             ]
         },
         pageInfo:{},
