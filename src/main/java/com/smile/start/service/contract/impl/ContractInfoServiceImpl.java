@@ -562,7 +562,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             Project project = projectService.getProject(contractInfo.getProjectId());
             project.setStep(Step.LOAN.getIndex());
-            processEngine.next(project, true);
+            processEngine.next(project, false);
         }
     }
 }
