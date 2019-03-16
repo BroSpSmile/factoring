@@ -402,7 +402,7 @@ vue.tableColumns=[{
         	return h('span',vue.toModelName(param.row.model))
         }
     },{
-        title: '应收账款受让款(万元)',
+        title: '受让款(万元)',
         key: 'projectName',
         align: 'center',
         width:80,
@@ -418,7 +418,7 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.receivable)
         }
     },{
-        title: '转让期限年',
+        title: '年限',
         key: 'projectName',
         align: 'center',
         width:60,
@@ -426,15 +426,14 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.duration)
         }
     },{
-        title: '项目负责人',
+        title: '负责人',
         key: 'user',
         align: 'center',
-        width:90,
         render:(h,param)=>{
         	return h('span',param.row.user.username)
         }
     },{
-        title: '当前进度',
+        title: '进度',
         key: 'progress',
         align: 'center',
         render:(h,param)=>{
