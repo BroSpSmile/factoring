@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="seal">
+			<card dis-hover title="搜索条件" style="width:100%">
+				<p>
+					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
+						<form-item label="项目编号" prop="projectCode">
+							<i-input placeholder="输入项目编号" class="inputw" v-model="formInline.projectCode"></i-input>
+						</form-item>
+						<form-item label="项目名称" prop="projectName">
+							<i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
+						</form-item>
+						<form-item label="业务负责人" prop="projectPerson">
+							<i-input placeholder="输入业务负责人" class="inputw" v-model="formInline.projectPerson"></i-input>
+						</form-item>
+						<form-item label="用印状态" prop="sealStatus">
+							<i-select class="inputw" v-model="formInline.sealStatus" clearable>
+								<i-option :value="0">未用印</i-option>
+								<i-option :value="1">已用印</i-option>
+							</i-select>
+						</form-item>
+						<row type="flex">
+							<i-col span="8" offset="8">
+								<i-button type="primary"  icon="ios-search" @click="query()">查询</i-button>
+								<i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
+							</i-col>
+						</row>
+					</i-form>
+				</p>
+			</card>
+			<br>
+			<card dis-hover title="搜索结果" v-if="showResult">
+				<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
+				<br/>
+				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
+			</card>
+
+			<!-- 合同签署 -->
+			<modal v-model="modal1" title="合同签署" mask-closable="false" width="500px">
+				<div id="modalForm">
+					<i-form ref="entityDataForm" :model="addForm" :label-width="150">
+						<Row v-for="(item, index) in addForm.signList"
+							 :key="index"
+							 :prop="'items.' + index + '.value'">
+							<Col span="4">
+								<Checkbox v-model="item.status"></Checkbox>
+							</Col>
+							<Col span="18">
+							<span v-if="item.isRequired == 1" style="color: red">*</span>
+							<span v-if="item.isRequired == 2">&nbsp;</span>
+							{{ item.signListName }}
+							</Col>
+						</Row>
+					</i-form>
+				</div>
+				<div slot="footer">
+					<i-button type="primary" @click="saveSign" style="margin-left: 8px">保存</i-button>
+					<i-button type="primary" @click="signFinish" style="margin-left: 8px">签署完成</i-button>
+					<i-button @click="cancel" style="margin-left: 8px">取消</i-button>
+				</div>
+			</modal>
+		</div>
+	    <script src="js/project/seal.js"></script>
+	</div>
+</html>

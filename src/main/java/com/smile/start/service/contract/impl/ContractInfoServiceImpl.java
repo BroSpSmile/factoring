@@ -195,6 +195,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
+        contractInfo.setSealStatus(SealStatusEnum.NOT_STAMPED.getValue());
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
 
         //保存签署清单

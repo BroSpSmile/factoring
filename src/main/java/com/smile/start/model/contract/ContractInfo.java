@@ -61,6 +61,12 @@ public class ContractInfo implements Serializable {
      * 删除标志：0、未删除；1、删除
      */
     private Integer deleteFlag;
+
+    /**
+     * 用印状态：0、未用印；1、已用印
+     */
+    private Integer sealStatus;
+
     private String createUser;
     private String modifyUser;
     private Date gmtCreate;
@@ -144,6 +150,14 @@ public class ContractInfo implements Serializable {
 
     public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public Integer getSealStatus() {
+        return sealStatus;
+    }
+
+    public void setSealStatus(Integer sealStatus) {
+        this.sealStatus = sealStatus;
     }
 
     public String getCreateUser() {
