@@ -31,7 +31,7 @@ public interface PermissionDao {
      * @param permission
      * @return
      */
-    @Update("update auth_permission_info set permission_name=#{permissionName},permission_type=#{permissionType},remark=#{remark},parent_serial_no=#{parentSerialNo},url=#{url},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update auth_permission_info set permission_code=#{permissionCode},permission_name=#{permissionName},permission_type=#{permissionType},remark=#{remark},parent_serial_no=#{parentSerialNo},url=#{url},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(Permission permission);
 
     /**
