@@ -62,6 +62,12 @@ public class Project implements Serializable {
     /** 项目附件 */
     private List<ProjectItem> items;
 
+    /** 保理分期信息 */
+    private List<Installment> factoringInstallment;
+
+    /** 回款分期信息 */
+    private List<Installment> returnInstallment;
+
     /** 项目明细 */
     private FactoringDetail   detail;
 
