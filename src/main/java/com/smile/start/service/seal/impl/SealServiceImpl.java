@@ -33,7 +33,7 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public PageInfo<ProjectSeal> findAll(PageRequest<SealSearchDTO> pageRequest) {
-        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
+        PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "fp.id desc");
         final List<ProjectSeal> projectList = sealDao.findByParam(pageRequest.getCondition());
         return new PageInfo<>(projectList);
     }
