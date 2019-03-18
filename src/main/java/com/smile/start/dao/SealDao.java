@@ -22,7 +22,7 @@ public interface SealDao {
      * @param sealSearchDTO
      * @return
      */
-    @Select("<script>" + "select fp.project_id project_code,fp.project_name,ui.username projectPerson,ci.seal_status from factoring_project fp,contract_info ci,auth_user_info ui "
+    @Select("<script>" + "select fp.id project_id,fp.project_id project_code,fp.project_name,ui.username projectPerson,ci.seal_status from factoring_project fp,contract_info ci,auth_user_info ui "
             + " where fp.id=ci.project_id and fp.person=ui.id and fp.step = 6"
             + "<if test = 'projectCode!=null'> and fp.project_id like CONCAT('%',#{projectCode},'%')</if>"
             + "<if test = 'projectName!=null'> and fp.project_name like CONCAT('%',#{projectName},'%')</if>"

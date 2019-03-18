@@ -17,4 +17,10 @@ public interface SealService {
      * @return
      */
     PageInfo<ProjectSeal> findAll(PageRequest<SealSearchDTO> pageRequest);
+
+    /**
+     * 用印完成
+     * @param projectId
+     */
+    void sealFinish(Long projectId);
 }

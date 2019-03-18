@@ -35,7 +35,7 @@ public interface ContractSignListDao {
      * @return
      */
     @Delete("delete from contract_sign_list where contract_serial_no = #{contractSerialNo}")
-    int deleteByContractSerialNo(String contractSerialNo);
+    void deleteByContractSerialNo(String contractSerialNo);
 
     /**
      * 按合同业务流水查询确认函
@@ -43,4 +43,13 @@ public interface ContractSignListDao {
      */
     @Select("select * from contract_sign_list where contract_serial_no = #{contractSerialNo}")
     List<ContractSignList> findByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 指定合同流水、签署清单名称查询
+     * @param contractSerialNo
+     * @param signListName
+     * @return
+     */
+    @Select("select * from contract_sign_list where contract_serial_no = #{contractSerialNo} and sign_list_name = #{signListName}")
+    ContractSignList findByContractSerialNoAndName(String contractSerialNo, String signListName);
 }
