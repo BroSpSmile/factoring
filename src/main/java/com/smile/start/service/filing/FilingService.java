@@ -5,6 +5,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.filing.FilingApplyInfo;
 
+@Deprecated
 public interface FilingService {
 
     /**

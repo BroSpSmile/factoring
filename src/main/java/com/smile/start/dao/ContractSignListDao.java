@@ -43,4 +43,20 @@ public interface ContractSignListDao {
      */
     @Select("select * from contract_sign_list where contract_serial_no = #{contractSerialNo}")
     List<ContractSignList> findByContractSerialNo(String contractSerialNo);
+
+    /**
+     * 根据项目查询签署清单
+     * @param projectId
+     * @return
+     */
+    @Select("select t1.* from contract_sign_list t1 inner join contract_info t2 on t1.contract_serial_no = t2.serial_no where t2.project_id = #{projectId}")
+    List<ContractSignList> findByProjectId(Long projectId);
+
+    /**
+     * 更新签署清单归档信息
+     * @param contractSignList
+     * @return
+     */
+    @Update("update contract_sign_list set filing_status = #{filingStatus} where serial_no = #{serialNo}")
+    int updateFilingStatus(ContractSignList contractSignList);
 }

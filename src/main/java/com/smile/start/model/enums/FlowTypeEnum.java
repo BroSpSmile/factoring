@@ -8,7 +8,7 @@ package com.smile.start.model.enums;
  */
 public enum FlowTypeEnum {
                           /**  */
-                          CONTRACT(1, "合同审核流程 "),
+                          DRAWUP(1, "合同审核流程 "),
                           /**  */
                           TUNEUP(2, "尽调审核流程"),
 

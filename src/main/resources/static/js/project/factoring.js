@@ -39,17 +39,11 @@ var vue = new Vue({
             baseContract: [
             	{ required: true,  message: '基础合同不能为空',trigger:'blur'}
             ],
-            signDate: [
-            	{ required: true,type: 'date',  message: '签署日期不能为空', trigger: 'change'}
-            ],
             assignee: [
             	{ required: true,  message: '应收账款受让款不能为空'}
             ],
             receivable: [
             	{ required: true,  message: '应收账款不能为空'}
-            ],
-            remittanceDay: [
-            	{ required: true, type: 'date', message: '合同回款日不能为空', trigger: 'change'}
             ],
             totalFactoringFee: [
             	{ required: true, type:'number', message: '保理费不能为空'}

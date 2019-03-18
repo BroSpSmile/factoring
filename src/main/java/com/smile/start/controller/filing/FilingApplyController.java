@@ -1,25 +1,28 @@
 package com.smile.start.controller.filing;
 
-import com.smile.start.commons.DateUtil;
-import com.smile.start.commons.FastJsonUtils;
-import com.smile.start.commons.LoggerUtils;
-import com.smile.start.controller.BaseController;
-import com.smile.start.model.auth.User;
-import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.AuditResult;
-import com.smile.start.model.enums.FilingSubProgress;
-import com.smile.start.model.filing.FilingApplyInfo;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.AuditRecord;
-import com.smile.start.service.audit.AuditService;
-import com.smile.start.service.filing.FilingService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.smile.start.commons.LoggerUtils;
+import com.smile.start.controller.BaseController;
+import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.model.auth.User;
+import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.Progress;
+import com.smile.start.model.project.Project;
+import com.smile.start.service.contract.ContractInfoService;
+import com.smile.start.service.engine.ProcessEngine;
 
 /**
  * @author ：xioutman
@@ -32,17 +35,13 @@ import java.util.Date;
 @RequestMapping("/filingApply")
 public class FilingApplyController extends BaseController {
 
-    /**
-     * 项目服务
-     */
+    /** 合同服务 */
     @Resource
-    private FilingService filingService;
+    private ContractInfoService contractInfoService;
 
-    /**
-     * auditService
-     */
+    /** 流程引擎 */
     @Resource
-    private AuditService auditService;
+    private ProcessEngine       processEngine;
 
     /**
      * 归档申请页面
@@ -67,25 +66,9 @@ public class FilingApplyController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public BaseResult save(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
-        User user = getUserByToken(request);
-        genFilingApplyInfo(filingApplyInfo, user);
-        filingApplyInfo.setProgress(FilingSubProgress.FILE_TOBE_APPLY);
-        LoggerUtils.info(logger, "归档申请filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        checkAndSetAuditField(filingApplyInfo, user);
-        return filingService.addFilingApply(filingApplyInfo);
-    }
-
-    /**
-     * 归档申请打回保存
-     *
-     * @param filingApplyInfo
-     * @return
-     */
-    @PostMapping("/rejectAndSave")
-    @ResponseBody
-    public BaseResult rejectAndSave(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
-        return save(request, filingApplyInfo);
+    public BaseResult save(@RequestBody ContractInfoDTO contract) {
+        List<ContractSignListDTO> signDtos = contract.getSignList();
+        return contractInfoService.updateFilingStatus(signDtos);
     }
 
     /**
@@ -96,32 +79,12 @@ public class FilingApplyController extends BaseController {
      */
     @PostMapping("/commit")
     @ResponseBody
-    public BaseResult commit(HttpServletRequest request, @RequestBody FilingApplyInfo filingApplyInfo) {
+    public BaseResult commit(HttpServletRequest request, @RequestBody ContractInfoDTO contract) {
         User user = getUserByToken(request);
-        genFilingApplyInfo(filingApplyInfo, user);
-        filingApplyInfo.setProgress(FilingSubProgress.FILE_APPLY);
-        LoggerUtils.info(logger, "归档申请: filingApplyInfo={}", FastJsonUtils.toJSONString(filingApplyInfo));
-        checkAndSetAuditField(filingApplyInfo, user);
-        return filingService.addFilingApply(filingApplyInfo);
-    }
-
-    private void checkAndSetAuditField(FilingApplyInfo filingApplyInfo, User user) {
-        if (null == filingApplyInfo.getRecord()) {
-            filingApplyInfo.setRecord(new AuditRecord());
-        }
-        filingApplyInfo.getRecord().setAuditor(user);
-        filingApplyInfo.getRecord().setAuditTime(new Date());
-        filingApplyInfo.getRecord().setResult(AuditResult.APPLY);
-        filingApplyInfo.getRecord().setRemark("申请成功");
-        if (null == filingApplyInfo.getAudit()) {
-            filingApplyInfo.setAudit(new Audit());
-        }
-    }
-
-    private void genFilingApplyInfo(FilingApplyInfo filingApplyInfo, User user) {
-        if (null != user) {
-            filingApplyInfo.setApplicant(String.valueOf(user.getId()));
-        }
-        filingApplyInfo.setApplyTime(DateUtil.getNewFormatDateString(new Date()));
+        Project project = contract.getProject();
+        project.setProgress(Progress.LOAN);
+        project.setStep(9);
+        project.setUser(user);
+        return processEngine.next(project, true);
     }
 }

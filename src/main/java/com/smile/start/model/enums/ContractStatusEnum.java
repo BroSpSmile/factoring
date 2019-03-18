@@ -76,56 +76,12 @@ public enum ContractStatusEnum {
                                 GENERAL_MANAGER_AUDIT(6, "集团正总审核") {
                                     @Override
                                     public ContractStatusEnum getNextStatus() {
-                                        return SIGN;
+                                        return null;
                                     }
 
                                     @Override
                                     public ContractStatusEnum getDefaultRejectStatus() {
                                         return VICE_GENERAL_MANAGER_AUDIT;
-                                    }
-                                },
-                                FINISH(7, "完成") {
-                                    @Override
-                                    public ContractStatusEnum getNextStatus() {
-                                        return null;
-                                    }
-
-                                    @Override
-                                    public ContractStatusEnum getDefaultRejectStatus() {
-                                        return null;
-                                    }
-                                },
-                                //    NOTIFY_OFFICE(7, "通知办公室") {
-                                //        @Override
-                                //        public ContractStatusEnum getNextStatus() {
-                                //            return SIGN;
-                                //        }
-                                //
-                                //        @Override
-                                //        public ContractStatusEnum getDefaultRejectStatus() {
-                                //            return null;
-                                //        }
-                                //    },
-                                SIGN(8, "签署") {
-                                    @Override
-                                    public ContractStatusEnum getNextStatus() {
-                                        return null;
-                                    }
-
-                                    @Override
-                                    public ContractStatusEnum getDefaultRejectStatus() {
-                                        return null;
-                                    }
-                                },
-                                SIGN_FINISH(9, "签署完成") {
-                                    @Override
-                                    public ContractStatusEnum getNextStatus() {
-                                        return null;
-                                    }
-
-                                    @Override
-                                    public ContractStatusEnum getDefaultRejectStatus() {
-                                        return null;
                                     }
                                 };
 

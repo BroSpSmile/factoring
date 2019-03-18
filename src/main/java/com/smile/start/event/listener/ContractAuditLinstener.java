@@ -24,7 +24,7 @@ public class ContractAuditLinstener implements AuditListener {
     @Override
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
-        if (AuditType.CONTRACT == audit.getAuditType()) {
+        if (AuditType.DRAWUP == audit.getAuditType()) {
 
         }
     }

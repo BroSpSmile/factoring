@@ -76,7 +76,6 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         BaseResult result = this.save(loan);
         if (result.isSuccess()) {
             Project project = loan.getProject();
-            project.setProgress(Progress.LOAN);
             project.setStep(7);
             project.setUser(loan.getUser());
             processEngine.next(project, true);

@@ -124,7 +124,7 @@ var vue = new Vue({
 		pass:function(){
 			let _self = this;
 			this.record.audit = this.audit;
-			if(this.audit.auditType=='TUNEUP'&& (this.audit.step==2||this.audit.step==3)){
+			if(this.audit.auditType=='TUNEUP'&& (this.audit.step==4||this.audit.step==3)){
 				if(this.fileList === undefined || this.fileList.length == 0){
 					this.$Message.error("请上传尽调文件");
 					return false;

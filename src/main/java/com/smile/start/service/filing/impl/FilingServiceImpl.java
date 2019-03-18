@@ -371,7 +371,6 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setStep(progress.getIndex());
-        audit.setAuditType(AuditType.getByCode(project.getProgress().getCode()));
         FlowStatusDTO step = getStep(progress);
         if (null == step) {
             //审批流程已结束

@@ -31,7 +31,7 @@ public enum LoanFlowEnum {
                           CHARGE_AUDIT(2, "债权负责人审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return FORENSIC_AUDIT;
+                                  return FINANCIAL_AUDIT;
                               }
 
                               @Override
@@ -39,10 +39,10 @@ public enum LoanFlowEnum {
                                   return DEPARTMENT_AUDIT;
                               }
                           },
-                          FORENSIC_AUDIT(3, "法务审核") {
+                          FINANCIAL_AUDIT(3, "财务风控审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_AUDIT;
+                                  return FORENSIC_AUDIT;
                               }
 
                               @Override
@@ -50,7 +50,7 @@ public enum LoanFlowEnum {
                                   return CHARGE_AUDIT;
                               }
                           },
-                          FINANCIAL_AUDIT(4, "财务审核") {
+                          FORENSIC_AUDIT(4, "法务风控审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return FINANCIAL_MAIN_AUDIT;
@@ -58,7 +58,7 @@ public enum LoanFlowEnum {
 
                               @Override
                               public LoanFlowEnum getDefaultRejectStatus() {
-                                  return FORENSIC_AUDIT;
+                                  return FINANCIAL_AUDIT;
                               }
                           },
                           FINANCIAL_MAIN_AUDIT(5, "财务负责人审核") {
@@ -69,7 +69,7 @@ public enum LoanFlowEnum {
 
                               @Override
                               public LoanFlowEnum getDefaultRejectStatus() {
-                                  return FINANCIAL_AUDIT;
+                                  return FORENSIC_AUDIT;
                               }
                           },
                           VP_AUDIT(6, "集团副总审核") {

@@ -19,7 +19,7 @@ public enum FileFlowEnum {
                                   return null;
                               }
                           },
-                          FILE_LEGAL_AUDIT(FilingSubProgress.FILE_LEGAL_AUDIT.getIndex() - 1, "法务分控审核") {
+                          FILE_LEGAL_AUDIT(FilingSubProgress.FILE_LEGAL_AUDIT.getIndex() - 1, "法务风控审核") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return FILE_OFFICER;

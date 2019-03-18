@@ -57,26 +57,9 @@
 							</form-item>
 							<row type="flex" v-if="showAuditButton && audit.step > 0">
 			                    <i-col span="12" offset="2">
-			                    	<div v-if="audit.auditType == 'CONTRACT'">
-	                                    <i-button type="success" v-if="!isLastFileStep" icon="ios-checkmark" @click="contractPass">通过</i-button>
-	                                    <i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
-			                    	</div>
-			                    	<div v-if="audit.auditType == 'TUNEUP'">
-			                    		<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
-	                                    <i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
-			                    	</div>
-			                    	<div v-if="audit.auditType == 'LOAN'">
-			                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
-	                                    	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
-			                    	</div>
-			                    	<div v-if="audit.auditType == 'FILE'">
 		                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
                                     	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
-			                    	</div>
 			                    </i-col>
-                                <i-col span="6" offset="4">
-                                    <i-button type="success" @click="openPass"  v-if="isLastFileStep">归档完成</i-button>
-                                </i-col>
 	                		</row>
 
 						</i-form>
@@ -91,10 +74,13 @@
 			<modal v-model="modal1" title="审核通过"  mask-closable="false">
 				<div id="modalForm">
 					<i-form  :label-width="120" >
-						<form-item :label="auditTitle" v-if="audit.auditType =='TUNEUP' && (audit.step==2||audit.step==3)" >
+						<form-item :label="auditTitle" v-if="audit.auditType =='TUNEUP' && (audit.step==3||audit.step==4)" >
 							<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
 						        <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
 						    </Upload>
+						</form-item>
+						<form-item label="备注" prop="remark">
+							 <i-input type="textarea" :rows="4" placeholder="请备注" class="inputw" v-model="record.remark"></i-input>
 						</form-item>
 					</i-form>
 				</div>

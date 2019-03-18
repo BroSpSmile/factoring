@@ -18,6 +18,7 @@ var vue = new Vue({
 			department:{},
 			user:{},
 			project:{
+				id:0,
 				items:[]
 			}
 		},
@@ -59,7 +60,9 @@ var vue = new Vue({
 			let _self = this;
 			if(id){
 				this.$http.get("/loanApply/"+id).then(function(response){
-					_self.loan = response.data;
+					if(response.data){
+						_self.loan = response.data;
+					}
 				},function(error){
 					console.error(error);
 				})

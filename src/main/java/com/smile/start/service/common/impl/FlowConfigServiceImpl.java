@@ -109,7 +109,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     @Transactional
     public Long insert(FlowConfigDTO flowConfigDTO) {
         final List<FlowConfig> flowList = flowConfigDao.findByFlowType(flowConfigDTO.getFlowType());
-        if(!CollectionUtils.isEmpty(flowList)) {
+        if (!CollectionUtils.isEmpty(flowList)) {
             throw new ValidateException("此流程类型已存在记录");
         }
         FlowConfig flowConfig = flowConfigMapper.dto2do(flowConfigDTO);
@@ -140,7 +140,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
         flowConfigDao.update(flowConfig);
 
         //保存状态信息
-//        flowConfigDao.deleteStatusRole(flowConfigDTO.getSerialNo());
+        //        flowConfigDao.deleteStatusRole(flowConfigDTO.getSerialNo());
         flowConfigDao.deleteFlowStatus(flowConfigDTO.getSerialNo());
         saveStatus(flowConfigDTO.getStatusList(), flowConfigDTO.getSerialNo());
     }
@@ -155,16 +155,16 @@ public class FlowConfigServiceImpl implements FlowConfigService {
             flowStatus.setFlowStatusDesc(flowStatusDTO.getFlowStatusDesc());
             flowStatus.setRoleSerialNo(flowStatusDTO.getRoleSerialNo());
             flowConfigDao.insertFlowStatus(flowStatus);
-//            if (!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
-//                flowStatusDTO.getCheckedRoleList().forEach(e -> {
-//                    FlowStatusRole flowStatusRole = new FlowStatusRole();
-//                    flowStatusRole.setSerialNo(SerialNoGenerator.generateSerialNo("FSR", 5));
-//                    flowStatusRole.setFlowSerialNo(flowSerialNo);
-//                    flowStatusRole.setStatusSerialNo(statusSerialNo);
-//                    flowStatusRole.setRoleSerialNo(e);
-//                    flowConfigDao.insertStatusRole(flowStatusRole);
-//                });
-//            }
+            //            if (!CollectionUtils.isEmpty(flowStatusDTO.getCheckedRoleList())) {
+            //                flowStatusDTO.getCheckedRoleList().forEach(e -> {
+            //                    FlowStatusRole flowStatusRole = new FlowStatusRole();
+            //                    flowStatusRole.setSerialNo(SerialNoGenerator.generateSerialNo("FSR", 5));
+            //                    flowStatusRole.setFlowSerialNo(flowSerialNo);
+            //                    flowStatusRole.setStatusSerialNo(statusSerialNo);
+            //                    flowStatusRole.setRoleSerialNo(e);
+            //                    flowConfigDao.insertStatusRole(flowStatusRole);
+            //                });
+            //            }
         }
     }
 
@@ -205,7 +205,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                     statusList.add(flowStatus);
                 }
                 return statusList;
-            case CONTRACT:
+            case DRAWUP:
                 for (ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
                     FlowStatusDTO flowStatus = new FlowStatusDTO();
                     flowStatus.setRoleList(roleList);

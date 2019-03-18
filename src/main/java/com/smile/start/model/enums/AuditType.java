@@ -16,7 +16,7 @@ public enum AuditType {
                        TUNEUP("TUNEUP", "尽调审核"),
 
                        /**  */
-                       CONTRACT("CONTRACT", "合同审核"),
+                       DRAWUP("DRAWUP", "合同审核"),
 
                        /**  */
                        LOAN("LOAN", "放款审核"),

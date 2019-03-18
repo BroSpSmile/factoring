@@ -20,6 +20,7 @@ var vue = new Vue({
 	},
 	created : function() {
 		this.initData();
+		this.search();
 	},
 	methods : {
 		

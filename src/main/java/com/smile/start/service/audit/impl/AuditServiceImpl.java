@@ -276,6 +276,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     private FlowTypeEnum toType(Progress progress) {
+        if (Progress.DRAWUP.equals(progress)) {
+            return FlowTypeEnum.DRAWUP;
+        }
         return FlowTypeEnum.valueOf(progress.name());
     }
 
