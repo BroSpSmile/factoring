@@ -13,7 +13,6 @@ import com.smile.start.dao.LoanDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.LoanType;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.loan.Loan;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;

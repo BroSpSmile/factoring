@@ -4,8 +4,6 @@
  */
 package com.smile.start.model.project;
 
-import com.smile.start.model.enums.ProjectItemType;
-
 import java.io.Serializable;
 
 /**
@@ -24,28 +22,28 @@ public class InstallmentItem implements Serializable {
     /**
      * 编号
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 分期编号
      */
-    private Long installmentId;
+    private Long              installmentId;
 
     /**
      * 附件名称
      */
-    private String itemName;
+    private String            itemName;
 
     /**
      * 附件文件id
      */
-    private String itemValue;
+    private String            itemValue;
 
     /**
      * 此字段只有itemType是合同时才生效
      * 附件类型：1、标准；2、自定义
      */
-    private Integer attachType;
+    private Integer           attachType;
 
     public Long getId() {
         return id;

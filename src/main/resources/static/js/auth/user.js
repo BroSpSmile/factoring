@@ -235,7 +235,7 @@ vue.tableColumns=[
     },{
         title: '手机号',
         key: 'mobile',
-        align: 'center'
+        align: 'left'
     },{
         title: '邮箱',
         key: 'email',

@@ -196,6 +196,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setCreateUser(loginUser.getSerialNo());
         contractInfo.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
+        contractInfo.setSealStatus(SealStatusEnum.NOT_STAMPED.getValue());
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
 
         //保存签署清单
@@ -468,6 +469,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfo.setStatus(currentStatus.getNextStatus().getValue());
             //如果集团正总审核完成，则直接将合同状态更新为完成，流转到办公室人员，并修改项目状态为拟定合同
             if (currentStatus.getNextStatus() == ContractStatusEnum.GENERAL_MANAGER_AUDIT) {
+                contractInfo.setStatus(7);
+
+                //状态流转到下一级
+                //                audit.setStep(ContractStatusEnum.SIGN.getValue());
 
                 //更新项目状态，后面优化去掉 TODO
                 project.setProgress(Progress.DRAWUP);
@@ -559,8 +564,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //        }
         if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
-            // contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
-            contractInfoDao.update(contractInfo);
+
+            //            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
+            //            contractInfoDao.update(contractInfo);
 
             Project project = projectService.getProject(contractInfo.getProjectId());
             project.setStep(Step.SIGN.getIndex());
