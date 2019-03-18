@@ -153,8 +153,8 @@ var vue = new Vue({
         /**
          * 更新角色
          */
-        updateRole : function(user){
-            this.addForm = user;
+        updateRole : function(role){
+            this.addForm = JSON.parse(JSON.stringify(role));
             this.modal1 = true;
             this.isDisable = false;
         },

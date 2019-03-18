@@ -1,13 +1,10 @@
 package com.smile.start.controller.contract;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +20,9 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.service.contract.ContractInfoService;
 
 /**
@@ -161,41 +155,5 @@ public class ContractInfoController extends BaseController {
             logger.error("状态流转失败", e);
             return toResult(e);
         }
-    }
-
-    @GetMapping(value = "/signList/{contractSerialNo}")
-    @ResponseBody
-    public ListResult<ContractSignListDTO> signList(@PathVariable String contractSerialNo) {
-        try {
-            final List<ContractSignListDTO> signList = contractInfoService.findSignListByContractSerialNo(contractSerialNo);
-            ListResult<ContractSignListDTO> result = new ListResult<>();
-            result.setSuccess(true);
-            result.setErrorMessage("获取合同签署清单成功");
-            result.setValues(signList);
-            return result;
-        } catch (Exception e) {
-            logger.error("获取合同签署清单失败", e);
-            return toListResult(e, ContractSignListDTO.class);
-        }
-    }
-
-    /**
-     * 根据项目id查询签署清单
-     * @param projectId
-     * @return
-     */
-    @GetMapping("/project/{projectId}")
-    @ResponseBody
-    public ListResult<ContractSignList> getSignList(@PathVariable Long projectId) {
-        List<ContractSignList> list = contractInfoService.findSinListByProject(projectId);
-        ListResult<ContractSignList> result = new ListResult<ContractSignList>();
-        if (!CollectionUtils.isEmpty(list)) {
-            result.setSuccess(true);
-            result.setValues(list);
-        } else {
-            result.setSuccess(false);
-            result.setErrorMessage("查询不到签署清单");
-        }
-        return result;
     }
 }

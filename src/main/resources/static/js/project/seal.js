@@ -55,15 +55,34 @@ var vue = new Vue({
         /**
          * 用印完成确认
          */
-        sealFinishWarn : function(serialNo){
+        sealFinishWarn : function(projectId){
+            console.log(projectId)
             this.$Modal.confirm({
                 title: '用印完成提示',
                 content: '<p>当前项目确定已盖章完成？</p>',
                 onOk: () => {
-                    // this.signFinish(serialNo);
+                    this.sealFinish(projectId);
                 },
                 onCancel: () => {}
             })
+        },
+        sealFinish : function(projectId) {
+            let self = this;
+            this.$http.post("/seal/sealFinish/" + projectId).then(function(response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content : "保存成功",
+                        onClose : function() {
+                            self.query();
+                            self.cancel();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            });
         },
         /**
          * 取消保存
@@ -162,11 +181,11 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                        vue.sealFinishWarn(param.row.serialNo);
-        }
-        }
-        }, '用印完成')
-        ])
+                            vue.sealFinishWarn(param.row.projectId);
+                        }
+                    }
+                }, '用印完成')
+            ])
         }
     }
 ];

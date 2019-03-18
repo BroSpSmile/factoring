@@ -74,15 +74,14 @@ var vue = new Vue({
             })
 
             this.$http.get("/organizational/list").then(function(response) {
-                    if (response.data.success) {
-                        self.organizationalList = response.data.values;
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
+                if (response.data.success) {
+                    self.organizationalList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
                 }
-            )
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            })
         },
         /** 分页 */
         pageChange:function(page){
@@ -205,7 +204,7 @@ var vue = new Vue({
          * 更新用户
          */
         updateUser : function(user){
-            this.addForm = user;
+            this.addForm = JSON.parse(JSON.stringify(user));
             this.modal1 = true;
             this.isDisable = false;
         },

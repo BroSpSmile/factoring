@@ -537,12 +537,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     /**
      * 获取合同签署清单列表
-     * @param contractSerialNo
+     * @param projectId
      * @return
      */
     @Override
-    public List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo) {
-        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractSerialNo));
+    public List<ContractSignListDTO> findSignListByProjectId(Long projectId) {
+        ContractInfo contractInfo = contractInfoDao.getByProjectId(projectId);
+        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo()));
     }
 
     /** 
@@ -559,12 +560,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-        //        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
-        //            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
-        //        }
+        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+        }
         if (contractSignDTO.getFinished()) {
-            final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
-
+            final ContractInfo contractInfo = contractInfoDao.getByProjectId(contractSignDTO.getProjectId());
+            if (contractInfo.getSealStatus() == SealStatusEnum.NOT_STAMPED.getValue()) {
+                throw new ValidateException("用印未完成，不能完成签署");
+            }
             //            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
             //            contractInfoDao.update(contractInfo);
 
