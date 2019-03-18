@@ -109,13 +109,14 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
      * @see com.smile.start.service.engine.ProcessEngine#skip(com.smile.start.model.project.Project)
      */
     @Override
+    @Transactional
     public SingleResult<StepRecord> skip(Project project) {
         StepRecord record = new StepRecord();
         record.setProject(project);
         record.setStatus(StepStatus.LATER);
         record.setStep(Step.getStep(project.getStep()));
         record.setCreateTime(new Date());
-        long effect = stepDao.insert(record);
+        BaseResult result = addOrUpate(record);
         if (Step.TUNEUP.equals(Step.getStep(project.getStep()))) {
             project.setStep(project.getStep() + 1);
             StepRecord recordAudit = new StepRecord();
@@ -123,14 +124,31 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
             recordAudit.setStatus(StepStatus.LATER);
             recordAudit.setStep(Step.getStep(project.getStep()));
             recordAudit.setCreateTime(new Date());
-            stepDao.insert(record);
+            result = addOrUpate(recordAudit);
         }
-        if (effect > 0) {
+        if (result.isSuccess()) {
             return this.next(project, false);
         } else {
             throw new RuntimeException("更新项目进度失败");
         }
 
+    }
+
+    /**
+     * 更新或者新增步骤
+     * @param record
+     * @return
+     */
+    public BaseResult addOrUpate(StepRecord record) {
+        StepRecord exist = stepDao.getStep(record.getProject().getId(), record.getStep());
+        if (null != exist) {
+            record.setId(exist.getId());
+            record.setModifyTime(new Date());
+            stepDao.update(record);
+        } else {
+            stepDao.insert(record);
+        }
+        return new BaseResult();
     }
 
     /** 

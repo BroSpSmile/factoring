@@ -11,6 +11,7 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.enums.ProjectModel;
+import com.smile.start.model.enums.Step;
 
 /**
  * 项目
@@ -62,14 +63,19 @@ public class Project implements Serializable {
     /** 项目附件 */
     private List<ProjectItem> items;
 
-    /** 保理分期信息 */
-    private List<Installment> factoringInstallment;
-
-    /** 回款分期信息 */
-    private List<Installment> returnInstallment;
-
     /** 项目明细 */
     private FactoringDetail   detail;
+
+    /**
+     * 获取步骤枚举
+     * @return
+     */
+    public Step getStepEnum() {
+        if (null != step) {
+            return Step.getStep(step);
+        }
+        return null;
+    }
 
     /**
      * Getter method for property <tt>id</tt>.

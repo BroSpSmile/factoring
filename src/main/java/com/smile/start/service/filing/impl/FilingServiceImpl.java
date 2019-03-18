@@ -39,66 +39,67 @@ import java.util.List;
  * @modified By：
  * @version: $
  */
+@SuppressWarnings("deprecation")
 @Service
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
-    private static final FlowTypeEnum FLOW_TYPE = FlowTypeEnum.valueOf(Progress.FILE.name());
+    private static final FlowTypeEnum FLOW_TYPE  = FlowTypeEnum.valueOf(Progress.FILE.name());
 
-    private static final AuditType AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
+    private static final AuditType    AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
 
     /**
      * 归档DAO
      */
     @Resource
-    private FilingDao filingDao;
+    private FilingDao                 filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao                projectDao;
 
     /**
      * auditDao
      */
     @Resource
-    private AuditDao auditDao;
+    private AuditDao                  auditDao;
 
     /**
      * auditRecordDao
      */
     @Resource
-    private AuditRecordDao auditRecordDao;
+    private AuditRecordDao            auditRecordDao;
 
     /**
      * stepDao
      */
     @Resource
-    private ProjectStepDao stepDao;
+    private ProjectStepDao            stepDao;
 
     /**
      * 文件服务
      */
     @Resource
-    private FileService fileService;
+    private FileService               fileService;
 
     /**
      * 用户服务
      */
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService           userInfoService;
 
     /**
      * flowConfigService
      */
     @Resource
-    private FlowConfigService flowConfigService;
+    private FlowConfigService         flowConfigService;
 
     /**
      *
      */
     @Resource
-    private ProcessEngine processEngine;
+    private ProcessEngine             processEngine;
 
     /**
      * 该方法仅save 和 commit调用，流程审核走公共方法
@@ -272,8 +273,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
             LoggerUtils.info(logger, "删除归档申请影响行effect={}", effect);
 
             //删除归档文件 in db
-            long effectDelItem =
-                filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
+            long effectDelItem = filingDao.delFileItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
 
             //更新项目状态为待归档状态即 已放款状态
             long updateProjectEffect = updateProject(filingApplyInfo);
@@ -288,8 +288,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
         } finally {
             //删除文件
             if (null != filingApplyInfo) {
-                List<FilingFileItem> items =
-                    filingDao.findItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
+                List<FilingFileItem> items = filingDao.findItemByProjectId(filingApplyInfo.getProject(), Progress.FILE.getCode());
                 for (FilingFileItem item : items) {
                     LoggerUtils.info(logger, "删除文件ID={}", item.getItemValue());
                     fileService.delete(item.getItemValue());
@@ -369,8 +368,7 @@ public class FilingServiceImpl extends AbstractService implements FilingService 
     }
 
     private Progress getProgress(FilingApplyInfo filingApplyInfo) {
-        Progress progress =
-            filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_OFFICER) ? Progress.FILED : Progress.FILE;
+        Progress progress = filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_OFFICER) ? Progress.FILED : Progress.FILE;
 
         if (filingApplyInfo.getProgress().equals(FilingSubProgress.FILE_TOBE_APPLY)) {
             progress = Progress.LOANED;
