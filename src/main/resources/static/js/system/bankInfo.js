@@ -221,7 +221,7 @@ vue.tableColumns=[
     },{
         title: '银行余额',
         key: 'amount',
-        align: 'center'
+        align: 'right'
     },{
         title: '操作',
             align: 'center',
