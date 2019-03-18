@@ -163,7 +163,7 @@ var vue = new Vue({
          * 更新角色
          */
         updateOrganizational : function(organizational){
-            this.addForm = organizational;
+            this.addForm = JSON.parse(JSON.stringify(organizational));
             this.modal1 = true;
             this.isDisable = false;
             this.getOrganizationalList();

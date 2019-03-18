@@ -141,8 +141,8 @@ var vue = new Vue({
         /**
          * 更新签署清单
          */
-        updateSign : function(user){
-            this.addForm = user;
+        updateSign : function(sign){
+            this.addForm = JSON.parse(JSON.stringify(sign));
             this.modal1 = true;
             this.isDisable = false;
         },

@@ -204,7 +204,7 @@ var vue = new Vue({
          * 更新用户
          */
         updateUser : function(user){
-            this.addForm = user;
+            this.addForm = JSON.parse(JSON.stringify(user));
             this.modal1 = true;
             this.isDisable = false;
         },

@@ -182,8 +182,8 @@ var vue = new Vue({
         /**
          * 更新权限
          */
-        updatePermission : function(user){
-            this.addForm = user;
+        updatePermission : function(permission){
+            this.addForm = JSON.parse(JSON.stringify(permission));
             this.modal1 = true;
             this.isDisable = false;
             this.getMenuList();
