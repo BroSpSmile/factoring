@@ -6,6 +6,7 @@ package com.smile.start.model.project;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.smile.start.model.enums.InstallmentType;
 
@@ -37,18 +38,38 @@ public class Installment implements Serializable {
     /** 是否已支付 */
     private boolean           paied;
 
-    /** 开票信息 */
-    private String            invoice;
+    /** 是否已开票 */
+    private boolean            invoiced;
+
+    /**
+     * 分期收款或开票信息明细
+     */
+    private List<InstallmentDetail> detailList;
+
+    /**
+     * 分期凭证附件
+     */
+    private InstallmentItem item;
+
+    public InstallmentItem getItem() {
+        return item;
+    }
+
+    public void setItem(InstallmentItem item) {
+        this.item = item;
+    }
 
     /** 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (detail != null ? "detail\":\"" + detail + "\", \"" : "")
-               + (type != null ? "type\":\"" + type + "\", \"" : "") + "amount\":\"" + amount + "\", \""
-               + (installmentDate != null ? "installmentDate\":\"" + installmentDate + "\", \"" : "") + "paied\":\"" + paied + "\", \""
-               + (invoice != null ? "invoice\":\"" + invoice : "") + "\"}  ";
+        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "")
+            + (detail != null ? "detail\":\"" + detail + "\", \"" : "")
+            + (type != null ? "type\":\"" + type + "\", \"" : "") + "amount\":\"" + amount + "\", \""
+            + (installmentDate != null ? "installmentDate\":\"" + installmentDate + "\", \"" : "")
+            + "paied\":\"" + paied + "\", \""
+            + "invoiced\":\"" + invoiced + "\", \"" + "\"}  ";
     }
 
     /**
@@ -159,22 +180,20 @@ public class Installment implements Serializable {
         this.paied = paied;
     }
 
-    /**
-     * Getter method for property <tt>invoice</tt>.
-     * 
-     * @return property value of invoice
-     */
-    public String getInvoice() {
-        return invoice;
+    public boolean isInvoiced() {
+        return invoiced;
     }
 
-    /**
-     * Setter method for property <tt>invoice</tt>.
-     * 
-     * @param invoice value to be assigned to property invoice
-     */
-    public void setInvoice(String invoice) {
-        this.invoice = invoice;
+    public void setInvoiced(boolean invoiced) {
+        this.invoiced = invoiced;
+    }
+
+    public List<InstallmentDetail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<InstallmentDetail> detailList) {
+        this.detailList = detailList;
     }
 
 }
