@@ -25,7 +25,7 @@ public enum ProjectItemType {
                              FILE("FILE", "归档文件"),
 
                              /** */
-                             CONTRACT("CONTRACT", "合同文件");
+                             DRAWUP("DRAWUP", "合同文件");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

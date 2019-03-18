@@ -11,18 +11,18 @@ import java.util.List;
 public class ContractSignDTO implements Serializable {
     private static final long serialVersionUID = -6894536194501862919L;
 
-    private String serialNo;
+    private Long projectId;
 
     private Boolean finished = false;
 
     private List<ContractSignListDTO> signList;
 
-    public String getSerialNo() {
-        return serialNo;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public Boolean getFinished() {

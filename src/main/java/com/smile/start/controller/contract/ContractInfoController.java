@@ -157,20 +157,4 @@ public class ContractInfoController extends BaseController {
             return toResult(e);
         }
     }
-
-    @GetMapping(value = "/signList/{contractSerialNo}")
-    @ResponseBody
-    public ListResult<ContractSignListDTO> signList(@PathVariable String contractSerialNo) {
-        try {
-            final List<ContractSignListDTO> signList = contractInfoService.findSignListByContractSerialNo(contractSerialNo);
-            ListResult<ContractSignListDTO> result = new ListResult<>();
-            result.setSuccess(true);
-            result.setErrorMessage("获取合同签署清单成功");
-            result.setValues(signList);
-            return result;
-        } catch (Exception e) {
-            logger.error("获取合同签署清单失败", e);
-            return toListResult(e, ContractSignListDTO.class);
-        }
-    }
 }

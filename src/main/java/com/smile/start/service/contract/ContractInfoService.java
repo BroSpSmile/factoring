@@ -81,10 +81,10 @@ public interface ContractInfoService {
 
     /**
      * 获取合同签署清单列表
-     * @param contractSerialNo
+     * @param projectId
      * @return
      */
-    List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo);
+    List<ContractSignListDTO> findSignListByProjectId(Long projectId);
 
     /**
      * 保存签署信息

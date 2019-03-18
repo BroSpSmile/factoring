@@ -132,7 +132,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 
         //获取合同附件
-        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.CONTRACT);
+        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
         if (!CollectionUtils.isEmpty(attachs)) {
             List<ContractAttachDTO> attachList = Lists.newArrayList();
             attachs.forEach(e -> {
@@ -248,7 +248,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ProjectItem projectItem = new ProjectItem();
             projectItem.setAttachType(ContractAttachTypeEnum.STANDARD.getValue());
             projectItem.setProjectId(projectId);
-            projectItem.setItemType(ProjectItemType.CONTRACT);
+            projectItem.setItemType(ProjectItemType.DRAWUP);
             projectItem.setItemName(fileName);
             projectItem.setItemValue(upload.getFileId());
             projectItemDao.insert(projectItem);
@@ -305,7 +305,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
 
         //更新附件信息，先批量删除再插入
-        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.CONTRACT);
+        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
         if (!CollectionUtils.isEmpty(typeItems)) {
             typeItems.forEach(e -> projectItemDao.delete(e));
         }
@@ -351,7 +351,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                     ProjectItem projectItem = new ProjectItem();
                     projectItem.setAttachType(ContractAttachTypeEnum.USER_DEFINED.getValue());
                     projectItem.setProjectId(contractInfoDTO.getBaseInfo().getProjectId());
-                    projectItem.setItemType(ProjectItemType.CONTRACT);
+                    projectItem.setItemType(ProjectItemType.DRAWUP);
                     projectItem.setItemName(e.getAttachName());
                     projectItem.setItemValue(e.getFileId());
                     projectItemDao.insert(projectItem);
@@ -536,12 +536,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     /**
      * 获取合同签署清单列表
-     * @param contractSerialNo
+     * @param projectId
      * @return
      */
     @Override
-    public List<ContractSignListDTO> findSignListByContractSerialNo(String contractSerialNo) {
-        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractSerialNo));
+    public List<ContractSignListDTO> findSignListByProjectId(Long projectId) {
+        ContractInfo contractInfo = contractInfoDao.getByProjectId(projectId);
+        return contractInfoMapper.doList2dtoListSign(contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo()));
     }
 
     /**
@@ -550,11 +551,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public void saveSign(ContractSignDTO contractSignDTO) {
-        //        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
-        //            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
-        //        }
+        if (!CollectionUtils.isEmpty(contractSignDTO.getSignList())) {
+            contractSignDTO.getSignList().forEach(e -> contractSignListDao.update(contractInfoMapper.dto2do(e)));
+        }
         if (contractSignDTO.getFinished()) {
-            final ContractInfo contractInfo = contractInfoDao.findBySerialNo(contractSignDTO.getSerialNo());
+            final ContractInfo contractInfo = contractInfoDao.getByProjectId(contractSignDTO.getProjectId());
 //            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
 //            contractInfoDao.update(contractInfo);
 
