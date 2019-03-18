@@ -79,24 +79,28 @@ public class FilingAuditController extends BaseController {
         SingleResult<FilingApplyInfo> result = new SingleResult<FilingApplyInfo>();
 
         Audit audit = auditService.getAuditByProjectFlowAndType(id, AuditType.FILE.getCode());
-        boolean right = false;
-        if (audit.getStep() == -1) {
-            right = true;
-        } else {
-            LoginUser user = LoginHandler.getLoginUser();
-            for (LoginUserRole role : user.getRoleList()) {
-                if (StringUtils.equals(role.getSerialNo(), audit.getRole().getSerialNo())) {
-                    right = true;
-                    break;
-                }
-            }
-        }
-        if (!right) {
-            result.setErrorMessage("没有审批权限!");
-            result.setErrorCode("VP00011002");
-            result.setSuccess(false);
-            return result;
-        }
+//        boolean right = false;
+//        if (null != audit) {
+//            if (audit.getStep() == -1) {
+//                right = true;
+//            } else {
+//                LoginUser user = LoginHandler.getLoginUser();
+//                for (LoginUserRole role : user.getRoleList()) {
+//                    if (StringUtils.equals(role.getSerialNo(), audit.getRole().getSerialNo())) {
+//                        right = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (!right) {
+//                throw new RuntimeException("没有审批权限!");
+////            result.setErrorMessage("没有审批权限!");
+////            result.setErrorCode("VP00011002");
+////            result.setSuccess(false);
+////            return result;
+//            }
+//        }
+
         FilingApplyInfo filingApplyInfo = filingService.findByProjectId(id);
         if (StringUtils.isNotBlank(filingApplyInfo.getFilingListStr())) {
             filingApplyInfo.setFilingList(filingApplyInfo.getFilingListStr().split(","));
