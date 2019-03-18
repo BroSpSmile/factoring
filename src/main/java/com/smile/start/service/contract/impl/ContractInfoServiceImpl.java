@@ -556,6 +556,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         }
         if (contractSignDTO.getFinished()) {
             final ContractInfo contractInfo = contractInfoDao.getByProjectId(contractSignDTO.getProjectId());
+            if(contractInfo.getSealStatus() == SealStatusEnum.NOT_STAMPED.getValue()) {
+                throw new ValidateException("用印未完成，不能完成签署");
+            }
 //            contractInfo.setStatus(ContractStatusEnum.SIGN_FINISH.getValue());
 //            contractInfoDao.update(contractInfo);
 
