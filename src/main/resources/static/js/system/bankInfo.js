@@ -18,9 +18,13 @@ var vue = new Vue({
         addForm : {
             bankFullName : "",
             bankShortName : "",
-            bankAccount : ""
+            bankAccount : "",
+            organizationalSerialNo : ""
         },
         ruleValidate: {
+            organizationalSerialNo: [
+                { required: true, message: '所属组织不能为空', trigger: 'blur' }
+            ],
             bankFullName: [
                 { required: true, message: '银行全称不能为空', trigger: 'blur' }
             ],
@@ -35,12 +39,26 @@ var vue = new Vue({
         tableColumns:[],
         showResult:false,
         modal1:false,
-        isDisable : false
+        isDisable : false,
+        organizationalList:[]
     },
     created : function() {
+        this.initData();
         this.query();
     },
     methods : {
+        initData : function() {
+            let self = this;
+            this.$http.get("/organizational/list").then(function(response) {
+                if (response.data.success) {
+                    self.organizationalList = response.data.values;
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function(error) {
+                self.$Message.error(error.data.message);
+            })
+        },
         /** 分页 */
         pageChange : function(page){
             this.queryParam.pageNum = page;
@@ -70,6 +88,7 @@ var vue = new Vue({
                 bankFullName : "",
                 bankShortName : "",
                 bankAccount : "",
+                organizationalSerialNo : "",
                 amount:0.00
             };
         },

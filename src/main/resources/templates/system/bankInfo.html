@@ -7,6 +7,11 @@
 		<card dis-hover title="搜索条件" style="width:100%">
 			<p>
 				<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
+					<form-item label="选择组织" prop="organizationalSerialNo">
+						<i-select class="inputw" v-model="formInline.organizationalSerialNo" filterable clearable>
+							<i-option v-for="item in organizationalList" :value="item.serialNo">{{ item.organizationalName }}</i-option>
+						</i-select>
+					</form-item>
 					<form-item label="银行全称" prop="bankFullName">
 						<i-input placeholder="输入银行全称" class="inputw" v-model="formInline.bankFullName"></i-input>
 					</form-item>
@@ -37,6 +42,11 @@
 		<modal v-model="modal1" title="新增银行信息" :mask-closable="false">
 			<div id="modalForm">
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="120" >
+					<form-item label="选择组织" prop="organizationalSerialNo">
+						<i-select v-model="addForm.organizationalSerialNo" filterable clearable>
+							<i-option v-for="item in organizationalList" :value="item.serialNo">{{ item.organizationalName }}</i-option>
+						</i-select>
+					</form-item>
 					<form-item label="银行全称" prop="bankFullName">
 						<i-input placeholder="输入银行全称" v-model="addForm.bankFullName"></i-input>
 					</form-item>
