@@ -119,7 +119,7 @@ public class FinanceManageController extends BaseController {
             .map(installment -> installment.isInvoiced())
             .collect(Collectors.toList()));
 
-        //测试效果
+        //测试效果，后面删除，测试多个属性拆分不同个数单元格
         projectForView.getFactoringInstallmentInvoiceds().remove(0);
         return projectForView;
     }
