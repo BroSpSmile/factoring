@@ -11,6 +11,11 @@ public class BankInfoSearchDTO implements Serializable {
     private static final long serialVersionUID = 8867440426764642572L;
 
     /**
+     * 所属组织
+     */
+    private String organizationalSerialNo;
+
+    /**
      * 银行全称
      */
     private String bankFullName;
@@ -24,6 +29,14 @@ public class BankInfoSearchDTO implements Serializable {
      * 银行账号
      */
     private String bankAccount;
+
+    public String getOrganizationalSerialNo() {
+        return organizationalSerialNo;
+    }
+
+    public void setOrganizationalSerialNo(String organizationalSerialNo) {
+        this.organizationalSerialNo = organizationalSerialNo;
+    }
 
     public String getBankFullName() {
         return bankFullName;

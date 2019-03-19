@@ -182,7 +182,7 @@ public enum Step {
                       }
 
                   },
-                  LOANEN(8, "放款操作") {
+                  LOANEN(9, "放款操作") {
 
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
@@ -201,13 +201,13 @@ public enum Step {
                       }
 
                   },
-                  FILE(9, "归档") {
+                  FILE(10, "归档") {
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
                        */
                       @Override
                       public Step prev() {
-                          return LOAN_AUDIT;
+                          return LOANEN;
                       }
 
                       /** 
@@ -219,13 +219,13 @@ public enum Step {
                       }
 
                   },
-                  FILE_AUDIT(10, "归档审核") {
+                  FILE_AUDIT(11, "归档审核") {
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
                        */
                       @Override
                       public Step prev() {
-                          return LOAN;
+                          return FILE;
                       }
 
                       /** 
@@ -237,7 +237,7 @@ public enum Step {
                       }
 
                   },
-                  END(11, "完结") {
+                  END(12, "完结") {
 
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()

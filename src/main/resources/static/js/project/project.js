@@ -523,7 +523,7 @@ vue.tableColumns=[{
 						param.row.step==4?h('DropdownItem',{props:{name:'contractInfo'}},'合同拟定'):h('span'),
 						param.row.step==6?h('DropdownItem',{props:{name:'contractSign'}},'签署'):h('span'),
 						param.row.step==7?h('DropdownItem',{props:{name:'loanApply'}},'放款'):h('span'),
-						param.row.step==9?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
+						param.row.step==10?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
 					])
 				])
 			])

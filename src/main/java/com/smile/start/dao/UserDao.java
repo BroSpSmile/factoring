@@ -47,7 +47,8 @@ public interface UserDao {
      * @param user
      * @return
      */
-    @Update("update auth_user_info set mobile = #{mobile},username=#{username},email=#{email},status=#{status},delete_flag=#{deleteFlag},passwd=#{passwd},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update auth_user_info set mobile = #{mobile},username=#{username},email=#{email},status=#{status},"
+            + "delete_flag=#{deleteFlag},passwd=#{passwd},modify_user=#{modifyUser},gmt_modify=#{gmtModify},openid = #{openid}" + " where id=#{id}")
     int update(User user);
 
     /**
@@ -65,6 +66,14 @@ public interface UserDao {
      */
     @Select("select * from auth_user_info where mobile = #{mobile} limit 1")
     User getByMobile(String mobile);
+
+    /**
+     * 根据OpenId获取用户
+     * @param openId
+     * @return
+     */
+    @Select("select * from auth_user_info where openid = #{openId} limit 1")
+    User getByOpenId(String openId);
 
     /**
      * 根据用户编号查询用户
@@ -87,10 +96,8 @@ public interface UserDao {
      * @param userSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0"
-            + "<if test = 'username!=null'> and username = #{username}</if>"
-            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>"
-            + "<if test = 'status!=null'> and status = #{status}</if>"
+    @Select("<script>" + "select * from auth_user_info where 1=1 and delete_flag = 0" + "<if test = 'username!=null'> and username = #{username}</if>"
+            + "<if test = 'mobile!=null'> and mobile = #{mobile}</if>" + "<if test = 'status!=null'> and status = #{status}</if>"
             + "<if test = 'organizational!=null'> and serial_no in (select user_serial_no from auth_user_organizational where organizational_serial_no = #{organizational})</if>"
             + "</script>")
     List<User> findByParam(UserSearchDTO userSearchDTO);

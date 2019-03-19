@@ -5,6 +5,7 @@ import com.smile.start.commons.LoginHandler;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.UserInfoService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 
 import java.io.IOException;
@@ -47,14 +48,14 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-        if (isAllowed(path)) {
+        if (isAllowed(path) || isWx(request)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String token = getToken(request);
             if (token != null && userInfoService.validateToken(token)) {
                 //从session中获取登录用户信息，如果session中没有则从数据库中获取
                 LoginUser loginUser = (LoginUser) request.getSession().getAttribute(Constants.LOGIN_USER_SESSION_KEY);
-                if(loginUser == null) {
+                if (loginUser == null) {
                     loginUser = userInfoService.getLoginUserByToken(token);
                     request.getSession().setAttribute(Constants.LOGIN_USER_SESSION_KEY, loginUser);
                 }
@@ -64,6 +65,19 @@ public class LoginFilter implements Filter {
                 request.getRequestDispatcher("/login").forward(request, response);
             }
         }
+    }
+
+    /**
+     * 判断是否微信用户
+     * @param request
+     * @return
+     */
+    private boolean isWx(HttpServletRequest request) {
+        String openId = request.getParameter("openId");
+        if (StringUtils.isNotBlank(openId)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isAllowed(String path) {

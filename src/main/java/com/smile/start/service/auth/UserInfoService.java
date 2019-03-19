@@ -61,6 +61,13 @@ public interface UserInfoService {
     User getUserByToken(String token);
 
     /**
+     * 根据OpenId获取用户信息
+     * @param openId
+     * @return
+     */
+    User getUserByOpenId(String openId);
+
+    /**
      * 根据ID获取用户信息
      * @param id
      * @return

@@ -8,9 +8,7 @@ import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.project.Project;
-import com.smile.start.service.filing.FilingService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @description：归档申请，项目查询
@@ -35,12 +32,6 @@ public class FilingProjectController extends BaseController {
     /** 项目服务 */
     @Resource
     private ProjectService projectService;
-
-    /**
-     * 项目服务
-     */
-    @Resource
-    private FilingService  filingService;
 
     /**
      *
@@ -70,7 +61,8 @@ public class FilingProjectController extends BaseController {
     }
 
     private String getSubProgress(Project project) {
-        Optional<FilingApplyInfo> opt = Optional.ofNullable(filingService.findByProjectId(project.getId()));
-        return opt.isPresent() ? opt.get().getProgress().getCode() : "";
+        //        Optional<FilingApplyInfo> opt = Optional.ofNullable(filingService.findByProjectId(project.getId()));
+        //        return opt.isPresent() ? opt.get().getProgress().getCode() : "";
+        return null;
     }
 }

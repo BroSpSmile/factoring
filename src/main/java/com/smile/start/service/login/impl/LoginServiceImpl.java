@@ -15,7 +15,9 @@ import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
@@ -51,6 +53,7 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
      * @return
      */
     @Override
+    @Transactional
     public AuthUserInfoDTO login(LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
         //TODO 密码暂时用明文，等用户新增功能做好
         //String md5Passwd = MD5Encoder.encode(loginRequestDTO.getPasswd().getBytes());
@@ -67,6 +70,11 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
         token.setTokenExpire(DateUtil.addMinutes(nowDate, 600));
         tokenDao.insert(token);
         response.addCookie(new Cookie(Constants.TOKEN_COOKIE_KEY, tokenStr));
+        if (StringUtils.isNotBlank(loginRequestDTO.getOpenId())) {
+            login.setOpenid(loginRequestDTO.getOpenId());
+            userDao.update(login);
+        }
+        login.setOpenid(loginRequestDTO.getOpenId());
         return userInfoService.get(login.getId());
     }
 

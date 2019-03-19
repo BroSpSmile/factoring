@@ -33,7 +33,6 @@ import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditFlow;
@@ -131,7 +130,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setCreateTime(new Date());
         audit.setStep(0);
         audit.setAuditType(AuditType.getByCode(Step.getStep(project.getStep()).name()));
-        FlowStatusDTO step = nextStep(audit, toType(project.getProgress()), 1);
+        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 1);
         audit.setStep(step.getFlowStatus());
         //获取审核流程
         AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -147,11 +146,11 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Transactional
     public BaseResult pass(AuditRecord record) {
         Audit audit = getAudit(record.getAudit().getId());
-        FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
+        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 0);
         record.setResult(AuditResult.PASS);
         record.setType(step.getFlowStatusDesc());
         record.setStatus(step.getFlowStatusDesc() + "通过");
-        FlowStatusDTO nextStep = nextStep(audit, toType(audit.getProject().getProgress()), 1);
+        FlowStatusDTO nextStep = nextStep(audit, toType(audit.getAuditType()), 1);
         if (null != nextStep) {
             audit.setStep(nextStep.getFlowStatus());
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -178,10 +177,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Transactional
     public BaseResult reject(AuditRecord record) {
         Audit audit = getAudit(record.getAudit().getId());
-        FlowStatusDTO step = nextStep(audit, toType(audit.getProject().getProgress()), 0);
+        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 0);
         record.setResult(AuditResult.REJECTED);
         record.setType(step.getFlowStatusDesc());
-        FlowStatusDTO nextStep = nextStep(record.getAudit(), toType(audit.getProject().getProgress()), 0);
+        FlowStatusDTO nextStep = nextStep(record.getAudit(), toType(audit.getAuditType()), 0);
         if (null != nextStep) {
             record.setStatus("驳回至" + nextStep.getFlowStatusDesc());
             audit.setStep(nextStep.getFlowStatus());
@@ -273,13 +272,6 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             }
         }
         return null;
-    }
-
-    private FlowTypeEnum toType(Progress progress) {
-        if (Progress.DRAWUP.equals(progress)) {
-            return FlowTypeEnum.DRAWUP;
-        }
-        return FlowTypeEnum.valueOf(progress.name());
     }
 
     private FlowTypeEnum toType(AuditType auditType) {

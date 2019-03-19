@@ -21,6 +21,11 @@ public class BankInfoDTO implements Serializable {
     private String            serialNo;
 
     /**
+     * 所属组织
+     */
+    private String            organizationalSerialNo;
+
+    /**
      * 银行全称
      */
     private String            bankFullName;
@@ -82,6 +87,14 @@ public class BankInfoDTO implements Serializable {
      */
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
+    }
+
+    public String getOrganizationalSerialNo() {
+        return organizationalSerialNo;
+    }
+
+    public void setOrganizationalSerialNo(String organizationalSerialNo) {
+        this.organizationalSerialNo = organizationalSerialNo;
     }
 
     /**

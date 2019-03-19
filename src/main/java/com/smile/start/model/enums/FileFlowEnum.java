@@ -8,7 +8,7 @@ package com.smile.start.model.enums;
  */
 public enum FileFlowEnum {
 
-                          FILE_APPLY(FilingSubProgress.FILE_APPLY.getIndex() - 1, "提出归档申请") {
+                          FILE_APPLY(0, "提出归档申请") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return FILE_LEGAL_AUDIT;
@@ -19,7 +19,7 @@ public enum FileFlowEnum {
                                   return null;
                               }
                           },
-                          FILE_LEGAL_AUDIT(FilingSubProgress.FILE_LEGAL_AUDIT.getIndex() - 1, "法务风控审核") {
+                          FILE_LEGAL_AUDIT(1, "法务风控审核") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return FILE_OFFICER;
@@ -30,7 +30,7 @@ public enum FileFlowEnum {
                                   return FILE_APPLY;
                               }
                           },
-                          FILE_OFFICER(FilingSubProgress.FILE_LEGAL_AUDIT.getIndex() - 1, "办公室专员归档") {
+                          FILE_OFFICER(2, "办公室专员归档") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return null;

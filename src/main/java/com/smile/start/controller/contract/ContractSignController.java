@@ -5,13 +5,18 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.dto.ContractBaseInfoDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.dto.ContractSignDTO;
+import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.ListResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.service.contract.ContractInfoService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -25,8 +30,16 @@ public class ContractSignController extends BaseController {
     @Resource
     private ContractInfoService contractInfoService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String index() {
+    /**
+     * 从项目列表中点击 签署 跳转页面
+     * @param request
+     * @param model
+     * @return
+     */
+    @GetMapping
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        model.addAttribute("projectId", id);
         return "contract/contractSign";
     }
 
@@ -48,6 +61,22 @@ public class ContractSignController extends BaseController {
         } catch (Exception e) {
             logger.error("保存签署信息失败", e);
             return toResult(e);
+        }
+    }
+
+    @GetMapping(value = "/signList/{projectId}")
+    @ResponseBody
+    public ListResult<ContractSignListDTO> signList(@PathVariable Long projectId) {
+        try {
+            final List<ContractSignListDTO> signList = contractInfoService.findSignListByProjectId(projectId);
+            ListResult<ContractSignListDTO> result = new ListResult<>();
+            result.setSuccess(true);
+            result.setErrorMessage("获取合同签署清单成功");
+            result.setValues(signList);
+            return result;
+        } catch (Exception e) {
+            logger.error("获取合同签署清单失败", e);
+            return toListResult(e, ContractSignListDTO.class);
         }
     }
 }
