@@ -39,7 +39,7 @@ var vue = new Vue({
     },
     created: function () {
         this.initDate();
-        this.queryWithFactoringInfo();
+        this.query();
     },
     methods: {
         /**
@@ -64,7 +64,7 @@ var vue = new Vue({
             });
         },
 
-        queryWithFactoringInfo: function () {
+        query: function () {
             let self = this;
             self.queryParam.condition = self.formInline;
             this.$http.post("/financeManage/query", self.queryParam).then(
@@ -143,27 +143,6 @@ var vue = new Vue({
                 }
             }
             return "";
-        },
-
-        /** 分页查询 */
-        query: function () {
-            let self = this;
-            self.queryParam.condition = self.formInline;
-            this.$http.post("/project/query", self.queryParam).then(
-                function (response) {
-                    let data = response.data;
-                    console.log(data)
-                    for (let index in data.list) {
-                        try {
-                            data.list[index].creditor = data.list[index].detail.creditor;
-                            data.list[index].debtor = data.list[index].detail.debtor;
-                        } catch (e) {
-                        }
-                    }
-                    self.pageInfo = data;
-                }, function (error) {
-                    self.$Message.error(error.data.message);
-                })
         },
 
         /** 搜索 */
