@@ -234,6 +234,15 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /** 
+     * @see com.smile.start.service.auth.UserInfoService#getUserByOpenId(java.lang.String)
+     */
+    @Override
+    public User getUserByOpenId(String openId) {
+        User user = userDao.getByOpenId(openId);
+        return user;
+    }
+
+    /** 
      * @see com.smile.start.service.auth.UserInfoService#getUserById(java.lang.Long)
      */
     @Override
@@ -282,7 +291,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 LoginUserPermission loginUserPermission = dto2LoginUserPermisson(e);
                 List<AuthPermissionInfoDTO> subList = permissionInfoService.findByParentSerialNo(e.getSerialNo());
                 List<LoginUserPermission> childrens = Lists.newArrayList();
-                if(!CollectionUtils.isEmpty(subList)) {
+                if (!CollectionUtils.isEmpty(subList)) {
                     subList.forEach(p -> childrens.add(dto2LoginUserPermisson(p)));
                 }
                 loginUserPermission.setChildrens(childrens);

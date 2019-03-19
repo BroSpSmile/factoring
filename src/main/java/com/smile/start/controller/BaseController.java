@@ -94,6 +94,10 @@ public class BaseController {
             User user = userInfoService.getUserByToken(token);
             return user;
         }
+        String openId = request.getParameter("openId");
+        if (StringUtils.isNoneBlank(openId)) {
+            return userInfoService.getUserByOpenId(openId);
+        }
         return null;
     }
 
