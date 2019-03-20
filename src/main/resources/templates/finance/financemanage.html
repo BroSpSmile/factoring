@@ -33,42 +33,6 @@
 		</card>
 		<br>
 		<card dis-hover title="搜索结果" >
-
-
-			<table class="table table-bordered">
-				<thead>
-				<tr>
-					<th>项目编号</th>
-					<th>项目名称</th>
-					<th>业务负责人</th>
-					<th>放款审核通过时间</th>
-					<th>应收账款（万元）</th>
-					<th>已投放金额（万元）</th>
-					<th>投放日期</th>
-					<th>回款金额（万元）</th>
-					<th>回款日期</th>
-					<th>保理费合计（万元）</th>
-					<th>保理费分期（万元）</th>
-					<th>保理费到账日（前）</th>
-					<th>开票日期</th>
-					<th>放款审核通过时间</th>
-					<th>操作</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr v-for="item in tableData" :key="item.id">
-					<td>{{ item.id }}</td>
-					<td :rowspan="item.projectspan" :class="{hidden: item.projectdis}">{{ item.project }}</td>
-					<td :rowspan="item.typespan" :class="{hidden: item.typedis}">{{ item.type }}</td>
-					<td>{{item.subentry}}</td>
-					<td>{{item.nowManage}}</td>
-					<td>{{item.Hidden}}</td>
-					<td>{{item.Total}}</td>
-					<td>{{item.remark}}</td>
-				</tr>
-				</tbody>
-			</table>
-
 			<i-table border :columns="tableColumns" :data="pageInfo.list" ></i-table>
 			<br/>
 			<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
@@ -77,5 +41,11 @@
 
 	</div>
 	<script src="js/finance/financemanage.js"></script>
+	<style scoped>
+		.ivu-table-cell {
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+	</style>
 </div>
 </html>

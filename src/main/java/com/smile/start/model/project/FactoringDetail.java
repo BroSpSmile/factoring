@@ -70,6 +70,11 @@ public class FactoringDetail implements Serializable {
     /** 备注 */
     private String            remark;
 
+    /**
+     * TODO 放款审核通过时间，财务管理查询页面使用，放款审核监听修改
+     */
+    private Date loanAuditPassTime;
+
     /** 
      * @see java.lang.Object#toString()
      */
@@ -84,6 +89,14 @@ public class FactoringDetail implements Serializable {
                + (returnInstallments != null ? "returnInstallments\":\"" + returnInstallments + "\", \"" : "") + "totalFactoringFee\":\"" + totalFactoringFee + "\", \""
                + (factoringInstallments != null ? "factoringInstallments\":\"" + factoringInstallments + "\", \"" : "") + "returnRate\":\"" + returnRate + "\", \""
                + (remark != null ? "remark\":\"" + remark : "") + "\"}  ";
+    }
+
+    public Date getLoanAuditPassTime() {
+        return loanAuditPassTime;
+    }
+
+    public void setLoanAuditPassTime(Date loanAuditPassTime) {
+        this.loanAuditPassTime = loanAuditPassTime;
     }
 
     /**

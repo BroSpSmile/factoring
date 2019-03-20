@@ -25,7 +25,7 @@ public class Project implements Serializable {
     private static final long serialVersionUID = -530319698748537765L;
 
     /** ID */
-    private long              id;
+    private long              id = -1;
 
     /** 项目编号 */
     private String            projectId;

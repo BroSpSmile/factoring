@@ -5,17 +5,25 @@
 package com.smile.start.controller.finance;
 
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectForView;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author ：xioutman
@@ -28,16 +36,21 @@ import javax.annotation.Resource;
 @RequestMapping("/financeManage")
 public class FinanceManageController extends BaseController {
 
-    /** 项目服务 */
+    /**
+     * 项目服务
+     */
     @Resource
     private ProjectService projectService;
 
-    /**  财务服务 */
+    /**
+     * 财务服务
+     */
     @Resource
     private FinanceService financeService;
 
     /**
      * 跳转
+     *
      * @return
      */
     @GetMapping
@@ -47,14 +60,51 @@ public class FinanceManageController extends BaseController {
 
     /**
      * 分页查询
+     *
      * @param query
      * @return
      */
     @PostMapping("/query")
     @ResponseBody
-    public PageInfo<Project> queryByParam(@RequestBody PageRequest<Project> query) {
+    public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query) {
+        SingleResult<Map<String, Object>> singleResult = new SingleResult<Map<String, Object>>();
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
-        return projectService.queryPage(query);
+        List<ProjectForView> projectForViewList = Lists.newArrayList();
+        if (null != projectService.queryPage(query)) {
+            List<Project> list = projectService.queryPage(query).getList();
+            if (null != list && !list.isEmpty()) {
+                for (Project project : list) {
+                    projectForViewList.add(getProjectForView(project));
+                }
+            }
+        }
+        PageInfo<ProjectForView> result = new PageInfo<>(projectForViewList);
+        return result;
     }
 
+    private ProjectForView getProjectForView(Project project) {
+        ProjectForView projectForView = new ProjectForView();
+        projectForView.setId(project.getId());
+        projectForView.setProjectId(project.getProjectId());
+        projectForView.setProjectName(project.getProjectName());
+        projectForView.setUsername(project.getUser().getUsername());
+        FactoringDetail detail = project.getDetail();
+        projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
+        projectForView.setReceivable(detail.getReceivable());
+        projectForView.setDropAmount(detail.getDropAmount());
+        projectForView.setDropDates(
+            detail.getLoanInstallments().stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
+        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount()).count());
+        projectForView.setReturnDates(
+            detail.getReturnInstallments().stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
+        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee());
+        projectForView.setFactoringInstallmentAmounts(detail.getFactoringInstallments().stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
+        projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments().stream().map(installment -> installment.getInstallmentDate())
+            .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
+        projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments().stream().map(installment -> installment.isInvoiced()).collect(Collectors.toList()));
+
+        //测试效果，后面删除，测试多个属性拆分不同个数单元格
+        projectForView.getFactoringInstallmentInvoiceds().remove(0);
+        return projectForView;
+    }
 }
