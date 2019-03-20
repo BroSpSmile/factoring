@@ -1,6 +1,7 @@
 package com.smile.start.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Joseph
@@ -13,7 +14,7 @@ public class BankInfoSearchDTO implements Serializable {
     /**
      * 所属组织
      */
-    private String organizationalSerialNo;
+    private List<String> organizationalList;
 
     /**
      * 银行全称
@@ -30,12 +31,12 @@ public class BankInfoSearchDTO implements Serializable {
      */
     private String bankAccount;
 
-    public String getOrganizationalSerialNo() {
-        return organizationalSerialNo;
+    public List<String> getOrganizationalList() {
+        return organizationalList;
     }
 
-    public void setOrganizationalSerialNo(String organizationalSerialNo) {
-        this.organizationalSerialNo = organizationalSerialNo;
+    public void setOrganizationalList(List<String> organizationalList) {
+        this.organizationalList = organizationalList;
     }
 
     public String getBankFullName() {

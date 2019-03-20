@@ -38,6 +38,11 @@ public class LoginUser implements Serializable {
     private String email;
 
     /**
+     * 所属组织
+     */
+    private List<LoginUserOrganizational> organizationalList;
+
+    /**
      * 用户拥有的角色列表
      */
     private List<LoginUserRole> roleList;
@@ -87,6 +92,14 @@ public class LoginUser implements Serializable {
         this.email = email;
     }
 
+    public List<LoginUserOrganizational> getOrganizationalList() {
+        return organizationalList;
+    }
+
+    public void setOrganizationalList(List<LoginUserOrganizational> organizationalList) {
+        this.organizationalList = organizationalList;
+    }
+
     public List<LoginUserRole> getRoleList() {
         return roleList;
     }
@@ -111,6 +124,7 @@ public class LoginUser implements Serializable {
                 ", mobile='" + mobile + '\'' +
                 ", openid='" + openid + '\'' +
                 ", email='" + email + '\'' +
+                ", organizationalList=" + organizationalList +
                 ", roleList=" + roleList +
                 ", permissionList=" + permissionList +
                 '}';

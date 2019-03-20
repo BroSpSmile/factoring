@@ -20,6 +20,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.login.LoginUserOrganizational;
 import com.smile.start.model.login.LoginUserPermission;
 import com.smile.start.model.login.LoginUserRole;
 import com.smile.start.service.auth.OrganizationalService;
@@ -290,6 +291,17 @@ public class UserInfoServiceImpl implements UserInfoService {
             });
             loginUser.setPermissionList(userPermissionList);
         }
+
+        //获取组织信息
+        final List<OrganizationalDTO> organiztionalList = organizationalService.findByUserSerialNo(user.getSerialNo());
+        if (!CollectionUtils.isEmpty(organiztionalList)) {
+            List<LoginUserOrganizational> organizationalList = Lists.newArrayList();
+            organiztionalList.forEach(e -> {
+                LoginUserOrganizational loginUserOrganizational = dto2LoginUserOrganizational(e);
+                organizationalList.add(loginUserOrganizational);
+            });
+            loginUser.setOrganizationalList(organizationalList);
+        }
         return loginUser;
     }
 
@@ -301,6 +313,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         loginUserPermission.setPermissionType(authPermissionInfoDTO.getPermissionType());
         loginUserPermission.setUrl(authPermissionInfoDTO.getUrl());
         return loginUserPermission;
+    }
+
+    private LoginUserOrganizational dto2LoginUserOrganizational(OrganizationalDTO organizationalDTO) {
+        LoginUserOrganizational loginUserOrganizational = new LoginUserOrganizational();
+        loginUserOrganizational.setSerialNo(organizationalDTO.getSerialNo());
+        loginUserOrganizational.setOrganizationalName(organizationalDTO.getOrganizationalName());
+        return loginUserOrganizational;
     }
 
     /**

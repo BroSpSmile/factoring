@@ -3,6 +3,8 @@ package com.smile.start.service.common.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.BankInfoDao;
 import com.smile.start.dto.BankInfoDTO;
@@ -10,6 +12,7 @@ import com.smile.start.dto.BankInfoSearchDTO;
 import com.smile.start.mapper.BankInfoMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.BankInfo;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.common.BankInfoService;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +49,12 @@ public class BankInfoServiceImpl implements BankInfoService {
     @Override
     public PageInfo<BankInfoDTO> findAll(PageRequest<BankInfoSearchDTO> pageRequest) {
         PageHelper.startPage(pageRequest.getPageNum(), pageRequest.getPageSize(), "id desc");
-        final List<BankInfo> bankList = bankInfoDao.findByParam(pageRequest.getCondition());
+        BankInfoSearchDTO condition = pageRequest.getCondition();
+        List<String> organizationlIds = Lists.newArrayList();
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        loginUser.getOrganizationalList().forEach(e -> organizationlIds.add(e.getSerialNo()));
+        condition.setOrganizationalList(organizationlIds);
+        final List<BankInfo> bankList = bankInfoDao.findByParam(condition);
         PageInfo<BankInfoDTO> pageInfo = new PageInfo<>(bankInfoMapper.doList2dtoList(bankList));
         Page<BankInfo> page = (Page<BankInfo>) bankList;
         pageInfo.setTotal(page.getTotal());
