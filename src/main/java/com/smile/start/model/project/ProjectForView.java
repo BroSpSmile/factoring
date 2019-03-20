@@ -21,6 +21,11 @@ public class ProjectForView implements Serializable {
     /**
      * 项目编号
      */
+    private Long id;
+
+    /**
+     * 项目编号
+     */
     private String projectId;
 
     /**
@@ -82,6 +87,14 @@ public class ProjectForView implements Serializable {
      * 是否已经开票 列表
      */
     private List<Boolean> factoringInstallmentInvoiceds;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getProjectId() {
         return projectId;

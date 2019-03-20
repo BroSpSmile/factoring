@@ -8,6 +8,7 @@ var vue = new Vue({
     el: '#financeManage',
     data: {
         formInline: {
+            id:-1,
             projectId: null,
             projectName: null,
             person: null,
@@ -20,9 +21,8 @@ var vue = new Vue({
             pageSize: 10
         },
         pageInfo: {},
-        list: [],
-        modal1: false,
         statusItems: [],
+        models:[],
         project: {
             projectId: "",
             detail: {
@@ -46,7 +46,7 @@ var vue = new Vue({
          * 初始化数据
          */
         initDate: function () {
-            var _self = this;
+            let _self = this;
             this.$http.get("/combo/progress").then(function (response) {
                 _self.statusItems = response.data;
             }, function (error) {
@@ -70,11 +70,19 @@ var vue = new Vue({
             this.$http.post("/financeManage/query", self.queryParam).then(
                 function (response) {
                     let data = response.data;
-                    console.log(data)
+                    console.log(data);
                     self.pageInfo = data;
                 }, function (error) {
                     self.$Message.error(error.data.message);
                 })
+        },
+
+        /**
+         * 新增项目
+         */
+        edit : function(id) {
+            window.open("financeOperation?id=" + id, "_self");
+
         },
 
         getData: function (list) {
@@ -190,62 +198,8 @@ var vue = new Vue({
                 self.$Message.error(error.data.message);
             });
         },
-
-        /**
-         * 取消
-         */
-        cancel: function () {
-            this.modal1 = false;
-        },
-
-        /**
-         * 跳转菜单
-         */
-        operate: function (project) {
-            this.modal1 = true;
-            this.project = project;
-        },
-        /**
-         * 文件上传成功
-         */
-        uploadSuccess: function (response, file, fileList) {
-            // this.fileList = fileList;
-            // console.log(fileList);
-        },
-        /**
-         * 文件上传失败
-         */
-        uploadError: function (error, file, fileList) {
-            // this.fileList = fileList;
-            // console.log(error);
-        },
-        removeFile: function (file, fileList) {
-            this.fileList = fileList;
-            console.log(file);
-            let fileId = file.response.data.fileId;
-            let self = this;
-            this.$http.delete("/file/" + fileId).then(function (response) {
-                if (response.data.success) {
-                    self.$Message.info("删除成功");
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                self.$Message.error(error.data.errorMessage);
-            })
-        },
-        genFileInfo: function () {
-            for (let index in this.fileList) {
-                let item = {
-                    attachName: this.fileList[index].name,
-                    fileId: this.fileList[index].response.data.fileId
-                };
-                this.addForm.attachList.push(item);
-            }
-            return true;
-        },
         columnRender: function (h, param) {
-            var childArray = param.row[param.column.key];
+            let childArray = param.row[param.column.key];
             if (childArray.length == 0) {
                 return h('span');
             } else if (childArray.length == 1) {
@@ -265,7 +219,7 @@ var vue = new Vue({
                     ]);
                     trAarry.push(aa);
                     if (index !== childArray.length - 1) {
-                        var bb = h('hr', {
+                        let bb = h('hr', {
                             style: {
                                 height: '1px',
                                 'background-color': '#e9eaec',
@@ -378,10 +332,10 @@ vue.tableColumns = [{
                     },
                     on: {
                         click: () => {
-                            vue.operate(param.row);
+                            vue.edit(param.row.id);
                         }
                     }
-                }, '登记')
+                }, '编辑')
             ]
         )
     }

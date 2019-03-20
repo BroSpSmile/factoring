@@ -1,35 +1,34 @@
 /**
  * 菜单信息
  */
-common.pageName = "finance";
-common.openName = [ 'finance' ];
+common.pageName = "financeManage";
+common.openName = [ 'financeManage' ];
 
 var vue = new Vue({
-    el : '#finance',
+    el : '#financeOperation',
     data : {
-        formInline : {
-            projectId : null,
-            projectName : null,
-            person : null,
-            progress : null
+        projectUrl: 'financeManage',
+        project:{
         },
-        addForm : {
-            projectId : "",
-            projectName : "",
-            person : ""
-        },
-        queryParam : {
-            condition : {},
-            pageNum : 1,
-            pageSize : 10
-        },
-        pageInfo:{},
-        modal1 : false,
         statusItems : [],
+        steps:[],
         models:[],
-        steps:[]
+        queryParam: {
+            condition: {},
+            pageNum: 1,
+            pageSize: 10
+        },
+        formInline: {
+            id:-1,
+            projectId: null,
+            projectName: null,
+            person: null,
+            progress: null
+        },
     },
     created : function() {
+        this.formInline.id = document.getElementById("projectId").value;
+        this.queryParam.condition = this.formInline;
         this.initDate();
         this.query();
     },
@@ -38,7 +37,7 @@ var vue = new Vue({
          * 初始化数据
          */
         initDate : function() {
-            var _self = this;
+            let _self = this;
             this.$http.get("/combo/progress").then(function(response) {
                 _self.statusItems = response.data;
             }, function(error) {
@@ -54,6 +53,19 @@ var vue = new Vue({
             }, function(error) {
                 console.error(error);
             });
+        },
+
+        /** 分页查询 */
+        query : function() {
+            let self = this;
+            self.queryParam.condition = self.formInline;
+            this.$http.post("/project/query", self.queryParam).then(
+                function(response) {
+                    let data = response.data;
+                    self.project=data.list[0];
+                }, function(error) {
+                    self.$Message.error(error.data.message);
+                })
         },
 
         /**
@@ -99,51 +111,6 @@ var vue = new Vue({
             return "";
         },
 
-        /** 分页查询 */
-        query : function() {
-            let self = this;
-            self.queryParam.condition = self.formInline;
-            this.$http.post("/project/query", self.queryParam).then(
-                function(response) {
-                    let data = response.data;
-                    for(let index in data.list){
-                        try{
-                            data.list[index].creditor = data.list[index].detail.creditor;
-                            data.list[index].debtor = data.list[index].detail.debtor;
-                        }catch(e){}
-                    }
-                    self.pageInfo = data;
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                })
-        },
-
-        /** 搜索 */
-        search:function(){
-            this.queryParam.pageNum = 1;
-            this.query();
-        },
-
-        /** 分页 */
-        pageChange:function(page){
-            this.queryParam.pageNum = page;
-            this.query();
-        },
-
-        /**
-         * 重置
-         */
-        reset:function(){
-            this.$refs['searchForm'].resetFields();
-        },
-
-        /**
-         * 新增项目
-         */
-        addProject : function() {
-            window.open("factoring","_blank");
-        },
-
         /** 保存项目 */
         saveProject : function() {
             let self = this;
@@ -183,19 +150,9 @@ var vue = new Vue({
 
         },
 
-        /**
-         * 取消
-         */
-        cancel : function() {
-            this.modal1 = false;
+        cancel: function () {
+            window.open(this.projectUrl, "_self");
         },
-
-        /**
-         * 跳转菜单
-         */
-        operate : function(projectId){
-            this.modal1 = true;
-        }
     }
 });
 

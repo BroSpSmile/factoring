@@ -88,6 +88,7 @@ public class FinanceManageController extends BaseController {
 
     private ProjectForView getProjectForView(Project project) {
         ProjectForView projectForView = new ProjectForView();
+        projectForView.setId(project.getId());
         projectForView.setProjectId(project.getProjectId());
         projectForView.setProjectName(project.getProjectName());
         projectForView.setUsername(project.getUser().getUsername());

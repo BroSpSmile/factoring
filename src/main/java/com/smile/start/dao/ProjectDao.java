@@ -107,7 +107,8 @@ public interface ProjectDao {
                                               @Result(column = "username", property = "user.username")})
     @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id "
             + "where 1=1 " + "<if test = 'projectId!=null'> and t1.project_id = #{projectId}</if>"
-            + "<if test = 'kind!=null'> and t1.kind = #{kind}</if>" 
+            + "<if test = 'kind!=null'> and t1.kind = #{kind}</if>"
+            + "<if test = 'id!=-1'> and t1.id = #{id}</if>"
             + "<if test = 'projectName!=null'> and t1.project_name = #{projectName}</if>"
             + "<if test = 'user!=null'> and t1.person = #{user.id}</if>" 
             + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"

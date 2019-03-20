@@ -13,9 +13,11 @@ import com.smile.start.model.project.Project;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ：xioutman
@@ -41,9 +43,13 @@ public class OperationController extends BaseController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        LoggerUtils.info(logger, "项目ID={}", id);
+        model.addAttribute("id", id);
         return "finance/operation";
     }
+
 
     /**
      * 分页查询
