@@ -19,10 +19,10 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
 import com.smile.start.dao.AuditDao;
 import com.smile.start.dao.AuditRecordDao;
 import com.smile.start.dao.AuditRecordItemDao;
+import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
 import com.smile.start.dto.FlowConfigDTO;
 import com.smile.start.dto.FlowStatusDTO;
@@ -78,6 +78,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     /** flowConfigService */
     @Resource
     private FlowConfigService  flowConfigService;
+
+    /** flowConfigDao */
+    @Resource
+    private FlowConfigDao      flowConfigDao;
 
     /** 项目服务 */
     @Resource
@@ -242,16 +246,14 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     private void genAudit(Audit audit) {
-        User applicant = userInfoService.getUserById(audit.getApplicant().getId());
-        audit.setApplicant(applicant);
         Project project = projectService.getProject(audit.getProject().getId());
         audit.setProject(project);
         List<AuditRecord> records = auditRecordDao.query(audit);
         for (AuditRecord record : records) {
-            List<AuditRecordItem> items = auditRecordItemDao.query(record);
-            record.setItems(items);
-            User user = userInfoService.getUserById(record.getAuditor().getId());
-            record.setAuditor(user);
+            if (AuditType.TUNEUP.equals(audit.getAuditType())) {
+                List<AuditRecordItem> items = auditRecordItemDao.query(record);
+                record.setItems(items);
+            }
         }
         audit.setRecords(records);
         audit.setFlows(getFlows(audit));
@@ -279,20 +281,14 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     private List<AuditFlow> getFlows(Audit audit) {
-        FlowConfigDTO configDTO = flowConfigService.getByType(toType(audit.getAuditType()));
-        List<AuditFlow> flows = Lists.newArrayList();
-        for (FlowStatusDTO statu : configDTO.getStatusList()) {
-            AuditFlow flow = new AuditFlow();
-            flow.setStep(statu.getFlowStatus());
-            flow.setDesc(statu.getFlowStatusDesc());
-            flow.setRole(roleInfoService.getBySerialNo(statu.getRoleSerialNo()));
+        List<AuditFlow> flows = flowConfigDao.findFlows(toType(audit.getAuditType()).getValue());
+        for (AuditFlow flow : flows) {
             //查询审核记录
-            AuditRecord record = auditRecordDao.getLast(audit.getId(), statu.getFlowStatusDesc());
+            AuditRecord record = auditRecordDao.getLast(audit.getId(), flow.getDesc());
             if (null != record) {
                 flow.setResult(record.getResult());
                 flow.setUser(userInfoService.getUserById(record.getAuditor().getId()));
             }
-            flows.add(flow);
         }
         return flows;
     }

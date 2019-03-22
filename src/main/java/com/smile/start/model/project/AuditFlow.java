@@ -20,6 +20,8 @@ public class AuditFlow implements Serializable {
 
     /** UID */
     private static final long serialVersionUID = 2472045809225914087L;
+    
+    private Long id;
 
     /** 审核步骤描述 */
     private String            desc;
@@ -47,6 +49,27 @@ public class AuditFlow implements Serializable {
         return "{\"step\":\"" + step + "\", \"" + (role != null ? "role\":\"" + role + "\", \"" : "") + (result != null ? "result\":\"" + result + "\", \"" : "")
                + (user != null ? "user\":\"" + user : "") + "\"}  ";
     }
+
+    
+    /**
+     * Getter method for property <tt>id</tt>.
+     * 
+     * @return property value of id
+     */
+    public Long getId() {
+        return id;
+    }
+
+
+    /**
+     * Setter method for property <tt>id</tt>.
+     * 
+     * @param id value to be assigned to property id
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     /**
      * Getter method for property <tt>step</tt>.

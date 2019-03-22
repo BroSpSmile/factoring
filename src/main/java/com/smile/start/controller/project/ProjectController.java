@@ -29,7 +29,9 @@ import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
+import com.smile.start.model.project.StepRecord;
 import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -48,6 +50,10 @@ public class ProjectController extends BaseController {
     /** 审核服务 */
     @Resource
     private AuditService   auditService;
+
+    /** 流程引擎 */
+    @Resource
+    private ProcessEngine  processEngine;
 
     /**
      * 项目立项页
@@ -69,6 +75,19 @@ public class ProjectController extends BaseController {
     public Project get(@PathVariable Long id) {
         LoggerUtils.info(logger, "根据ID获取项目信息,id={}", id);
         return projectService.getProject(id);
+    }
+
+    /**
+     * 获取审核历史
+     * @param id
+     * @return
+     */
+    @GetMapping("/steps/{id}")
+    @ResponseBody
+    public List<StepRecord> getSteps(@PathVariable Long id) {
+        Project project = new Project();
+        project.setId(id);
+        return processEngine.getRecords(project);
     }
 
     /**
