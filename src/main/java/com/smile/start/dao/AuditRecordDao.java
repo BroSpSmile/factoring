@@ -49,7 +49,9 @@ public interface AuditRecordDao {
      * @return
      */
     @Results(id = "getLastMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "audit", property = "audit.id"),
-                                          @Result(column = "auditor", property = "auditor.id") })
-    @Select("select * from audit_record where audit =#{auditId} and type = #{type} order by id desc limit 1")
+                                          @Result(column = "auditor", property = "auditor.id"),@Result(column = "username", property = "auditor.username") })
+    @Select("select r.* ,u.username from audit_record  r "
+            + "inner join auth_user_info u on r.auditor = u.id "
+            + "where audit =#{auditId} and type = #{type} order by id desc limit 1")
     AuditRecord getLast(Long auditId, String type);
 }

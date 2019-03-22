@@ -148,6 +148,6 @@ public interface FlowConfigDao {
     @Select("select s.*,r.role_name from flow_config c "
             + "inner join flow_status s on c.serial_no = s.flow_serial_no"
             + " left join auth_role_info r  on s.role_serial_no = r.serial_no "
-            + " where  c.flow_type = #{flowType}")
+            + " where  c.flow_type = #{flowType} order by flow_status ")
     List<AuditFlow> findFlows(Integer flowType);
 }
