@@ -126,6 +126,11 @@ var vue = new Vue({
                 })
             }
         },
+        download: function (fileId, fileName) {
+            //TODO
+            console.debug(fileId);
+            window.open("/file?fileId=" + fileId + "&fileName=" + fileName);
+        },
         saveInstallment: function (type) {
             let self = this;
             if (type == 'return') {

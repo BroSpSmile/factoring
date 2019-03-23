@@ -64,7 +64,7 @@
                                         </i-col>
                                     </td>
                                     <td align="center">
-                                        <Tag v-if="(installment.item!=null)" closable  @on-close="deleteFile(installment.item.itemValue,index,'loan')">
+                                        <Tag v-if="(installment.item!=null)" closable  @click.native="download(installment.item.itemValue,installment.item.itemName)" @on-close="deleteFile(installment.item.itemValue,index,'loan')">
                                             {{installment.item.itemName}}
                                         </Tag>
                                         <Upload  v-if="(installment.item ==null)" action="/file/uploadInstallment" :data="{'index': index}" :on-success="uploadSuccessLoan" :on-error="uploadError"
@@ -130,7 +130,7 @@
                                         </i-col>
                                     </td>
                                     <td align="center">
-                                        <Tag v-if="(installment.item!=null)" closable  @on-close="deleteFile(installment.item.itemValue,index,'return')">
+                                        <Tag v-if="(installment.item!=null)" closable  @click.native="download(installment.item.itemValue,installment.item.itemName)" @on-close="deleteFile(installment.item.itemValue,index,'return')">
                                             {{installment.item.itemName}}
                                         </Tag>
                                         <Upload  v-if="(installment.item ==null)" action="/file/uploadInstallment" :data="{'index': index}" :on-success="uploadSuccessReturn" :on-error="uploadError"
