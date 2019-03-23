@@ -51,6 +51,9 @@ public class DateUtil {
     /** yyyy-MM-dd HH:mm日期格式 */
     public final static String  noSecondFormat       = "yyyy-MM-dd HH:mm";
 
+    /** yyyy.MM.dd 日期格式 */
+    public final static String spotFormat            = "yyyy.MM.dd";
+
     /**
      * 私有构造函数
      */
@@ -753,6 +756,7 @@ public class DateUtil {
      */
     public static void main(String[] args) {
         System.out.println(isBeforeNow(new Date()));
+        System.out.println(getDay(new Date()));
     }
 
     /**
@@ -767,5 +771,38 @@ public class DateUtil {
             return dateFormat.parse(sDate);
         }
         return null;
+    }
+
+    /**
+     * 获取指定日期年份
+     * @param date
+     * @return
+     */
+    public static String getYeah(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return String.valueOf(calendar.get(Calendar.YEAR));
+    }
+
+    /**
+     * 获取指定日期月份
+     * @param date
+     * @return
+     */
+    public static String getMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return String.valueOf(calendar.get(Calendar.MONTH) + 1);
+    }
+
+    /**
+     * 获取指定日期天
+     * @param date
+     * @return
+     */
+    public static String getDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
 }

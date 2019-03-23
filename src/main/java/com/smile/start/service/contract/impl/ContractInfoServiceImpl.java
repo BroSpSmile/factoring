@@ -263,8 +263,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //生成标准合同文件
         try {
-            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            String fileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
+            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
             upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
@@ -293,9 +293,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     /**
      * 构建登录协议模板数据
      * @param contractReceivableAgreement
+     * @param contractExtendInfo
      * @return
      */
-    private Map<String, Object> buildTemplateData(ContractReceivableAgreement contractReceivableAgreement) {
+    private Map<String, Object> buildTemplateData(ContractReceivableAgreement contractReceivableAgreement, ContractExtendInfo contractExtendInfo) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("protocolCode", contractReceivableAgreement.getProtocolCode());
         data.put("spName", contractReceivableAgreement.getSpName());
@@ -306,6 +307,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
         data.put("spFax", contractReceivableAgreement.getSpFax());
         data.put("signDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("fpSignatureDate", DateUtil.format(contractReceivableAgreement.getFpSignatureDate(), DateUtil.spotFormat));
+        data.put("spSignatureDate", DateUtil.format(contractReceivableAgreement.getSpSignatureDate(), DateUtil.spotFormat));
+        data.put("contractCode", contractExtendInfo.getContractCode());
+        data.put("contractSignDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
+        data.put("contractSignDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
+        data.put("contractSignDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
         return data;
     }
 
@@ -358,8 +365,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //生成标准合同文件
         try {
-            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
-            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
+            String fileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
+            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
             upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
