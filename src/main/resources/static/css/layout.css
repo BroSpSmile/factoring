@@ -204,3 +204,7 @@ html, body {
     display: inline-block;
     margin-left: 32px;
 }
+
+[v-cloak] {
+  display: none;
+}

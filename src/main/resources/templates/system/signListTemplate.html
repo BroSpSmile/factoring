@@ -3,7 +3,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	  layout:decorator="layout/layout">
 <div layout:fragment="content">
-	<div id="signListTemplate">
+	<div id="signListTemplate" v-cloak>
 		<card dis-hover title="搜索条件" style="width:100%">
 			<p>
 				<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
