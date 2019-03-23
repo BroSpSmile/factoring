@@ -24,7 +24,9 @@ var vue = new Vue({
 			pageSize : 10
 		},
 		pageInfo:{},
+		flowInfo:{},
 		modal1 : false,
+		modal2:false,
 		statusItems : [],
 		models:[],
 		steps:[],
@@ -33,6 +35,25 @@ var vue = new Vue({
 	created : function() {
 		this.initDate();
 		this.query();
+	},
+	filters:{
+		timeFilter:function(value){
+			if(!value){
+				return "";
+			}
+			return moment(value).format('YYYY-MM-DD HH:mm');
+		},
+		/**
+		 * 翻译
+		 */
+		toStepName:function(value){
+			for(let index in vue.steps){
+				if(vue.steps[index].value == value){
+					return vue.steps[index].text;
+				}
+			}
+			return "";
+		}
 	},
 	methods : {
 		/**
@@ -74,17 +95,6 @@ var vue = new Vue({
 			return "";
 		},
 		
-		/**
-		 * 翻译
-		 */
-		toStepName:function(value){
-			for(let index in this.steps){
-				if(this.steps[index].value == value){
-					return this.steps[index].text;
-				}
-			}
-			return "";
-		},
 		
 		/**
 		 * 翻译
@@ -258,6 +268,28 @@ var vue = new Vue({
 			}else{
 				window.open(menu);
 			}
+		},
+		
+		showFlows:function(project){
+			this.flowInfo = project;
+			for(let index in project.records){
+				let step = parseInt(index) ;
+				if(step == project.step){
+					project.records[index]['clazz'] = 'ivu-steps-status-process';
+				}else if(step < project.step){
+					if(project.records[index].status=='LATER'){
+						project.records[index]['clazz'] = 'ivu-steps-status-error';
+						var now = new Date();
+						var days = daysBetween(new Date(),new Date(project.records[index].createTime));
+						project.records[index]['days'] = days;
+					}else if(project.records[index].status=='COMPLETED'){
+						project.records[index]['clazz'] = 'ivu-steps-status-finish';
+					}else{
+						project.records[index]['clazz'] = 'ivu-steps-status-process';
+					}
+				}
+			}
+			this.modal2=true;
 		},
 		
 		/**
@@ -460,7 +492,14 @@ vue.tableColumns=[{
         key: 'progress',
         align: 'center',
         render:(h,param)=>{
-        	return h('span',vue.toIndexStepName(param.row.step));
+        	return h('a',{
+        		props:{},
+        		on:{
+        			'click':(value)=>{
+        				vue.showFlows(param.row);
+        			}
+        		}
+        	},vue.toIndexStepName(param.row.step));
         }
     },{
     	title: '操作',
@@ -468,41 +507,6 @@ vue.tableColumns=[{
     	width:80,
         render:(h,param)=>{
         	return h('div', [
-				h('Poptip',{props:{trigger:'click',placement:'right',width:'1400'}},[
-					h('Button',{props:{size:'small',type:'info',ghost:true}},[
-						'进度',
-						h('Icon',{props:{type:'ios-information-circle'}})
-					]),
-					h('div',{props:{},slot:'content'},[
-						h('Card',{},[
-							h('p',{slot:'title'},param.row.projectName),
-							h('p',{slot:'extra'},"项目编号:"+param.row.projectId),
-							h('div',{},[
-								h('Steps',{
-									props:{
-										current:param.row.step
-									}
-								},[
-									param.row.records.map(item=>{
-										return h('Step',{
-											props:{
-												title:vue.toStepName(item.step),
-												content:item.modifyTime==null?'':moment(item.modifyTime).format('YYYY-MM-DD')
-											}
-										})
-									})
-								])
-//								,
-//								h('Row',[
-//									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
-//									h('Col',{props:{span:3}},[h('div',{style:'ivu-steps-content'},'已完结')]),
-//									h('Col',{props:{span:3}},[h('Button',{props:{type:'error',size:'small',ghost:true}},'后补')]),
-//									h('Col',{props:{span:3}},[h('Button',{props:{type:'dashed',size:'small'}},'操作')])
-//								])
-							])
-						])
-					])
-				]),
 				h('Dropdown',{
 					props:{},
 					on:{

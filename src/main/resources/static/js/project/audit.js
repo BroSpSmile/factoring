@@ -231,6 +231,14 @@ var vue = new Vue({
         	window.open("/finance");
         },
         
+        print:function(){
+    	    var bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+    	    var printHtml = window.document.getElementById("printDiv").innerHTML;
+    	    window.document.body.innerHTML=printHtml;
+    	    window.print();
+    	    window.document.body.innerHTML=bdhtml;
+        },
+        
 		cancel:function(){
 			this.modal1 = false;
 			this.modal2 = false;

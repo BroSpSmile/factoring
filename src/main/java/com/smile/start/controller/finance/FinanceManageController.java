@@ -11,7 +11,6 @@ import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectForView;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -67,7 +65,6 @@ public class FinanceManageController extends BaseController {
     @PostMapping("/query")
     @ResponseBody
     public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query) {
-        SingleResult<Map<String, Object>> singleResult = new SingleResult<Map<String, Object>>();
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         List<ProjectForView> projectForViewList = Lists.newArrayList();
         if (null != projectService.queryPage(query)) {
