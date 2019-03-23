@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout/layout">
 	<div layout:fragment="content">
-		<div id="contractSign">
+		<div id="contractSign" v-cloak>
 			<card dis-hover title="合同签署" style="width:100%">
 				<div id="modalForm">
 					<i-form ref="entityDataForm" :model="addForm" :label-width="150">

@@ -54,10 +54,13 @@ public interface BankInfoDao {
      * @param bankInfoSearchDTO
      * @return
      */
-    @Select("<script>" + "select * from bank_info where 1=1 " + "<if test = 'bankFullName!=null'> and bank_full_name like CONCAT('%',#{bankFullName},'%')</if>"
+    @Select("<script>" + "select * from bank_info where 1=1 "
+            + "<if test = 'bankFullName!=null'> and bank_full_name like CONCAT('%',#{bankFullName},'%')</if>"
             + "<if test = 'bankShortName!=null'> and bank_short_name like CONCAT('%',#{bankShortName},'%')</if>"
-            + "<if test = 'organizationalSerialNo!=null'> and organizational_serial_no = #{organizationalSerialNo}</if>"
-            + "<if test = 'bankAccount!=null'> and bank_account like CONCAT('%',#{bankAccount},'%')</if>" + "</script>")
+            + "<if test = 'bankAccount!=null'> and bank_account like CONCAT('%',#{bankAccount},'%')</if>"
+            + " and organizational_serial_no "
+            + "in <foreach item='item' index='index' collection='organizationalList' open='(' separator=',' close=')'> #{item} </foreach> "
+            + "</script>")
     List<BankInfo> findByParam(BankInfoSearchDTO bankInfoSearchDTO);
 
     /**

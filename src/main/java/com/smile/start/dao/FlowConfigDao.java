@@ -4,9 +4,13 @@ import com.smile.start.dto.FlowConfigSearchDTO;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
+import com.smile.start.model.project.AuditFlow;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -132,4 +136,18 @@ public interface FlowConfigDao {
      */
     @Select("select fs.* from flow_config fc,flow_status fs where fc.serial_no = fs.flow_serial_no and fc.flow_type = #{flowType} and fs.flow_status = #{flowStatus}")
     FlowStatus findByFlowTypeAndStatus(Integer flowType, Integer flowStatus);
+    
+    /**
+     * 
+     * @param flowType
+     * @return
+     */
+    @Results(id = "findFlowsMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "flow_status", property = "step"),
+                                      @Result(column = "flow_status_desc", property = "desc"), @Result(column = "role_serial_no", property = "role.serialNo"),
+                                      @Result(column = "role_name", property = "role.roleName")})
+    @Select("select s.*,r.role_name from flow_config c "
+            + "inner join flow_status s on c.serial_no = s.flow_serial_no"
+            + " left join auth_role_info r  on s.role_serial_no = r.serial_no "
+            + " where  c.flow_type = #{flowType} order by flow_status ")
+    List<AuditFlow> findFlows(Integer flowType);
 }

@@ -71,8 +71,9 @@ public interface AuditDao {
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
-                                      @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
-    @Select("select * from audit where id = #{id}")
+                                      @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo"),
+                                      @Result(column = "username", property = "applicant.username")})
+    @Select("select t1.*,t2.username from audit t1 inner join auth_user_info t2 on t1.applicant = t2.id where t1.id = #{id}")
     Audit get(Long id);
 
     /**

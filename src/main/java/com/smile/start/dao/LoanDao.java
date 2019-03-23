@@ -83,6 +83,6 @@ public interface LoanDao {
     @Select("<script>" + "select * from loan where 1=1 " + "<if test='department!=null and department.id!=null'> and department = #{department.id}</if>"
             + "<if test='user!=null and user.id!=null'> and user = #{user.id}</if>" + "<if test='project!=null and project.id!=null'> and project_id = #{project.id}</if>"
             + "<if test='payeeName!=null and payeeName!=\"\"'> and payee_name = #{payeeName}</if>"
-            + "<if test='payerName!=null and payerName!=\\\"\\\"'> and payer_name = #{payerName}</if>" + "</script>")
+            + "<if test='payerName!=null and payerName!=\"\"'> and payer_name = #{payerName}</if>" + "</script>")
     List<Loan> query(Loan loan);
 }

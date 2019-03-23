@@ -19,13 +19,11 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
 import com.smile.start.dao.AuditDao;
 import com.smile.start.dao.AuditRecordDao;
 import com.smile.start.dao.AuditRecordItemDao;
+import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowStatusDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -42,9 +40,7 @@ import com.smile.start.model.project.AuditRecordItem;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
-import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
-import com.smile.start.service.common.FlowConfigService;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -69,15 +65,11 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
 
     /** 用户服务 */
     @Resource
-    protected UserInfoService  userInfoService;
+    private UserInfoService    userInfoService;
 
-    /** 角色服务 */
+    /** flowConfigDao */
     @Resource
-    private RoleInfoService    roleInfoService;
-
-    /** flowConfigService */
-    @Resource
-    private FlowConfigService  flowConfigService;
+    private FlowConfigDao      flowConfigDao;
 
     /** 项目服务 */
     @Resource
@@ -130,12 +122,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setCreateTime(new Date());
         audit.setStep(0);
         audit.setAuditType(AuditType.getByCode(Step.getStep(project.getStep()).name()));
-        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 1);
-        audit.setStep(step.getFlowStatus());
-        //获取审核流程
-        AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-        role.setSerialNo(step.getRoleSerialNo());
-        audit.setRole(role);
+        AuditFlow flow = getFlow(audit, 1);
+        audit.setStep(flow.getStep());
+        audit.setRole(flow.getRole());
         return audit;
     }
 
@@ -145,17 +134,15 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     @Transactional
     public BaseResult pass(AuditRecord record) {
-        Audit audit = getAudit(record.getAudit().getId());
-        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 0);
+        Audit audit = auditDao.get(record.getAudit().getId());
+        AuditFlow step = getFlow(audit, 0);
         record.setResult(AuditResult.PASS);
-        record.setType(step.getFlowStatusDesc());
-        record.setStatus(step.getFlowStatusDesc() + "通过");
-        FlowStatusDTO nextStep = nextStep(audit, toType(audit.getAuditType()), 1);
+        record.setType(step.getDesc());
+        record.setStatus(step.getDesc() + "通过");
+        AuditFlow nextStep = getFlow(audit, 1);
         if (null != nextStep) {
-            audit.setStep(nextStep.getFlowStatus());
-            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(nextStep.getRoleSerialNo());
-            audit.setRole(role);
+            audit.setStep(nextStep.getStep());
+            audit.setRole(nextStep.getRole());
         } else {
             audit.setStep(-1);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -176,17 +163,15 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     @Override
     @Transactional
     public BaseResult reject(AuditRecord record) {
-        Audit audit = getAudit(record.getAudit().getId());
-        FlowStatusDTO step = nextStep(audit, toType(audit.getAuditType()), 0);
+        Audit audit = auditDao.get(record.getAudit().getId());
+        AuditFlow flow = getFlow(audit, 0);
         record.setResult(AuditResult.REJECTED);
-        record.setType(step.getFlowStatusDesc());
-        FlowStatusDTO nextStep = nextStep(record.getAudit(), toType(audit.getAuditType()), 0);
-        if (null != nextStep) {
-            record.setStatus("驳回至" + nextStep.getFlowStatusDesc());
-            audit.setStep(nextStep.getFlowStatus());
-            AuthRoleInfoDTO role = new AuthRoleInfoDTO();
-            role.setSerialNo(nextStep.getRoleSerialNo());
-            audit.setRole(role);
+        record.setType(flow.getDesc());
+        AuditFlow nextFlow = getFlow(record.getAudit(), 0);
+        if (null != nextFlow) {
+            record.setStatus("驳回至" + nextFlow.getDesc());
+            audit.setStep(nextFlow.getStep());
+            audit.setRole(nextFlow.getRole());
         } else {
             audit.setStep(-2);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -242,16 +227,14 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     private void genAudit(Audit audit) {
-        User applicant = userInfoService.getUserById(audit.getApplicant().getId());
-        audit.setApplicant(applicant);
         Project project = projectService.getProject(audit.getProject().getId());
         audit.setProject(project);
         List<AuditRecord> records = auditRecordDao.query(audit);
         for (AuditRecord record : records) {
-            List<AuditRecordItem> items = auditRecordItemDao.query(record);
-            record.setItems(items);
-            User user = userInfoService.getUserById(record.getAuditor().getId());
-            record.setAuditor(user);
+            if (AuditType.TUNEUP.equals(audit.getAuditType())) {
+                List<AuditRecordItem> items = auditRecordItemDao.query(record);
+                record.setItems(items);
+            }
         }
         audit.setRecords(records);
         audit.setFlows(getFlows(audit));
@@ -263,36 +246,34 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
      * @param type
      * @return
      */
-    private FlowStatusDTO nextStep(Audit audit, FlowTypeEnum type, Integer offset) {
-        FlowConfigDTO config = flowConfigService.getByType(type);
-        List<FlowStatusDTO> steps = config.getStatusList();
-        for (FlowStatusDTO step : steps) {
-            if (step.getFlowStatus() == (audit.getStep() + offset)) {
-                return step;
+    private AuditFlow getFlow(Audit audit, Integer offset) {
+        List<AuditFlow> flows = flowConfigDao.findFlows(toType(audit.getAuditType()).getValue());
+        for (AuditFlow flow : flows) {
+            if (flow.getStep() == (audit.getStep() + offset)) {
+                return flow;
             }
         }
         return null;
     }
 
+    /**
+     * 类型转换
+     * @param auditType
+     * @return
+     */
     private FlowTypeEnum toType(AuditType auditType) {
         return FlowTypeEnum.valueOf(auditType.name());
     }
 
     private List<AuditFlow> getFlows(Audit audit) {
-        FlowConfigDTO configDTO = flowConfigService.getByType(toType(audit.getAuditType()));
-        List<AuditFlow> flows = Lists.newArrayList();
-        for (FlowStatusDTO statu : configDTO.getStatusList()) {
-            AuditFlow flow = new AuditFlow();
-            flow.setStep(statu.getFlowStatus());
-            flow.setDesc(statu.getFlowStatusDesc());
-            flow.setRole(roleInfoService.getBySerialNo(statu.getRoleSerialNo()));
+        List<AuditFlow> flows = flowConfigDao.findFlows(toType(audit.getAuditType()).getValue());
+        for (AuditFlow flow : flows) {
             //查询审核记录
-            AuditRecord record = auditRecordDao.getLast(audit.getId(), statu.getFlowStatusDesc());
+            AuditRecord record = auditRecordDao.getLast(audit.getId(), flow.getDesc());
             if (null != record) {
                 flow.setResult(record.getResult());
-                flow.setUser(userInfoService.getUserById(record.getAuditor().getId()));
+                flow.setUser(record.getAuditor());
             }
-            flows.add(flow);
         }
         return flows;
     }
