@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.smile.start.model.common.InstallmentFileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -64,6 +65,33 @@ public class FileApi extends BaseController {
             return toResult(e, FileInfo.class);
         }
     }
+
+    /**
+     * 文件上传
+     * @param file
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/uploadInstallment", method = RequestMethod.POST)
+    @ResponseBody
+    public SingleResult<InstallmentFileInfo> uploadInstallment(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        String contentType = file.getContentType(); //文件类型
+        String fileName = file.getOriginalFilename(); //文件名字
+        LoggerUtils.info(logger, "上传文件类型={},上传文件名={}", contentType, fileName);
+        try {
+            FileInfo fileInfo = fileService.upload(file.getInputStream(), fileName);
+            InstallmentFileInfo  installmentFileInfo =  new InstallmentFileInfo();
+            installmentFileInfo.setFileId(fileInfo.getFileId());
+            installmentFileInfo.setFileName(fileInfo.getFileName());
+            installmentFileInfo.setId(request.getParameter("index"));
+            SingleResult<InstallmentFileInfo> result = new SingleResult<InstallmentFileInfo>(installmentFileInfo);
+            return result;
+        } catch (IOException e) {
+            logger.error("", e);
+            return toResult(e, InstallmentFileInfo.class);
+        }
+    }
+
 
     /**
      * 删除文件

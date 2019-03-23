@@ -21,7 +21,7 @@ public class Installment implements Serializable {
     private static final long serialVersionUID = 2671634818269610449L;
 
     /** 编号 */
-    private Long              id;
+    private Long              id =-1L;
 
     /** 所属项目 */
     private FactoringDetail   detail;

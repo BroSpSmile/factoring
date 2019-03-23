@@ -22,10 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,18 +93,18 @@ public class FinanceManageController extends BaseController {
         projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
         projectForView.setReceivable(detail.getReceivable());
         projectForView.setDropAmount(detail.getDropAmount());
-        projectForView.setDropDates(detail.getLoanInstallments()
+        projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>())
             .stream().map(installment -> installment.getInstallmentDate()).map(date-> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
         projectForView.setReturnAmount(detail.getReturnInstallments()
             .stream()
             .map(installment -> installment.getAmount())
             .count());
-        projectForView.setReturnDates(detail.getReturnInstallments()
+        projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>())
             .stream().map(installment -> installment.getInstallmentDate()).map(date-> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
         projectForView.setTotalFactoringFee(detail.getTotalFactoringFee());
-        projectForView.setFactoringInstallmentAmounts(detail.getFactoringInstallments()
+        projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>())
             .stream()
             .map(installment -> installment.getAmount())
             .collect(Collectors.toList()));
@@ -120,8 +117,6 @@ public class FinanceManageController extends BaseController {
             .map(installment -> installment.isInvoiced())
             .collect(Collectors.toList()));
 
-        //测试效果，后面删除，测试多个属性拆分不同个数单元格
-        projectForView.getFactoringInstallmentInvoiceds().remove(0);
         return projectForView;
     }
 }

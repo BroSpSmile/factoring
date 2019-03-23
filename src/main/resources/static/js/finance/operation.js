@@ -25,6 +25,10 @@ var vue = new Vue({
             person: null,
             progress: null
         },
+        totalLoanAmount:0,
+        loanInstallmentFileList: [],
+        returnInstallmentFileList: [],
+        factoringInstallmentFileList: [],
     },
     created : function() {
         this.formInline.id = document.getElementById("projectId").value;
@@ -33,6 +37,77 @@ var vue = new Vue({
         this.query();
     },
     methods : {
+        addLoanInstallment:function(){
+            this.project.detail.loanInstallments.push({
+                amount:0,
+                installmentDate:'',
+                item:null
+            });
+        },
+        uploadSuccessLoanInstallment: function (response, file, fileList) {
+            this.loanInstallmentFileList.push(file);
+            let id = response.data.id;
+            for (let index in fileList) {
+                let loanInstallment = this.project.detail.loanInstallments[id];
+                let item = {
+                    installmentId:loanInstallment.id,
+                    //itemType 未使用
+                    itemType: "",
+                    itemName: fileList[index].name,
+                    itemValue: fileList[index].response.data.fileId
+                };
+                loanInstallment.item =item;
+            }
+        },
+        deleteFileLoanInstallment: function (fileId,index) {
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+                    let loanInstallment = this.project.detail.loanInstallments[index];
+                    loanInstallment.item = null;
+                    for (let index in this.loanInstallmentFileList) {
+                        if (fileId == this.loanInstallmentFileList[index].response.data.fileId) {
+                            if (index > -1) {
+                                this.loanInstallmentFileList.splice(index, 1);
+                            }
+                        }
+                    }
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+        },
+        cancelLoanInstallment: function () {
+            this.removeAllFile(this.returnInstallmentFileList);
+            this.removeAllFile(this.factoringInstallmentFileList);
+            this.cancel();
+        },
+        saveLoanInstallment: function () {
+            let result = this.genFilingInfo();
+            if (!result) {
+                return false;
+            }
+            let self = this;
+            this.$http.post("/financeOperation/saveLoanInstallment", this.project).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info({
+                        content: "放款信息保存成功",
+                        onClose: function () {
+                            window.close();
+                        },
+                    });
+                    window.open(this.projectUrl, "_self");
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error);
+            })
+        },
+
         /**
          * 初始化数据
          */
@@ -63,6 +138,9 @@ var vue = new Vue({
                 function(response) {
                     let data = response.data;
                     self.project=data.list[0];
+                    self.project.detail.loanInstallments.forEach(cur=>{
+                        self.totalLoanAmount += cur.amount;
+                    });
                 }, function(error) {
                     self.$Message.error(error.data.message);
                 })
@@ -111,48 +189,60 @@ var vue = new Vue({
             return "";
         },
 
-        /** 保存项目 */
-        saveProject : function() {
-            let self = this;
-            if(this.addForm.id==null||this.addForm.id==""){
-                this.$http.post("/approval", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "保存成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
-                            }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }else{
-                this.$http.put("/approval", this.addForm).then(function(response) {
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content : "更新成功",
-                            onClose : function() {
-                                self.query();
-                                self.cancel();
-                            }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function(error) {
-                    self.$Message.error(error.data.message);
-                });
-            }
 
+
+        /**
+         * --公用方法
+         */
+        removeAllFile: function (fileList) {
+            for (let index in this.fileList) {
+                let fileId = this.fileList[index].response.data.fileId;
+                this.$http.delete("/file/" + fileId).then(function (response) {
+                    if (response.data.success) {
+                        //self.$Message.info("删除成功");
+                    } else {
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function (error) {
+                    self.$Message.error(error.data.errorMessage);
+                })
+            }
         },
 
+        /**
+         * 文件上传失败--公用方法
+         */
+        uploadError: function (error, file, fileList) {
+            console.log(error);
+        },
+
+        /**
+         * 页面已隐藏，用不到--公用方法
+         * @param file
+         * @param fileList
+         */
+        removeFile: function (file, fileList) {
+            console.log(file);
+            let fileId = file.response.data.fileId;
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+        },
+
+        /**
+         * 公用方法
+         */
         cancel: function () {
             window.open(this.projectUrl, "_self");
-        },
+        }
     }
 });
 
