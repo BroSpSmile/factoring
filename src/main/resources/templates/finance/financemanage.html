@@ -14,7 +14,7 @@
 					<form-item label="项目名称" prop="projectName">
 						<i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
 					</form-item>
-					<form-item label="业务发起人" prop="person">
+					<form-item label="项目负责人" prop="person">
 						<i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
 					</form-item>
 					<form-item label="当前进度" prop="progress">
@@ -37,8 +37,6 @@
 			<br/>
 			<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 		</card>
-
-
 	</div>
 	<script src="js/finance/financemanage.js"></script>
 	<style scoped>

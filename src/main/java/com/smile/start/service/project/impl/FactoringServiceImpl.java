@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.project.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -18,9 +19,6 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.InstallmentType;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.model.project.FactoringDetail;
-import com.smile.start.model.project.Installment;
-import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
@@ -85,6 +83,12 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         if (null != detail) {
             List<Installment> installments = installmentDao.queryByDetail(detail.getId());
             for (Installment installment : installments) {
+                InstallmentItem installmentItem = installmentDao.getInstallmentItem(installment);
+                installment.setItem(installmentItem);
+                installment.setDetailList(installmentDao.getInstallmentDetail(installment.getId()));
+                for (InstallmentDetail installmentDetail : installment.getDetailList()) {
+                    installmentDetail.setItem(installmentDao.getInstallmentDetailItem(installmentDetail));
+                }
                 if (InstallmentType.FACTORING.equals(installment.getType())) {
                     detail.addFactoringInstallment(installment);
                 }

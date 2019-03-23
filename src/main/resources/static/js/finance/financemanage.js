@@ -8,11 +8,10 @@ var vue = new Vue({
     el: '#financeManage',
     data: {
         formInline: {
-            id:-1,
+            id: -1,
             projectId: null,
             projectName: null,
-            person: null,
-            progress: null
+            person: null
         },
         addForm: {},
         queryParam: {
@@ -22,7 +21,7 @@ var vue = new Vue({
         },
         pageInfo: {},
         statusItems: [],
-        models:[],
+        models: [],
         project: {
             projectId: "",
             detail: {
@@ -35,7 +34,8 @@ var vue = new Vue({
                 id: 0
             },
             installmentDate: ""
-        }
+        },
+
     },
     created: function () {
         this.initDate();
@@ -63,14 +63,13 @@ var vue = new Vue({
                 console.error(error);
             });
         },
-
         query: function () {
             let self = this;
             self.queryParam.condition = self.formInline;
             this.$http.post("/financeManage/query", self.queryParam).then(
                 function (response) {
                     let data = response.data;
-                    console.log(data);
+                    //console.log(data);
                     self.pageInfo = data;
                 }, function (error) {
                     self.$Message.error(error.data.message);
@@ -78,36 +77,11 @@ var vue = new Vue({
         },
 
         /**
-         * 新增项目
+         * 编辑项目
          */
-        edit : function(id) {
+        edit: function (id) {
             window.open("financeOperation?id=" + id, "_self");
 
-        },
-
-        getData: function (list) {
-            //console.log(list[0]);
-            for (let field in list[0]) {
-                let k = 0;
-                let i = 0;
-                while (k < list.length) {
-                    list[k][field + 'span'] = 1;
-                    list[k][field + 'dis'] = false;
-                    for (i = k + 1; i <= list.length - 1; i++) {
-                        if (list[k][field] === list[i][field] && list[k][field] !== '') {
-                            list[k][field + 'span']++;
-                            list[k][field + 'dis'] = false;
-                            list[i][field + 'span'] = 1;
-                            list[i][field + 'dis'] = true
-                        } else {
-                            // k = i
-                            break
-                        }
-                    }
-                    k = i
-                }
-            }
-            return list;
         },
 
         /**
@@ -171,48 +145,30 @@ var vue = new Vue({
         reset: function () {
             this.$refs['searchForm'].resetFields();
         },
-        /** 保存放款信息 */
-        saveLoanInstallment: function () {
-            let self = this;
-            this.loanInstallment.detail.id = this.project.detail.id;
-            this.$http.post("/finance/saveLoanInstallment", this.loanInstallment).then(function (response) {
-                if (response.data.success) {
-                    self.$Message.info({
-                        content: "保存成功",
-                        onClose: function () {
-                            self.project.detail.loanInstallments.push(self.loanInstallment);
-                            console.log(self.project.detail)
-                            self.loanInstallment = {
-                                amount: 0,
-                                detail: {
-                                    id: 0
-                                },
-                                installmentDate: ""
-                            }
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                self.$Message.error(error.data.message);
-            });
-        },
         columnRender: function (h, param) {
             let childArray = param.row[param.column.key];
             if (childArray.length == 0) {
                 return h('span');
             } else if (childArray.length == 1) {
-                var value = childArray[0];
+                let value = childArray[0];
+                if (param.column.colType == 'boolean') {
+                    value = this.toBoolean(value);
+                }
                 return h('span', value);
             } else {
-                var trAarry = [];
-                childArray.forEach((item,index)=> {
-                    var aa = h('tr', {}, [
+                let trAarry = [];
+                childArray.forEach((item, index) => {
+                    if (param.column.colType == 'boolean') {
+                        item = this.toBoolean(item);
+                    }
+
+                    let aa = h('tr', {}, [
                         h('td', {
                             style: {
                                 border: 0,
                                 'text-align': 'center',
+                                'text-align': 'center',
+                                'vertical-align': 'middle',
                                 'width': '100%'
                             }
                         }, item),
@@ -245,12 +201,12 @@ vue.tableColumns = [{
     title: '项目编号',
     key: 'projectId',
     align: 'center',
-    width:100
+    width: 100
 }, {
     title: '项目名称',
     key: 'projectName',
     align: 'center',
-    width:100
+    width: 100
 }, {
     title: '业务负责人',
     key: 'username',
@@ -260,7 +216,7 @@ vue.tableColumns = [{
     key: 'loanAuditPassTime',
     tooltip: true,
     align: 'center',
-    width:105
+    width: 105
 }, {
     title: '应收账款（万元）',
     key: 'receivable',
@@ -304,7 +260,7 @@ vue.tableColumns = [{
     title: '保理费到账日（前）',
     key: 'factoringInstallmentDates',
     align: 'center',
-    width:105,
+    width: 105,
     render: (h, param) => {
         return vue.columnRender(h, param);
     }
@@ -312,6 +268,7 @@ vue.tableColumns = [{
     title: '是否已开发票',
     key: 'factoringInstallmentInvoiceds',
     align: 'center',
+    colType: 'boolean',
     render: (h, param) => {
         return vue.columnRender(h, param);
     }

@@ -4,6 +4,20 @@
  */
 package com.smile.start.controller.finance;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
@@ -12,16 +26,11 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectForView;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ：xioutman
@@ -89,19 +98,18 @@ public class FinanceManageController extends BaseController {
         projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
         projectForView.setReceivable(detail.getReceivable());
         projectForView.setDropAmount(detail.getDropAmount());
-        projectForView.setDropDates(
-            detail.getLoanInstallments().stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
+        projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
+            .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount()).count());
-        projectForView.setReturnDates(
-            detail.getReturnInstallments().stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
+        projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
+            .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setTotalFactoringFee(detail.getTotalFactoringFee());
-        projectForView.setFactoringInstallmentAmounts(detail.getFactoringInstallments().stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
+        projectForView.setFactoringInstallmentAmounts(
+            Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments().stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments().stream().map(installment -> installment.isInvoiced()).collect(Collectors.toList()));
 
-        //测试效果，后面删除，测试多个属性拆分不同个数单元格
-        projectForView.getFactoringInstallmentInvoiceds().remove(0);
         return projectForView;
     }
 }

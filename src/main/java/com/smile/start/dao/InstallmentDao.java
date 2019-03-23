@@ -134,14 +134,14 @@ public interface InstallmentDao {
      */
     @Results(id = "getInstallmentDetailMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "bankInfo_id", property = "bankInfo.id") })
     @Select("select * from installment_detail where installment_id = #{installmentId}")
-    InstallmentDetail getInstallmentDetail(Long installmentId);
+    List<InstallmentDetail> getInstallmentDetail(Long installmentId);
 
     /**
      * 获取
      * @param installment
      * @return
      */
-    @Select("select * from installment_item where installment_detail_id = #{id}")
+    @Select("select * from installment_item where installment_id = #{id}")
     InstallmentItem getInstallmentItem(Installment installment);
     /**
      * 获取
@@ -156,7 +156,7 @@ public interface InstallmentDao {
      * @param item
      * @return
      */
-    @Delete("delete from installment_item where id = #{id}")
+    @Delete("delete from installment_item where installment_id = #{installmentId}")
     int deleteInstallmentItem(InstallmentItem item);
 
     /**
