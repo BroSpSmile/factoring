@@ -58,6 +58,7 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
         //TODO 密码暂时用明文，等用户新增功能做好
         //String md5Passwd = MD5Encoder.encode(loginRequestDTO.getPasswd().getBytes());
         //loginRequestDTO.setPasswd(md5Passwd);
+        logger.info("service login start...");
         final User login = userDao.login(loginRequestDTO);
         Asserts.notNull(login, "用户名或密码错误");
         String tokenStr = UUID.randomUUID().toString();
@@ -68,14 +69,18 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
         token.setMobile(loginRequestDTO.getMobile());
         token.setGmtCreate(nowDate);
         token.setTokenExpire(DateUtil.addMinutes(nowDate, 600));
+        logger.info("insert token start...");
         tokenDao.insert(token);
+        logger.info("insert token end...");
         response.addCookie(new Cookie(Constants.TOKEN_COOKIE_KEY, tokenStr));
         if (StringUtils.isNotBlank(loginRequestDTO.getOpenId())) {
             login.setOpenid(loginRequestDTO.getOpenId());
             userDao.update(login);
         }
         login.setOpenid(loginRequestDTO.getOpenId());
-        return userInfoService.get(login.getId());
+        AuthUserInfoDTO authUserInfoDTO = userInfoService.get(login.getId());
+        logger.info("service login end...");
+        return authUserInfoDTO;
     }
 
 }
