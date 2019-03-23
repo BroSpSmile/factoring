@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 合同应收账款转让登记协议
+ * 合同应收账款转让确认函
  * @author Joseph
  * @version v1.0 2019/2/19 10:20, ContractReceivableConfirmation.java
  * @since 1.8
