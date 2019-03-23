@@ -83,6 +83,26 @@ public class ContractExtendInfoDTO implements Serializable {
     private String contractName;
 
     /**
+     * 应收账款
+     */
+    private BigDecimal receivableMoney;
+
+    /**
+     * 应收账款大写
+     */
+    private String receivableMoneyUpper;
+
+    /**
+     * 债务人享有金额
+     */
+    private BigDecimal obligorEnjoyMoney;
+
+    /**
+     * 债务人享有金额大写
+     */
+    private String obligorEnjoyMoneyUpper;
+
+    /**
      * 应收账款受让款
      */
     private BigDecimal receivableAssigneeMoney;
@@ -93,6 +113,16 @@ public class ContractExtendInfoDTO implements Serializable {
     private String receivableAssigneeMoneyUpper;
 
     /**
+     * 应收账款受让款首付款
+     */
+    private BigDecimal receivableAssigneeFirstMoney;
+
+    /**
+     * 应收账款受让款首付款大写
+     */
+    private String receivableAssigneeFirstMoneyUpper;
+
+    /**
      * 应收账款回收款
      */
     private BigDecimal receivableRecoveryMoney;
@@ -101,6 +131,11 @@ public class ContractExtendInfoDTO implements Serializable {
      * 应收账款回收款大写
      */
     private String receivableRecoveryMoneyUpper;
+
+    /**
+     * 应收账款支付时间
+     */
+    private Date receivableRecoveryMoneyPaytime;
 
     /**
      * 甲方户名
@@ -250,6 +285,38 @@ public class ContractExtendInfoDTO implements Serializable {
         this.contractName = contractName;
     }
 
+    public BigDecimal getReceivableMoney() {
+        return receivableMoney;
+    }
+
+    public void setReceivableMoney(BigDecimal receivableMoney) {
+        this.receivableMoney = receivableMoney;
+    }
+
+    public String getReceivableMoneyUpper() {
+        return receivableMoneyUpper;
+    }
+
+    public void setReceivableMoneyUpper(String receivableMoneyUpper) {
+        this.receivableMoneyUpper = receivableMoneyUpper;
+    }
+
+    public BigDecimal getObligorEnjoyMoney() {
+        return obligorEnjoyMoney;
+    }
+
+    public void setObligorEnjoyMoney(BigDecimal obligorEnjoyMoney) {
+        this.obligorEnjoyMoney = obligorEnjoyMoney;
+    }
+
+    public String getObligorEnjoyMoneyUpper() {
+        return obligorEnjoyMoneyUpper;
+    }
+
+    public void setObligorEnjoyMoneyUpper(String obligorEnjoyMoneyUpper) {
+        this.obligorEnjoyMoneyUpper = obligorEnjoyMoneyUpper;
+    }
+
     public BigDecimal getReceivableAssigneeMoney() {
         return receivableAssigneeMoney;
     }
@@ -280,6 +347,30 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setReceivableRecoveryMoneyUpper(String receivableRecoveryMoneyUpper) {
         this.receivableRecoveryMoneyUpper = receivableRecoveryMoneyUpper;
+    }
+
+    public BigDecimal getReceivableAssigneeFirstMoney() {
+        return receivableAssigneeFirstMoney;
+    }
+
+    public void setReceivableAssigneeFirstMoney(BigDecimal receivableAssigneeFirstMoney) {
+        this.receivableAssigneeFirstMoney = receivableAssigneeFirstMoney;
+    }
+
+    public String getReceivableAssigneeFirstMoneyUpper() {
+        return receivableAssigneeFirstMoneyUpper;
+    }
+
+    public void setReceivableAssigneeFirstMoneyUpper(String receivableAssigneeFirstMoneyUpper) {
+        this.receivableAssigneeFirstMoneyUpper = receivableAssigneeFirstMoneyUpper;
+    }
+
+    public Date getReceivableRecoveryMoneyPaytime() {
+        return receivableRecoveryMoneyPaytime;
+    }
+
+    public void setReceivableRecoveryMoneyPaytime(Date receivableRecoveryMoneyPaytime) {
+        this.receivableRecoveryMoneyPaytime = receivableRecoveryMoneyPaytime;
     }
 
     public String getFpAccountName() {

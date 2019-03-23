@@ -12,11 +12,23 @@ public class GenerateSqlTest {
 
     @Test
     public void testGenerateSql() {
-        String tableName = "flow_config";
-        String str = "  `serial_no` varchar(64) NOT NULL COMMENT '业务流水',\n" +
-                "  `flow_serial_no` varchar(64) NOT NULL COMMENT '流程配置表流水',\n" +
-                "  `status_serial_no` varchar(64) NOT NULL COMMENT '状态表流水',\n" +
-                "  `role_serial_no` varchar(64) NOT NULL COMMENT '角色表流水',";
+        String tableName = "contract_fasa";
+        String str = "`serial_no` varchar(64) NOT NULL COMMENT '业务流水',\n" +
+                "  `contract_serial_no` varchar(64) NOT NULL COMMENT '合同流水',\n" +
+                "  `fp_company_name` varchar(256) DEFAULT NULL COMMENT '甲方公司名称',\n" +
+                "  `fp_residence` varchar(512) DEFAULT NULL COMMENT '甲方住所',\n" +
+                "  `fp_legal_person` varchar(64) DEFAULT NULL COMMENT '甲方法定代表人',\n" +
+                "  `fp_post_code` varchar(16) DEFAULT NULL COMMENT '甲方邮编',\n" +
+                "  `fp_telephone` varchar(32) DEFAULT NULL COMMENT '甲方电话',\n" +
+                "  `fp_fax` varchar(32) DEFAULT NULL COMMENT '甲方传真',\n" +
+                "  `sign_address` varchar(512) DEFAULT NULL COMMENT '协议签署地',\n" +
+                "  `sing_date` datetime DEFAULT NULL COMMENT '协议签署日期',\n" +
+                "  `advisory_service_money` decimal(10,2) DEFAULT NULL COMMENT '财务顾问费',\n" +
+                "  `advisory_service_money_upper` varchar(256) DEFAULT NULL COMMENT '财务顾问费大写',\n" +
+                "  `advisory_service_money_appointment` varchar(512) DEFAULT NULL COMMENT '财务顾问费约定',\n" +
+                "  `sp_bank_name` varchar(256) DEFAULT NULL COMMENT '乙方银行名称',\n" +
+                "  `sp_account` varchar(256) DEFAULT NULL COMMENT '乙方银行账户',\n" +
+                "  `expiry_date_month` int(11) DEFAULT NULL COMMENT '协议有效期月数',";
 
         List<String> fields = Lists.newArrayList(Splitter.on("\n").split(str));
         List<String> fieldList = Lists.newArrayList();

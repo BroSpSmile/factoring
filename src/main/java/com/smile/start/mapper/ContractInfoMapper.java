@@ -44,4 +44,7 @@ public interface ContractInfoMapper {
     @Mapping(source = "operationTime", target = "operationTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ContractAuditRecordDTO do2dto(ContractAuditRecord contractAuditRecord);
     List<ContractAuditRecordDTO> doList2dtoListAuditRecord(List<ContractAuditRecord> doList);
+
+    ContractFasa dto2do(ContractFasaDTO dto);
+    ContractFasaDTO do2dto(ContractFasa contractFasa);
 }

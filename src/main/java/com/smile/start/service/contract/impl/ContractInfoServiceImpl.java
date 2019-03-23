@@ -17,6 +17,7 @@ import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.common.FlowStatus;
+import com.smile.start.model.contract.*;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
@@ -37,11 +38,6 @@ import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.ContractExtendInfo;
-import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.ContractReceivableAgreement;
-import com.smile.start.model.contract.ContractReceivableConfirmation;
-import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.auth.UserInfoService;
@@ -66,6 +62,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractReceivableConfirmationDao contractReceivableConfirmationDao;
+
+    @Resource
+    private ContractFasaDao                   contractFasaDao;
 
     @Resource
     private ContractSignListDao               contractSignListDao;
@@ -223,6 +222,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
+        //保存财务顾问协议
+        final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+        contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
+        contractFasa.setContractSerialNo(contractSerialNo);
+        contractFasa.setFasaCode(project.getProjectId() + "-4");
+        contractFasaDao.insert(contractFasa);
+
         //附件合同
         insertAttachList(contractInfoDTO);
         Long contractId = contractInfoDao.insert(contractInfo);
@@ -300,6 +306,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //更新应收账款转让登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
         contractReceivableAgreementDao.update(contractReceivableAgreement);
+
+        //保存财务顾问协议
+        final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+        contractFasaDao.update(contractFasa);
 
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());

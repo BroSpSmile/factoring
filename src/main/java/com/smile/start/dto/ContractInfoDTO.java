@@ -34,6 +34,11 @@ public class ContractInfoDTO implements Serializable {
     private ContractReceivableConfirmationDTO contractReceivableConfirmation;
 
     /**
+     * 财务顾问服务协议
+     */
+    private ContractFasaDTO contractFasa;
+
+    /**
      * 签署清单
      */
     private List<ContractSignListDTO> signList;
@@ -78,6 +83,14 @@ public class ContractInfoDTO implements Serializable {
 
     public void setContractReceivableConfirmation(ContractReceivableConfirmationDTO contractReceivableConfirmation) {
         this.contractReceivableConfirmation = contractReceivableConfirmation;
+    }
+
+    public ContractFasaDTO getContractFasa() {
+        return contractFasa;
+    }
+
+    public void setContractFasa(ContractFasaDTO contractFasa) {
+        this.contractFasa = contractFasa;
     }
 
     public List<ContractSignListDTO> getSignList() {
