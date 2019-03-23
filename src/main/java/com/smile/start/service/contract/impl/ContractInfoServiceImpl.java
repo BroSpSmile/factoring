@@ -223,11 +223,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
         //保存财务顾问协议
-        final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
-        contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
-        contractFasa.setContractSerialNo(contractSerialNo);
-        contractFasa.setFasaCode(project.getProjectId() + "-4");
-        contractFasaDao.insert(contractFasa);
+        if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+            contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
+            contractFasa.setContractSerialNo(contractSerialNo);
+            contractFasa.setFasaCode(project.getProjectId() + "-4");
+            contractFasaDao.insert(contractFasa);
+        }
 
         //附件合同
         insertAttachList(contractInfoDTO);
@@ -308,8 +310,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreementDao.update(contractReceivableAgreement);
 
         //保存财务顾问协议
-        final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
-        contractFasaDao.update(contractFasa);
+        if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+            contractFasaDao.update(contractFasa);
+        }
 
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
