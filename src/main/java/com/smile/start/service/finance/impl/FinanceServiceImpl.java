@@ -73,20 +73,25 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         BaseResult result = new BaseResult();
         for (Installment installment : installments) {
             installment.setType(installmentType);
+            installment.setDetail(project.getDetail());
             long effect = 0;
             long itemEffect = 0;
             if (installment.getId().equals(new Long(-1L))) {
                 //ADD
                 effect = installmentDao.insert(installment);
-                installment.getItem().setInstallmentId(installment.getId());
-                itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+                if (null != installment.getItem()) {
+                    installment.getItem().setInstallmentId(installment.getId());
+                    itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+                }
             } else {
                 //UPDATE
                 effect = installmentDao.update(installment);
-                installment.getItem().setInstallmentId(installment.getId());
-                itemEffect = installmentDao.deleteInstallmentItem(installment.getItem());
-                if (itemEffect > 0) {
-                    itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+                if (null != installment.getItem()) {
+                    installment.getItem().setInstallmentId(installment.getId());
+                    itemEffect = installmentDao.deleteInstallmentItem(installment.getItem());
+                    if (itemEffect >= 0) {
+                        itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+                    }
                 }
             }
             if (installmentType == InstallmentType.FACTORING) {
@@ -96,7 +101,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
                 }
             }
 
-            if (effect <= 0 || itemEffect <= 0 || !result.isSuccess()) {
+            if (effect < 0 || itemEffect < 0 || !result.isSuccess()) {
                 throw new RuntimeException("保存" + installmentType.getDesc() + "信息失败!");
             }
         }
