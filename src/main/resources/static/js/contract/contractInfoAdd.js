@@ -20,6 +20,8 @@ var vue = new Vue({
             contractExtendInfo : {},
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
+            contractShareholderMeeting : {},
+            contractFasa : {},
             signList : [],
             attachList : [],
             projectMode : 1
@@ -47,7 +49,7 @@ var vue = new Vue({
         fileList : [],
         showResult:false,
         modal1:false,
-        panelOpen : "0",
+        panelOpen : "projectInfo",
         isDisable : false
     },
     created : function() {

@@ -17,6 +17,7 @@ import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.common.FlowStatus;
+import com.smile.start.model.contract.*;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.AuditRecord;
@@ -37,11 +38,6 @@ import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.contract.ContractExtendInfo;
-import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.ContractReceivableAgreement;
-import com.smile.start.model.contract.ContractReceivableConfirmation;
-import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.auth.UserInfoService;
@@ -66,6 +62,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ContractReceivableConfirmationDao contractReceivableConfirmationDao;
+
+    @Resource
+    private ContractFasaDao                   contractFasaDao;
+
+    @Resource
+    private ContractShareholderMeetingDao     contractShareholderMeetingDao;
 
     @Resource
     private ContractSignListDao               contractSignListDao;
@@ -123,12 +125,29 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         AuthUserInfoDTO userInfo = userInfoService.findBySerialNo(contractInfo.getCreateUser());
         contractBaseInfoDTO.setCreateUser(userInfo.getUsername());
 
+        //保理合同信息
         final ContractExtendInfo contractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractExtendInfo(contractInfoMapper.do2dto(contractExtendInfo));
+
+        //登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableAgreement(contractInfoMapper.do2dto(contractReceivableAgreement));
+
+        //确认函
         final ContractReceivableConfirmation contractReceivableConfirmation = contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableConfirmation(contractInfoMapper.do2dto(contractReceivableConfirmation));
+
+        //财务顾问服务协议
+        if(contractInfo.getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractFasaDao.findByContractSerialNo(contractInfo.getSerialNo());
+            contractInfoDTO.setContractFasa(contractInfoMapper.do2dto(contractFasa));
+        }
+
+        //股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting =  contractShareholderMeetingDao.findByContractSerialNo(contractInfo.getSerialNo());
+        contractInfoDTO.setContractShareholderMeeting(contractInfoMapper.do2dto(contractShareholderMeeting));
+
+        //签署清单
         final List<ContractSignList> signList = contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 
@@ -223,6 +242,21 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
+        //保存财务顾问协议
+        if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+            contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
+            contractFasa.setContractSerialNo(contractSerialNo);
+            contractFasa.setFasaCode(project.getProjectId() + "-4");
+            contractFasaDao.insert(contractFasa);
+        }
+
+        //保存股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
+        contractShareholderMeeting.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
+        contractShareholderMeeting.setContractSerialNo(contractSerialNo);
+        contractShareholderMeetingDao.insert(contractShareholderMeeting);
+
         //附件合同
         insertAttachList(contractInfoDTO);
         Long contractId = contractInfoDao.insert(contractInfo);
@@ -300,6 +334,16 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //更新应收账款转让登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
         contractReceivableAgreementDao.update(contractReceivableAgreement);
+
+        //保存财务顾问协议
+        if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+            contractFasaDao.update(contractFasa);
+        }
+
+        //保存股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
+        contractShareholderMeetingDao.update(contractShareholderMeeting);
 
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());

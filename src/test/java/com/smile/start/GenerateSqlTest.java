@@ -12,11 +12,16 @@ public class GenerateSqlTest {
 
     @Test
     public void testGenerateSql() {
-        String tableName = "flow_config";
-        String str = "  `serial_no` varchar(64) NOT NULL COMMENT '业务流水',\n" +
-                "  `flow_serial_no` varchar(64) NOT NULL COMMENT '流程配置表流水',\n" +
-                "  `status_serial_no` varchar(64) NOT NULL COMMENT '状态表流水',\n" +
-                "  `role_serial_no` varchar(64) NOT NULL COMMENT '角色表流水',";
+        String tableName = "contract_shareholder_meeting";
+        String str = " `serial_no` varchar(64) NOT NULL COMMENT '业务流水',\n" +
+                "  `contract_serial_no` varchar(64) NOT NULL COMMENT '合同流水',\n" +
+                "  `metting_time` datetime DEFAULT NULL COMMENT '会议时间',\n" +
+                "  `metting_address` varchar(512) DEFAULT NULL COMMENT '会议地点',\n" +
+                "  `sp_company_name` varchar(256) DEFAULT NULL COMMENT '乙方公司名称',\n" +
+                "  `attending_shareholders` varchar(512) DEFAULT NULL COMMENT '出席股东',\n" +
+                "  `meeting_number` int(11) DEFAULT NULL COMMENT '会议次数',\n" +
+                "  `passing_rate` varchar(64) DEFAULT NULL COMMENT '表决权通过率',\n" +
+                "  `signature_date` datetime DEFAULT NULL COMMENT '签字日期',";
 
         List<String> fields = Lists.newArrayList(Splitter.on("\n").split(str));
         List<String> fieldList = Lists.newArrayList();
