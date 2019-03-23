@@ -112,6 +112,27 @@ var vue = new Vue({
 		},
 		
 		/**
+		 * 后补
+		 */
+		later:function(){
+			let _self = this;
+			this.$http.put("/apply",this.project).then(function(response){
+				if (response.data.success) {
+					_self.$Message.info({
+						content : "申请成功",
+						onClose : function() {
+							window.close();
+						}
+					});
+				} else {
+					_self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				_self.$Message.error(error.data.message);
+			})
+		},
+		
+		/**
 		 * 下载文件
 		 */
 		downloadItem:function(item){

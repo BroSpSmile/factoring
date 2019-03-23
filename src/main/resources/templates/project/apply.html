@@ -35,7 +35,7 @@
 								<row type="flex" v-if="project.step ==1">
 				                   <i-col span="8" offset="1">
 				                       	<i-button type="success"  @click="commit">提交审核</i-button>
-				                        <i-button type="" v-if="!audit"  @click="" style="margin-left: 8px">此步骤后补</i-button>
+				                        <i-button type="" v-if="!audit"  @click="later" style="margin-left: 8px">此步骤后补</i-button>
 				                   </i-col>
 				            	</row>
 							</i-form>

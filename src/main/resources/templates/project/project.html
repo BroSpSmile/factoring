@@ -78,8 +78,9 @@
 							        </div>
 							        <div class="ivu-steps-main">
 							            <div class="ivu-steps-title">{{record.step|toStepName}}</div>
-							            <div class="ivu-steps-content">{{record.createTime|timeFilter}}</div>
-							            <div class="ivu-steps-content">{{record.modifyTime|timeFilter}}</div>
+							            <div class="ivu-steps-content" v-if="record.status=='LATER'">待补,滞留{{record.days}}天</div>
+							            <div class="ivu-steps-content" v-if="record.status!='LATER'">{{record.createTime|timeFilter}}</div>
+							            <div class="ivu-steps-content" v-if="record.status=='COMPLETED'">{{record.modifyTime|timeFilter}}</div>
 							            <div class="ivu-steps-content"></div>
 							        </div>
 							    </div>

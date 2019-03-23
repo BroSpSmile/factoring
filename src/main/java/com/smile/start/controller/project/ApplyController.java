@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +21,9 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.TuneupService;
 
 /**
@@ -36,6 +39,10 @@ public class ApplyController extends BaseController {
     @Resource
     private TuneupService tuneupService;
 
+    /** 流程引擎 */
+    @Resource
+    private ProcessEngine  processEngine;
+    
     /**
      * 页面跳转
      * @param id
@@ -61,5 +68,17 @@ public class ApplyController extends BaseController {
         project.setUser(user);
         LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(project));
         return tuneupService.tuneupApply(project);
+    }
+    
+    /**
+     * 提出申请
+     * @param project
+     * @return
+     */
+    @PutMapping
+    @ResponseBody
+    public BaseResult skip(HttpServletRequest request, @RequestBody Project project) {
+        project.setStep(Step.TUNEUP.getIndex());
+        return processEngine.skip(project);
     }
 }
