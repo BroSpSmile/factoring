@@ -39,6 +39,11 @@ public class ContractInfoDTO implements Serializable {
     private ContractFasaDTO contractFasa;
 
     /**
+     * 股东会决议
+     */
+    private ContractShareholderMeetingDTO contractShareholderMeeting;
+
+    /**
      * 签署清单
      */
     private List<ContractSignListDTO> signList;
@@ -91,6 +96,14 @@ public class ContractInfoDTO implements Serializable {
 
     public void setContractFasa(ContractFasaDTO contractFasa) {
         this.contractFasa = contractFasa;
+    }
+
+    public ContractShareholderMeetingDTO getContractShareholderMeeting() {
+        return contractShareholderMeeting;
+    }
+
+    public void setContractShareholderMeeting(ContractShareholderMeetingDTO contractShareholderMeeting) {
+        this.contractShareholderMeeting = contractShareholderMeeting;
     }
 
     public List<ContractSignListDTO> getSignList() {

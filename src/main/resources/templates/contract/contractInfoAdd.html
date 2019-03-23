@@ -293,7 +293,7 @@
 										<i-input placeholder="请输入协议签署地" v-model="addForm.contractFasa.signAddress"></i-input>
 									</form-item>
 									<form-item label="协议签署日期" prop="contractFasa.singDate">
-										<i-input placeholder="请输入协议签署日期" v-model="addForm.contractFasa.singDate"></i-input>
+										<date-picker type="date" placeholder="请输入协议签署日期" v-model="addForm.contractFasa.singDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item label="财务顾问费" prop="contractFasa.advisoryServiceMoney">
 										<i-input placeholder="请输入财务顾问费" v-model="addForm.contractFasa.advisoryServiceMoney"></i-input>
@@ -301,7 +301,6 @@
 									<form-item label="财务顾问费（大写）" prop="contractFasa.advisoryServiceMoneyUpper">
 										<i-input placeholder="请输入财务顾问费（大写）" v-model="addForm.contractFasa.advisoryServiceMoneyUpper"></i-input>
 									</form-item>
-
 									<form-item label="财务顾问费约定" prop="contractFasa.advisoryServiceMoneyAppointment">
 										<i-input placeholder="请输入财务顾问费约定" v-model="addForm.contractFasa.advisoryServiceMoneyAppointment"></i-input>
 									</form-item>
@@ -319,35 +318,27 @@
 							<Panel name="resolution">
 								股东会决议
 								<div slot="content">
-									<Card>
-										<p slot="title">
-											乙方信息
-										</p>
-										<form-item label="名称" prop="contractReceivableAgreement.spName">
-											<i-input placeholder="请输入乙方名称" v-model="addForm.contractReceivableAgreement.spName"></i-input>
-										</form-item>
-										<form-item label="住所" prop="contractReceivableAgreement.spResidence">
-											<i-input placeholder="请输入乙方住所" v-model="addForm.contractReceivableAgreement.spResidence"></i-input>
-										</form-item>
-										<form-item label="法定代表人" prop="contractReceivableAgreement.spLegalPerson">
-											<i-input placeholder="请输入乙方法定代表人" v-model="addForm.contractReceivableAgreement.spLegalPerson"></i-input>
-										</form-item>
-										<form-item label="联系地址" prop="contractReceivableAgreement.spContactAddress">
-											<i-input placeholder="请输入乙方联系地址" v-model="addForm.contractReceivableAgreement.spContactAddress"></i-input>
-										</form-item>
-										<form-item label="邮编" prop="contractReceivableAgreement.spPostCode">
-											<i-input placeholder="请输入乙方邮编" v-model="addForm.contractReceivableAgreement.spPostCode"></i-input>
-										</form-item>
-										<form-item label="电话" prop="contractReceivableAgreement.spTelephone">
-											<i-input placeholder="请输入乙方电话" v-model="addForm.contractReceivableAgreement.spTelephone"></i-input>
-										</form-item>
-										<form-item label="传真" prop="contractReceivableAgreement.spFax">
-											<i-input placeholder="请输入乙方传真" v-model="addForm.contractReceivableAgreement.spFax"></i-input>
-										</form-item>
-										<form-item label="签署日期" prop="contractReceivableAgreement.signDate">
-											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableAgreement.signDate" format="yyyy-MM-dd"></date-picker>
-										</form-item>
-									</Card>
+									<form-item label="会议时间" prop="contractShareholderMeeting.mettingTime">
+										<date-picker type="date" placeholder="请输入会议时间" v-model="addForm.contractShareholderMeeting.mettingTime" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+									<form-item label="会议地点" prop="contractShareholderMeeting.mettingAddress">
+										<i-input placeholder="请输入会议地点" v-model="addForm.contractShareholderMeeting.mettingAddress"></i-input>
+									</form-item>
+									<form-item label="乙方公司名称" prop="contractShareholderMeeting.spCompanyName">
+										<i-input placeholder="请输入乙方公司名称" v-model="addForm.contractShareholderMeeting.spCompanyName"></i-input>
+									</form-item>
+									<form-item label="出席股东" prop="contractShareholderMeeting.attendingShareholders">
+										<i-input placeholder="请输入出席股东" v-model="addForm.contractShareholderMeeting.attendingShareholders"></i-input>
+									</form-item>
+									<form-item label="会议次数" prop="contractShareholderMeeting.meetingNumber">
+										<i-input placeholder="请输入会议次数" v-model="addForm.contractShareholderMeeting.meetingNumber"></i-input>
+									</form-item>
+									<form-item label="表决权通过率" prop="contractShareholderMeeting.passingRate">
+										<i-input placeholder="请输入表决权通过率" v-model="addForm.contractShareholderMeeting.passingRate"></i-input>
+									</form-item>
+									<form-item label="签字日期" prop="contractShareholderMeeting.signatureDate">
+										<date-picker type="date" placeholder="请输入签字日期" v-model="addForm.contractShareholderMeeting.signatureDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
 								</div>
 							</Panel>
 							<Panel name="upload">

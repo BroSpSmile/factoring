@@ -47,4 +47,7 @@ public interface ContractInfoMapper {
 
     ContractFasa dto2do(ContractFasaDTO dto);
     ContractFasaDTO do2dto(ContractFasa contractFasa);
+
+    ContractShareholderMeeting dto2do(ContractShareholderMeetingDTO dto);
+    ContractShareholderMeetingDTO do2dto(ContractShareholderMeeting contractShareholderMeeting);
 }

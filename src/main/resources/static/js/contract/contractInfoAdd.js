@@ -20,6 +20,7 @@ var vue = new Vue({
             contractExtendInfo : {},
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {},
+            contractShareholderMeeting : {},
             contractFasa : {},
             signList : [],
             attachList : [],

@@ -67,6 +67,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private ContractFasaDao                   contractFasaDao;
 
     @Resource
+    private ContractShareholderMeetingDao     contractShareholderMeetingDao;
+
+    @Resource
     private ContractSignListDao               contractSignListDao;
 
     @Resource
@@ -231,6 +234,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractFasaDao.insert(contractFasa);
         }
 
+        //保存股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
+        contractShareholderMeeting.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
+        contractShareholderMeeting.setContractSerialNo(contractSerialNo);
+        contractShareholderMeetingDao.insert(contractShareholderMeeting);
+
         //附件合同
         insertAttachList(contractInfoDTO);
         Long contractId = contractInfoDao.insert(contractInfo);
@@ -314,6 +323,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
             contractFasaDao.update(contractFasa);
         }
+
+        //保存股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
+        contractShareholderMeetingDao.update(contractShareholderMeeting);
 
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
