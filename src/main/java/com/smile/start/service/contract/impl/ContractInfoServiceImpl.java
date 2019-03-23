@@ -125,12 +125,29 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         AuthUserInfoDTO userInfo = userInfoService.findBySerialNo(contractInfo.getCreateUser());
         contractBaseInfoDTO.setCreateUser(userInfo.getUsername());
 
+        //保理合同信息
         final ContractExtendInfo contractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractExtendInfo(contractInfoMapper.do2dto(contractExtendInfo));
+
+        //登记协议
         final ContractReceivableAgreement contractReceivableAgreement = contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableAgreement(contractInfoMapper.do2dto(contractReceivableAgreement));
+
+        //确认函
         final ContractReceivableConfirmation contractReceivableConfirmation = contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setContractReceivableConfirmation(contractInfoMapper.do2dto(contractReceivableConfirmation));
+
+        //财务顾问服务协议
+        if(contractInfo.getProjectMode() == 2) {
+            final ContractFasa contractFasa = contractFasaDao.findByContractSerialNo(contractInfo.getSerialNo());
+            contractInfoDTO.setContractFasa(contractInfoMapper.do2dto(contractFasa));
+        }
+
+        //股东会决议
+        final ContractShareholderMeeting contractShareholderMeeting =  contractShareholderMeetingDao.findByContractSerialNo(contractInfo.getSerialNo());
+        contractInfoDTO.setContractShareholderMeeting(contractInfoMapper.do2dto(contractShareholderMeeting));
+
+        //签署清单
         final List<ContractSignList> signList = contractSignListDao.findByContractSerialNo(contractInfo.getSerialNo());
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 

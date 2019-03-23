@@ -37,5 +37,5 @@ public interface ContractShareholderMeetingDao {
      * @param contractSerialNo
      */
     @Select("select * from contract_shareholder_meeting where contract_serial_no = #{contractSerialNo}")
-    ContractFasa findByContractSerialNo(String contractSerialNo);
+    ContractShareholderMeeting findByContractSerialNo(String contractSerialNo);
 }
