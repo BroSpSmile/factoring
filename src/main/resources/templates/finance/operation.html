@@ -28,7 +28,7 @@
 
         <row>
             <i-col span="22" offset="1">
-                <Tabs :animated="false" style="width: 85%">
+                <Tabs :animated="false" >
                     <Tab-pane label="放款">
                         <card dis-hover title="分期信息">
                             <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
@@ -36,7 +36,7 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th>日期</th>
+                                    <th width="140">日期</th>
                                     <th width="160">放款凭证</th>
                                     <th width="200" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -56,13 +56,13 @@
                                                           v-model="installment.amount"></input-number>
                                         </i-col>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.id==null)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -90,7 +90,7 @@
                         </card>
                         <br>
                         <row type="flex" justify="end">
-                            <i-col offset="20">
+                            <i-col offset="16">
                                 <i-button type="success" @click="saveInstallment('loan')">保存放款信息</i-button>
                                 <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
                             </i-col>
@@ -104,10 +104,10 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th>日期</th>
+                                    <th width="140">日期</th>
                                     <th width="140">开票金额</th>
                                     <th width="140">开票行</th>
-                                    <th>开票日期</th>
+                                    <th width="140">开票日期</th>
                                     <th width="160">开票凭证</th>
                                     <th width="180" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -130,14 +130,14 @@
                                                           @on-blur="synInstallment(installment,'INVOICE')"></input-number>
                                         </i-col>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"
                                                          @on-change="synInstallment(installment,'INVOICE')"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.amount!=-1 && installment.id >0)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -159,13 +159,13 @@
                                             <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
                                         </i-select>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.detailId==null)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.detailId!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -205,10 +205,10 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th>日期</th>
+                                    <th width="140">日期</th>
                                     <th width="140">保理费收款金额</th>
                                     <th width="140">收款行</th>
-                                    <th>收款日期</th>
+                                    <th width="140">收款日期</th>
                                     <th width="160">收款凭证</th>
                                     <th width="180" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -231,14 +231,14 @@
                                                           @on-blur="synInstallment(installment,'PAYMENT')"></input-number>
                                         </i-col>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          @on-change="synInstallment(installment,'PAYMENT')"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.amount!=-1 && installment.id >0)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -260,13 +260,13 @@
                                             <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
                                         </i-select>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.detailId==null)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.detailId!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -301,7 +301,7 @@
                         </card>
                         <br>
                         <row type="flex" justify="end">
-                            <i-col offset="20">
+                            <i-col offset="16">
                                 <i-button type="success" @click="saveInstallment('factoring')">保存保理信息</i-button>
                                 <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
                             </i-col>
@@ -315,7 +315,7 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th>日期</th>
+                                    <th width="140">日期</th>
                                     <th width="160">收款凭证</th>
                                     <th width="200" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -335,13 +335,13 @@
                                                           v-model="installment.amount"></input-number>
                                         </i-col>
                                     </td>
-                                    <td align="center">
+                                    <td width="140" align="center">
                                         <i-col v-if="(installment.id==null)">
-                                            <date-picker placement="top-start" type="date"
+                                            <date-picker placement="top-start" type="date"  class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date"
+                                            <date-picker readonly="true" placement="top-start" type="date"  class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -369,7 +369,7 @@
                         </card>
                         <br>
                         <row type="flex" justify="end">
-                            <i-col offset="20">
+                            <i-col offset="16">
                                 <i-button type="success" @click="saveInstallment('return')">保存回款信息</i-button>
                                 <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
                             </i-col>
