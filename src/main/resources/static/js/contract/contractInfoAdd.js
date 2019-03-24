@@ -73,6 +73,24 @@ var vue = new Vue({
                     //合同信息已经存在
                     if (response.data.success && response.data.data !== null) {
                         self.addForm = response.data.data;
+                        if(response.data.data.contractShareholderMeeting === null) {
+                            self.addForm.contractShareholderMeeting = {};
+                        }
+                        if(response.data.data.contractFasa === null) {
+                            self.addForm.contractFasa = {};
+                        }
+                        if(response.data.data.contractExtendInfo === null) {
+                            self.addForm.contractExtendInfo = {};
+                        }
+                        if(response.data.data.contractReceivableAgreement === null) {
+                            self.addForm.contractReceivableAgreement = {};
+                        }
+                        if(response.data.data.contractReceivableConfirmation === null) {
+                            self.addForm.contractReceivableConfirmation = {};
+                        }
+                        if(response.data.data.attachList === null) {
+                            self.addForm.attachList = [];
+                        }
                     } else {
                         //没有合同信息，初始新增数据
                         self.addForm.baseInfo.projectId = projectId;
@@ -103,7 +121,7 @@ var vue = new Vue({
             this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
-                    if (this.addForm.baseInfo.id == null || this.addForm.baseInfo.id === "") {
+                    if (this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                         this.$http.post("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
@@ -122,6 +140,7 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     } else {
+                        console.log(self.addForm)
                         this.$http.put("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
@@ -338,6 +357,7 @@ var vue = new Vue({
             }
         },
         genFileInfo: function () {
+            console.log(this.fileList)
             for (let index in this.fileList) {
                 let item = {
                     attachName: this.fileList[index].name,

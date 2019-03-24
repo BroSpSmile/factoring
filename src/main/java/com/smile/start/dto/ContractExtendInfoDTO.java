@@ -171,7 +171,17 @@ public class ContractExtendInfoDTO implements Serializable {
      * 合同强制解除日期
      * @return
      */
-    private Date ompulsoryRescissionDate;
+    private Date compulsoryRescissionDate;
+
+    /**
+     * 甲方签字日期
+     */
+    private Date fpSignatureDate;
+
+    /**
+     * 乙方签字日期
+     */
+    private Date spSignatureDate;
 
     public Long getId() {
         return id;
@@ -421,11 +431,27 @@ public class ContractExtendInfoDTO implements Serializable {
         this.spAccount = spAccount;
     }
 
-    public Date getOmpulsoryRescissionDate() {
-        return ompulsoryRescissionDate;
+    public Date getCompulsoryRescissionDate() {
+        return compulsoryRescissionDate;
     }
 
-    public void setOmpulsoryRescissionDate(Date ompulsoryRescissionDate) {
-        this.ompulsoryRescissionDate = ompulsoryRescissionDate;
+    public void setCompulsoryRescissionDate(Date compulsoryRescissionDate) {
+        this.compulsoryRescissionDate = compulsoryRescissionDate;
+    }
+
+    public Date getFpSignatureDate() {
+        return fpSignatureDate;
+    }
+
+    public void setFpSignatureDate(Date fpSignatureDate) {
+        this.fpSignatureDate = fpSignatureDate;
+    }
+
+    public Date getSpSignatureDate() {
+        return spSignatureDate;
+    }
+
+    public void setSpSignatureDate(Date spSignatureDate) {
+        this.spSignatureDate = spSignatureDate;
     }
 }
