@@ -86,6 +86,12 @@
 										<p slot="title">
 											应收账款
 										</p>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款类别" prop="contractExtendInfo.receivableMoneyType">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableMoneyType">
+												<Radio label="不低于">不低于</Radio>
+												<Radio label="为">为</Radio>
+											</Radio-Group>
+										</form-item>
 										<form-item label="应收账款" prop="contractExtendInfo.receivableMoney">
 											<input-number placeholder="请输入应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableMoney"></input-number>&nbsp;元
 										</form-item>
@@ -111,10 +117,27 @@
 											<i-input placeholder="请输入应收账款受让款首付款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoneyUpper"></i-input>
 										</form-item>
 									</Card>
+									<Card v-if="project.model == 'RECOURSE_RIGHT'">
+										<p slot="title">
+											保理费
+										</p>
+										<form-item label="计费起始日期" prop="contractExtendInfo.billingStartDate">
+											<date-picker type="date" placeholder="请输入计费起始日期" v-model="addForm.contractExtendInfo.billingStartDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="年利率" prop="contractExtendInfo.interestRate">
+											<input-number placeholder="请输入年利率" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.interestRate"></input-number>&nbsp;元
+										</form-item>
+									</Card>
 									<Card>
 										<p slot="title">
 											应收账款回收款
 										</p>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款回收款类别" prop="contractExtendInfo.receivableRecoveryMoneyType">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableRecoveryMoneyType">
+												<Radio label="不低于">不低于</Radio>
+												<Radio label="为">为</Radio>
+											</Radio-Group>
+										</form-item>
 										<form-item label="应收账款回收款" prop="contractExtendInfo.receivableRecoveryMoney">
 											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
