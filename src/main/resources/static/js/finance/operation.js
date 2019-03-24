@@ -392,11 +392,13 @@ var vue = new Vue({
                     let factoringInstallmentForView = this.factoringInstallmentsPayment[index];
                     if (factoringInstallmentForView.amount != -1) {
                         this.project.detail.factoringInstallments.push({
-                            id: factoringInstallmentForView.id > 0,
+                            id: factoringInstallmentForView.id,
                             amount: factoringInstallmentForView.amount,
                             installmentDate: factoringInstallmentForView.installmentDate,
                             detailList: [
                                 {
+                                    id:factoringInstallmentForView.detailId,
+                                    installmentId:factoringInstallmentForView.id,
                                     type: factoringInstallmentForView.type,
                                     bankInfoId: factoringInstallmentForView.bankInfoId,
                                     detailAmount: factoringInstallmentForView.detailAmount,
@@ -409,6 +411,8 @@ var vue = new Vue({
                         for (let index2 in this.project.detail.factoringInstallments) {
                             if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
                                 this.project.detail.factoringInstallments[index2].detailList.push({
+                                    id:factoringInstallmentForView.detailId,
+                                    installmentId:factoringInstallmentForView.id,
                                     type: factoringInstallmentForView.type,
                                     bankInfoId: factoringInstallmentForView.bankInfoId,
                                     detailAmount: factoringInstallmentForView.detailAmount,
@@ -427,6 +431,7 @@ var vue = new Vue({
                     for (let index2 in this.project.detail.factoringInstallments) {
                         if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
                             this.project.detail.factoringInstallments[index2].detailList.push({
+                                id:factoringInstallmentForView.detailId,
                                 type: factoringInstallmentForView.type,
                                 bankInfoId: factoringInstallmentForView.bankInfoId,
                                 detailAmount: factoringInstallmentForView.detailAmount,
@@ -525,7 +530,7 @@ var vue = new Vue({
                                     id: factoringInstallment.id,
                                     amount: j == 0 ? factoringInstallment.amount : -1,
                                     installmentDate: factoringInstallment.installmentDate,
-                                    type: 'INVOICE',
+                                    type: 'PAYMENT',
                                     bankInfoId: detailListPayment[j].bankInfoId,
                                     detailAmount: detailListPayment[j].detailAmount,
                                     detailDate: detailListPayment[j].detailDate,
@@ -539,7 +544,7 @@ var vue = new Vue({
                                 id: factoringInstallment.id,
                                 amount: factoringInstallment.amount,
                                 installmentDate: factoringInstallment.installmentDate,
-                                type: 'INVOICE',
+                                type: 'PAYMENT',
                                 bankInfoId: null,
                                 detailAmount: 0,
                                 detailDate: '',
@@ -558,7 +563,7 @@ var vue = new Vue({
                                     detailAmount: detailListInvoice[k].detailAmount,
                                     detailDate: detailListInvoice[k].detailDate,
                                     item: detailListInvoice[k].item,
-                                    detailId: detailListPayment[j].id
+                                    detailId: detailListInvoice[k].id
                                 });
                             }
                         } else {

@@ -68,7 +68,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         } else if (installmentType == InstallmentType.RETURN) {
             installments = detail.getLoanInstallments();
         } else if (installmentType == InstallmentType.FACTORING) {
-            installments = detail.getLoanInstallments();
+            installments = detail.getFactoringInstallments();
         }
         BaseResult result = new BaseResult();
         for (Installment installment : installments) {
@@ -76,7 +76,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
             installment.setDetail(project.getDetail());
             long effect = 0;
             long itemEffect = 0;
-            if (installment.getId().equals(new Long(-1L))) {
+            if (null != installment.getId() && installment.getId() <= -1L) {
                 //ADD
                 effect = installmentDao.insert(installment);
                 if (null != installment.getItem()) {
@@ -97,7 +97,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
             if (installmentType == InstallmentType.FACTORING) {
                 List<InstallmentDetail> detailList = installment.getDetailList();
                 if (!CollectionUtils.isEmpty(detailList) && detailList.size() > 0) {
-                    result = saveInstallmentDetails(detailList);
+                    result = saveInstallmentDetails(detailList, installment.getId());
                 }
             }
 
@@ -118,27 +118,32 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
      * @param detailList
      * @return
      */
-    private BaseResult saveInstallmentDetails(List<InstallmentDetail> detailList) {
+    private BaseResult saveInstallmentDetails(List<InstallmentDetail> detailList, Long id) {
         if (!CollectionUtils.isEmpty(detailList) && detailList.size() > 0) {
             for (InstallmentDetail detail : detailList) {
+                detail.setInstallmentId(id);
                 long effect = 0;
                 long itemEffect = 0;
-                if (detail.getId().equals(new Long(-1L))) {
+                if (null != detail.getId() && detail.getId() <= -1L) {
                     //ADD
                     effect = installmentDao.insertInstallmentDetail(detail);
-                    detail.getItem().setInstallmentDetailId(detail.getId());
-                    itemEffect = installmentDao.insertInstallmentDetailItem(detail.getItem());
+                    if (null != detail.getItem()) {
+                        detail.getItem().setInstallmentDetailId(detail.getId());
+                        itemEffect = installmentDao.insertInstallmentDetailItem(detail.getItem());
+                    }
                 } else {
                     //UPDATE
                     effect = installmentDao.updateInstallmentDetail(detail);
-                    detail.getItem().setInstallmentDetailId(detail.getId());
-                    itemEffect = installmentDao.deleteInstallmentDetailItem(detail.getItem());
-                    if (itemEffect > 0) {
-                        itemEffect = installmentDao.insertInstallmentDetailItem(detail.getItem());
+                    if (null != detail.getItem()) {
+                        detail.getItem().setInstallmentDetailId(detail.getId());
+                        itemEffect = installmentDao.deleteInstallmentDetailItem(detail.getItem());
+                        if (itemEffect > 0) {
+                            itemEffect = installmentDao.insertInstallmentDetailItem(detail.getItem());
+                        }
                     }
                 }
 
-                if (effect <= 0 || itemEffect <= 0) {
+                if (effect < 0 || itemEffect < 0) {
                     throw new RuntimeException("保存分期明细信息失败!");
                 }
             }

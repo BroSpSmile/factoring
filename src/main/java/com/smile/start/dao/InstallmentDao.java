@@ -112,12 +112,12 @@ public interface InstallmentDao {
      * @param installmentDetail
      * @return
      */
-    @Update("<script>" + "update installment_detail set id = #{id}"
-        + "<if test = 'type!=null'>,type = #{type}</if>"
-        + "<if test = 'bankInfo!=null'>,bankInfo_id = #{bankInfoId}</if>"
+    @Update("<script>" + "update installment_detail set"
+        + "<if test = 'type!=null'> type = #{type}</if>"
+        + "<if test = 'bankInfoId!=null'>,bankInfo_id = #{bankInfoId}</if>"
         + "<if test = 'detailDate!=null'>,detail_date = #{detailDate}</if>"
         + "<if test = 'detailAmount!=null'>,detail_amount = #{detailAmount}</if>"
-        + "where installment_id = #{installmentId}" + "</script>")
+        + "where id = #{id}</script>")
     int updateInstallmentDetail(InstallmentDetail installmentDetail);
 
     /**
