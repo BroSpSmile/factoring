@@ -32,12 +32,17 @@ public class InstallmentDetail implements Serializable {
      */
     private Long installmentId;
 
-    private BankInfo bankInfo;
+    private Long bankInfoId;
 
     /**
      * 分期明细操作时间：开票日期或者收款日期
      */
     private Date detailDate;
+
+    /**
+     * 分期详情金额
+     */
+    private double detailAmount;
 
     /**
      * 开票或收款凭证附件
@@ -72,12 +77,12 @@ public class InstallmentDetail implements Serializable {
         this.installmentId = installmentId;
     }
 
-    public BankInfo getBankInfo() {
-        return bankInfo;
+    public Long getBankInfoId() {
+        return bankInfoId;
     }
 
-    public void setBankInfo(BankInfo bankInfo) {
-        this.bankInfo = bankInfo;
+    public void setBankInfoId(Long bankInfoId) {
+        this.bankInfoId = bankInfoId;
     }
 
     public Date getDetailDate() {
@@ -94,5 +99,13 @@ public class InstallmentDetail implements Serializable {
 
     public void setItem(InstallmentDetailItem item) {
         this.item = item;
+    }
+
+    public double getDetailAmount() {
+        return detailAmount;
+    }
+
+    public void setDetailAmount(double detailAmount) {
+        this.detailAmount = detailAmount;
     }
 }
