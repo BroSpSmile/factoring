@@ -159,15 +159,7 @@ var vue = new Vue({
                 } else if (type == 'factoring') {
                     if ('PAYMENT' == installmentDetailType) {
                         if (installment.amount != -1) {
-                            for (let i = this.factoringInstallmentsPayment.length - 1; i >= 0; i--) {
-                                let curInstallment = this.factoringInstallmentsPayment[i];
-                                if (curInstallment.id == installment.id) {
-                                    if (null != this.factoringInstallmentsPayment[i].item) {
-                                        this.deleteFile(this.factoringInstallmentsPayment[i].item.itemValue, index, type);
-                                    }
-                                    this.factoringInstallmentsPayment.splice(i, 1);
-                                }
-                            }
+                            this.deleteSyn(installment);
                         } else {
                             if (null != this.factoringInstallmentsPayment[index].item) {
                                 this.deleteFile(this.factoringInstallmentsPayment[index].item.itemValue, index, type);
@@ -176,15 +168,7 @@ var vue = new Vue({
                         }
                     } else if ('INVOICE' == installmentDetailType) {
                         if (installment.amount != -1) {
-                            for (let i = this.factoringInstallmentsInvoice.length - 1; i >= 0; i--) {
-                                let curInstallment = this.factoringInstallmentsInvoice[i];
-                                if (curInstallment.id == installment.id) {
-                                    if (null != this.factoringInstallmentsInvoice[i].item) {
-                                        this.deleteFile(this.factoringInstallmentsInvoice[i].item.itemValue, index, type);
-                                    }
-                                    this.factoringInstallmentsInvoice.splice(i, 1);
-                                }
-                            }
+                            this.deleteSyn(installment);
                         } else {
                             if (null != this.factoringInstallmentsInvoice[index].item) {
                                 this.deleteFile(this.factoringInstallmentsInvoice[index].item.itemValue, index, type);
@@ -193,6 +177,26 @@ var vue = new Vue({
                             this.factoringInstallmentsInvoice.splice(index, 1);
                         }
                     }
+                }
+            }
+        },
+        deleteSyn: function (installment) {
+            for (let i = this.factoringInstallmentsInvoice.length - 1; i >= 0; i--) {
+                let curInstallment = this.factoringInstallmentsInvoice[i];
+                if (curInstallment.id == installment.id) {
+                    if (null != this.factoringInstallmentsInvoice[i].item) {
+                        this.deleteFile(this.factoringInstallmentsInvoice[i].item.itemValue, index, type);
+                    }
+                    this.factoringInstallmentsInvoice.splice(i, 1);
+                }
+            }
+            for (let i = this.factoringInstallmentsPayment.length - 1; i >= 0; i--) {
+                let curInstallment = this.factoringInstallmentsPayment[i];
+                if (curInstallment.id == installment.id) {
+                    if (null != this.factoringInstallmentsPayment[i].item) {
+                        this.deleteFile(this.factoringInstallmentsPayment[i].item.itemValue, index, type);
+                    }
+                    this.factoringInstallmentsPayment.splice(i, 1);
                 }
             }
         },
@@ -397,8 +401,8 @@ var vue = new Vue({
                             installmentDate: factoringInstallmentForView.installmentDate,
                             detailList: [
                                 {
-                                    id:factoringInstallmentForView.detailId,
-                                    installmentId:factoringInstallmentForView.id,
+                                    id: factoringInstallmentForView.detailId,
+                                    installmentId: factoringInstallmentForView.id,
                                     type: factoringInstallmentForView.type,
                                     bankInfoId: factoringInstallmentForView.bankInfoId,
                                     detailAmount: factoringInstallmentForView.detailAmount,
@@ -411,8 +415,8 @@ var vue = new Vue({
                         for (let index2 in this.project.detail.factoringInstallments) {
                             if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
                                 this.project.detail.factoringInstallments[index2].detailList.push({
-                                    id:factoringInstallmentForView.detailId,
-                                    installmentId:factoringInstallmentForView.id,
+                                    id: factoringInstallmentForView.detailId,
+                                    installmentId: factoringInstallmentForView.id,
                                     type: factoringInstallmentForView.type,
                                     bankInfoId: factoringInstallmentForView.bankInfoId,
                                     detailAmount: factoringInstallmentForView.detailAmount,
@@ -431,7 +435,7 @@ var vue = new Vue({
                     for (let index2 in this.project.detail.factoringInstallments) {
                         if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
                             this.project.detail.factoringInstallments[index2].detailList.push({
-                                id:factoringInstallmentForView.detailId,
+                                id: factoringInstallmentForView.detailId,
                                 type: factoringInstallmentForView.type,
                                 bankInfoId: factoringInstallmentForView.bankInfoId,
                                 detailAmount: factoringInstallmentForView.detailAmount,
