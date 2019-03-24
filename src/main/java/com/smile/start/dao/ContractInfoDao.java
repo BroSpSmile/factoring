@@ -49,7 +49,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Insert("insert into contract_info (project_id,serial_no,contract_name,project_mode,contract_template,status,delete_flag,seal_status,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractName},#{projectMode},#{contractTemplate},#{status},#{deleteFlag},#{sealStatus},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into contract_info (project_id,serial_no,contract_name,project_mode,contract_template,status,delete_flag,seal_status,factoring_contract,confirmation_letter,registration_agreement,financial_agreement,shareholder_resolution,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractName},#{projectMode},#{contractTemplate},#{status},#{deleteFlag},#{sealStatus},#{factoringContract},#{confirmationLetter},#{registrationAgreement},#{financialAgreement},#{shareholderResolution},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(ContractInfo contractInfo);
 
     /**
@@ -57,7 +57,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},factoring_contract=#{factoringContract},confirmation_letter=#{confirmationLetter},registration_agreement=#{registrationAgreement},financial_agreement=#{financialAgreement},shareholder_resolution=#{shareholderResolution},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**
