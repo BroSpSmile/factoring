@@ -124,8 +124,14 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Override
     @Transactional
     public BaseResult turnover(Project project) {
-        int effect = projectDao.update(project);
-        LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
+        Project local = projectDao.get(project.getId());
+        if (project.getStep().equals(local.getStep())) {//判断是否后补进度
+            project.setStep(project.getStep() + 1);
+            int effect = projectDao.update(project);
+            LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
+        }else {
+            project.setStep(project.getStep() + 1);
+        }
         if (!CollectionUtils.isEmpty(project.getItems())) {
             for (ProjectItem item : project.getItems()) {
                 projectItemDao.insert(item);

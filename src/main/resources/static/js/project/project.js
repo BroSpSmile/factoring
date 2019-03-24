@@ -293,6 +293,21 @@ var vue = new Vue({
 		},
 		
 		/**
+		 * 后补
+		 */
+		make:function(item){
+			var step = item.step
+			var projectId = item.project.id
+			if(step=='APPROVAL'){
+				this.toMenu('meeting',projectId);
+			}else if(step == 'TUNEUP'){
+				this.toMenu('apply',projectId);
+			}else if(step == 'MEETING'){
+				this.toMenu('past',projectId);
+			}
+		},
+		
+		/**
 		 * 尽调审核
 		 */
 		tuneup:function(projectId){

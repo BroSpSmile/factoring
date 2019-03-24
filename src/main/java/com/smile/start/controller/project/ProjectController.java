@@ -78,7 +78,7 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 获取审核历史
+     * 获取项目进度历史
      * @param id
      * @return
      */

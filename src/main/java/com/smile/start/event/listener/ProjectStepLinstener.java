@@ -12,6 +12,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.event.AuditEvent;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
@@ -39,6 +40,7 @@ public class ProjectStepLinstener implements AuditListener {
         Project project = audit.getProject();
         if (null != project) {
             project.setItems(Collections.emptyList());
+            project.setStep(getStep(audit.getAuditType()));
             if (audit.getStep() == -1) {//审核完结流转下一节点
                 processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
                 processEngine.next(project, false);
@@ -47,6 +49,27 @@ public class ProjectStepLinstener implements AuditListener {
             }
 
         }
+    }
+
+    private Integer getStep(AuditType type) {
+        Integer step = 0;
+        switch (type) {
+            case TUNEUP:
+                step = 2;
+                break;
+            case DRAWUP:
+                step = 5;
+                break;
+            case LOAN:
+                step = 8;
+                break;
+            case FILE:
+                step = 11;
+                break;
+            default:
+                break;
+        }
+        return step;
     }
 
 }

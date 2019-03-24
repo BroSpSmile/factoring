@@ -67,7 +67,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         if (needAudit) {
             auditResult = auditService.apply(project, project.getUser());
         }
-        BaseResult updataResult = updateProject(project);
+        BaseResult updataResult = projectService.turnover(project);
         if (updataResult.isSuccess()) {
             StepRecord record = new StepRecord();
             record.setProject(project);
@@ -77,9 +77,9 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
             if (null != auditResult && auditResult.isSuccess()) {
                 record.setAudit(auditResult.getData());
             }
-            long effect = stepDao.insert(record);
+            BaseResult addResult = addOrUpate(record);
             SingleResult<StepRecord> result = new SingleResult<StepRecord>();
-            result.setSuccess(effect > 0);
+            result.setSuccess(addResult.isSuccess());
             result.setData(record);
             return result;
         } else {
@@ -142,9 +142,11 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     public BaseResult addOrUpate(StepRecord record) {
         StepRecord exist = stepDao.getStep(record.getProject().getId(), record.getStep());
         if (null != exist) {
-            record.setId(exist.getId());
-            record.setModifyTime(new Date());
-            stepDao.update(record);
+            if (StepStatus.LATER.equals(exist.getStatus())) {
+                record.setId(exist.getId());
+                record.setModifyTime(new Date());
+                stepDao.update(record);
+            }
         } else {
             stepDao.insert(record);
         }
@@ -214,14 +216,4 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         return record;
     }
 
-    /**
-     * 更新项目
-     * 
-     * @param project
-     * @return
-     */
-    private BaseResult updateProject(Project project) {
-        project.setStep(project.getStep() + 1);
-        return projectService.turnover(project);
-    }
 }

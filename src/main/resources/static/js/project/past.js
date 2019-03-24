@@ -12,18 +12,15 @@ var vue = new Vue({
 		},
 		modelFlag:"",
 		showMeeting:false,
+		project:{},
 		pms:[],
 		projects:[],
 		changeFlag:false,
 		meetings:[],
 		ruleValidate: {
-			projectId: [
-            	{ required: true,  message: '项目不能为空',trigger: 'blur'}
-            ],
 			meetingIds: [
                 { required: true, type: 'array', min: 1, message: '请选择三重一大会议', trigger: 'change' }
             ]
-            
         }
 	},
 	created:function(){
@@ -50,8 +47,18 @@ var vue = new Vue({
 				console.error(error);
 			});
 			if(document.getElementById("projectId").value){
-				this.getMeetings(document.getElementById("projectId").value)
+				this.getProject(document.getElementById("projectId").value);
+				this.getMeetings(document.getElementById("projectId").value);
 			}
+		},
+		
+		getProject:function(projectId){
+			let _self = this;
+			this.$http.get("/project/"+projectId).then(function(response){
+				_self.project = response.data;
+			},function(error){
+				console.error(error);
+			})
 		},
 		
 		getMeetings:function(projectId){
