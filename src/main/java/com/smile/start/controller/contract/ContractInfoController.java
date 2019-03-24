@@ -1,5 +1,7 @@
 package com.smile.start.controller.contract;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +25,7 @@ import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.contract.ContractSignList;
 import com.smile.start.service.contract.ContractInfoService;
 
 /**
@@ -155,5 +158,16 @@ public class ContractInfoController extends BaseController {
             logger.error("状态流转失败", e);
             return toResult(e);
         }
+    }
+
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("/project/{id}")
+    @ResponseBody
+    public List<ContractSignList> getSignList(@PathVariable Long id) {
+        return contractInfoService.findSinListByProject(id);
     }
 }

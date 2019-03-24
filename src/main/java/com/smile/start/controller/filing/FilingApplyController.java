@@ -19,7 +19,6 @@ import com.smile.start.dto.ContractInfoDTO;
 import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.contract.ContractInfoService;
@@ -83,7 +82,6 @@ public class FilingApplyController extends BaseController {
     public BaseResult commit(HttpServletRequest request, @RequestBody ContractInfoDTO contract) {
         User user = getUserByToken(request);
         Project project = contract.getProject();
-        project.setProgress(Progress.LOAN);
         project.setStep(Step.FILE.getIndex());
         project.setUser(user);
         return processEngine.next(project, true);

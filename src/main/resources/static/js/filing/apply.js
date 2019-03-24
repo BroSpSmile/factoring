@@ -48,18 +48,15 @@ var vue = new Vue({
 //            });
             if(this.contract.project.id){
             	 this.$http.get("contractInfo/project/"+this.contract.project.id).then(function(response){
-            		 let result = response.data;
-            		 if(result.success){
-            			 _self.signList = result.values;
-            			 _self.contract.signList = [];
-            			 for(let index in _self.signList){
-            				 if(_self.signList[index].filingStatus >=2){
-            					 _self.contract.signList.push(_self.signList[index].serialNo);
-            				 }
-            			 }
-            		 }else{
-            			 _self.$Message.error(result.message);
-            		 }
+        			 _self.signList = response.data;
+        			 console.log(_self.signList);
+        			 _self.contract.signList = [];
+        			 for(let index in _self.signList){
+        				 if(_self.signList[index].filingStatus >=2){
+        					 _self.contract.signList.push(_self.signList[index].serialNo);
+        				 }
+        			 }
+            		
             	 },function(error){
             		 console.error(error);
             	 })
