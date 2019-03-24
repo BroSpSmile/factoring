@@ -87,25 +87,25 @@
 											应收账款
 										</p>
 										<form-item label="应收账款" prop="contractExtendInfo.receivableMoney">
-											<i-input placeholder="请输入应收账款" v-model="addForm.contractExtendInfo.receivableMoney"></i-input>
+											<input-number placeholder="请输入应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款（大写）" prop="contractExtendInfo.receivableMoneyUpper">
 											<i-input placeholder="请输入应收账款（大写）" v-model="addForm.contractExtendInfo.receivableMoneyUpper"></i-input>
 										</form-item>
 										<form-item label="债务人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
-											<i-input placeholder="请输入债务人享有金额" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></i-input>
+											<input-number placeholder="请输入债务人享有金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="债务人享有金额（大写）" prop="contractExtendInfo.obligorEnjoyMoneyUpper">
 											<i-input placeholder="请输入债务人享有金额（大写）" v-model="addForm.contractExtendInfo.obligorEnjoyMoneyUpper"></i-input>
 										</form-item>
 										<form-item label="应收账款受让款" prop="contractExtendInfo.receivableAssigneeMoney">
-											<i-input placeholder="请输入应收账款受让款" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></i-input>
+											<input-number placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款受让款（大写）" prop="contractExtendInfo.receivableAssigneeMoneyUpper">
 											<i-input placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeMoneyUpper"></i-input>
 										</form-item>
 										<form-item label="应收账款受让款首付款" prop="contractExtendInfo.receivableAssigneeFirstMoney">
-											<i-input placeholder="请输入应收账款受让款首付款" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoney"></i-input>
+											<input-number placeholder="请输入应收账款受让款首付款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款受让款首付款（大写）" prop="contractExtendInfo.receivableAssigneeFirstMoneyUpper">
 											<i-input placeholder="请输入应收账款受让款首付款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoneyUpper"></i-input>
@@ -116,7 +116,7 @@
 											应收账款回收款
 										</p>
 										<form-item label="应收账款回收款" prop="contractExtendInfo.receivableRecoveryMoney">
-											<i-input placeholder="请输入应收账款回收款" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></i-input>
+											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款回收款（大写）" prop="contractExtendInfo.receivableRecoveryMoneyUpper">
 											<i-input placeholder="请输入应收账款回收款（大写）" v-model="addForm.contractExtendInfo.receivableRecoveryMoneyUpper"></i-input>
@@ -189,13 +189,13 @@
 											<i-input placeholder="请输入商务合同名称" v-model="addForm.contractReceivableConfirmation.businessContractName"></i-input>
 										</form-item>
 										<form-item label="未支付应收账款受让款" prop="contractReceivableConfirmation.unpaidReceivableAssigneeMoney">
-											<i-input placeholder="请输入未支付应收账款受让款" v-model="addForm.contractReceivableConfirmation.unpaidReceivableAssigneeMoney"></i-input>
+											<input-number placeholder="请输入未支付应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.unpaidReceivableAssigneeMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="未支付应收账款受让款（大写）" prop="contractReceivableConfirmation.unpaidReceivableAssigneeMoneyUpper">
 											<i-input placeholder="请输入未支付应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.unpaidReceivableAssigneeMoneyUpper"></i-input>
 										</form-item>
 										<form-item label="应收账款受让款" prop="contractReceivableConfirmation.receivableAssigneeMoney">
-											<i-input placeholder="请输入应收账款受让款" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoney"></i-input>
+											<input-number placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款受让款（大写）" prop="contractReceivableConfirmation.receivableAssigneeMoneyUpper">
 											<i-input placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyUpper"></i-input>
@@ -206,31 +206,31 @@
 											应收账款的确认和转让
 										</p>
 										<form-item label="应收账款回收款" prop="contractReceivableConfirmation.receivableRecoveryMoney">
-											<i-input placeholder="请输入应收账款回收款" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></i-input>
+											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款回收款截止日期" prop="contractReceivableConfirmation.receivableExpiryDate">
 											<i-input placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate"></i-input>
 										</form-item>
 										<form-item label="合同应收账款" prop="contractReceivableConfirmation.contractReceivable">
-											<i-input placeholder="请输入合同应收账款" v-model="addForm.contractReceivableConfirmation.contractReceivable"></i-input>
+											<input-number placeholder="请输入合同应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.contractReceivable"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.contractReceivableUpper">
 											<i-input placeholder="请输入合同应收账款（大写）" v-model="addForm.contractReceivableConfirmation.contractReceivableUpper"></i-input>
 										</form-item>
 										<form-item label="让与人对债务人的应收账款" prop="contractReceivableConfirmation.assignorAbligorReceivable">
-											<i-input placeholder="请输入让与人对债务人的应收账款" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivable"></i-input>
+											<input-number placeholder="请输入让与人对债务人的应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivable"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.assignorAbligorReceivableUpper">
 											<i-input placeholder="请输入让与人对债务人的应收账款（大写）" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivableUpper"></i-input>
 										</form-item>
 										<form-item label="未支付让与人对债务人的应收账款" prop="contractReceivableConfirmation.unpaidAssignorAbligorReceivable">
-											<i-input placeholder="请输入未支付让与人对债务人的应收账款" v-model="addForm.contractReceivableConfirmation.unpaidAssignorAbligorReceivable"></i-input>
+											<input-number placeholder="请输入未支付让与人对债务人的应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.unpaidAssignorAbligorReceivable"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.unpaidAssignorAbligorReceivableUpper">
 											<i-input placeholder="请输入未支付让与人对债务人的应收账款（大写）" v-model="addForm.contractReceivableConfirmation.unpaidAssignorAbligorReceivableUpper"></i-input>
 										</form-item>
 										<form-item label="受让人已向让与人支付的应收账款受让款" prop="contractReceivableConfirmation.receivableAssigneeMoneyPaid">
-											<i-input placeholder="请输入受让人已向让与人支付的应收账款受让款" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaid"></i-input>
+											<input-number placeholder="请输入受让人已向让与人支付的应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaid"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper">
 											<i-input placeholder="请输入受让人已向让与人支付的应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper"></i-input>
@@ -352,7 +352,7 @@
 										<date-picker type="date" placeholder="请输入协议签署日期" v-model="addForm.contractFasa.singDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item label="财务顾问费" prop="contractFasa.advisoryServiceMoney">
-										<i-input placeholder="请输入财务顾问费" v-model="addForm.contractFasa.advisoryServiceMoney"></i-input>
+										<input-number placeholder="请输入财务顾问费" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractFasa.advisoryServiceMoney"></input-number>&nbsp;元
 									</form-item>
 									<form-item label="财务顾问费（大写）" prop="contractFasa.advisoryServiceMoneyUpper">
 										<i-input placeholder="请输入财务顾问费（大写）" v-model="addForm.contractFasa.advisoryServiceMoneyUpper"></i-input>

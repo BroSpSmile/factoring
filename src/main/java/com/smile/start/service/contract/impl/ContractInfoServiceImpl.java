@@ -510,60 +510,62 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
 
-        //更新合同信息
-        final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
-        if(Strings.isNullOrEmpty(contractExtendInfo.getSerialNo())) {
-            contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
-            contractExtendInfo.setContractSerialNo(contractInfo.getSerialNo());
-            contractExtendInfo.setContractCode(project.getProjectId() + "-1");
-            contractExtendInfoDao.insert(contractExtendInfo);
-        } else {
-            contractExtendInfoDao.update(contractExtendInfo);
-        }
-
-        //更新应收账款转让确认函
-        final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
-        if(Strings.isNullOrEmpty(contractReceivableConfirmation.getSerialNo())) {
-            contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
-            contractReceivableConfirmation.setContractSerialNo(contractInfo.getSerialNo());
-            contractReceivableConfirmation.setConfirmationCode(project.getProjectId() + "-2");
-            contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
-        } else {
-            contractReceivableConfirmationDao.update(contractReceivableConfirmation);
-        }
-
-        //更新应收账款转让登记协议
-        final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
-        if(Strings.isNullOrEmpty(contractReceivableAgreement.getSerialNo())) {
-            contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
-            contractReceivableAgreement.setContractSerialNo(contractInfo.getSerialNo());
-            contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
-            contractReceivableAgreementDao.insert(contractReceivableAgreement);
-        } else {
-            contractReceivableAgreementDao.update(contractReceivableAgreement);
-        }
-
-        //保存财务顾问协议，无追合同才有
-        if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
-            final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
-            if(Strings.isNullOrEmpty(contractFasa.getSerialNo())) {
-                contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
-                contractFasa.setContractSerialNo(contractInfo.getSerialNo());
-                contractFasa.setFasaCode(project.getProjectId() + "-4");
-                contractFasaDao.insert(contractFasa);
+        if(contractInfo.getContractTemplate() == ContractTemplateEnum.STANDARD.getValue()) {
+            //更新合同信息
+            final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
+            if(Strings.isNullOrEmpty(contractExtendInfo.getSerialNo())) {
+                contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
+                contractExtendInfo.setContractSerialNo(contractInfo.getSerialNo());
+                contractExtendInfo.setContractCode(project.getProjectId() + "-1");
+                contractExtendInfoDao.insert(contractExtendInfo);
             } else {
-                contractFasaDao.update(contractFasa);
+                contractExtendInfoDao.update(contractExtendInfo);
             }
-        }
 
-        //保存股东会决议
-        final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
-        if(Strings.isNullOrEmpty(contractShareholderMeeting.getSerialNo())) {
-            contractShareholderMeeting.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
-            contractShareholderMeeting.setContractSerialNo(contractInfo.getSerialNo());
-            contractShareholderMeetingDao.insert(contractShareholderMeeting);
-        } else {
-            contractShareholderMeetingDao.update(contractShareholderMeeting);
+            //更新应收账款转让确认函
+            final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
+            if(Strings.isNullOrEmpty(contractReceivableConfirmation.getSerialNo())) {
+                contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
+                contractReceivableConfirmation.setContractSerialNo(contractInfo.getSerialNo());
+                contractReceivableConfirmation.setConfirmationCode(project.getProjectId() + "-2");
+                contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
+            } else {
+                contractReceivableConfirmationDao.update(contractReceivableConfirmation);
+            }
+
+            //更新应收账款转让登记协议
+            final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
+            if(Strings.isNullOrEmpty(contractReceivableAgreement.getSerialNo())) {
+                contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
+                contractReceivableAgreement.setContractSerialNo(contractInfo.getSerialNo());
+                contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
+                contractReceivableAgreementDao.insert(contractReceivableAgreement);
+            } else {
+                contractReceivableAgreementDao.update(contractReceivableAgreement);
+            }
+
+            //保存财务顾问协议，无追合同才有
+            if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+                final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
+                if(Strings.isNullOrEmpty(contractFasa.getSerialNo())) {
+                    contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
+                    contractFasa.setContractSerialNo(contractInfo.getSerialNo());
+                    contractFasa.setFasaCode(project.getProjectId() + "-4");
+                    contractFasaDao.insert(contractFasa);
+                } else {
+                    contractFasaDao.update(contractFasa);
+                }
+            }
+
+            //保存股东会决议
+            final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
+            if(Strings.isNullOrEmpty(contractShareholderMeeting.getSerialNo())) {
+                contractShareholderMeeting.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
+                contractShareholderMeeting.setContractSerialNo(contractInfo.getSerialNo());
+                contractShareholderMeetingDao.insert(contractShareholderMeeting);
+            } else {
+                contractShareholderMeetingDao.update(contractShareholderMeeting);
+            }
         }
 
         //更新签署清单

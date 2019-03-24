@@ -88,6 +88,9 @@ var vue = new Vue({
                         if(response.data.data.contractReceivableConfirmation === null) {
                             self.addForm.contractReceivableConfirmation = {};
                         }
+                        if(response.data.data.attachList === null) {
+                            self.addForm.attachList = [];
+                        }
                     } else {
                         //没有合同信息，初始新增数据
                         self.addForm.baseInfo.projectId = projectId;
@@ -354,6 +357,7 @@ var vue = new Vue({
             }
         },
         genFileInfo: function () {
+            console.log(this.fileList)
             for (let index in this.fileList) {
                 let item = {
                     attachName: this.fileList[index].name,
