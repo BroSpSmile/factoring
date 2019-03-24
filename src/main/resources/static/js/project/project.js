@@ -349,13 +349,13 @@ vue.tableColumns=[{
 	    				props:{span:6}
 	    			},[
 	    				h('span',{style:{color:'#2db7f5'}},'签署日期:'),
-	    				h('span',{},moment(params.row.detail.signDate).format('YYYY-MM-DD'))
+	    				h('span',{},params.row.detail.signDate?moment(params.row.detail.signDate).format('YYYY-MM-DD'):"")
 	    			]),
 	    			h('Col',{
 	    				props:{span:6}
 	    			},[
 	    				h('span',{style:{color:'#2db7f5'}},'合同回款日:'),
-	    				h('span',{},moment(params.row.detail.remittanceDay).format('YYYY-MM-DD'))
+	    				h('span',{},params.row.detail.remittanceDay?moment(params.row.detail.remittanceDay).format('YYYY-MM-DD'):"")
 	    			]),
 	    			h('Col',{
 	    				props:{span:6}
@@ -382,7 +382,7 @@ vue.tableColumns=[{
 	    					params.row.detail.factoringInstallments.map(item=>{
 	    						return h('Row',{},[
 	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
-	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))])
+	    							h('Col',{props:{span:6}},[h('span',{},item.installmentDate?moment(item.installmentDate).format('YYYY-MM-DD'):"")])
 	    						])
 	    					})
 	    				]),
@@ -399,7 +399,7 @@ vue.tableColumns=[{
 	    						return h('Row',{},[
 	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
 	    							h('Col',{props:{span:4}},[h('span',{},vue.toBoolean(item.paied))]),
-	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))])
+	    							h('Col',{props:{span:6}},[h('span',{},item.installmentDate?moment(item.installmentDate).format('YYYY-MM-DD'):"")])
 	    						])
 	    					})
 	    				]),
