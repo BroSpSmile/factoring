@@ -7,13 +7,16 @@ package com.smile.start.controller.combobox;
 import com.google.common.collect.Lists;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dao.UserDao;
+import com.smile.start.dto.BankInfoDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.*;
+import com.smile.start.service.common.BankInfoService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -29,6 +32,8 @@ public class Combobox extends BaseController {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private BankInfoService bankInfoService;
     /**
      * 
      * @return
@@ -159,5 +164,15 @@ public class Combobox extends BaseController {
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(String.valueOf(e.getIndex()), e.getName())));
         return items;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping("/banks")
+    public List<Item> getBanks() {
+        List<BankInfoDTO> banks = bankInfoService.findAll();
+        return banks.stream().map(bank->new Item(String.valueOf(bank.getId()),bank.getBankFullName())).collect(Collectors.toList());
     }
 }

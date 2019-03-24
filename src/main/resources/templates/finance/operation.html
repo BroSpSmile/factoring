@@ -28,19 +28,19 @@
 
         <row>
             <i-col span="22" offset="1">
-                <Tabs :animated="false">
+                <Tabs :animated="false" style="width: 85%">
                     <Tab-pane label="放款">
-                        <card dis-hover title="分期信息" >
-
-                            <table class="table table-hover table-bordered" style="border: 0px;width: 80%">
+                        <card dis-hover title="分期信息">
+                            <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
                                 <thead>
                                 <tr>
                                     <th width="100">序号</th>
-                                    <th width="100">金额</th>
+                                    <th width="140">金额</th>
                                     <th>日期</th>
-                                    <th>放款凭证</th>
-                                    <th align="center">
-                                        <i-button type="success" size="small"  ghost icon="md-add" @click="addInstallment('loan')">
+                                    <th width="160">放款凭证</th>
+                                    <th width="200" align="center">
+                                        <i-button type="success" size="small" ghost icon="md-add"
+                                                  @click="addInstallment('loan')">
                                             添加
                                         </i-button>
                                     </th>
@@ -49,31 +49,40 @@
                                 <tbody>
                                 <tr v-for="(installment,index) in project.detail.loanInstallments" :key="index">
                                     <td width="100" align="center">{{index+1}}</td>
-                                    <td  width="100" align="center">
+                                    <td width="140" align="center">
                                         <span v-if="(installment.id!=null)">{{ installment.amount }}</span>
                                         <i-col v-if="(installment.id==null)">
-                                            <input-number min="0" :max="100000000000" class="select-width-140" v-model="installment.amount"></input-number>
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.amount"></input-number>
                                         </i-col>
                                     </td>
                                     <td align="center">
                                         <i-col v-if="(installment.id==null)">
-                                            <date-picker  placement="top-start" type="date"  v-model="installment.installmentDate"></date-picker>
+                                            <date-picker placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker disabled="true"   placement="top-start" type="date"  v-model="installment.installmentDate"></date-picker>
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
-                                    <td align="center">
-                                        <Tag v-if="(installment.item!=null)" closable  @click.native="download(installment.item.itemValue,installment.item.itemName)" @on-close="deleteFile(installment.item.itemValue,index,'loan')">
+                                    <td width="160" align="center">
+                                        <Tag v-if="(installment.item!=null)" closable class="select-width-160"
+                                             @click.native="download(installment.item.itemValue,installment.item.itemName)"
+                                             @on-close="deleteFile(installment.item.itemValue,index,'loan')">
                                             {{installment.item.itemName}}
                                         </Tag>
-                                        <Upload  v-if="(installment.item ==null)" action="/file/uploadInstallment" :data="{'index': index}" :on-success="uploadSuccessLoan" :on-error="uploadError"
-                                                 :on-remove="removeFile" show-upload-list="false">
-                                            <i-button size="small"  icon="ios-cloud-upload-outline">上传</i-button>
+                                        <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
+                                                :data="{'index': index}" :on-success="uploadSuccessLoan"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile" show-upload-list="false">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传</i-button>
                                         </Upload>
                                     </td>
-                                    <td align="center">
-                                        <i-button v-if="(installment.id==null)" type="error"  size="small" ghost  icon="md-close" @click="cancel">删除</i-button>
+                                    <td width="200" align="center">
+                                        <i-button v-if="(installment.id==null)" type="error" size="small" ghost
+                                                  icon="md-close" @click="deleteInstallment('loan',index)">删除
+                                        </i-button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -81,32 +90,236 @@
                         </card>
                         <br>
                         <row type="flex" justify="end">
-                            <i-col span="8" offset="16">
-                                <i-button type="success" @click="saveInstallment('loan')" >保存</i-button>
+                            <i-col offset="20">
+                                <i-button type="success" @click="saveInstallment('loan')">保存放款信息</i-button>
                                 <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
                             </i-col>
                         </row>
                     </Tab-pane>
-                    <Tab-pane label="保理费">
-                        <row type="flex" justify="end">
-                            <i-col span="8" offset="16">
-                                <i-button type="success" @click="cancel" >保存</i-button>
-                                <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
-                            </i-col>
-                        </row>
-                    </Tab-pane>
-                    <Tab-pane label="本金">
-                        <card dis-hover title="本金分期信息" >
 
-                            <table class="table table-hover table-bordered" style="border: 0px;width: 80%">
+                    <Tab-pane label="保理费">
+                        <card dis-hover title="保理费分期开票信息">
+                            <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
                                 <thead>
                                 <tr>
                                     <th width="100">序号</th>
-                                    <th width="100">金额</th>
+                                    <th width="140">金额</th>
                                     <th>日期</th>
-                                    <th>放款凭证</th>
-                                    <th align="center">
-                                        <i-button type="success" size="small"  ghost icon="md-add" @click="addInstallment('return')">
+                                    <th width="140">开票金额</th>
+                                    <th width="140">开票行</th>
+                                    <th>开票日期</th>
+                                    <th width="160">开票凭证</th>
+                                    <th width="180" align="center">
+                                        <i-button type="success" size="small" ghost icon="md-add"
+                                                  @click="addInstallment('factoring')">
+                                            添加保理分期
+                                        </i-button>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(installment,index) in factoringInstallmentsInvoice" :key="index">
+                                    <td width="100" align="center">
+                                        <span v-if="(installment.indexView!=null && installment.indexView>0)">{{installment.indexView}} </span>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <span v-if="(installment.amount!=-1&& installment.id>0)">{{ installment.amount }}</span>
+                                        <i-col v-if="(installment.amount!=-1&& installment.id<=0)">
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.amount"
+                                                          @on-blur="synInstallment(installment,'INVOICE')"></input-number>
+                                        </i-col>
+                                    </td>
+                                    <td align="center">
+                                        <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
+                                            <date-picker placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"
+                                                         @on-change="synInstallment(installment,'INVOICE')"></date-picker>
+                                        </i-col>
+                                        <i-col v-if="(installment.amount!=-1 && installment.id >0)">
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
+                                        </i-col>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <i-col v-if="(installment.detailId==null)">
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.detailAmount"></input-number>
+                                        </i-col>
+                                        <span v-if="(installment.detailId!=null)">{{ installment.detailAmount }}</span>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <i-select v-if="(installment.detailId==null)" class="select-width-140"
+                                                  v-model="installment.bankInfoId" clearable>
+                                            <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
+                                        </i-select>
+                                        <i-select readonly="true" v-if="(installment.detailId!=null)"
+                                                  class="select-width-140"
+                                                  v-model="installment.bankInfoId" clearable>
+                                            <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
+                                        </i-select>
+                                    </td>
+                                    <td align="center">
+                                        <i-col v-if="(installment.detailId==null)">
+                                            <date-picker placement="top-start" type="date"
+                                                         v-model="installment.detailDate"></date-picker>
+                                        </i-col>
+                                        <i-col v-if="(installment.detailId!=null)">
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.detailDate"></date-picker>
+                                        </i-col>
+                                    </td>
+                                    <td width="160" align="center">
+                                        <Tag v-if="(installment.item!=null)" closable class="select-width-160"
+                                             @click.native="download(installment.item.itemValue,installment.item.itemName)"
+                                             @on-close="deleteFile(installment.item.itemValue,index,'loan','INVOICE')">
+                                            {{installment.item.itemName}}
+                                        </Tag>
+                                        <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
+                                                :data="{'index': index}" :on-success="uploadSuccessFactoringInvoice"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile" show-upload-list="false">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传</i-button>
+                                        </Upload>
+                                    </td>
+                                    <td width="180" align="center">
+                                        <i-button v-if="(installment.amount!=-1)" type="success" size="small" ghost
+                                                  icon="md-add"
+                                                  @click="addInstallmentDetail(index,installment.id,'INVOICE')">添加
+                                        </i-button>
+                                        <i-button
+                                                v-if="((installment.id>0 && installment.amount==-1 &&installment.detailId==null)||installment.id<=0)"
+                                                type="error" size="small" ghost
+                                                icon="md-close"
+                                                @click="deleteInstallment('factoring',index,'INVOICE',installment)">删除
+                                        </i-button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </card>
+                        </br>
+                        <card dis-hover title="保理费分期收款信息">
+                            <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
+                                <thead>
+                                <tr>
+                                    <th width="100">序号</th>
+                                    <th width="140">金额</th>
+                                    <th>日期</th>
+                                    <th width="140">保理费收款金额</th>
+                                    <th width="140">收款行</th>
+                                    <th>收款日期</th>
+                                    <th width="160">收款凭证</th>
+                                    <th width="180" align="center">
+                                        <i-button type="success" size="small" ghost icon="md-add"
+                                                  @click="addInstallment('factoring')">
+                                            添加保理分期
+                                        </i-button>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(installment,index) in factoringInstallmentsPayment" :key="index">
+                                    <td width="100" align="center">
+                                        <span v-if="(installment.indexView!=null && installment.indexView >0)">{{installment.indexView}} </span>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <span v-if="(installment.amount!=-1&& installment.id>0)">{{ installment.amount }}</span>
+                                        <i-col v-if="(installment.amount!=-1&& installment.id<=0)">
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.amount"
+                                                          @on-blur="synInstallment(installment,'PAYMENT')"></input-number>
+                                        </i-col>
+                                    </td>
+                                    <td align="center">
+                                        <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
+                                            <date-picker placement="top-start" type="date"
+                                                         @on-change="synInstallment(installment,'PAYMENT')"
+                                                         v-model="installment.installmentDate"></date-picker>
+                                        </i-col>
+                                        <i-col v-if="(installment.amount!=-1 && installment.id >0)">
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
+                                        </i-col>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <i-col v-if="(installment.detailId==null)">
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.detailAmount"></input-number>
+                                        </i-col>
+                                        <span v-if="(installment.detailId!=null)">{{ installment.detailAmount }}</span>
+                                    </td>
+                                    <td width="140" align="center">
+                                        <i-select v-if="(installment.detailId==null)" class="select-width-140"
+                                                  v-model="installment.bankInfoId" clearable>
+                                            <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
+                                        </i-select>
+                                        <i-select readonly="true" v-if="(installment.detailId!=null)"
+                                                  class="select-width-140"
+                                                  v-model="installment.bankInfoId" clearable>
+                                            <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
+                                        </i-select>
+                                    </td>
+                                    <td align="center">
+                                        <i-col v-if="(installment.detailId==null)">
+                                            <date-picker placement="top-start" type="date"
+                                                         v-model="installment.detailDate"></date-picker>
+                                        </i-col>
+                                        <i-col v-if="(installment.detailId!=null)">
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.detailDate"></date-picker>
+                                        </i-col>
+                                    </td>
+                                    <td width="160" align="center">
+                                        <Tag v-if="(installment.item!=null)" closable class="select-width-160"
+                                             @click.native="download(installment.item.itemValue,installment.item.itemName)"
+                                             @on-close="deleteFile(installment.item.itemValue,index,'loan','PAYMENT')">
+                                            {{installment.item.itemName}}
+                                        </Tag>
+                                        <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
+                                                :data="{'index': index}" :on-success="uploadSuccessFactoringPayment"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile" show-upload-list="false">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传</i-button>
+                                        </Upload>
+                                    </td>
+                                    <td width="180" align="center">
+                                        <i-button v-if="(installment.amount!=-1)" type="success" size="small" ghost
+                                                  icon="md-add"
+                                                  @click="addInstallmentDetail(index,installment.id,'PAYMENT')">添加
+                                        </i-button>
+                                        <i-button
+                                                v-if="((installment.id>0 && installment.amount==-1 &&installment.detailId==null)||installment.id<=0)"
+                                                type="error" size="small" ghost
+                                                icon="md-close"
+                                                @click="deleteInstallment('factoring',index,'PAYMENT',installment)">删除
+                                        </i-button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </card>
+                        <br>
+                        <row type="flex" justify="end">
+                            <i-col offset="20">
+                                <i-button type="success" @click="saveInstallment('factoring')">保存保理信息</i-button>
+                                <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
+                            </i-col>
+                        </row>
+                    </Tab-pane>
+
+                    <Tab-pane label="本金">
+                        <card dis-hover title="本金分期信息">
+                            <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
+                                <thead>
+                                <tr>
+                                    <th width="100">序号</th>
+                                    <th width="140">金额</th>
+                                    <th>日期</th>
+                                    <th width="160">收款凭证</th>
+                                    <th width="200" align="center">
+                                        <i-button type="success" size="small" ghost icon="md-add"
+                                                  @click="addInstallment('return')">
                                             添加
                                         </i-button>
                                     </th>
@@ -115,31 +328,40 @@
                                 <tbody>
                                 <tr v-for="(installment,index) in project.detail.returnInstallments" :key="index">
                                     <td width="100" align="center">{{index+1}}</td>
-                                    <td  width="100" align="center">
+                                    <td width="140" align="center">
                                         <span v-if="(installment.id!=null)">{{ installment.amount }}</span>
                                         <i-col v-if="(installment.id==null)">
-                                            <input-number min="0" :max="100000000000" class="select-width-140" v-model="installment.amount"></input-number>
+                                            <input-number min="0" :max="100000000000" class="select-width-140"
+                                                          v-model="installment.amount"></input-number>
                                         </i-col>
                                     </td>
                                     <td align="center">
                                         <i-col v-if="(installment.id==null)">
-                                            <date-picker  placement="top-start" type="date"  v-model="installment.installmentDate"></date-picker>
+                                            <date-picker placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker disabled="true"   placement="top-start" type="date"  v-model="installment.installmentDate"></date-picker>
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
-                                    <td align="center">
-                                        <Tag v-if="(installment.item!=null)" closable  @click.native="download(installment.item.itemValue,installment.item.itemName)" @on-close="deleteFile(installment.item.itemValue,index,'return')">
+                                    <td width="160" align="center">
+                                        <Tag v-if="(installment.item!=null)" closable class="select-width-160"
+                                             @click.native="download(installment.item.itemValue,installment.item.itemName)"
+                                             @on-close="deleteFile(installment.item.itemValue,index,'return')">
                                             {{installment.item.itemName}}
                                         </Tag>
-                                        <Upload  v-if="(installment.item ==null)" action="/file/uploadInstallment" :data="{'index': index}" :on-success="uploadSuccessReturn" :on-error="uploadError"
-                                                 :on-remove="removeFile" show-upload-list="false">
-                                            <i-button size="small"  icon="ios-cloud-upload-outline">上传</i-button>
+                                        <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
+                                                :data="{'index': index}" :on-success="uploadSuccessReturn"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile" show-upload-list="false">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传</i-button>
                                         </Upload>
                                     </td>
-                                    <td align="center">
-                                        <i-button v-if="(installment.id==null)" type="error"  size="small" ghost  icon="md-close" @click="cancel">删除</i-button>
+                                    <td width="200" align="center">
+                                        <i-button v-if="(installment.id==null)" type="error" size="small" ghost
+                                                  icon="md-close" @click="cancel">删除
+                                        </i-button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -147,8 +369,8 @@
                         </card>
                         <br>
                         <row type="flex" justify="end">
-                            <i-col span="8" offset="16">
-                                <i-button type="success" @click="saveInstallment('return')" >保存</i-button>
+                            <i-col offset="20">
+                                <i-button type="success" @click="saveInstallment('return')">保存回款信息</i-button>
                                 <i-button type="primary" @click="cancel" style="margin:0 8px">返回</i-button>
                             </i-col>
                         </row>

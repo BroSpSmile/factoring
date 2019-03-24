@@ -94,8 +94,8 @@ public interface InstallmentDao {
      * @param installmentDetail
      * @return
      */
-    @Insert("insert into installment_detail (type,installment_id,bankInfo_id,detail_date)"
-        + "values(#{type},#{installmentId},#{bankInfo.id},#{detailDate} )")
+    @Insert("insert into installment_detail (type,installment_id,bankInfo_id,detail_amount,detail_date)"
+        + "values(#{type},#{installmentId},#{bankInfoId},#{detailAmount} ,#{detailDate} )")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insertInstallmentDetail(InstallmentDetail installmentDetail);
 
@@ -112,11 +112,12 @@ public interface InstallmentDao {
      * @param installmentDetail
      * @return
      */
-    @Update("<script>" + "update installment_detail set id = #{id}"
-        + "<if test = 'type!=null'>,type = #{type}</if>"
-        + "<if test = 'bankInfo!=null'>,bankInfo_id = #{bankInfo.id}</if>"
+    @Update("<script>" + "update installment_detail set"
+        + "<if test = 'type!=null'> type = #{type}</if>"
+        + "<if test = 'bankInfoId!=null'>,bankInfo_id = #{bankInfoId}</if>"
         + "<if test = 'detailDate!=null'>,detail_date = #{detailDate}</if>"
-        + "where installment_id = #{installmentId}" + "</script>")
+        + "<if test = 'detailAmount!=null'>,detail_amount = #{detailAmount}</if>"
+        + "where id = #{id}</script>")
     int updateInstallmentDetail(InstallmentDetail installmentDetail);
 
     /**
@@ -124,7 +125,7 @@ public interface InstallmentDao {
      * @param item
      * @return
      */
-    @Insert("insert installment_detail_item (installment_detail_id,item_name,item_value,attach_type) values(#{installmentId},#{itemName},#{itemValue},#{attachType})")
+    @Insert("insert installment_detail_item (installment_detail_id,item_name,item_value,attach_type) values(#{installmentDetailId},#{itemName},#{itemValue},#{attachType})")
     long insertInstallmentDetailItem(InstallmentDetailItem item);
 
     /**
@@ -132,7 +133,7 @@ public interface InstallmentDao {
      * @param installmentId
      * @return
      */
-    @Results(id = "getInstallmentDetailMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "bankInfo_id", property = "bankInfo.id") })
+    @Results(id = "getInstallmentDetailMap", value = { @Result(id = true, column = "id", property = "id") })
     @Select("select * from installment_detail where installment_id = #{installmentId}")
     List<InstallmentDetail> getInstallmentDetail(Long installmentId);
 

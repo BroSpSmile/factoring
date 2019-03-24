@@ -9,9 +9,15 @@ var vue = new Vue({
     data: {
         projectUrl: 'financeManage',
         project: {
+            detail: {
+                returnInstallments: [],
+                loanInstallments: [],
+                factoringInstallments: []
+            },
         },
         statusItems: [],
         steps: [],
+        banks: [],
         models: [],
         queryParam: {
             condition: {},
@@ -28,13 +34,19 @@ var vue = new Vue({
         totalLoanAmount: 0,
         loanInstallmentFileList: [],
         returnInstallmentFileList: [],
-        factoringInstallmentFileList: [],
+        factoringInstallmentFileListPayment: [],
+        factoringInstallmentFileListInvoice: [],
+        factoringInstallmentsPayment: [],
+        factoringInstallmentsInvoice: [],
+        installmentId: 0,
+        indexView: 0,
+
     },
     created: function () {
         this.formInline.id = document.getElementById("projectId").value;
         this.queryParam.condition = this.formInline;
         this.initDate();
-        this.query();
+        this.queryProject();
     },
     methods: {
         addInstallment: function (type) {
@@ -50,8 +62,139 @@ var vue = new Vue({
                     installmentDate: '',
                     item: null
                 });
+            } else if (type == 'factoring') {
+                this.installmentId--;
+                this.indexView++;
+                this.factoringInstallmentsPayment.push({
+                    indexView: this.indexView,
+                    id: this.installmentId,
+                    amount: 0,
+                    installmentDate: '',
+                    type: 'PAYMENT',
+                    bankInfoId: '',
+                    detailAmount: 0,
+                    detailDate: '',
+                    item: null,
+                });
+                this.factoringInstallmentsInvoice.push({
+                    indexView: this.indexView,
+                    id: this.installmentId,
+                    amount: 0,
+                    installmentDate: '',
+                    type: 'INVOICE',
+                    bankInfoId: '',
+                    detailAmount: 0,
+                    detailDate: '',
+                    item: null,
+                });
+            }
+        },
+        addInstallmentDetail: function (index, id, installmentDetailType) {
+            if ('PAYMENT' == installmentDetailType) {
+                let curFactoringInstallmentPayment = this.factoringInstallmentsPayment[index];
+                let insertIndex = 0;
+                for (let index1 in this.factoringInstallmentsPayment) {
+                    if (index1 < index) {
+                        continue;
+                    }
+                    if (curFactoringInstallmentPayment.id != this.factoringInstallmentsPayment[index1].id) {
+                        insertIndex = index1 - 1;
+                        break;
+                    }
+                    if (index1 == this.factoringInstallmentsPayment.length - 1) {
+                        insertIndex = this.factoringInstallmentsPayment.length - 1;
+                    }
+                }
+
+                this.factoringInstallmentsPayment.splice(insertIndex + 1, 0, {
+                    id: id,
+                    amount: -1,
+                    installmentDate: '',
+                    type: installmentDetailType,
+                    bankInfoId: '',
+                    detailAmount: 0,
+                    detailDate: '',
+                    item: null,
+                });
+            } else if ('INVOICE' == installmentDetailType) {
+                let curFactoringInstallmentInvoice = this.factoringInstallmentsInvoice[index];
+                let insertIndex = 0;
+                for (let index1 in this.factoringInstallmentsInvoice) {
+                    if (index1 < index) {
+                        continue;
+                    }
+                    if (curFactoringInstallmentInvoice.id != this.factoringInstallmentsInvoice[index1].id) {
+                        insertIndex = index1 - 1;
+                        break;
+                    }
+                    if (index1 == this.factoringInstallmentsInvoice.length - 1) {
+                        insertIndex = this.factoringInstallmentsInvoice.length - 1;
+                    }
+                }
+                this.factoringInstallmentsInvoice.splice(insertIndex + 1, 0, {
+                    id: id,
+                    amount: -1,
+                    installmentDate: '',
+                    type: installmentDetailType,
+                    bankInfoId: '',
+                    detailAmount: 0,
+                    detailDate: '',
+                    item: null,
+                });
             }
 
+        },
+        deleteInstallment: function (type, index, installmentDetailType, installment) {
+            if (index > -1) {
+                if (type == 'return') {
+                    if (null != this.project.detail.returnInstallments[index].item) {
+                        this.deleteFile(this.project.detail.returnInstallments[index].item.itemValue, index, type);
+                    }
+                    this.project.detail.returnInstallments.splice(index, 1);
+                } else if (type == 'loan') {
+                    if (null != this.project.detail.loanInstallments[index].item) {
+                        this.deleteFile(this.project.detail.loanInstallments[index].item.itemValue, index, type);
+                    }
+                    this.project.detail.loanInstallments.splice(index, 1);
+                } else if (type == 'factoring') {
+                    if ('PAYMENT' == installmentDetailType) {
+                        if (installment.amount != -1) {
+                            for (let i = this.factoringInstallmentsPayment.length - 1; i >= 0; i--) {
+                                let curInstallment = this.factoringInstallmentsPayment[i];
+                                if (curInstallment.id == installment.id) {
+                                    if (null != this.factoringInstallmentsPayment[i].item) {
+                                        this.deleteFile(this.factoringInstallmentsPayment[i].item.itemValue, index, type);
+                                    }
+                                    this.factoringInstallmentsPayment.splice(i, 1);
+                                }
+                            }
+                        } else {
+                            if (null != this.factoringInstallmentsPayment[index].item) {
+                                this.deleteFile(this.factoringInstallmentsPayment[index].item.itemValue, index, type);
+                            }
+                            this.factoringInstallmentsPayment.splice(index, 1);
+                        }
+                    } else if ('INVOICE' == installmentDetailType) {
+                        if (installment.amount != -1) {
+                            for (let i = this.factoringInstallmentsInvoice.length - 1; i >= 0; i--) {
+                                let curInstallment = this.factoringInstallmentsInvoice[i];
+                                if (curInstallment.id == installment.id) {
+                                    if (null != this.factoringInstallmentsInvoice[i].item) {
+                                        this.deleteFile(this.factoringInstallmentsInvoice[i].item.itemValue, index, type);
+                                    }
+                                    this.factoringInstallmentsInvoice.splice(i, 1);
+                                }
+                            }
+                        } else {
+                            if (null != this.factoringInstallmentsInvoice[index].item) {
+                                this.deleteFile(this.factoringInstallmentsInvoice[index].item.itemValue, index, type);
+                            }
+
+                            this.factoringInstallmentsInvoice.splice(index, 1);
+                        }
+                    }
+                }
+            }
         },
         uploadSuccessLoan: function (response, file, fileList) {
             this.loanInstallmentFileList.push(file);
@@ -82,10 +225,66 @@ var vue = new Vue({
                 };
                 returnInstallment.item = item;
             }
+        },
+        synInstallment: function (installment, type) {
+            let payment = null;
+            for (let i in this.factoringInstallmentsPayment) {
+                if (installment.id == this.factoringInstallmentsPayment [i].id && this.factoringInstallmentsPayment [i].amount != -1) {
+                    payment = this.factoringInstallmentsPayment [i];
+                    break;
+                }
+            }
+            let invoice = null;
+            for (let i in this.factoringInstallmentsInvoice) {
+                if (installment.id == this.factoringInstallmentsInvoice [i].id && this.factoringInstallmentsInvoice [i].amount != -1) {
+                    invoice = this.factoringInstallmentsInvoice [i];
+                    break;
+                }
+            }
+            if ('PAYMENT' == type) {
+                invoice.amount = payment.amount;
+                invoice.installmentDate = payment.installmentDate;
+            } else if ('INVOICE' == type) {
+                payment.amount = invoice.amount;
+                payment.installmentDate = invoice.installmentDate;
+            }
 
         },
-        deleteFile: function (fileId, index, type) {
+        uploadSuccessFactoringPayment: function (response, file, fileList) {
+            this.factoringInstallmentFileListPayment.push(file);
+            let id = response.data.id;
+            for (let index in fileList) {
+                let factoringInstallmentPayment = this.factoringInstallmentsPayment[id];
+                let item = {
+                    installmentId: factoringInstallmentPayment.id,
+                    //itemType 未使用
+                    itemType: "",
+                    itemName: fileList[index].name,
+                    itemValue: fileList[index].response.data.fileId
+                };
+                factoringInstallmentPayment.item = item;
+            }
+        },
+        uploadSuccessFactoringInvoice: function (response, file, fileList) {
+            this.factoringInstallmentFileListInvoice.push(file);
+            let id = response.data.id;
+            for (let index in fileList) {
+                let factoringInstallmentInvoice = this.factoringInstallmentsInvoice[id];
+                let item = {
+                    installmentId: factoringInstallmentInvoice.id,
+                    //itemType 未使用
+                    itemType: "",
+                    itemName: fileList[index].name,
+                    itemValue: fileList[index].response.data.fileId
+                };
+                factoringInstallmentInvoice.item = item;
+            }
+        },
+        deleteFile: function (fileId, index, type, installmentDetailType) {
             let self = this;
+            if (null == fileId) {
+                return;
+            }
             if (type == 'return') {
                 this.$http.delete("/file/" + fileId).then(function (response) {
                     if (response.data.success) {
@@ -124,6 +323,46 @@ var vue = new Vue({
                 }, function (error) {
                     self.$Message.error(error.data.errorMessage);
                 })
+            } else if (type == 'factoring') {
+                if ('PAYMENT' == installmentDetailType) {
+                    this.$http.delete("/file/" + fileId).then(function (response) {
+                        if (response.data.success) {
+                            self.$Message.info("删除成功");
+                            let factoringInstallmentPayment = this.factoringInstallmentsPayment[index];
+                            factoringInstallmentPayment.item = null;
+                            for (let index in this.factoringInstallmentFileListPayment) {
+                                if (fileId == this.factoringInstallmentFileListPayment[index].response.data.fileId) {
+                                    if (index > -1) {
+                                        this.factoringInstallmentFileListPayment.splice(index, 1);
+                                    }
+                                }
+                            }
+                        } else {
+                            self.$Message.error(response.data.errorMessage);
+                        }
+                    }, function (error) {
+                        self.$Message.error(error.data.errorMessage);
+                    })
+                } else if ('INVOICE' == installmentDetailType) {
+                    this.$http.delete("/file/" + fileId).then(function (response) {
+                        if (response.data.success) {
+                            self.$Message.info("删除成功");
+                            let factoringInstallmentInvoice = this.factoringInstallmentsInvoice[index];
+                            factoringInstallmentInvoice.item = null;
+                            for (let index in this.factoringInstallmentFileListInvoice) {
+                                if (fileId == this.factoringInstallmentFileListInvoice[index].response.data.fileId) {
+                                    if (index > -1) {
+                                        this.factoringInstallmentFileListPayment.splice(index, 1);
+                                    }
+                                }
+                            }
+                        } else {
+                            self.$Message.error(response.data.errorMessage);
+                        }
+                    }, function (error) {
+                        self.$Message.error(error.data.errorMessage);
+                    })
+                }
             }
         },
         download: function (fileId, fileName) {
@@ -134,14 +373,77 @@ var vue = new Vue({
         saveInstallment: function (type) {
             let self = this;
             if (type == 'return') {
-                this.removeAllFile(this.factoringInstallmentFileList);
+                this.removeAllFile(this.factoringInstallmentFileListPayment);
+                this.removeAllFile(this.factoringInstallmentFileListInvoice);
                 this.removeAllFile(this.loanInstallmentFileList);
                 let url = "/financeOperation/saveReturnInstallment";
                 this.doPostSave(url);
             } else if (type == 'loan') {
-                this.removeAllFile(this.factoringInstallmentFileList);
+                this.removeAllFile(this.factoringInstallmentFileListPayment);
+                this.removeAllFile(this.factoringInstallmentFileListInvoice);
                 this.removeAllFile(this.returnInstallmentFileList);
                 let url = "/financeOperation/saveLoanInstallment";
+                this.doPostSave(url);
+            } else if (type == 'factoring') {
+                this.removeAllFile(this.loanInstallmentFileList);
+                this.removeAllFile(this.returnInstallmentFileList);
+                this.project.detail.factoringInstallments = [];
+                for (let index in this.factoringInstallmentsPayment) {
+                    let factoringInstallmentForView = this.factoringInstallmentsPayment[index];
+                    if (factoringInstallmentForView.amount != -1) {
+                        this.project.detail.factoringInstallments.push({
+                            id: factoringInstallmentForView.id,
+                            amount: factoringInstallmentForView.amount,
+                            installmentDate: factoringInstallmentForView.installmentDate,
+                            detailList: [
+                                {
+                                    id:factoringInstallmentForView.detailId,
+                                    installmentId:factoringInstallmentForView.id,
+                                    type: factoringInstallmentForView.type,
+                                    bankInfoId: factoringInstallmentForView.bankInfoId,
+                                    detailAmount: factoringInstallmentForView.detailAmount,
+                                    detailDate: factoringInstallmentForView.detailDate,
+                                    item: factoringInstallmentForView.item,
+                                }
+                            ]
+                        });
+                    } else {
+                        for (let index2 in this.project.detail.factoringInstallments) {
+                            if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
+                                this.project.detail.factoringInstallments[index2].detailList.push({
+                                    id:factoringInstallmentForView.detailId,
+                                    installmentId:factoringInstallmentForView.id,
+                                    type: factoringInstallmentForView.type,
+                                    bankInfoId: factoringInstallmentForView.bankInfoId,
+                                    detailAmount: factoringInstallmentForView.detailAmount,
+                                    detailDate: factoringInstallmentForView.detailDate,
+                                    item: factoringInstallmentForView.item,
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+                for (let index in this.factoringInstallmentsInvoice) {
+                    let factoringInstallmentForView = this.factoringInstallmentsInvoice[index];
+
+                    //已经存在
+                    for (let index2 in this.project.detail.factoringInstallments) {
+                        if (this.project.detail.factoringInstallments[index2].id == factoringInstallmentForView.id) {
+                            this.project.detail.factoringInstallments[index2].detailList.push({
+                                id:factoringInstallmentForView.detailId,
+                                type: factoringInstallmentForView.type,
+                                bankInfoId: factoringInstallmentForView.bankInfoId,
+                                detailAmount: factoringInstallmentForView.detailAmount,
+                                detailDate: factoringInstallmentForView.detailDate,
+                                item: factoringInstallmentForView.item,
+                            });
+                            break;
+                        }
+
+                    }
+                }
+                let url = "/financeOperation/saveFactoringInstallment";
                 this.doPostSave(url);
             }
         },
@@ -183,10 +485,16 @@ var vue = new Vue({
             }, function (error) {
                 console.error(error);
             });
+
+            this.$http.get("/combo/banks").then(function (response) {
+                _self.banks = response.data;
+            }, function (error) {
+                console.error(error);
+            });
         },
 
         /** 分页查询 */
-        query: function () {
+        queryProject: function () {
             let self = this;
             self.queryParam.condition = self.formInline;
             this.$http.post("/project/query", self.queryParam).then(
@@ -196,9 +504,88 @@ var vue = new Vue({
                     self.project.detail.loanInstallments.forEach(cur => {
                         self.totalLoanAmount += cur.amount;
                     });
-                }, function (error) {
+
+                    self.factoringInstallmentsPayment = [];
+                    self.factoringInstallmentsInvoice = [];
+                    self.indexView = self.project.detail.factoringInstallments.length;
+                    for (let index in self.project.detail.factoringInstallments) {
+                        let factoringInstallment = self.project.detail.factoringInstallments[index];
+                        let detailList = factoringInstallment.detailList;
+                        let detailListPayment = [];
+                        let detailListInvoice = [];
+                        if (null != detailList) {
+                            for (let i in detailList) {
+                                if (detailList[i].type == 'PAYMENT') {
+                                    detailListPayment.push(detailList[i]);
+                                } else if (detailList[i].type == 'INVOICE') {
+                                    detailListInvoice.push(detailList[i])
+                                }
+                            }
+                        }
+                        let indexView = parseInt(index) + 1;
+                        if (detailListPayment.length > 0) {
+                            for (let j in detailListPayment) {
+                                this.factoringInstallmentsPayment.push({
+                                    indexView: j == 0 ? indexView : null,
+                                    id: factoringInstallment.id,
+                                    amount: j == 0 ? factoringInstallment.amount : -1,
+                                    installmentDate: factoringInstallment.installmentDate,
+                                    type: 'PAYMENT',
+                                    bankInfoId: detailListPayment[j].bankInfoId,
+                                    detailAmount: detailListPayment[j].detailAmount,
+                                    detailDate: detailListPayment[j].detailDate,
+                                    item: detailListPayment[j].item,
+                                    detailId: detailListPayment[j].id
+                                });
+                            }
+                        } else {
+                            this.factoringInstallmentsPayment.push({
+                                indexView: indexView,
+                                id: factoringInstallment.id,
+                                amount: factoringInstallment.amount,
+                                installmentDate: factoringInstallment.installmentDate,
+                                type: 'PAYMENT',
+                                bankInfoId: null,
+                                detailAmount: 0,
+                                detailDate: '',
+                                item: null
+                            });
+                        }
+                        if (detailListInvoice.length > 0) {
+                            for (let k in detailListInvoice) {
+                                this.factoringInstallmentsInvoice.push({
+                                    indexView: k == 0 ? indexView : null,
+                                    id: factoringInstallment.id,
+                                    amount: k == 0 ? factoringInstallment.amount : -1,
+                                    installmentDate: factoringInstallment.installmentDate,
+                                    type: 'INVOICE',
+                                    bankInfoId: detailListInvoice[k].bankInfoId,
+                                    detailAmount: detailListInvoice[k].detailAmount,
+                                    detailDate: detailListInvoice[k].detailDate,
+                                    item: detailListInvoice[k].item,
+                                    detailId: detailListInvoice[k].id
+                                });
+                            }
+                        } else {
+                            this.factoringInstallmentsInvoice.push({
+                                indexView: indexView,
+                                id: factoringInstallment.id,
+                                amount: factoringInstallment.amount,
+                                installmentDate: factoringInstallment.installmentDate,
+                                type: 'INVOICE',
+                                bankInfoId: null,
+                                detailAmount: 0,
+                                detailDate: '',
+                                item: null
+                            });
+                        }
+
+                    }
+                },
+                function (error) {
                     self.$Message.error(error.data.message);
-                })
+                }
+            )
         },
 
         /**
@@ -302,95 +689,3 @@ var vue = new Vue({
         }
     }
 });
-
-vue.tableColumns = [{
-    title: '项目编号',
-    key: 'projectId',
-    align: 'center',
-    width: 125
-}, {
-    title: '项目名称',
-    key: 'projectName',
-    width: 125,
-    tooltip: true,
-    align: 'center'
-}, {
-    title: '让与人',
-    key: 'creditor',
-    tooltip: true,
-    align: 'center'
-}, {
-    title: '债务人',
-    key: 'debtor',
-    tooltip: true,
-    align: 'center'
-}, {
-    title: '追索权',
-    key: 'projectName',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', vue.toModelName(param.row.model))
-    }
-}, {
-    title: '应收账款受让款(万元)',
-    key: 'projectName',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', param.row.detail.assignee)
-    }
-}, {
-    title: '应收账款(万元)',
-    key: 'projectName',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', param.row.detail.receivable)
-    }
-}, {
-    title: '转让期限年',
-    key: 'projectName',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', param.row.detail.duration)
-    }
-}, {
-    title: '项目负责人',
-    key: 'user',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', param.row.user.username)
-    }
-}, {
-    title: '当前进度',
-    key: 'progress',
-    align: 'center',
-    render: (h, param) => {
-        return h('span', vue.getProgress(param.row.progress));
-    }
-}, {
-    title: '操作',
-    align: 'center',
-    render: (h, param) => {
-        return h('div', [
-                h('span'),
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "warning",
-                        ghost: true
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.operate(param.row.id);
-                        }
-                    }
-                }, '登记')
-            ]
-        )
-    }
-}
-];
-
-
