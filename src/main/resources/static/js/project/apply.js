@@ -113,8 +113,10 @@ var vue = new Vue({
 				}
 				this.project.items.push(item);
 			}
+			this.$Spin.show();
 			let self = this;
 			this.$http.post("/apply",this.project).then(function(response){
+				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({
 						content : "尽调申请成功",
@@ -126,6 +128,7 @@ var vue = new Vue({
 					self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
+				this.$Spin.hide();
 				self.$Message.error(error);
 			})
 			

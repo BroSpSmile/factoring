@@ -81,7 +81,9 @@ var vue = new Vue({
 					this.$Message.error('校验失败,请完善信息!');
 					return false;
 				}else{
+					this.$Spin.show();
 					self.$http.post("/past", self.projectMeeting).then(function(response) {
+						this.$Spin.hide();
 						if (response.data.success) {
 							self.$Message.info({
 								content : "保存成功",
@@ -93,6 +95,7 @@ var vue = new Vue({
 							self.$Message.error(response.data.errorMessage);
 						}
 					}, function(error) {
+						this.$Spin.hide();
 						self.$Message.error(error.data.message);
 					});
 				}
@@ -101,7 +104,9 @@ var vue = new Vue({
 		
 		skip:function(){
 			let _self = this;
+			this.$Spin.show();
 			this.$http.post("/past/"+_self.projectMeeting.projectId).then(function(response){
+				this.$Spin.hide();
 				if (response.data.success) {
 					_self.$Message.info({
 						content : "保存成功",
@@ -113,6 +118,7 @@ var vue = new Vue({
 					_self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
+				this.$Spin.hide();
 				_self.$Message.error(error.data.message);
 			})
 		},

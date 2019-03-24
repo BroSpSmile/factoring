@@ -149,7 +149,9 @@ var vue = new Vue({
 				}
 			//}
 			let self = this;
+			this.$Spin.show();
 			this.$http.post("/minutes",meeting).then(function(response){
+				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({
 						content : "创建会议成功",
@@ -161,6 +163,7 @@ var vue = new Vue({
 					self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
+				this.$Spin.hide();
 				self.$Message.error(error.data.message);
 			})	
 		},
