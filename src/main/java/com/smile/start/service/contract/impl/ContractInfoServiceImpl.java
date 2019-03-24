@@ -242,7 +242,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
         contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
-        //保存财务顾问协议
+        //保存财务顾问协议，无追合同才有
         if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
             final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
             contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
@@ -263,9 +263,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //生成标准合同文件
         try {
-            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
-            upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
+            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
+            File agreementFile = DocUtil.createDoc(agreementFileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
+            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
+
+            String shareholderFileName = "股东会决议";
+            File shareholderFile = DocUtil.createDoc(shareholderFileName, "股东会决议_模板.xml", buildTemplateData(contractShareholderMeeting, contractExtendInfo));
+            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
         }
@@ -293,9 +297,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     /**
      * 构建登录协议模板数据
      * @param contractReceivableAgreement
+     * @param contractExtendInfo
      * @return
      */
-    private Map<String, Object> buildTemplateData(ContractReceivableAgreement contractReceivableAgreement) {
+    private Map<String, Object> buildTemplateData(ContractReceivableAgreement contractReceivableAgreement, ContractExtendInfo contractExtendInfo) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("protocolCode", contractReceivableAgreement.getProtocolCode());
         data.put("spName", contractReceivableAgreement.getSpName());
@@ -306,6 +311,35 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", contractReceivableAgreement.getSpTelephone());
         data.put("spFax", contractReceivableAgreement.getSpFax());
         data.put("signDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("fpSignatureDate", DateUtil.format(contractReceivableAgreement.getFpSignatureDate(), DateUtil.spotFormat));
+        data.put("spSignatureDate", DateUtil.format(contractReceivableAgreement.getSpSignatureDate(), DateUtil.spotFormat));
+        data.put("contractCode", contractExtendInfo.getContractCode());
+        data.put("contractSignDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
+        data.put("contractSignDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
+        data.put("contractSignDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        return data;
+    }
+
+    /**
+     * 构建股东会决议模板数据
+     * @param contractShareholderMeeting
+     * @param contractExtendInfo
+     * @return
+     */
+    private Map<String, Object> buildTemplateData(ContractShareholderMeeting contractShareholderMeeting, ContractExtendInfo contractExtendInfo) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("contractCode", contractExtendInfo.getContractCode());
+        data.put("meetingTimeYear", DateUtil.getYeah(contractShareholderMeeting.getMeetingTime()));
+        data.put("meetingTimeMonth", DateUtil.getMonth(contractShareholderMeeting.getMeetingTime()));
+        data.put("meetingTimeDay", DateUtil.getDay(contractShareholderMeeting.getMeetingTime()));
+        data.put("meetingAddress", contractShareholderMeeting.getMeetingAddress());
+        data.put("spCompanyName", contractShareholderMeeting.getSpCompanyName());
+        data.put("attendingShareholders", contractShareholderMeeting.getAttendingShareholders());
+        data.put("meetingNumber", contractShareholderMeeting.getMeetingNumber());
+        data.put("passingRate", contractShareholderMeeting.getPassingRate());
+        data.put("signatureDateYear", DateUtil.getYeah(contractShareholderMeeting.getSignatureDate()));
+        data.put("signatureDateMonth", DateUtil.getMonth(contractShareholderMeeting.getSignatureDate()));
+        data.put("signatureDateDay", DateUtil.getDay(contractShareholderMeeting.getSignatureDate()));
         return data;
     }
 
@@ -335,7 +369,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
         contractReceivableAgreementDao.update(contractReceivableAgreement);
 
-        //保存财务顾问协议
+        //保存财务顾问协议，无追合同才有
         if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
             final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
             contractFasaDao.update(contractFasa);
@@ -358,9 +392,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //生成标准合同文件
         try {
-            String fileName = "应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
-            File file = DocUtil.createDoc(fileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement));
-            upload(file, fileName, contractInfoDTO.getBaseInfo().getProjectId());
+            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
+            File agreementFile = DocUtil.createDoc(agreementFileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
+            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
+
+            String shareholderFileName = "股东会决议";
+            File shareholderFile = DocUtil.createDoc(shareholderFileName, "股东会决议_模板.xml", buildTemplateData(contractShareholderMeeting, contractExtendInfo));
+            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } catch (Exception e) {
             throw new Exception("标准合同生成文件异常", e);
         }

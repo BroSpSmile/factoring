@@ -30,12 +30,12 @@ public class ContractShareholderMeetingDTO implements Serializable {
     /**
      * 会议时间
      */
-    private Date mettingTime;
+    private Date meetingTime;
 
     /**
      * 会议地点
      */
-    private String mettingAddress;
+    private String meetingAddress;
 
     /**
      * 乙方公司名称
@@ -86,20 +86,20 @@ public class ContractShareholderMeetingDTO implements Serializable {
         this.contractSerialNo = contractSerialNo;
     }
 
-    public Date getMettingTime() {
-        return mettingTime;
+    public Date getMeetingTime() {
+        return meetingTime;
     }
 
-    public void setMettingTime(Date mettingTime) {
-        this.mettingTime = mettingTime;
+    public void setMeetingTime(Date meetingTime) {
+        this.meetingTime = meetingTime;
     }
 
-    public String getMettingAddress() {
-        return mettingAddress;
+    public String getMeetingAddress() {
+        return meetingAddress;
     }
 
-    public void setMettingAddress(String mettingAddress) {
-        this.mettingAddress = mettingAddress;
+    public void setMeetingAddress(String meetingAddress) {
+        this.meetingAddress = meetingAddress;
     }
 
     public String getSpCompanyName() {

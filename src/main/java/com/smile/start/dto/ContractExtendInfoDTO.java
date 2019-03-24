@@ -171,7 +171,7 @@ public class ContractExtendInfoDTO implements Serializable {
      * 合同强制解除日期
      * @return
      */
-    private String ompulsoryRescissionDate;
+    private Date ompulsoryRescissionDate;
 
     public Long getId() {
         return id;
@@ -421,11 +421,11 @@ public class ContractExtendInfoDTO implements Serializable {
         this.spAccount = spAccount;
     }
 
-    public String getOmpulsoryRescissionDate() {
+    public Date getOmpulsoryRescissionDate() {
         return ompulsoryRescissionDate;
     }
 
-    public void setOmpulsoryRescissionDate(String ompulsoryRescissionDate) {
+    public void setOmpulsoryRescissionDate(Date ompulsoryRescissionDate) {
         this.ompulsoryRescissionDate = ompulsoryRescissionDate;
     }
 }

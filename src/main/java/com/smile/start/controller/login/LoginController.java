@@ -64,7 +64,11 @@ public class LoginController extends BaseController {
     @ResponseBody
     public SingleResult<AuthUserInfoDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
         SingleResult<AuthUserInfoDTO> result = new SingleResult<>();
+        long start = System.currentTimeMillis();
+        logger.info("controller login start : {}", start);
         AuthUserInfoDTO authUserInfoDTO = loginService.login(loginRequestDTO, response);
+        long end = System.currentTimeMillis();
+        logger.info("controller login end : {}, cost : {}", end, (end - start));
         result.setData(authUserInfoDTO);
         return result;
     }

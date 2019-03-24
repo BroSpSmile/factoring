@@ -20,7 +20,7 @@ public interface ContractShareholderMeetingDao {
      * @param contractShareholderMeeting
      * @return
      */
-    @Insert("insert into contract_shareholder_meeting (serial_no,contract_serial_no,metting_time,metting_address,sp_company_name,attending_shareholders,meeting_number,passing_rate,signature_date) values (#{serialNo},#{contractSerialNo},#{mettingTime},#{mettingAddress},#{spCompanyName},#{attendingShareholders},#{meetingNumber},#{passingRate},#{signatureDate})")
+    @Insert("insert into contract_shareholder_meeting (serial_no,contract_serial_no,meeting_time,meeting_address,sp_company_name,attending_shareholders,meeting_number,passing_rate,signature_date) values (#{serialNo},#{contractSerialNo},#{meetingTime},#{meetingAddress},#{spCompanyName},#{attendingShareholders},#{meetingNumber},#{passingRate},#{signatureDate})")
     long insert(ContractShareholderMeeting contractShareholderMeeting);
 
     /**
@@ -28,7 +28,7 @@ public interface ContractShareholderMeetingDao {
      * @param contractShareholderMeeting
      * @return
      */
-    @Update("update contract_shareholder_meeting set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},metting_time=#{mettingTime},metting_address=#{mettingAddress},sp_company_name=#{spCompanyName},attending_shareholders=#{attendingShareholders},meeting_number=#{meetingNumber},passing_rate=#{passingRate},signature_date=#{signatureDate} where id=#{id}")
+    @Update("update contract_shareholder_meeting set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},meeting_time=#{meetingTime},meeting_address=#{meetingAddress},sp_company_name=#{spCompanyName},attending_shareholders=#{attendingShareholders},meeting_number=#{meetingNumber},passing_rate=#{passingRate},signature_date=#{signatureDate} where id=#{id}")
     int update(ContractShareholderMeeting contractShareholderMeeting);
 
     /**

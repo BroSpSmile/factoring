@@ -71,6 +71,16 @@ public class ContractReceivableAgreementDTO implements Serializable {
      */
     private Date signDate;
 
+    /**
+     * 甲方签字日期
+     */
+    private Date fpSignatureDate;
+
+    /**
+     * 乙方签字日期
+     */
+    private Date spSignatureDate;
+
     public Long getId() {
         return id;
     }
@@ -165,5 +175,21 @@ public class ContractReceivableAgreementDTO implements Serializable {
 
     public void setSignDate(Date signDate) {
         this.signDate = signDate;
+    }
+
+    public Date getFpSignatureDate() {
+        return fpSignatureDate;
+    }
+
+    public void setFpSignatureDate(Date fpSignatureDate) {
+        this.fpSignatureDate = fpSignatureDate;
+    }
+
+    public Date getSpSignatureDate() {
+        return spSignatureDate;
+    }
+
+    public void setSpSignatureDate(Date spSignatureDate) {
+        this.spSignatureDate = spSignatureDate;
     }
 }
