@@ -200,6 +200,11 @@ public class ContractExtendInfo implements Serializable {
     private String receivableMoneyType;
 
     /**
+     * 应收账款附加：所有、空
+     */
+    private String receivableMoneyAdditional;
+
+    /**
      * 应收账款回收款类别：不低于、为
      */
     private String receivableRecoveryMoneyType;
@@ -506,5 +511,13 @@ public class ContractExtendInfo implements Serializable {
 
     public void setReceivableRecoveryMoneyType(String receivableRecoveryMoneyType) {
         this.receivableRecoveryMoneyType = receivableRecoveryMoneyType;
+    }
+
+    public String getReceivableMoneyAdditional() {
+        return receivableMoneyAdditional;
+    }
+
+    public void setReceivableMoneyAdditional(String receivableMoneyAdditional) {
+        this.receivableMoneyAdditional = receivableMoneyAdditional;
     }
 }

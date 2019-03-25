@@ -481,6 +481,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("contractName", Strings.nullToEmpty(contractExtendInfo.getContractName()));
         data.put("receivableMoney", contractExtendInfo.getReceivableMoney());
         data.put("receivableMoneyUpper", contractExtendInfo.getReceivableMoneyUpper());
+        data.put("receivableMone", contractExtendInfo.getReceivableMoneyType());
+        data.put("receivableMoneyAdditional", contractExtendInfo.getReceivableMoneyAdditional());
         data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney());
         data.put("obligorEnjoyMoneyUpper", contractExtendInfo.getObligorEnjoyMoneyUpper());
         data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney());
