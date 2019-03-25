@@ -8,42 +8,85 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.smile.start.commons.DateUtil;
-import com.smile.start.dao.*;
-import com.smile.start.dto.*;
-import com.smile.start.model.common.FileInfo;
-import com.smile.start.model.common.FlowStatus;
-import com.smile.start.model.contract.*;
-import com.smile.start.model.enums.*;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.AuditRecord;
-import com.smile.start.model.project.ProjectItem;
-import com.smile.start.service.audit.AuditService;
-import com.smile.start.service.auth.RoleInfoService;
-import com.smile.start.service.common.FileService;
-import com.smile.start.service.engine.ProcessEngine;
-import com.smile.start.service.project.ProjectService;
-import freemarker.template.TemplateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.smile.start.commons.DateUtil;
+import com.smile.start.commons.DocUtil;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.AuditDao;
+import com.smile.start.dao.AuditRecordDao;
+import com.smile.start.dao.ContractAuditRecordDao;
+import com.smile.start.dao.ContractExtendInfoDao;
+import com.smile.start.dao.ContractFasaDao;
+import com.smile.start.dao.ContractInfoDao;
+import com.smile.start.dao.ContractReceivableAgreementDao;
+import com.smile.start.dao.ContractReceivableConfirmationDao;
+import com.smile.start.dao.ContractShareholderMeetingDao;
+import com.smile.start.dao.ContractSignListDao;
+import com.smile.start.dao.FlowConfigDao;
+import com.smile.start.dao.ProjectItemDao;
+import com.smile.start.dao.UserDao;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.ContractAttachDTO;
+import com.smile.start.dto.ContractAuditDTO;
+import com.smile.start.dto.ContractAuditRecordDTO;
+import com.smile.start.dto.ContractAuditSearchDTO;
+import com.smile.start.dto.ContractBaseInfoDTO;
+import com.smile.start.dto.ContractExtendInfoDTO;
+import com.smile.start.dto.ContractFasaDTO;
+import com.smile.start.dto.ContractInfoDTO;
+import com.smile.start.dto.ContractInfoSearchDTO;
+import com.smile.start.dto.ContractReceivableAgreementDTO;
+import com.smile.start.dto.ContractReceivableConfirmationDTO;
+import com.smile.start.dto.ContractShareholderMeetingDTO;
+import com.smile.start.dto.ContractSignDTO;
+import com.smile.start.dto.ContractSignListDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.common.FileInfo;
+import com.smile.start.model.common.FlowStatus;
+import com.smile.start.model.contract.ContractExtendInfo;
+import com.smile.start.model.contract.ContractFasa;
+import com.smile.start.model.contract.ContractInfo;
+import com.smile.start.model.contract.ContractReceivableAgreement;
+import com.smile.start.model.contract.ContractReceivableConfirmation;
+import com.smile.start.model.contract.ContractShareholderMeeting;
+import com.smile.start.model.contract.ContractSignList;
+import com.smile.start.model.enums.AuditResult;
+import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.ContractStatusEnum;
+import com.smile.start.model.enums.ContractTemplateEnum;
+import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.SealStatusEnum;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.project.Audit;
+import com.smile.start.model.project.AuditRecord;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectItem;
+import com.smile.start.service.audit.AuditService;
+import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
+import com.smile.start.service.common.FileService;
 import com.smile.start.service.contract.ContractInfoService;
+import com.smile.start.service.engine.ProcessEngine;
+import com.smile.start.service.project.ProjectService;
+
+import freemarker.template.TemplateException;
 
 /**
  * @author Joseph
@@ -234,18 +277,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
             contractExtendInfoDao.insert(contractExtendInfo);
 
-<<<<<<< HEAD
-            //            String contractFileName;
-            //            if(contractInfo.getProjectMode() == 1) {
-            //                contractFileName = "保理合同（有追索权）" + contractExtendInfo.getContractCode();
-            //            } else {
-            //                contractFileName = "保理合同（无追索权）" + contractExtendInfo.getContractCode();
-            //            }
-            //            File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + contractInfo.getProjectMode() + ".xml", buildTemplateData(contractExtendInfo, project.getProjectId() + "-4"));
-            //            upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
-=======
->>>>>>> Joseph
             //保存应收账款转让确认函
             ContractReceivableConfirmationDTO contractReceivableConfirmationDTO = contractInfoDTO.getContractReceivableConfirmation();
             contractReceivableConfirmationDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
@@ -254,13 +285,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
             contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
 
-<<<<<<< HEAD
-            //            String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode();
-            //            File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + contractInfo.getProjectMode() + ".xml", buildTemplateData(contractReceivableConfirmation, contractExtendInfo));
-            //            upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
-=======
->>>>>>> Joseph
             //保存应收账款转让登记协议
             ContractReceivableAgreementDTO contractReceivableAgreementDTO = contractInfoDTO.getContractReceivableAgreement();
             contractReceivableAgreementDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
@@ -269,13 +293,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
             contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
-<<<<<<< HEAD
-            //            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-            //            File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfo.getProjectMode() + ".xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
-            //            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
-=======
->>>>>>> Joseph
             //保存财务顾问协议，无追合同才有
             if (contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
                 ContractFasaDTO contractFasaDTO = contractInfoDTO.getContractFasa();
@@ -284,13 +301,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractFasaDTO.setFasaCode(project.getProjectId() + "-4");
                 ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
                 contractFasaDao.insert(contractFasa);
-<<<<<<< HEAD
 
-                //                String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode();
-                //                File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + contractInfo.getProjectMode() + ".xml", buildTemplateData(contractFasa, contractExtendInfo));
-                //                upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
-=======
->>>>>>> Joseph
             }
 
             //保存股东会决议
@@ -299,17 +310,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractShareholderMeetingDTO.setContractSerialNo(contractSerialNo);
             ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
             contractShareholderMeetingDao.insert(contractShareholderMeeting);
-<<<<<<< HEAD
-
-            //            String shareholderFileName = "股东会决议";
-            //            File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfo.getProjectMode() + ".xml", buildTemplateData(contractShareholderMeeting, contractExtendInfo));
-            //            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
-=======
->>>>>>> Joseph
         }
 
         //标准合同
-//        uploadStandardTemplate(contractInfoDTO, project);
+        //        uploadStandardTemplate(contractInfoDTO, project);
 
         //自定义附件合同
         insertAttachList(contractInfoDTO);
@@ -320,7 +324,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         ContractExtendInfoDTO contractExtendInfo = contractInfoDTO.getContractExtendInfo();
         Integer projectMode = contractInfoDTO.getBaseInfo().getProjectMode();
         String contractFileName;
-        if(projectMode == 1) {
+        if (projectMode == 1) {
             contractFileName = "保理合同（有追索权）" + contractExtendInfo.getContractCode();
         } else {
             contractFileName = "保理合同（无追索权）" + contractExtendInfo.getContractCode();
@@ -330,12 +334,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         ContractReceivableConfirmationDTO contractReceivableConfirmation = contractInfoDTO.getContractReceivableConfirmation();
         String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode();
-        File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + projectMode + ".xml", buildTemplateData(contractReceivableConfirmation, contractExtendInfo));
+        File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + projectMode + ".xml",
+            buildTemplateData(contractReceivableConfirmation, contractExtendInfo));
         upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         ContractReceivableAgreementDTO contractReceivableAgreement = contractInfoDTO.getContractReceivableAgreement();
         String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-        File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + projectMode + ".xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
+        File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + projectMode + ".xml",
+            buildTemplateData(contractReceivableAgreement, contractExtendInfo));
         upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         ContractFasaDTO contractFasa = contractInfoDTO.getContractFasa();
@@ -344,7 +350,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         String shareholderFileName = "股东会决议";
-        File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + projectMode + ".xml", buildTemplateData(contractInfoDTO.getContractShareholderMeeting(), contractExtendInfo));
+        File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + projectMode + ".xml",
+            buildTemplateData(contractInfoDTO.getContractShareholderMeeting(), contractExtendInfo));
         upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
     }
 
@@ -567,20 +574,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         if (contractInfo.getContractTemplate() == ContractTemplateEnum.STANDARD.getValue()) {
             //更新合同信息
-<<<<<<< HEAD
-            final ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractInfoDTO.getContractExtendInfo());
-            if (Strings.isNullOrEmpty(contractExtendInfo.getSerialNo())) {
-                contractExtendInfo.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
-                contractExtendInfo.setContractSerialNo(contractInfo.getSerialNo());
-                contractExtendInfo.setContractCode(project.getProjectId() + "-1");
-=======
+
             ContractExtendInfoDTO contractExtendInfoDTO = contractInfoDTO.getContractExtendInfo();
-            if(Strings.isNullOrEmpty(contractExtendInfoDTO.getSerialNo())) {
+            if (Strings.isNullOrEmpty(contractExtendInfoDTO.getSerialNo())) {
                 contractExtendInfoDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
                 contractExtendInfoDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractExtendInfoDTO.setContractCode(project.getProjectId() + "-1");
                 ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
->>>>>>> Joseph
                 contractExtendInfoDao.insert(contractExtendInfo);
             } else {
                 ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
@@ -588,20 +588,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
 
             //更新应收账款转让确认函
-<<<<<<< HEAD
-            final ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableConfirmation());
-            if (Strings.isNullOrEmpty(contractReceivableConfirmation.getSerialNo())) {
-                contractReceivableConfirmation.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
-                contractReceivableConfirmation.setContractSerialNo(contractInfo.getSerialNo());
-                contractReceivableConfirmation.setConfirmationCode(project.getProjectId() + "-2");
-=======
             ContractReceivableConfirmationDTO contractReceivableConfirmationDTO = contractInfoDTO.getContractReceivableConfirmation();
-            if(Strings.isNullOrEmpty(contractReceivableConfirmationDTO.getSerialNo())) {
+            if (Strings.isNullOrEmpty(contractReceivableConfirmationDTO.getSerialNo())) {
                 contractReceivableConfirmationDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
                 contractReceivableConfirmationDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractReceivableConfirmationDTO.setConfirmationCode(project.getProjectId() + "-2");
                 ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
->>>>>>> Joseph
                 contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
             } else {
                 ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
@@ -609,20 +601,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
 
             //更新应收账款转让登记协议
-<<<<<<< HEAD
-            final ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractInfoDTO.getContractReceivableAgreement());
-            if (Strings.isNullOrEmpty(contractReceivableAgreement.getSerialNo())) {
-                contractReceivableAgreement.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
-                contractReceivableAgreement.setContractSerialNo(contractInfo.getSerialNo());
-                contractReceivableAgreement.setProtocolCode(project.getProjectId() + "-3");
-=======
             ContractReceivableAgreementDTO contractReceivableAgreementDTO = contractInfoDTO.getContractReceivableAgreement();
-            if(Strings.isNullOrEmpty(contractReceivableAgreementDTO.getSerialNo())) {
+            if (Strings.isNullOrEmpty(contractReceivableAgreementDTO.getSerialNo())) {
                 contractReceivableAgreementDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
                 contractReceivableAgreementDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractReceivableAgreementDTO.setProtocolCode(project.getProjectId() + "-3");
                 ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
->>>>>>> Joseph
                 contractReceivableAgreementDao.insert(contractReceivableAgreement);
             } else {
                 ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
@@ -630,22 +614,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
 
             //保存财务顾问协议，无追合同才有
-<<<<<<< HEAD
             if (contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
-                final ContractFasa contractFasa = contractInfoMapper.dto2do(contractInfoDTO.getContractFasa());
-                if (Strings.isNullOrEmpty(contractFasa.getSerialNo())) {
-                    contractFasa.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
-                    contractFasa.setContractSerialNo(contractInfo.getSerialNo());
-                    contractFasa.setFasaCode(project.getProjectId() + "-4");
-=======
-            if(contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
                 ContractFasaDTO contractFasaDTO = contractInfoDTO.getContractFasa();
-                if(Strings.isNullOrEmpty(contractFasaDTO.getSerialNo())) {
+                if (Strings.isNullOrEmpty(contractFasaDTO.getSerialNo())) {
                     contractFasaDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
                     contractFasaDTO.setContractSerialNo(contractInfo.getSerialNo());
                     contractFasaDTO.setFasaCode(project.getProjectId() + "-4");
                     ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
->>>>>>> Joseph
                     contractFasaDao.insert(contractFasa);
                 } else {
                     ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
@@ -654,18 +629,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
 
             //保存股东会决议
-<<<<<<< HEAD
-            final ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractInfoDTO.getContractShareholderMeeting());
-            if (Strings.isNullOrEmpty(contractShareholderMeeting.getSerialNo())) {
-                contractShareholderMeeting.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
-                contractShareholderMeeting.setContractSerialNo(contractInfo.getSerialNo());
-=======
             ContractShareholderMeetingDTO contractShareholderMeetingDTO = contractInfoDTO.getContractShareholderMeeting();
-            if(Strings.isNullOrEmpty(contractShareholderMeetingDTO.getSerialNo())) {
+            if (Strings.isNullOrEmpty(contractShareholderMeetingDTO.getSerialNo())) {
                 contractShareholderMeetingDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
                 contractShareholderMeetingDTO.setContractSerialNo(contractInfo.getSerialNo());
                 ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
->>>>>>> Joseph
                 contractShareholderMeetingDao.insert(contractShareholderMeeting);
             } else {
                 ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
@@ -685,21 +653,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         insertAttachList(contractInfoDTO);
 
         //生成标准合同文件
-<<<<<<< HEAD
-        //        try {
-        //            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
-        //            File agreementFile = DocUtil.createDoc(agreementFileName, "附件2：应收账款转让登记协议RJBL-2018-005-3_模板.xml", buildTemplateData(contractReceivableAgreement, contractExtendInfo));
-        //            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
-        //
-        //            String shareholderFileName = "股东会决议";
-        //            File shareholderFile = DocUtil.createDoc(shareholderFileName, "股东会决议_模板.xml", buildTemplateData(contractShareholderMeeting, contractExtendInfo));
-        //            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
-        //        } catch (Exception e) {
-        //            throw new Exception("标准合同生成文件异常", e);
-        //        }
-=======
-//        uploadStandardTemplate(contractInfoDTO, project);
->>>>>>> Joseph
+
     }
 
     /**
