@@ -64,6 +64,11 @@ public class ContractReceivableConfirmation implements Serializable {
     private String receivableAssigneeMoneyUpper;
 
     /**
+     * 应收账款受让款类别：不低于、为
+     */
+    private String receivableAssigneeMoneyType;
+
+    /**
      * 未支付应收账款受让款
      */
     private BigDecimal unpaidReceivableAssigneeMoney;
@@ -72,6 +77,11 @@ public class ContractReceivableConfirmation implements Serializable {
      * 未支付应收账款受让款大写
      */
     private String unpaidReceivableAssigneeMoneyUpper;
+
+    /**
+     * 未支付应收账款受让款类别：不低于、为
+     */
+    private String unpaidReceivableAssigneeMoneyType;
 
     /**
      * 应收账款回收款
@@ -187,6 +197,11 @@ public class ContractReceivableConfirmation implements Serializable {
      * 发票/收据所载金额（元）
      */
     private BigDecimal invoiceMoney;
+
+    /**
+     * 发票/收据所载金额类别：不低于、为
+     */
+    private String invoiceMoneyType;
 
     public Long getId() {
         return id;
@@ -466,5 +481,29 @@ public class ContractReceivableConfirmation implements Serializable {
 
     public void setInvoiceMoney(BigDecimal invoiceMoney) {
         this.invoiceMoney = invoiceMoney;
+    }
+
+    public String getReceivableAssigneeMoneyType() {
+        return receivableAssigneeMoneyType;
+    }
+
+    public void setReceivableAssigneeMoneyType(String receivableAssigneeMoneyType) {
+        this.receivableAssigneeMoneyType = receivableAssigneeMoneyType;
+    }
+
+    public String getUnpaidReceivableAssigneeMoneyType() {
+        return unpaidReceivableAssigneeMoneyType;
+    }
+
+    public void setUnpaidReceivableAssigneeMoneyType(String unpaidReceivableAssigneeMoneyType) {
+        this.unpaidReceivableAssigneeMoneyType = unpaidReceivableAssigneeMoneyType;
+    }
+
+    public String getInvoiceMoneyType() {
+        return invoiceMoneyType;
+    }
+
+    public void setInvoiceMoneyType(String invoiceMoneyType) {
+        this.invoiceMoneyType = invoiceMoneyType;
     }
 }
