@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 	<header th:fragment="side" >
-		<div id="side" v-cloak>
+		<div id="side" v-cloak class="menu-size">
 			 <i-menu :active-name="activeName" :open-names="openName" >
 			 	<div v-for="(menu,index) in menus">
 				 	<submenu  v-if="menu.childrens.length>0" :name="index">

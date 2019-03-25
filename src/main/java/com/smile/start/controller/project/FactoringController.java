@@ -4,6 +4,8 @@
  */
 package com.smile.start.controller.project;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +25,7 @@ import com.smile.start.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.FactoringsInfo;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
@@ -69,6 +72,16 @@ public class FactoringController extends BaseController {
         project.setDetail(null);
         LoggerUtils.info(logger, "data:{}", FastJsonUtils.toJSONString(detail));
         return detail;
+    }
+
+    /**
+     * 获取项目信息
+     * @return
+     */
+    @GetMapping("/infos")
+    @ResponseBody
+    public List<FactoringsInfo> getInfos() {
+        return factoringService.getInfos();
     }
 
     /**

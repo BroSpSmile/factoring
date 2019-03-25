@@ -13,7 +13,7 @@ var side = new Vue({
 	},
 	methods : {
 		getUser : function() {
-			this.$http.get("/login/user").then(function(response) {
+			this.$http.get("/login/user?"+new Date()).then(function(response) {
 				this.user = response.data;
 				this.menus = this.user.permissionList;
 				console.log(this.menus);
