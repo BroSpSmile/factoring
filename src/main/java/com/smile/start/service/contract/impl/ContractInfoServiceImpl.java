@@ -427,8 +427,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligor", Strings.nullToEmpty(contractReceivableConfirmation.getObligor()));
         data.put("businessContractName", Strings.nullToEmpty(contractReceivableConfirmation.getBusinessContractName()));
         data.put("receivableAssigneeMoneyUpper", contractReceivableConfirmation.getReceivableAssigneeMoneyUpper());
+        data.put("receivableAssigneeMoneyType", contractReceivableConfirmation.getReceivableAssigneeMoneyType());
         data.put("unpaidReceivableAssigneeMoney", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoney());
         data.put("unpaidReceivableAssigneeMoneyUpper", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyUpper());
+        data.put("unpaidReceivableAssigneeMoneyType", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyType());
         data.put("receivableExpiryDate", DateUtil.format(contractReceivableConfirmation.getReceivableExpiryDate(), DateUtil.chineseDtFormat));
 
         data.put("receivableRecoveryMoney", contractReceivableConfirmation.getReceivableRecoveryMoney());
@@ -454,6 +456,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligorSignatureDate", DateUtil.format(contractReceivableConfirmation.getObligorSignatureDate(), DateUtil.spotFormat));
         data.put("nameOfSubject", Strings.nullToEmpty(contractReceivableConfirmation.getNameOfSubject()));
         data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
+        data.put("invoiceMoneyUpper", contractReceivableConfirmation.getInvoiceMoneyType());
+        data.put("invoiceMoneyType", contractReceivableConfirmation.getInvoiceMoneyType());
         return data;
     }
 
