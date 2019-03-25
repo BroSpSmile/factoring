@@ -3,72 +3,15 @@
 	<header th:fragment="side" >
 		<div id="side" v-cloak>
 			 <i-menu :active-name="activeName" :open-names="openName" >
-				 <submenu name="1">
-		            <template slot="title">
-		                我的业务
-		            </template>
-	                <menu-item name="project" to="/project">保理业务</menu-item>
-		            <!-- 
-		            <menu-group title="母基金业务">
-		                <menu-item name="1-3">业务立项</menu-item>
-		                <menu-item name="1-4">立项审核</menu-item>
-		            </menu-group>
-		            <menu-group title="直投业务">
-		                <menu-item name="1-5">业务立项</menu-item>
-		                <menu-item name="1-6">立项审核</menu-item> -->
-		            </menu-group>
-				 </submenu>
-				 <menu-item name="audits" to="/audits">业务审核</menu-item>
-				 <!-- <menu-item name="past" to="/past">三重一大</menu-item> -->
-				 <submenu name="finance">
-		            <template slot="title">
-		                财务管理
-		            </template>
-		            <menu-item name="finance" to="/finance">财务管理</menu-item>
-		            <menu-item name="bankInfo" to="/bankInfo">银行信息维护</menu-item>
-		        </submenu>
-				 <menu-item name="seal" to="/seal">用印管理</menu-item>
-		        <!--<submenu name="3">
-		            <template slot="title">
-		                合同管理
-		            </template>
-		            <menu-item name="contractInfo" to="/contractInfo">保理合同拟定</menu-item>
-		            <menu-item name="contractAudit" to="/contractAudit">保理合同审核</menu-item>
-		            <menu-item name="contractSign" to="/contractSign">保理合同签署</menu-item>
-				</submenu>
-		        <submenu name="4">
-		            <template slot="title">
-		                放款
-		            </template>
-		            <menu-item name="loanApply" to="/loanApply">放款申请</menu-item>
-		        </submenu>
-		        <submenu name="5">
-		            <template slot="title">
-		                归档管理
-		            </template>
-		            <menu-item name="filingProject" to="/filingProject?type=0">归档申请</menu-item>-->
-		            <!--menu-item name="filingProjectAudit" to="/filingProject?type=1">归档审核</menu-item
-		        </submenu>-->
-		        <menu-item name="meeting" to="/meeting">会议管理</menu-item>
-		        <submenu name="7">
-		            <template slot="title">
-		                资产报表
-		            </template>
-		            <menu-item name="assets" to="/assets">资产报表</menu-item>
-		            <menu-item name="profit" to="/profit">收益报表</menu-item>
-		        </submenu>
-		        <submenu name="8">
-		            <template slot="title">
-		                系统管理
-		            </template>
-		            <menu-item name="user" to="/user">人员管理</menu-item>
-		            <menu-item name="role" to="/role">角色管理</menu-item>
-		            <menu-item name="permission" to="/permission">权限管理</menu-item>
-					<menu-item name="organizational" to="/organizational">组织架构管理</menu-item>
-					<menu-item name="flowConfig" to="/flowConfig">流程审核配置</menu-item>
-					<menu-item name="signListTemplate" to="/signListTemplate">签署清单模板</menu-item>
-		        </submenu>
-				 <menu-item name="financeManage" to="/financeManage">财务管理</menu-item>
+			 	<div v-for="(menu,index) in menus">
+				 	<submenu  v-if="menu.childrens.length>0" :name="index">
+				 		<template slot="title">
+			                {{menu.permissionName}}
+			            </template>
+			            <menu-item v-for="item in menu.childrens" v-if="item.url" :name="item.url" :to="item.url">{{item.permissionName}}</menu-item>
+				 	</submenu>
+				 	<menu-item  v-if="menu.childrens.length<1 && menu.url" :name="menu.url" :to="menu.url">{{menu.permissionName}}</menu-item>
+			 	</div>
 		    </i-menu>
 	    </div>
 

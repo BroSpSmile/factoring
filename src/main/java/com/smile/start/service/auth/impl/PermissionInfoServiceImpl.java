@@ -139,6 +139,15 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         return permissionInfoMapper.doList2dtoList(permissionList);
     }
 
+    /** 
+     * @see com.smile.start.service.auth.PermissionInfoService#findTopMenus(java.lang.String)
+     */
+    @Override
+    public List<AuthPermissionInfoDTO> findTopMenus(String userSerialNo) {
+        List<Permission> permissionList = permissionDao.findTopPermission(userSerialNo);
+        return permissionInfoMapper.doList2dtoList(permissionList);
+    }
+
     /**
      * 获取权限树
      * @param roleSerialNo
