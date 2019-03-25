@@ -51,7 +51,7 @@ public class ProjectForView implements Serializable {
     /**
      * 已投放金额
      */
-    private double dropAmount;
+    private List<Double> dropAmount;
 
     /**
      * 投放日期
@@ -61,7 +61,7 @@ public class ProjectForView implements Serializable {
     /**
      * 回款金额
      */
-    private double returnAmount;
+    private List<Double> returnAmount;
 
     /**
      * 回款日期
@@ -136,14 +136,6 @@ public class ProjectForView implements Serializable {
         this.receivable = receivable;
     }
 
-    public double getDropAmount() {
-        return dropAmount;
-    }
-
-    public void setDropAmount(double dropAmount) {
-        this.dropAmount = dropAmount;
-    }
-
     public List<String> getDropDates() {
         return dropDates;
     }
@@ -152,11 +144,19 @@ public class ProjectForView implements Serializable {
         this.dropDates = dropDates;
     }
 
-    public double getReturnAmount() {
+    public List<Double> getDropAmount() {
+        return dropAmount;
+    }
+
+    public void setDropAmount(List<Double> dropAmount) {
+        this.dropAmount = dropAmount;
+    }
+
+    public List<Double> getReturnAmount() {
         return returnAmount;
     }
 
-    public void setReturnAmount(double returnAmount) {
+    public void setReturnAmount(List<Double> returnAmount) {
         this.returnAmount = returnAmount;
     }
 

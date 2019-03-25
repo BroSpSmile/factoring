@@ -4,7 +4,9 @@
  */
 package com.smile.start.service.finance;
 
+import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.InstallmentType;
 import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.Project;
@@ -24,5 +26,7 @@ public interface FinanceService {
     Long saveLoanInstallment(Installment installment);
 
     BaseResult saveInstallments(Project project, InstallmentType installmentType);
+
+    PageInfo<Project> queryPageProject(PageRequest<Project> page);
 
 }
