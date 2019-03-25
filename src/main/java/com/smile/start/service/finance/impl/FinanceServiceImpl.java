@@ -4,13 +4,17 @@
  */
 package com.smile.start.service.finance.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.event.AuditEvent;
 import com.smile.start.event.InstallmentEvent;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.project.*;
+import com.smile.start.service.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,9 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
     @Resource
     private InstallmentDao installmentDao;
 
+    @Resource
+    private ProjectService projectService;
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -50,6 +57,20 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         installment.setType(InstallmentType.LOAN);
         return installmentDao.insert(installment);
     }
+
+    /**
+     * @see com.smile.start.service.project.ProjectService#queryPage(com.smile.start.model.base.PageRequest)
+     */
+    @Override
+    public PageInfo<Project> queryPageProject(PageRequest<Project> page) {
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
+        List<Project> projects = installmentDao.findByParamProject(page.getCondition());
+        projects.stream().forEach(project -> projectService.setDetail(project));
+        //4. 根据返回的集合，创建PageInfo对象
+        PageInfo<Project> result = new PageInfo<>(projects);
+        return result;
+    }
+
 
     /**
      * 保存分期信息

@@ -91,4 +91,6 @@ public interface ProjectService {
      * @return
      */
     BaseResult deleteItem(ProjectItem item);
+
+    void setDetail(Project project);
 }

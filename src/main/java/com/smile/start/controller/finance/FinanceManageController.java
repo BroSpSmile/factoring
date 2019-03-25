@@ -67,12 +67,16 @@ public class FinanceManageController extends BaseController {
     @PostMapping("/query")
     @ResponseBody
     public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query) {
+
+        //project.step  LOANEN(9, "放款操作") 可以查询 begin
+        //project.step END(12, "完结") 可以查询 begin
         SingleResult<Map<String, Object>> singleResult =
             new SingleResult<Map<String, Object>>();
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         List<ProjectForView> projectForViewList = Lists.newArrayList();
-        if (null != projectService.queryPage(query)) {
-            List<Project> list = projectService.queryPage(query).getList();
+        PageInfo<Project> projectPageInfo = financeService.queryPageProject(query);
+        if (null != projectPageInfo) {
+            List<Project> list = projectPageInfo.getList();
             if (null != list && !list.isEmpty()) {
                 for (Project project : list) {
                     projectForViewList.add(getProjectForView(project));
@@ -92,25 +96,29 @@ public class FinanceManageController extends BaseController {
         FactoringDetail detail = project.getDetail();
         projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
         projectForView.setReceivable(detail.getReceivable());
-        projectForView.setDropAmount(detail.getDropAmount());
+        projectForView.setDropAmount(detail.getLoanInstallments()
+            .stream()
+            .map(installment -> installment.getAmount())
+            .collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>())
-            .stream().map(installment -> installment.getInstallmentDate()).map(date-> DateUtil.getWebDateString(date))
+            .stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
         projectForView.setReturnAmount(detail.getReturnInstallments()
             .stream()
             .map(installment -> installment.getAmount())
-            .count());
+            .collect(Collectors.toList()));
         projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>())
-            .stream().map(installment -> installment.getInstallmentDate()).map(date-> DateUtil.getWebDateString(date))
+            .stream().map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
         projectForView.setTotalFactoringFee(detail.getTotalFactoringFee());
-        projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>())
+        projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments())
+            .orElse(new ArrayList<Installment>())
             .stream()
             .map(installment -> installment.getAmount())
             .collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments()
             .stream()
-            .map(installment -> installment.getInstallmentDate()).map(date-> DateUtil.getWebDateString(date))
+            .map(installment -> installment.getInstallmentDate()).map(date -> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
         projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments()
             .stream()

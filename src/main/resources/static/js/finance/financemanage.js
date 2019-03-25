@@ -225,6 +225,9 @@ vue.tableColumns = [{
     title: '已投放金额（万元）',
     key: 'dropAmount',
     align: 'center',
+    render: (h, param) => {
+        return vue.columnRender(h, param);
+    }
 }, {
     title: '投放日期',
     key: 'dropDates',
@@ -237,6 +240,9 @@ vue.tableColumns = [{
     title: '回款金额（万元）',
     key: 'returnAmount',
     align: 'center',
+    render: (h, param) => {
+        return vue.columnRender(h, param);
+    }
 }, {
     title: '回款日期',
     key: 'returnDates',
