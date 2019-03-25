@@ -92,6 +92,12 @@
 												<Radio label="为">为</Radio>
 											</Radio-Group>
 										</form-item>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款附加" prop="contractExtendInfo.receivableMoneyAdditional">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableMoneyAdditional">
+												<Radio label="所有">所有</Radio>
+												<Radio label="">空</Radio>
+											</Radio-Group>
+										</form-item>
 										<form-item label="应收账款" prop="contractExtendInfo.receivableMoney">
 											<input-number placeholder="请输入应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableMoney"></input-number>&nbsp;元
 										</form-item>
