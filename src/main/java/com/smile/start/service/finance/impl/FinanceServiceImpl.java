@@ -107,10 +107,11 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
             } else {
                 //UPDATE
                 effect = installmentDao.update(installment);
+                itemEffect = installmentDao.deleteInstallmentItem(installment);
+
                 if (null != installment.getItem()) {
                     installment.getItem().setInstallmentId(installment.getId());
-                    itemEffect = installmentDao.deleteInstallmentItem(installment.getItem());
-                    if (itemEffect >= 0) {
+                    if (itemEffect > 0) {
                         itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
                     }
                 }
@@ -155,10 +156,10 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
                 } else {
                     //UPDATE
                     effect = installmentDao.updateInstallmentDetail(detail);
+                    itemEffect = installmentDao.deleteInstallmentDetailItem(detail);
                     if (null != detail.getItem()) {
-                        detail.getItem().setInstallmentDetailId(detail.getId());
-                        itemEffect = installmentDao.deleteInstallmentDetailItem(detail.getItem());
-                        if (itemEffect > 0) {
+                        if (itemEffect >= 0) {
+                            detail.getItem().setInstallmentDetailId(detail.getId());
                             itemEffect = installmentDao.insertInstallmentDetailItem(detail.getItem());
                         }
                     }

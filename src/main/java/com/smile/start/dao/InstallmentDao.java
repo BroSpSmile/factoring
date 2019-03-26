@@ -154,19 +154,19 @@ public interface InstallmentDao {
 
     /**
      *
-     * @param item
+     * @param installment
      * @return
      */
-    @Delete("delete from installment_item where installment_id = #{installmentId}")
-    int deleteInstallmentItem(InstallmentItem item);
+    @Delete("delete from installment_item where installment_id = #{id}")
+    int deleteInstallmentItem(Installment installment);
 
     /**
      *
-     * @param item
+     * @param detail
      * @return
      */
-    @Delete("delete from installment_detail_item where id = #{id}")
-    int deleteInstallmentDetailItem(InstallmentDetailItem item);
+    @Delete("delete from installment_detail_item where installment_detail_id = #{id}")
+    int deleteInstallmentDetailItem(InstallmentDetail detail);
 
     /**
      * 分页查询
