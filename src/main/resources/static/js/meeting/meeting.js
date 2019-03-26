@@ -243,7 +243,11 @@ var vue = new Vue({
 		},
 		
 		createMninutes:function(meeting){
-			window.open("minutes?id="+meeting.id,"_blank");
+			parent.window.menu.createNew({
+				name:"会议纪要",
+				url:"minutes?id="+meeting.id,
+				id:"minutes"
+			});
 		},
 		
 		/**

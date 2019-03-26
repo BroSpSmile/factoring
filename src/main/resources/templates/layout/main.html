@@ -7,7 +7,7 @@
 	       <br>
 	       <row>
 	       	<i-col span="6" offset="1">
-	       		<a href="project">
+	       		<a @click='openFactoring'>
 		       		<card style="background: rgb(45, 183, 245);">
 		       			<p slot="title"><span class="card-head">保理业务</span></p>
 		       			<p class="card-body">项目总数:{{factoringTotal.total}}</p>
@@ -17,7 +17,7 @@
 	       		</a>
 	       	</i-col>
 	       	<i-col span="6" offset="2">
-	       		<a>
+	       		<a >
 		       		<card style="background: rgb(25, 190, 107);">
 		       			<p slot="title"><span class="card-head">直投业务</span></p>
 		       			<p class="card-body">项目总数:0</p>

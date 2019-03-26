@@ -11,6 +11,17 @@ var Menu = function(options){
 	this._select(this.defaultSelect);
 }
 
+/**
+ * 创建tab和iframe;
+ */
+Menu.prototype.createNew = function(options){
+	var id = options.id;
+	var name = options.name;
+	var href = options.url;
+	var $li = $('<li  class="subnav-li current" href="'+href+'" data-id="'+id+'">'+name+'</li>');
+	this._createContent($li);
+}
+
 /*创建内容，包括tab 和 iframe*/
 Menu.prototype._createContent = function($this){
 	var id = $this.attr('data-id'),

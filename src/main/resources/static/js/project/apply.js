@@ -183,7 +183,11 @@ var vue = new Vue({
 		 * 
 		 */
 		showAudit:function(audit){
-			window.open("/audit?id="+audit.id);
+			parent.window.menu.createNew({
+				name:"尽调审核",
+				url:"/audit?id="+audit.id,
+				id:"audit"
+			});
 		}
 	}
 });

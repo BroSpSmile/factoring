@@ -67,7 +67,11 @@ var vue = new Vue({
 		},
 		
 		toAudit:function(auditId){
-			window.open("audit?id="+auditId);
+			parent.window.menu.createNew({
+				name:"审核",
+				url:"/audit?id="+auditId,
+				id:"audit"
+			});
 		},
 		
 		/**

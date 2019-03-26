@@ -35,7 +35,7 @@
 .sidebar .nav .nav-li .subnav-li:hover .subnav-text{color:#047db6; font-weight:bold;}
 
 /*页面主体*/
-.main{ position:relative; padding-top:8px;}
+.main{ position:relative; padding-top:8px;background: #eee;}
 .main .title{ position:relative; border-bottom:1px solid #d7d7d7;height:31px; }
 /*更多tab*/
 .main .title .tab-more{display:none;float:left;margin:8px 0 0 5px;width:15px;height:14px;background:url(../../img/skin_/switch-system/tabright.png); cursor:pointer;}
@@ -49,7 +49,7 @@
 .main .tab li a:hover{ text-decoration:none;}
 .main .tab li.current a{ background:url(../../img/skin_/tab2.png) repeat-x;}
 .main .tab li a span{ float:left; height:32px; line-height:32px;/* width:73px; */text-align:center; color:#000;padding:0 20px;}
-.main .tab li.current a span{ color:#37a8dd; font-weight:bold;}
+.main .tab li.current a span{ color:#2db7f5; font-weight:bold;}
 
 .main .tab li a .close-tab{float:left; width:12px; height:12px; background:url(../../img/skin_/close.png); margin:9px 3px 0 6px;}
 .main .tab li.current a .close-tab{}

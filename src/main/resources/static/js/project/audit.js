@@ -236,7 +236,11 @@ var vue = new Vue({
          * 跳转财务放款
          */
         toLoan:function(){
-        	window.open("/finance");
+        	parent.window.menu.createNew({
+				name:"财务放款",
+				url:"/finance",
+				id:"finance"
+			});
         },
         
         print:function(){
