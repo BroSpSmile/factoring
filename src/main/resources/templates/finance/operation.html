@@ -28,7 +28,7 @@
 
         <row>
             <i-col span="22" offset="1">
-                <Tabs :animated="false" >
+                <Tabs :animated="false">
                     <Tab-pane label="放款">
                         <card dis-hover title="分期信息">
                             <table class="table table-hover table-bordered" style="border: 0px;width: 100%">
@@ -62,15 +62,17 @@
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
                                     <td width="160" align="center">
                                         <Tag v-if="(installment.item!=null)" closable class="select-width-160"
                                              @click.native="download(installment.item.itemValue,installment.item.itemName)"
-                                             @on-close="deleteFile(installment.item.itemValue,index,'loan')">
-                                            {{installment.item.itemName}}
+                                             @on-close="deleteFile(installment.item,index,'loan')">
+                                            {{installment.item.itemName.length<=8?
+                                            installment.item.itemName:installment.item.itemName.substring(0, 8)+'..'}}
                                         </Tag>
                                         <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
                                                 :data="{'index': index}" :on-success="uploadSuccessLoan"
@@ -104,10 +106,10 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th width="140">日期</th>
+                                    <th width="120">日期</th>
                                     <th width="140">开票金额</th>
                                     <th width="140">开票行</th>
-                                    <th width="140">开票日期</th>
+                                    <th width="120">开票日期</th>
                                     <th width="160">开票凭证</th>
                                     <th width="180" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -130,14 +132,15 @@
                                                           @on-blur="synInstallment(installment,'INVOICE')"></input-number>
                                         </i-col>
                                     </td>
-                                    <td width="140" align="center">
+                                    <td width="120" align="center">
                                         <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
-                                            <date-picker placement="top-start" type="date" class="select-width-140"
+                                            <date-picker placement="top-start" type="date" class="select-width-120"
                                                          v-model="installment.installmentDate"
                                                          @on-change="synInstallment(installment,'INVOICE')"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.amount!=-1 && installment.id >0)">
-                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-120"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -159,21 +162,23 @@
                                             <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
                                         </i-select>
                                     </td>
-                                    <td width="140" align="center">
+                                    <td width="120" align="center">
                                         <i-col v-if="(installment.detailId==null)">
-                                            <date-picker placement="top-start" type="date" class="select-width-140"
+                                            <date-picker placement="top-start" type="date" class="select-width-120"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.detailId!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-120"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                     </td>
                                     <td width="160" align="center">
                                         <Tag v-if="(installment.item!=null)" closable class="select-width-160"
                                              @click.native="download(installment.item.itemValue,installment.item.itemName)"
-                                             @on-close="deleteFile(installment.item.itemValue,index,'loan','INVOICE')">
-                                            {{installment.item.itemName}}
+                                             @on-close="deleteFile(installment.item,index,'factoring','INVOICE')">
+                                            {{installment.item.itemName.length<=8?
+                                            installment.item.itemName:installment.item.itemName.substring(0, 8)+'..'}}
                                         </Tag>
                                         <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
                                                 :data="{'index': index}" :on-success="uploadSuccessFactoringInvoice"
@@ -205,10 +210,10 @@
                                 <tr>
                                     <th width="100">序号</th>
                                     <th width="140">金额</th>
-                                    <th width="140">日期</th>
+                                    <th width="120">日期</th>
                                     <th width="140">保理费收款金额</th>
                                     <th width="140">收款行</th>
-                                    <th width="140">收款日期</th>
+                                    <th width="120">收款日期</th>
                                     <th width="160">收款凭证</th>
                                     <th width="180" align="center">
                                         <i-button type="success" size="small" ghost icon="md-add"
@@ -231,14 +236,15 @@
                                                           @on-blur="synInstallment(installment,'PAYMENT')"></input-number>
                                         </i-col>
                                     </td>
-                                    <td width="140" align="center">
+                                    <td width="120" align="center">
                                         <i-col v-if="(installment.amount!=-1 && installment.id <=0)">
-                                            <date-picker placement="top-start" type="date" class="select-width-140"
+                                            <date-picker placement="top-start" type="date" class="select-width-120"
                                                          @on-change="synInstallment(installment,'PAYMENT')"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.amount!=-1 && installment.id >0)">
-                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-120"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
@@ -260,21 +266,23 @@
                                             <i-option v-for="item in banks" :value="item.value">{{item.text}}</i-option>
                                         </i-select>
                                     </td>
-                                    <td width="140" align="center">
+                                    <td width="120" align="center">
                                         <i-col v-if="(installment.detailId==null)">
-                                            <date-picker placement="top-start" type="date" class="select-width-140"
+                                            <date-picker placement="top-start" type="date" class="select-width-120"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.detailId!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date" class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-120"
                                                          v-model="installment.detailDate"></date-picker>
                                         </i-col>
                                     </td>
                                     <td width="160" align="center">
                                         <Tag v-if="(installment.item!=null)" closable class="select-width-160"
                                              @click.native="download(installment.item.itemValue,installment.item.itemName)"
-                                             @on-close="deleteFile(installment.item.itemValue,index,'loan','PAYMENT')">
-                                            {{installment.item.itemName}}
+                                             @on-close="deleteFile(installment.item,index,'factoring','PAYMENT')">
+                                            {{installment.item.itemName.length<=8?
+                                            installment.item.itemName:installment.item.itemName.substring(0, 8)+'..'}}
                                         </Tag>
                                         <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
                                                 :data="{'index': index}" :on-success="uploadSuccessFactoringPayment"
@@ -337,19 +345,21 @@
                                     </td>
                                     <td width="140" align="center">
                                         <i-col v-if="(installment.id==null)">
-                                            <date-picker placement="top-start" type="date"  class="select-width-140"
+                                            <date-picker placement="top-start" type="date" class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                         <i-col v-if="(installment.id!=null)">
-                                            <date-picker readonly="true" placement="top-start" type="date"  class="select-width-140"
+                                            <date-picker readonly="true" placement="top-start" type="date"
+                                                         class="select-width-140"
                                                          v-model="installment.installmentDate"></date-picker>
                                         </i-col>
                                     </td>
                                     <td width="160" align="center">
                                         <Tag v-if="(installment.item!=null)" closable class="select-width-160"
                                              @click.native="download(installment.item.itemValue,installment.item.itemName)"
-                                             @on-close="deleteFile(installment.item.itemValue,index,'return')">
-                                            {{installment.item.itemName}}
+                                             @on-close="deleteFile(installment.item,index,'return')">
+                                            {{installment.item.itemName.length<=8?
+                                            installment.item.itemName:installment.item.itemName.substring(0, 8)+'..'}}
                                         </Tag>
                                         <Upload v-if="(installment.item ==null)" action="/file/uploadInstallment"
                                                 :data="{'index': index}" :on-success="uploadSuccessReturn"
@@ -381,5 +391,10 @@
         <input th:value="${id}" id="projectId" style="display:none"></input>
     </div>
     <script src="js/finance/operation.js"></script>
+    <style scoped>
+        .ivu-tag-text {
+            text-overflow: ellipsis;
+        }
+    </style>
 </div>
 </html>
