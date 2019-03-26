@@ -17,12 +17,12 @@
 .sidebar .nav .nav-li.current>a{ background:url(../../img/skin_/mbbg.png) repeat-x;}
 .sidebar .nav .nav-li>a .nav-ivon{ float:left; margin:13px 0 0 12px; width:9px; height:9px; background:url(../../img/skin_/leftmenu.png) no-repeat center center;}
 .sidebar .nav .nav-li.current>a .nav-ivon{ background:url(../../img/skin_/leftmenu1.png) no-repeat center center;}
-.sidebar .nav .nav-li>a .nav-text{ float:left; margin-left:11px; color:#4a4a4a; font-size:14px;}
-.sidebar .nav .nav-li.current>a .nav-text{ color:#047db6; font-weight:bold;}
+.sidebar .nav .nav-li>a .nav-text{ float:left; margin-left:11px; color:#17233d; font-size:14px;}
+.sidebar .nav .nav-li.current>a .nav-text{ color:#2db7f5; font-weight:bold;}
 .sidebar .nav .nav-li .subnav{  padding:9px 0 12px 0; background:url(../../img/skin_/leftyy.png) repeat-x top; display:none;}
 .sidebar .nav .nav-li.current .subnav{display:block;}
 .sidebar .nav .nav-li .subnav li a{ display:block; height:30px; line-height:30px; border-left:3px solid #fff; color:#000;}
-.sidebar .nav .nav-li .subnav li.current a{ border-left:3px solid #f24a39; background:#38a3d5; color:#fff;}
+.sidebar .nav .nav-li .subnav li.current a{ border-left:3px solid #f24a39; background:#2db7f5; color:#fff;}
 .sidebar .nav .nav-li .subnav li.current a:hover span{color:#fff;}
 .sidebar .nav .nav-li .subnav li a .subnav-icon{ float:left; margin:7px 8px 0 31px; width:12px; height:15px; background:url(../../img/skin_/leftlist.png);}
 .sidebar .nav .nav-li .subnav li a:hover{text-decoration:none;}
@@ -32,7 +32,7 @@
 .sidebar .nav .nav-li.last-nav-li.current{*height:auto;}
 .sidebar .nav .nav-li.last-nav-li.current .subnav{border-bottom:none;}
 /*二级菜单样式*/
-.sidebar .nav .nav-li .subnav-li:hover .subnav-text{color:#047db6; font-weight:bold;}
+.sidebar .nav .nav-li .subnav-li:hover .subnav-text{color:#2d8cf0; font-weight:bold;}
 
 /*页面主体*/
 .main{ position:relative; padding-top:8px;background: #eee;}
