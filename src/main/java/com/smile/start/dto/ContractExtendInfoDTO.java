@@ -183,6 +183,31 @@ public class ContractExtendInfoDTO implements Serializable {
      */
     private Date spSignatureDate;
 
+    /**
+     * 计费起始日期
+     */
+    private Date billingStartDate;
+
+    /**
+     * 年利率
+     */
+    private BigDecimal interestRate;
+
+    /**
+     * 应收账款类别：不低于、为
+     */
+    private String receivableMoneyType;
+
+    /**
+     * 应收账款附加：所有、空
+     */
+    private String receivableMoneyAdditional;
+
+    /**
+     * 应收账款回收款类别：不低于、为
+     */
+    private String receivableRecoveryMoneyType;
+
     public Long getId() {
         return id;
     }
@@ -453,5 +478,45 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setSpSignatureDate(Date spSignatureDate) {
         this.spSignatureDate = spSignatureDate;
+    }
+
+    public Date getBillingStartDate() {
+        return billingStartDate;
+    }
+
+    public void setBillingStartDate(Date billingStartDate) {
+        this.billingStartDate = billingStartDate;
+    }
+
+    public BigDecimal getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public String getReceivableMoneyType() {
+        return receivableMoneyType;
+    }
+
+    public void setReceivableMoneyType(String receivableMoneyType) {
+        this.receivableMoneyType = receivableMoneyType;
+    }
+
+    public String getReceivableRecoveryMoneyType() {
+        return receivableRecoveryMoneyType;
+    }
+
+    public void setReceivableRecoveryMoneyType(String receivableRecoveryMoneyType) {
+        this.receivableRecoveryMoneyType = receivableRecoveryMoneyType;
+    }
+
+    public String getReceivableMoneyAdditional() {
+        return receivableMoneyAdditional;
+    }
+
+    public void setReceivableMoneyAdditional(String receivableMoneyAdditional) {
+        this.receivableMoneyAdditional = receivableMoneyAdditional;
     }
 }

@@ -168,4 +168,25 @@ public interface InstallmentDao {
     @Delete("delete from installment_detail_item where id = #{id}")
     int deleteInstallmentDetailItem(InstallmentDetailItem item);
 
+    /**
+     * 分页查询
+     * @param project
+     * @return
+     */
+    @Results(id = "findByParamProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id"),
+        @Result(column = "username", property = "user.username")})
+    @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id"
+        +  " left join project_step t3 on t1.id= t3.project_id"
+        + " where 1=1 " + "<if test = 'projectId!=null'> and t1.project_id = #{projectId}</if>"
+        + "<if test = 'kind!=null and kind!=\"\"'> and t1.kind = #{kind}</if>"
+        + "<if test = 'id!=-1'> and t1.id = #{id}</if>"
+        + "<if test = 'projectName!=null'> and t1.project_name = #{projectName}</if>"
+        + "<if test = 'user!=null'> and t1.person = #{user.id}</if>"
+        + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
+        + "and t1.step in (9,12) and t3.status ='BEGIN'"
+        //有用，别删，不影响其他功能
+        + "<if test = 'progresses!=null'> and t1.progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
+        + "</script>")
+    List<Project> findByParamProject(Project project);
+
 }

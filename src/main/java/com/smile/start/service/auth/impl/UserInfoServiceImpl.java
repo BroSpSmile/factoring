@@ -296,7 +296,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         //获取用户权限信息
         logger.info("get permission start...");
-        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findParentByUserSerialNo(user.getSerialNo());
+        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findTopMenus(user.getSerialNo());
         if (!CollectionUtils.isEmpty(permissionList)) {
             List<LoginUserPermission> userPermissionList = Lists.newArrayList();
             permissionList.forEach(e -> {

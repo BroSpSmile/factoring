@@ -65,6 +65,13 @@ public interface PermissionInfoService {
     List<AuthPermissionInfoDTO> findParentByUserSerialNo(String userSerialNo);
 
     /**
+     * 查询用户顶级菜单
+     * @param userSerialNo
+     * @return
+     */
+    List<AuthPermissionInfoDTO> findTopMenus(String userSerialNo);
+
+    /**
      * 获取权限树
      * @param roleSerialNo
      * @return

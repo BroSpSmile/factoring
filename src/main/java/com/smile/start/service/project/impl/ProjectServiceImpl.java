@@ -243,7 +243,8 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
      * 
      * @param project
      */
-    private void setDetail(Project project) {
+    @Override
+    public void setDetail(Project project) {
         FactoringDetail detail = factoringService.get(project.getId());
         List<StepRecord> records = processEngine.getRecords(project);
         project.setRecords(records);

@@ -121,7 +121,7 @@ var vue = new Vue({
             this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
-                    if (this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
+                    if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                         this.$http.post("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
@@ -140,7 +140,6 @@ var vue = new Vue({
                             self.$Message.error(error.data.message);
                         });
                     } else {
-                        console.log(self.addForm)
                         this.$http.put("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
                                 self.$Message.info({
@@ -357,7 +356,6 @@ var vue = new Vue({
             }
         },
         genFileInfo: function () {
-            console.log(this.fileList)
             for (let index in this.fileList) {
                 let item = {
                     attachName: this.fileList[index].name,
