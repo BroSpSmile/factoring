@@ -27,7 +27,7 @@
                     	<li class="subnav-li current" href="main" data-id="1"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">首页</span></a></li>
                     </ul>
                 </li>
-            	<li v-for="(menu,index) in menus" class="nav-li" >
+            	<li v-for="(menu,index) in menus" class="nav-li" v-if="menu.url">
             		<a href="javascript:;"  class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">{{menu.permissionName}}</span></a>
             		<ul v-if="menu.childrens.length>0" class="subnav">
             			<li v-for="item in menu.childrens" v-if="item.url" class="subnav-li " :href="item.url" :data-id="item.url"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">{{item.permissionName}}</span></a></li>
