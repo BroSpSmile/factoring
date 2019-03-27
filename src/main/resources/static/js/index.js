@@ -28,8 +28,8 @@ var vue = new Vue({
 		openFactoring:function(){
 			parent.window.menu.createNew({
 				name:"保理业务",
-				url:"project",
-				id:2
+				url:"/project",
+				id:"/project"
 			});
 		}
 	}
