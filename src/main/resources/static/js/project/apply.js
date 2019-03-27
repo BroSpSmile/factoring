@@ -46,12 +46,10 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/project/steps/"+id).then(function(response){
 				var steps = response.data;
-				if(steps.length>=2){
-					if(steps.status=='COMPLETED'){
-						_self.showButton = false;
-					}
+				if(steps[1].status=='COMPLETED'){
+					_self.showButton = false;
 				}
-				if(steps.length>2){
+				if(steps[2].id){
 					_self.showLater = false;
 				}
 			},function(error){

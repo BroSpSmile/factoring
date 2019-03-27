@@ -18,9 +18,10 @@
 							 <Steps v-if="audit.auditType != 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
 							 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
 						    </Steps>
-							<Steps v-if="audit.auditType == 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
-								<Step v-for="flow in audit.flows" :title="flow.desc" v-if="flow.step > 0 && flow.step <= 6" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
-							</Steps>
+						    <row v-if="audit.auditType == 'TUNEUP'">
+						    	<i-col span="4" offset="14"><a @click="downloadItem(item)" v-for="item in cwItem">{{item.itemName}}</a></i-col>
+						    	<i-col span="4" offset="1"><a @click="downloadItem(item)" v-for="item in fwItem">{{item.itemName}}</a></i-col>
+						    </row>
 						</card>
 						<br>
 						<card dis-hover title="申请详情">
