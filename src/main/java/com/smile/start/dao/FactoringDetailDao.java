@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.Update;
 
 import com.smile.start.model.project.FactoringDetail;
 
+import java.util.Date;
+
 /**
  * 保理项目明细Dao
  * @author smile.jing
@@ -64,4 +66,16 @@ public interface FactoringDetailDao {
             + "where id = #{id}"
             + "</script>")
     int update(FactoringDetail detail);
+
+    /**
+     * 更新
+     *
+     * @param id
+     * @param auditTime
+     * @return
+     */
+    @Update("update factoring_detail set loan_audit_pass_time = #{auditTime} where id = #{id}")
+    int updateProjectLoanAuditTime(Long id, Date auditTime);
+
+
 }

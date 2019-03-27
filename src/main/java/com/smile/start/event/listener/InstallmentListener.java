@@ -5,6 +5,7 @@ import com.smile.start.dao.InstallmentDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.event.AuditEvent;
 import com.smile.start.event.InstallmentEvent;
+import com.smile.start.service.finance.FinanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -35,14 +36,14 @@ public class InstallmentListener {
     @Resource
     private InstallmentDao installmentDao;
 
+    @Resource
+    private FinanceService financeService;
+
     /**
      * @see AuditListener#listener(AuditEvent)
      */
     @EventListener
     public void listener(InstallmentEvent event) {
-        //TODO 更新分期表状态
-        //TODO 更新项目明细表
-        //TODO 更新项目状态
 
     }
 

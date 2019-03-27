@@ -6,6 +6,8 @@ package com.smile.start.service.finance.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.DateUtil;
+import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.event.AuditEvent;
 import com.smile.start.event.InstallmentEvent;
@@ -14,6 +16,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.*;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.project.*;
+import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 实现
@@ -45,6 +48,18 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    /**
+     * 项目DAO
+     */
+    @Resource
+    private FactoringDetailDao factoringDetailDao;
+
+    /**
+     * 流程引擎
+     */
+    @Resource
+    private ProcessEngine processEngine;
 
     /**
      * 保存放款信息
@@ -71,7 +86,6 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         return result;
     }
 
-
     /**
      * 保存分期信息
      *
@@ -83,6 +97,17 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
     public BaseResult saveInstallments(Project project, InstallmentType installmentType) {
         FactoringDetail detail =
             Optional.of(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
+
+        //放款操作中
+        if (project.getStep() == Step.LOANEN.getIndex()) {
+            processEngine.changeStatus(project, StepStatus.PROCESSING);
+        }
+
+        //回款操作中
+        if (project.getStep() == Step.END.getIndex()) {
+            processEngine.changeStatus(project, StepStatus.PROCESSING);
+        }
+
         List<Installment> installments = null;
         if (installmentType == InstallmentType.LOAN) {
             installments = detail.getLoanInstallments();
@@ -129,7 +154,8 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         }
 
         if (result.isSuccess()) {
-            applicationContext.publishEvent(new InstallmentEvent(this, project));
+            //applicationContext.publishEvent(new InstallmentEvent(this, project));
+            financeOperate(project);
         }
         return result;
     }
@@ -171,5 +197,72 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
             }
         }
         return new BaseResult();
+    }
+
+    /**
+     * 财务流程流转
+     *
+     * @param project
+     * @return
+     */
+    private void financeOperate(Project project) {
+        FactoringDetail detail =
+            Optional.ofNullable(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
+        //放款金额总计
+        double totalLoanAmount =
+            detail.getLoanInstallments().stream().map(installment -> installment.getAmount()).count();
+
+        //回款金额总计
+        double totalReturnAmount =
+            detail.getReturnInstallments().stream().map(installment -> installment.getAmount()).count();
+
+        //detail表里没有回款金额，不更新
+        detail.setDropAmount(totalLoanAmount);
+        factoringDetailDao.update(detail);
+
+        List<Installment> factoringInstallments = detail.getFactoringInstallments();
+
+        //保理分期金额总计
+        double totalFactoringAmount =
+            factoringInstallments.stream().map(installment -> installment.getAmount()).count();
+        boolean isAllPaied = true;
+        for (Installment installment : factoringInstallments) {
+            double totalInvoiceAmount = installment.getDetailList()
+                .stream()
+                .map(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.INVOICE ?
+                    installmentDetail.getDetailAmount() :
+                    0)
+                .count();
+            if (totalInvoiceAmount >= installment.getAmount()) {
+                installment.setInvoiced(true);
+            }
+            double totalPaymentAmount = installment.getDetailList()
+                .stream()
+                .map(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.PAYMENT ?
+                    installmentDetail.getDetailAmount() :
+                    0)
+                .count();
+            if (totalPaymentAmount >= installment.getAmount()) {
+                installment.setPaied(true);
+            }
+            isAllPaied = isAllPaied & installment.isPaied();
+            installmentDao.update(installment);
+        }
+
+        //放款操作
+        if (project.getStep() == Step.LOANEN.getIndex()) {
+            if (totalLoanAmount >= detail.getReceivable()) {
+                //放款完成，更新step表,更新项目表
+                processEngine.next(project, false);
+            }
+        }
+
+        //回款操作
+        if (project.getStep() == Step.END.getIndex()) {
+            if (totalReturnAmount >= totalLoanAmount && isAllPaied) {
+                //回款完成，更新step表,更新项目表
+                processEngine.changeStatus(project, StepStatus.COMPLETED);
+            }
+        }
     }
 }
