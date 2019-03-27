@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.smile.start.commons.LoginHandler;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.LoginRequestDTO;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.login.LoginService;
 
 /**
@@ -51,8 +52,8 @@ public class LoginController extends BaseController {
      */
     @GetMapping("/user")
     @ResponseBody
-    public User getUser(HttpServletRequest request) {
-        return getUserByToken(request);
+    public LoginUser getUser(HttpServletRequest request) {
+        return LoginHandler.getLoginUser();
     }
 
     /**
@@ -64,7 +65,11 @@ public class LoginController extends BaseController {
     @ResponseBody
     public SingleResult<AuthUserInfoDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
         SingleResult<AuthUserInfoDTO> result = new SingleResult<>();
+        long start = System.currentTimeMillis();
+        logger.info("controller login start : {}", start);
         AuthUserInfoDTO authUserInfoDTO = loginService.login(loginRequestDTO, response);
+        long end = System.currentTimeMillis();
+        logger.info("controller login end : {}, cost : {}", end, (end - start));
         result.setData(authUserInfoDTO);
         return result;
     }

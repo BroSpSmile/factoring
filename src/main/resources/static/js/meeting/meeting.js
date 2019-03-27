@@ -171,8 +171,10 @@ var vue = new Vue({
 					}
 					_self.addMeeting.beginTime = _self.addMeeting.meetingTime[0];
 					_self.addMeeting.endTime = _self.addMeeting.meetingTime[1];
+					this.$Spin.show();
 					if(_self.addMeeting.id==null||_self.addMeeting.id==''){
 						_self.$http.post("/meeting",_self.addMeeting).then(function(response){
+							this.$Spin.hide();
 							if (response.data.success) {
 								_self.$Message.info({
 									content : "创建会议成功",
@@ -185,10 +187,12 @@ var vue = new Vue({
 								_self.$Message.error(response.data.errorMessage);
 							}
 						},function(error){
+							this.$Spin.hide();
 							_self.$Message.error(error.data.message);
 						})	
 					}else{
 						_self.$http.put("/meeting",_self.addMeeting).then(function(response){
+							this.$Spin.hide();
 							if (response.data.success) {
 								_self.$Message.info({
 									content : "更新会议成功",
@@ -201,6 +205,7 @@ var vue = new Vue({
 								_self.$Message.error(response.data.errorMessage);
 							}
 						},function(error){
+							this.$Spin.hide();
 							_self.$Message.error(error.data.message);
 						})	
 					}
@@ -212,6 +217,7 @@ var vue = new Vue({
 		cancelMeeting:function(meeting){
 			let self = this;
 			meeting.status='CANCELLED';
+			this.$Spin.show();
 			this.$http.put("/meeting",meeting).then(function(response){
 				if (response.data.success) {
 					self.$Message.info({

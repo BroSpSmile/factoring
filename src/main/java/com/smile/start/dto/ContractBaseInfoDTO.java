@@ -58,7 +58,37 @@ public class ContractBaseInfoDTO implements Serializable {
     /**
      * 删除标志：0、未删除；1、删除
      */
-    private Integer deleteFlag;
+    private Integer           deleteFlag;
+
+    /**
+     * 用印状态：0、未用印；1、已用印
+     */
+    private Integer           sealStatus;
+
+    /**
+     * 是否有保理合同：1、有；0、无
+     */
+    private Boolean           factoringContract;
+
+    /**
+     * 是否有确认函：1、有；0、无
+     */
+    private Boolean           confirmationLetter;
+
+    /**
+     * 是否有登记协议：1、有；0、无
+     */
+    private Boolean           registrationAgreement;
+
+    /**
+     * 是否有财务协议：1、有；0、无
+     */
+    private Boolean           financialAgreement;
+
+    /**
+     * 是否有股东会决议：1、有；0、无
+     */
+    private Boolean           shareholderResolution;
 
     /**
      * 创建人
@@ -164,5 +194,53 @@ public class ContractBaseInfoDTO implements Serializable {
 
     public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
+    }
+
+    public Boolean getFactoringContract() {
+        return factoringContract;
+    }
+
+    public void setFactoringContract(Boolean factoringContract) {
+        this.factoringContract = factoringContract;
+    }
+
+    public Boolean getConfirmationLetter() {
+        return confirmationLetter;
+    }
+
+    public void setConfirmationLetter(Boolean confirmationLetter) {
+        this.confirmationLetter = confirmationLetter;
+    }
+
+    public Boolean getRegistrationAgreement() {
+        return registrationAgreement;
+    }
+
+    public void setRegistrationAgreement(Boolean registrationAgreement) {
+        this.registrationAgreement = registrationAgreement;
+    }
+
+    public Boolean getFinancialAgreement() {
+        return financialAgreement;
+    }
+
+    public void setFinancialAgreement(Boolean financialAgreement) {
+        this.financialAgreement = financialAgreement;
+    }
+
+    public Boolean getShareholderResolution() {
+        return shareholderResolution;
+    }
+
+    public void setShareholderResolution(Boolean shareholderResolution) {
+        this.shareholderResolution = shareholderResolution;
+    }
+
+    public Integer getSealStatus() {
+        return sealStatus;
+    }
+
+    public void setSealStatus(Integer sealStatus) {
+        this.sealStatus = sealStatus;
     }
 }

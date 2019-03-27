@@ -4,7 +4,6 @@
  */
 package com.smile.start.model.project;
 
-import com.smile.start.model.common.BankInfo;
 import com.smile.start.model.enums.InstallmentDetailType;
 
 import java.io.Serializable;
@@ -18,31 +17,31 @@ import java.util.Date;
  */
 public class InstallmentDetail implements Serializable {
 
-    private static final long serialVersionUID = -134333261845069621L;
+    private static final long     serialVersionUID = -134333261845069621L;
 
     /**
      * 编号
      */
-    private Long id = -1l;
+    private Long                  id               = -1l;
 
     private InstallmentDetailType type;
 
     /**
      * 分期编号
      */
-    private Long installmentId;
+    private Long                  installmentId;
 
-    private Long bankInfoId;
+    private Long                  bankInfoId;
 
     /**
      * 分期明细操作时间：开票日期或者收款日期
      */
-    private Date detailDate;
+    private Date                  detailDate;
 
     /**
      * 分期详情金额
      */
-    private double detailAmount;
+    private double                detailAmount;
 
     /**
      * 开票或收款凭证附件

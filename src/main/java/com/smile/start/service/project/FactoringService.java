@@ -4,8 +4,11 @@
  */
 package com.smile.start.service.project;
 
+import java.util.List;
+
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.FactoringsInfo;
 
 /**
  * 保理服务
@@ -33,4 +36,10 @@ public interface FactoringService {
      * @return
      */
     FactoringDetail get(Long projectId);
+
+    /**
+     * 获取项目信息
+     * @return
+     */
+    List<FactoringsInfo> getInfos();
 }

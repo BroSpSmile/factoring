@@ -154,6 +154,7 @@ html, body {
 }
 
 .menu{
+	display:flex;/*设为伸缩容器*/ 
 	height:100%;
 	width:240px;
 	float: left; 
@@ -203,6 +204,10 @@ html, body {
 .info-menu {
     display: inline-block;
     margin-left: 32px;
+}
+
+.menu-size{
+	background-color: #808695;
 }
 
 [v-cloak] {

@@ -28,6 +28,8 @@ import com.smile.start.service.auth.PermissionInfoService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -43,6 +45,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
+    private Logger logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     @Resource
     private UserDao               userDao;
@@ -258,8 +261,13 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public LoginUser getLoginUserByToken(String token) {
+        logger.info("get getLoginUserByToken start...");
+        logger.info("get token start...");
         Token tokenDo = tokenDao.findByToken(token);
+        logger.info("get token end...");
+        logger.info("get user start...");
         User user = userDao.getByMobile(tokenDo.getMobile());
+        logger.info("get user end...");
 
         //封装用户信息
         LoginUser loginUser = new LoginUser();
@@ -270,6 +278,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         loginUser.setEmail(user.getEmail());
 
         //获取用户角色信息
+        logger.info("get role start...");
         final List<AuthRoleInfoDTO> roleList = roleInfoService.findByUserSerialNo(user.getSerialNo());
         if (!CollectionUtils.isEmpty(roleList)) {
             List<LoginUserRole> userRoleList = Lists.newArrayList();
@@ -283,9 +292,11 @@ public class UserInfoServiceImpl implements UserInfoService {
             });
             loginUser.setRoleList(userRoleList);
         }
+        logger.info("get role end...");
 
         //获取用户权限信息
-        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findParentByUserSerialNo(user.getSerialNo());
+        logger.info("get permission start...");
+        final List<AuthPermissionInfoDTO> permissionList = permissionInfoService.findTopMenus(user.getSerialNo());
         if (!CollectionUtils.isEmpty(permissionList)) {
             List<LoginUserPermission> userPermissionList = Lists.newArrayList();
             permissionList.forEach(e -> {
@@ -300,8 +311,10 @@ public class UserInfoServiceImpl implements UserInfoService {
             });
             loginUser.setPermissionList(userPermissionList);
         }
+        logger.info("get permission end...");
 
         //获取组织信息
+        logger.info("get organizational start...");
         final List<OrganizationalDTO> organiztionalList = organizationalService.findByUserSerialNo(user.getSerialNo());
         if (!CollectionUtils.isEmpty(organiztionalList)) {
             List<LoginUserOrganizational> organizationalList = Lists.newArrayList();
@@ -311,6 +324,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             });
             loginUser.setOrganizationalList(organizationalList);
         }
+        logger.info("get organizational end...");
+        logger.info("get getLoginUserByToken end...");
         return loginUser;
     }
 

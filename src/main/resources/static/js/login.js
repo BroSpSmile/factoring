@@ -29,7 +29,9 @@ var app = new Vue({
             		this.$Message.error('校验失败,请完善登录信息!');
             		passed = false;
             	}else{
+            		console.log("登录开始...")
             		this.$http.post("/login",this.form).then(function(response){
+                        console.log("登录结束...")
             			if (response.data.success) {
             				window.location.href = "index";
         				} else {

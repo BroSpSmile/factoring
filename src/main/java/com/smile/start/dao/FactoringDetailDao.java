@@ -4,6 +4,8 @@
  */
 package com.smile.start.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -13,6 +15,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.FactoringsInfo;
 
 import java.util.Date;
 
@@ -44,27 +47,19 @@ public interface FactoringDetailDao {
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id") })
     @Select("select * from factoring_detail where project_id = #{projectId}")
     FactoringDetail getByProject(Long projectId);
-    
+
     /**
      * 更新
      * @param detail
      * @return
      */
-    @Update("<script> update factoring_detail set id = #{id}"
-            +  "<if test = 'creditor!=null and \"\"!=creditor'>,creditor = #{creditor}</if>"
-            + "<if test = 'debtor!=null and \"\"!=debtor'>,debtor = #{debtor}</if>"
-            + "<if test = 'signDate!=null'>,sign_date = #{signDate}</if>"
-            + "<if test = 'baseContract!=null'>,base_contract = #{baseContract}</if>"
-            + "<if test = 'assignee!=null'>,assignee = #{assignee}</if>"
-            + "<if test = 'receivable!=null'>,receivable = #{receivable}</if>"
-            + "<if test = 'dropAmount!=null'>,drop_amount = #{dropAmount}</if>"
-            + "<if test = 'duration!=0'>,duration = #{duration}</if>"
-            + "<if test = 'remittanceDay!=null'>,remittance_day = #{remittanceDay}</if>"
-            + "<if test = 'totalFactoringFee!=null'>,total_factoring_fee = #{totalFactoringFee}</if>"
-            + "<if test = 'returnRate!=null'>,return_rate = #{returnRate}</if>"
-            + "<if test = 'remark!=null and remark!=\"\"'>,remark = #{remark}</if>"
-            + "where id = #{id}"
-            + "</script>")
+    @Update("<script> update factoring_detail set id = #{id}" + "<if test = 'creditor!=null and \"\"!=creditor'>,creditor = #{creditor}</if>"
+            + "<if test = 'debtor!=null and \"\"!=debtor'>,debtor = #{debtor}</if>" + "<if test = 'signDate!=null'>,sign_date = #{signDate}</if>"
+            + "<if test = 'baseContract!=null'>,base_contract = #{baseContract}</if>" + "<if test = 'assignee!=null'>,assignee = #{assignee}</if>"
+            + "<if test = 'receivable!=null'>,receivable = #{receivable}</if>" + "<if test = 'dropAmount!=null'>,drop_amount = #{dropAmount}</if>"
+            + "<if test = 'duration!=0'>,duration = #{duration}</if>" + "<if test = 'remittanceDay!=null'>,remittance_day = #{remittanceDay}</if>"
+            + "<if test = 'totalFactoringFee!=null'>,total_factoring_fee = #{totalFactoringFee}</if>" + "<if test = 'returnRate!=null'>,return_rate = #{returnRate}</if>"
+            + "<if test = 'remark!=null and remark!=\"\"'>,remark = #{remark}</if>" + "where id = #{id}" + "</script>")
     int update(FactoringDetail detail);
 
     /**
@@ -77,5 +72,12 @@ public interface FactoringDetailDao {
     @Update("update factoring_detail set loan_audit_pass_time = #{auditTime} where id = #{id}")
     int updateProjectLoanAuditTime(Long id, Date auditTime);
 
+    /**
+     * 
+     * @return
+     */
+    @Select("SELECT" + "    DATE_FORMAT( p.create_time, '%Y-%m' ) months," + "    count( 1 ) total ," + "    sum( d.assignee ) investment,"
+            + "    sum( d.total_factoring_fee ) profit " + "FROM factoring_project p" + "    INNER JOIN factoring_detail d ON p.id = d.project_id " + "GROUP BY months")
+    List<FactoringsInfo> factoringsInfos();
 
 }

@@ -63,17 +63,13 @@ public class PastServiceImpl extends AbstractService implements PastService {
         past.getMeetingIds().forEach(meeting -> pms.add(new ProjectMeeting(past.getProjectId(), meeting)));
         BaseResult result = meetingService.relationMeeting(pms);
         if (result.isSuccess()) {
+            project.setStep(3);
             if (getMeetings(past.getProjectId()).size() > 2) {
-                //三重一大全部关联完成后更改项目状态
-                project.setProgress(Progress.PASTMEETING);
-                project.setStep(3);
                 processEngine.next(project, false);
             } else {
                 project.setProgress(Progress.LATERMEETING);
                 processEngine.changeStatus(project, StepStatus.PROCESSING);
             }
-
-            result = projectService.turnover(project);
         }
         return result;
     }

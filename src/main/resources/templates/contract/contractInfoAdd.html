@@ -8,7 +8,7 @@
 				<i-form ref="addForm" :model="addForm" :rules="ruleValidate" :label-width="150">
 					<template>
 						<Collapse v-model="panelOpen" accordion>
-							<Panel name="0">
+							<Panel name="projectInfo">
 								项目信息
 								<div slot="content">
 									<row>
@@ -28,10 +28,18 @@
 												<span v-if="project.model == 'DIS_RECOURSE_RIGHT'">无追索权模式</span>
 											</form-item>
 										</i-col>
+										<i-col span="20" >
+											<form-item label="合同模板" prop="baseInfo.contractTemplate">
+												<Radio-Group v-model="addForm.baseInfo.contractTemplate">
+													<Radio :label="1">标准模板</Radio>
+													<Radio :label="2">自定义模板</Radio>
+												</Radio-Group>
+											</form-item>
+										</i-col>
 									</row>
 								</div>
 							</Panel>
-							<Panel name="1">
+							<Panel name="factoringContract" v-if="addForm.baseInfo.contractTemplate == 1">
 								保理合同
 								<div slot="content">
 									<Card>
@@ -78,22 +86,72 @@
 										<p slot="title">
 											应收账款
 										</p>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款类别" prop="contractExtendInfo.receivableMoneyType">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableMoneyType">
+												<Radio label="不低于">不低于</Radio>
+												<Radio label="为">为</Radio>
+											</Radio-Group>
+										</form-item>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款附加" prop="contractExtendInfo.receivableMoneyAdditional">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableMoneyAdditional">
+												<Radio label="所有">所有</Radio>
+												<Radio label="">空</Radio>
+											</Radio-Group>
+										</form-item>
+										<form-item label="应收账款" prop="contractExtendInfo.receivableMoney">
+											<input-number placeholder="请输入应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableMoney"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="应收账款（大写）" prop="contractExtendInfo.receivableMoneyUpper">
+											<i-input placeholder="请输入应收账款（大写）" v-model="addForm.contractExtendInfo.receivableMoneyUpper"></i-input>
+										</form-item>
+										<form-item label="债务人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
+											<input-number placeholder="请输入债务人享有金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="债务人享有金额（大写）" prop="contractExtendInfo.obligorEnjoyMoneyUpper">
+											<i-input placeholder="请输入债务人享有金额（大写）" v-model="addForm.contractExtendInfo.obligorEnjoyMoneyUpper"></i-input>
+										</form-item>
 										<form-item label="应收账款受让款" prop="contractExtendInfo.receivableAssigneeMoney">
-											<i-input placeholder="请输入应收账款受让款" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></i-input>
+											<input-number placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款受让款（大写）" prop="contractExtendInfo.receivableAssigneeMoneyUpper">
 											<i-input placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeMoneyUpper"></i-input>
+										</form-item>
+										<form-item label="应收账款受让款首付款" prop="contractExtendInfo.receivableAssigneeFirstMoney">
+											<input-number placeholder="请输入应收账款受让款首付款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoney"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="应收账款受让款首付款（大写）" prop="contractExtendInfo.receivableAssigneeFirstMoneyUpper">
+											<i-input placeholder="请输入应收账款受让款首付款（大写）" v-model="addForm.contractExtendInfo.receivableAssigneeFirstMoneyUpper"></i-input>
+										</form-item>
+									</Card>
+									<Card v-if="project.model == 'RECOURSE_RIGHT'">
+										<p slot="title">
+											保理费
+										</p>
+										<form-item label="计费起始日期" prop="contractExtendInfo.billingStartDate">
+											<date-picker type="date" placeholder="请输入计费起始日期" v-model="addForm.contractExtendInfo.billingStartDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="年利率" prop="contractExtendInfo.interestRate">
+											<input-number placeholder="请输入年利率" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.interestRate"></input-number>&nbsp;元
 										</form-item>
 									</Card>
 									<Card>
 										<p slot="title">
 											应收账款回收款
 										</p>
+										<form-item v-if="project.model == 'RECOURSE_RIGHT'" label="应收账款回收款类别" prop="contractExtendInfo.receivableRecoveryMoneyType">
+											<Radio-Group v-model="addForm.contractExtendInfo.receivableRecoveryMoneyType">
+												<Radio label="不低于">不低于</Radio>
+												<Radio label="为">为</Radio>
+											</Radio-Group>
+										</form-item>
 										<form-item label="应收账款回收款" prop="contractExtendInfo.receivableRecoveryMoney">
-											<i-input placeholder="请输入应收账款回收款" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></i-input>
+											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款回收款（大写）" prop="contractExtendInfo.receivableRecoveryMoneyUpper">
 											<i-input placeholder="请输入应收账款回收款（大写）" v-model="addForm.contractExtendInfo.receivableRecoveryMoneyUpper"></i-input>
+										</form-item>
+										<form-item label="应收账款支付日期" prop="contractExtendInfo.receivableRecoveryMoneyPaytime">
+											<date-picker type="date" placeholder="请输入应收账款支付日期" v-model="addForm.contractExtendInfo.receivableRecoveryMoneyPaytime" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 									<Card>
@@ -128,13 +186,19 @@
 										<p slot="title">
 											特别条款
 										</p>
-										<form-item label="合同强制解除日期" prop="contractExtendInfo.ompulsoryRescissionDate">
-											<i-input placeholder="请输入合同强制解除日期" v-model="addForm.contractExtendInfo.ompulsoryRescissionDate"></i-input>
+										<form-item label="合同强制解除日期" prop="contractExtendInfo.compulsoryRescissionDate">
+											<date-picker type="date" placeholder="请输入合同强制解除日期" v-model="addForm.contractExtendInfo.compulsoryRescissionDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="甲方签字日期" prop="contractExtendInfo.fpSignatureDate">
+											<date-picker type="date" placeholder="请输入甲方签字日期" v-model="addForm.contractExtendInfo.fpSignatureDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="甲方签字日期" prop="contractExtendInfo.spSignatureDate">
+											<date-picker type="date" placeholder="请输入甲方签字日期" v-model="addForm.contractExtendInfo.spSignatureDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 								</div>
 							</Panel>
-							<Panel name="2">
+							<Panel name="confirmationLetter" v-if="addForm.baseInfo.contractTemplate == 1">
 								应收账款转让确认函
 								<div slot="content">
 									<Card>
@@ -153,8 +217,17 @@
 										<form-item label="商务合同名称" prop="contractReceivableConfirmation.businessContractName">
 											<i-input placeholder="请输入商务合同名称" v-model="addForm.contractReceivableConfirmation.businessContractName"></i-input>
 										</form-item>
+										<form-item label="未支付应收账款受让款" prop="contractReceivableConfirmation.unpaidReceivableAssigneeMoney">
+											<input-number placeholder="请输入未支付应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.unpaidReceivableAssigneeMoney"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="未支付应收账款受让款（大写）" prop="contractReceivableConfirmation.unpaidReceivableAssigneeMoneyUpper">
+											<i-input placeholder="请输入未支付应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.unpaidReceivableAssigneeMoneyUpper"></i-input>
+										</form-item>
 										<form-item label="应收账款受让款" prop="contractReceivableConfirmation.receivableAssigneeMoney">
-											<i-input placeholder="请输入应收账款受让款" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoney"></i-input>
+											<input-number placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoney"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="应收账款受让款（大写）" prop="contractReceivableConfirmation.receivableAssigneeMoneyUpper">
+											<i-input placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyUpper"></i-input>
 										</form-item>
 									</Card>
 									<Card>
@@ -162,31 +235,37 @@
 											应收账款的确认和转让
 										</p>
 										<form-item label="应收账款回收款" prop="contractReceivableConfirmation.receivableRecoveryMoney">
-											<i-input placeholder="请输入让与人" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></i-input>
+											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="应收账款回收款截止日期" prop="contractReceivableConfirmation.receivableExpiryDate">
-											<i-input placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate"></i-input>
+											<date-picker type="date" placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 										<form-item label="合同应收账款" prop="contractReceivableConfirmation.contractReceivable">
-											<i-input placeholder="请输入合同应收账款" v-model="addForm.contractReceivableConfirmation.contractReceivable"></i-input>
+											<input-number placeholder="请输入合同应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.contractReceivable"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.contractReceivableUpper">
 											<i-input placeholder="请输入合同应收账款（大写）" v-model="addForm.contractReceivableConfirmation.contractReceivableUpper"></i-input>
 										</form-item>
 										<form-item label="让与人对债务人的应收账款" prop="contractReceivableConfirmation.assignorAbligorReceivable">
-											<i-input placeholder="请输入让与人对债务人的应收账款" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivable"></i-input>
+											<input-number placeholder="请输入让与人对债务人的应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivable"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.assignorAbligorReceivableUpper">
 											<i-input placeholder="请输入让与人对债务人的应收账款（大写）" v-model="addForm.contractReceivableConfirmation.assignorAbligorReceivableUpper"></i-input>
 										</form-item>
+										<form-item label="未支付让与人对债务人的应收账款" prop="contractReceivableConfirmation.unpaidAssignorAbligorReceivable">
+											<input-number placeholder="请输入未支付让与人对债务人的应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.unpaidAssignorAbligorReceivable"></input-number>&nbsp;元
+										</form-item>
+										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.unpaidAssignorAbligorReceivableUpper">
+											<i-input placeholder="请输入未支付让与人对债务人的应收账款（大写）" v-model="addForm.contractReceivableConfirmation.unpaidAssignorAbligorReceivableUpper"></i-input>
+										</form-item>
 										<form-item label="受让人已向让与人支付的应收账款受让款" prop="contractReceivableConfirmation.receivableAssigneeMoneyPaid">
-											<i-input placeholder="请输入受让人已向让与人支付的应收账款受让款" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaid"></i-input>
+											<input-number placeholder="请输入受让人已向让与人支付的应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaid"></input-number>&nbsp;元
 										</form-item>
 										<form-item label="人民币（大写）" prop="contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper">
 											<i-input placeholder="请输入受让人已向让与人支付的应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper"></i-input>
 										</form-item>
 										<form-item label="让与人提交资料日期" prop="contractReceivableConfirmation.assignorCommitDate">
-											<i-input placeholder="请输入让与人提交资料日期" v-model="addForm.contractReceivableConfirmation.assignorCommitDate"></i-input>
+											<date-picker type="date" placeholder="请输入让与人提交资料日期" v-model="addForm.contractReceivableConfirmation.assignorCommitDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
 									</Card>
 									<Card>
@@ -210,10 +289,31 @@
 										<form-item label="确认函签订地" prop="contractReceivableConfirmation.confirmationAddress">
 											<i-input placeholder="请输入确认函签订地" v-model="addForm.contractReceivableConfirmation.confirmationAddress"></i-input>
 										</form-item>
+										<form-item label="受让人签字日期" prop="contractReceivableConfirmation.assigneeSignatureDate">
+											<date-picker type="date" placeholder="请输入受让人签字日期" v-model="addForm.contractReceivableConfirmation.assigneeSignatureDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="让与人公司名称" prop="contractReceivableConfirmation.assignorCompanyName">
+											<i-input placeholder="请输入让与人公司名称" v-model="addForm.contractReceivableConfirmation.assignorCompanyName"></i-input>
+										</form-item>
+										<form-item label="让与人签字日期" prop="contractReceivableConfirmation.assignorSignatureDate">
+											<date-picker type="date" placeholder="请输入让与人签字日期" v-model="addForm.contractReceivableConfirmation.assignorSignatureDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="债务人公司名称" prop="contractReceivableConfirmation.obligorCompanyName">
+											<i-input placeholder="请输入债务人公司名称" v-model="addForm.contractReceivableConfirmation.obligorCompanyName"></i-input>
+										</form-item>
+										<form-item label="债务人签字日期" prop="contractReceivableConfirmation.obligorSignatureDate">
+											<date-picker type="date" placeholder="请输入债务人签字日期" v-model="addForm.contractReceivableConfirmation.obligorSignatureDate" format="yyyy-MM-dd"></date-picker>
+										</form-item>
+										<form-item label="商务合同标的物名称" prop="contractReceivableConfirmation.nameOfSubject">
+											<i-input placeholder="请输入商务合同标的物名称" v-model="addForm.contractReceivableConfirmation.nameOfSubject"></i-input>
+										</form-item>
+										<form-item label="发票/收据所载金额（元）" prop="contractReceivableConfirmation.invoiceMoney">
+											<input-number placeholder="请输入发票/收据所载金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.invoiceMoney"></input-number>&nbsp;元
+										</form-item>
 									</Card>
 								</div>
 							</Panel>
-							<Panel name="3">
+							<Panel name="registrationAgreement" v-if="addForm.baseInfo.contractTemplate == 1">
 								应收账款转让登录协议
 								<div slot="content">
 									<Card>
@@ -244,10 +344,95 @@
 										<form-item label="签署日期" prop="contractReceivableAgreement.signDate">
 											<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractReceivableAgreement.signDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
+                                        <form-item label="甲方签字日期" prop="contractReceivableAgreement.fpSignatureDate">
+                                            <date-picker type="date" placeholder="请输入甲方签字日期" v-model="addForm.contractReceivableAgreement.fpSignatureDate" format="yyyy-MM-dd"></date-picker>
+                                        </form-item>
+                                        <form-item label="乙方签字日期" prop="contractReceivableAgreement.spSignatureDate">
+                                            <date-picker type="date" placeholder="请输入乙方签字日期" v-model="addForm.contractReceivableAgreement.spSignatureDate" format="yyyy-MM-dd"></date-picker>
+                                        </form-item>
 									</Card>
 								</div>
 							</Panel>
-							<Panel name="4">
+							<Panel v-if="project.model == 'DIS_RECOURSE_RIGHT' && addForm.baseInfo.contractTemplate == 1" name="financialAgreement">
+								财务顾问服务协议
+								<div slot="content">
+									<form-item label="甲方公司名称" prop="contractFasa.fpCompanyName">
+										<i-input placeholder="请输入甲方公司名称" v-model="addForm.contractFasa.fpCompanyName"></i-input>
+									</form-item>
+									<form-item label="甲方住所" prop="contractFasa.fpResidence">
+										<i-input placeholder="请输入甲方住所" v-model="addForm.contractFasa.fpResidence"></i-input>
+									</form-item>
+									<form-item label="甲方法定代表人" prop="contractFasa.fpLegalPerson">
+										<i-input placeholder="请输入甲方法定代表人" v-model="addForm.contractFasa.fpLegalPerson"></i-input>
+									</form-item>
+									<form-item label="甲方邮编" prop="contractFasa.fpPostCode">
+										<i-input placeholder="请输入甲方邮编" v-model="addForm.contractFasa.fpPostCode"></i-input>
+									</form-item>
+									<form-item label="甲方电话" prop="contractFasa.fpTelephone">
+										<i-input placeholder="请输入甲方电话" v-model="addForm.contractFasa.fpTelephone"></i-input>
+									</form-item>
+									<form-item label="甲方传真" prop="contractFasa.fpFax">
+										<i-input placeholder="请输入甲方传真" v-model="addForm.contractFasa.fpFax"></i-input>
+									</form-item>
+									<form-item label="协议签署地" prop="contractFasa.signAddress">
+										<i-input placeholder="请输入协议签署地" v-model="addForm.contractFasa.signAddress"></i-input>
+									</form-item>
+									<form-item label="协议签署日期" prop="contractFasa.singDate">
+										<date-picker type="date" placeholder="请输入协议签署日期" v-model="addForm.contractFasa.singDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+									<form-item label="财务顾问费" prop="contractFasa.advisoryServiceMoney">
+										<input-number placeholder="请输入财务顾问费" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractFasa.advisoryServiceMoney"></input-number>&nbsp;元
+									</form-item>
+									<form-item label="财务顾问费（大写）" prop="contractFasa.advisoryServiceMoneyUpper">
+										<i-input placeholder="请输入财务顾问费（大写）" v-model="addForm.contractFasa.advisoryServiceMoneyUpper"></i-input>
+									</form-item>
+									<form-item label="财务顾问费约定" prop="contractFasa.advisoryServiceMoneyAppointment">
+										<i-input placeholder="请输入财务顾问费约定" v-model="addForm.contractFasa.advisoryServiceMoneyAppointment"></i-input>
+									</form-item>
+									<form-item label="乙方银行名称" prop="contractFasa.spBankName">
+										<i-input placeholder="请输入乙方银行名称" v-model="addForm.contractFasa.spBankName"></i-input>
+									</form-item>
+									<form-item label="乙方银行账户" prop="contractFasa.spAccount">
+										<i-input placeholder="请输入乙方银行账户" v-model="addForm.contractFasa.spAccount"></i-input>
+									</form-item>
+									<form-item label="协议有效期月数" prop="contractFasa.expiryDateMonth">
+										<i-input placeholder="请输入协议有效期月数" v-model="addForm.contractFasa.expiryDateMonth"></i-input>
+									</form-item>
+									<form-item label="甲方签字日期" prop="contractFasa.fpSignatureDate">
+										<date-picker type="date" placeholder="请输入甲方签字日期" v-model="addForm.contractFasa.fpSignatureDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+									<form-item label="甲方签字日期" prop="contractFasa.spSignatureDate">
+										<date-picker type="date" placeholder="请输入甲方签字日期" v-model="addForm.contractFasa.spSignatureDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+								</div>
+							</Panel>
+							<Panel name="shareholderResolution" v-if="addForm.baseInfo.contractTemplate == 1">
+								股东会决议
+								<div slot="content">
+									<form-item label="会议时间" prop="contractShareholderMeeting.meetingTime">
+										<date-picker type="date" placeholder="请输入会议时间" v-model="addForm.contractShareholderMeeting.meetingTime" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+									<form-item label="会议地点" prop="contractShareholderMeeting.meetingAddress">
+										<i-input placeholder="请输入会议地点" v-model="addForm.contractShareholderMeeting.meetingAddress"></i-input>
+									</form-item>
+									<form-item label="乙方公司名称" prop="contractShareholderMeeting.spCompanyName">
+										<i-input placeholder="请输入乙方公司名称" v-model="addForm.contractShareholderMeeting.spCompanyName"></i-input>
+									</form-item>
+									<form-item label="出席股东" prop="contractShareholderMeeting.attendingShareholders">
+										<i-input placeholder="请输入出席股东" v-model="addForm.contractShareholderMeeting.attendingShareholders"></i-input>
+									</form-item>
+									<form-item label="会议次数" prop="contractShareholderMeeting.meetingNumber">
+										<i-input placeholder="请输入会议次数" v-model="addForm.contractShareholderMeeting.meetingNumber"></i-input>
+									</form-item>
+									<form-item label="表决权通过率" prop="contractShareholderMeeting.passingRate">
+										<i-input placeholder="请输入表决权通过率" v-model="addForm.contractShareholderMeeting.passingRate"></i-input>
+									</form-item>
+									<form-item label="签字日期" prop="contractShareholderMeeting.signatureDate">
+										<date-picker type="date" placeholder="请输入签字日期" v-model="addForm.contractShareholderMeeting.signatureDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+								</div>
+							</Panel>
+							<Panel name="upload">
 								自定义模板上传
 								<div slot="content">
 									<row>
@@ -268,7 +453,7 @@
 									</row>
 								</div>
 							</Panel>
-							<Panel name="5">
+							<Panel name="signList">
 								签署清单
 								<div slot="content">
 									<row v-for="(item, index) in addForm.signList"

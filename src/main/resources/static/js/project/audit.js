@@ -137,7 +137,9 @@ var vue = new Vue({
 					this.record.items.push(item);
 				}
 			}
+			this.$Spin.show();
 			this.$http.post("/audit",this.record).then(function(response){
+				this.$Spin.hide();
 				if (response.data.success) {
 					_self.$Message.info({
 						content : "审核成功",
@@ -150,6 +152,7 @@ var vue = new Vue({
 					_self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
+				this.$Spin.hide();
 				_self.$Message.error(response.data.errorMessage);
 			})
 		},
@@ -159,10 +162,12 @@ var vue = new Vue({
 		 */
 		reject:function(){
 			let _self = this;
+			this.$Spin.show();
 			//非合同审核驳回
 			if(this.audit.auditType !== 'CONTRACT') {
                 this.record.audit = this.audit;
                 this.$http.put("/audit", this.record).then(function (response) {
+                	this.$Spin.hide();
                     if (response.data.success) {
                         _self.$Message.info({
                             content: "驳回成功",
@@ -175,6 +180,7 @@ var vue = new Vue({
                         _self.$Message.error(response.data.errorMessage);
                     }
                 }, function (error) {
+                	this.$Spin.hide();
                     _self.$Message.error(response.data.errorMessage);
                 })
             } else {
@@ -184,6 +190,7 @@ var vue = new Vue({
                 this.contractAudit.remark = this.record.remark;
                 this.contractAudit.rejectStatus = this.audit.step;
                 this.$http.post("/contractAudit/audit", this.contractAudit).then(function(response) {
+                	this.$Spin.hide();
                     if (response.data.success) {
                         _self.$Message.info({
                             content : "驳回成功",
@@ -195,6 +202,7 @@ var vue = new Vue({
                         _self.$Message.error(response.data.errorMessage);
                     }
                 }, function(error) {
+                	this.$Spin.hide();
                     _self.$Message.error(error.data.message);
                 });
 			}
@@ -229,6 +237,14 @@ var vue = new Vue({
          */
         toLoan:function(){
         	window.open("/finance");
+        },
+        
+        print:function(){
+    	    var bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+    	    var printHtml = window.document.getElementById("printDiv").innerHTML;
+    	    window.document.body.innerHTML=printHtml;
+    	    window.print();
+    	    window.document.body.innerHTML=bdhtml;
         },
         
 		cancel:function(){

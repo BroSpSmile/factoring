@@ -83,6 +83,26 @@ public class ContractExtendInfoDTO implements Serializable {
     private String contractName;
 
     /**
+     * 应收账款
+     */
+    private BigDecimal receivableMoney;
+
+    /**
+     * 应收账款大写
+     */
+    private String receivableMoneyUpper;
+
+    /**
+     * 债务人享有金额
+     */
+    private BigDecimal obligorEnjoyMoney;
+
+    /**
+     * 债务人享有金额大写
+     */
+    private String obligorEnjoyMoneyUpper;
+
+    /**
      * 应收账款受让款
      */
     private BigDecimal receivableAssigneeMoney;
@@ -93,6 +113,16 @@ public class ContractExtendInfoDTO implements Serializable {
     private String receivableAssigneeMoneyUpper;
 
     /**
+     * 应收账款受让款首付款
+     */
+    private BigDecimal receivableAssigneeFirstMoney;
+
+    /**
+     * 应收账款受让款首付款大写
+     */
+    private String receivableAssigneeFirstMoneyUpper;
+
+    /**
      * 应收账款回收款
      */
     private BigDecimal receivableRecoveryMoney;
@@ -101,6 +131,11 @@ public class ContractExtendInfoDTO implements Serializable {
      * 应收账款回收款大写
      */
     private String receivableRecoveryMoneyUpper;
+
+    /**
+     * 应收账款支付时间
+     */
+    private Date receivableRecoveryMoneyPaytime;
 
     /**
      * 甲方户名
@@ -136,7 +171,42 @@ public class ContractExtendInfoDTO implements Serializable {
      * 合同强制解除日期
      * @return
      */
-    private String ompulsoryRescissionDate;
+    private Date compulsoryRescissionDate;
+
+    /**
+     * 甲方签字日期
+     */
+    private Date fpSignatureDate;
+
+    /**
+     * 乙方签字日期
+     */
+    private Date spSignatureDate;
+
+    /**
+     * 计费起始日期
+     */
+    private Date billingStartDate;
+
+    /**
+     * 年利率
+     */
+    private BigDecimal interestRate;
+
+    /**
+     * 应收账款类别：不低于、为
+     */
+    private String receivableMoneyType;
+
+    /**
+     * 应收账款附加：所有、空
+     */
+    private String receivableMoneyAdditional;
+
+    /**
+     * 应收账款回收款类别：不低于、为
+     */
+    private String receivableRecoveryMoneyType;
 
     public Long getId() {
         return id;
@@ -250,6 +320,38 @@ public class ContractExtendInfoDTO implements Serializable {
         this.contractName = contractName;
     }
 
+    public BigDecimal getReceivableMoney() {
+        return receivableMoney;
+    }
+
+    public void setReceivableMoney(BigDecimal receivableMoney) {
+        this.receivableMoney = receivableMoney;
+    }
+
+    public String getReceivableMoneyUpper() {
+        return receivableMoneyUpper;
+    }
+
+    public void setReceivableMoneyUpper(String receivableMoneyUpper) {
+        this.receivableMoneyUpper = receivableMoneyUpper;
+    }
+
+    public BigDecimal getObligorEnjoyMoney() {
+        return obligorEnjoyMoney;
+    }
+
+    public void setObligorEnjoyMoney(BigDecimal obligorEnjoyMoney) {
+        this.obligorEnjoyMoney = obligorEnjoyMoney;
+    }
+
+    public String getObligorEnjoyMoneyUpper() {
+        return obligorEnjoyMoneyUpper;
+    }
+
+    public void setObligorEnjoyMoneyUpper(String obligorEnjoyMoneyUpper) {
+        this.obligorEnjoyMoneyUpper = obligorEnjoyMoneyUpper;
+    }
+
     public BigDecimal getReceivableAssigneeMoney() {
         return receivableAssigneeMoney;
     }
@@ -280,6 +382,30 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setReceivableRecoveryMoneyUpper(String receivableRecoveryMoneyUpper) {
         this.receivableRecoveryMoneyUpper = receivableRecoveryMoneyUpper;
+    }
+
+    public BigDecimal getReceivableAssigneeFirstMoney() {
+        return receivableAssigneeFirstMoney;
+    }
+
+    public void setReceivableAssigneeFirstMoney(BigDecimal receivableAssigneeFirstMoney) {
+        this.receivableAssigneeFirstMoney = receivableAssigneeFirstMoney;
+    }
+
+    public String getReceivableAssigneeFirstMoneyUpper() {
+        return receivableAssigneeFirstMoneyUpper;
+    }
+
+    public void setReceivableAssigneeFirstMoneyUpper(String receivableAssigneeFirstMoneyUpper) {
+        this.receivableAssigneeFirstMoneyUpper = receivableAssigneeFirstMoneyUpper;
+    }
+
+    public Date getReceivableRecoveryMoneyPaytime() {
+        return receivableRecoveryMoneyPaytime;
+    }
+
+    public void setReceivableRecoveryMoneyPaytime(Date receivableRecoveryMoneyPaytime) {
+        this.receivableRecoveryMoneyPaytime = receivableRecoveryMoneyPaytime;
     }
 
     public String getFpAccountName() {
@@ -330,11 +456,67 @@ public class ContractExtendInfoDTO implements Serializable {
         this.spAccount = spAccount;
     }
 
-    public String getOmpulsoryRescissionDate() {
-        return ompulsoryRescissionDate;
+    public Date getCompulsoryRescissionDate() {
+        return compulsoryRescissionDate;
     }
 
-    public void setOmpulsoryRescissionDate(String ompulsoryRescissionDate) {
-        this.ompulsoryRescissionDate = ompulsoryRescissionDate;
+    public void setCompulsoryRescissionDate(Date compulsoryRescissionDate) {
+        this.compulsoryRescissionDate = compulsoryRescissionDate;
+    }
+
+    public Date getFpSignatureDate() {
+        return fpSignatureDate;
+    }
+
+    public void setFpSignatureDate(Date fpSignatureDate) {
+        this.fpSignatureDate = fpSignatureDate;
+    }
+
+    public Date getSpSignatureDate() {
+        return spSignatureDate;
+    }
+
+    public void setSpSignatureDate(Date spSignatureDate) {
+        this.spSignatureDate = spSignatureDate;
+    }
+
+    public Date getBillingStartDate() {
+        return billingStartDate;
+    }
+
+    public void setBillingStartDate(Date billingStartDate) {
+        this.billingStartDate = billingStartDate;
+    }
+
+    public BigDecimal getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public String getReceivableMoneyType() {
+        return receivableMoneyType;
+    }
+
+    public void setReceivableMoneyType(String receivableMoneyType) {
+        this.receivableMoneyType = receivableMoneyType;
+    }
+
+    public String getReceivableRecoveryMoneyType() {
+        return receivableRecoveryMoneyType;
+    }
+
+    public void setReceivableRecoveryMoneyType(String receivableRecoveryMoneyType) {
+        this.receivableRecoveryMoneyType = receivableRecoveryMoneyType;
+    }
+
+    public String getReceivableMoneyAdditional() {
+        return receivableMoneyAdditional;
+    }
+
+    public void setReceivableMoneyAdditional(String receivableMoneyAdditional) {
+        this.receivableMoneyAdditional = receivableMoneyAdditional;
     }
 }

@@ -285,9 +285,10 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
      */
     private BaseResult addApplyRecord(Audit audit) {
         AuditRecord record = new AuditRecord();
+        AuditFlow flow = getFlow(audit, -1);
         record.setStatus("成功");
         record.setRemark("申请成功");
-        record.setType("发起审核");
+        record.setType(flow.getDesc());
         record.setAudit(audit);
         record.setAuditor(audit.getApplicant());
         record.setResult(AuditResult.APPLY);

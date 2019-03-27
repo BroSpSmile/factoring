@@ -63,12 +63,9 @@ public interface PermissionDao {
      * @param permissionSearchDTO
      * @return
      */
-    @Select("<script>"
-        + "select * from auth_permission_info where 1=1 and delete_flag = 0"
-        + "<if test = 'permissionCode!=null'> and permission_code = #{permissionCode}</if>"
-        + "<if test = 'permissionName!=null'> and permission_name = #{permissionName}</if>"
-        + "<if test = 'permissionType!=null'> and permission_type = #{permissionType}</if>"
-        + "</script>")
+    @Select("<script>" + "select * from auth_permission_info where 1=1 and delete_flag = 0" + "<if test = 'permissionCode!=null'> and permission_code = #{permissionCode}</if>"
+            + "<if test = 'permissionName!=null'> and permission_name = #{permissionName}</if>" + "<if test = 'permissionType!=null'> and permission_type = #{permissionType}</if>"
+            + "</script>")
     List<Permission> findByParam(PermissionSearchDTO permissionSearchDTO);
 
     /**
@@ -76,16 +73,9 @@ public interface PermissionDao {
      * @param userSerialNo
      * @return
      */
-    @Select("select * from auth_permission_info p," +
-        "auth_role_permission_info rp," +
-        "auth_user_info u," +
-        "auth_role_info r," +
-        "auth_user_role_info ur " +
-        "where p.serial_no = rp.permission_serial_no " +
-        "and rp.role_serial_no = r.serial_no " +
-        "and r.serial_no = ur.role_serial_no " +
-        "and ur.user_serial_no = u.serial_no " +
-        "and u.serial_no = #{serialNo}")
+    @Select("select * from auth_permission_info p," + "auth_role_permission_info rp," + "auth_user_info u," + "auth_role_info r," + "auth_user_role_info ur "
+            + "where p.serial_no = rp.permission_serial_no " + "and rp.role_serial_no = r.serial_no " + "and r.serial_no = ur.role_serial_no "
+            + "and ur.user_serial_no = u.serial_no " + "and u.serial_no = #{serialNo}")
     List<Permission> findByUserSerialNo(String userSerialNo);
 
     /**
@@ -93,18 +83,20 @@ public interface PermissionDao {
      * @param userSerialNo
      * @return
      */
-    @Select("select * from auth_permission_info p," +
-            "auth_role_permission_info rp," +
-            "auth_user_info u," +
-            "auth_role_info r," +
-            "auth_user_role_info ur " +
-            "where p.serial_no = rp.permission_serial_no " +
-            "and rp.role_serial_no = r.serial_no " +
-            "and r.serial_no = ur.role_serial_no " +
-            "and ur.user_serial_no = u.serial_no " +
-            "and p.parent_serial_no = '' " +
-            "and u.serial_no = #{serialNo}")
+    @Select("select * from auth_permission_info p," + "auth_role_permission_info rp," + "auth_user_info u," + "auth_role_info r," + "auth_user_role_info ur "
+            + "where p.serial_no = rp.permission_serial_no " + "and rp.role_serial_no = r.serial_no " + "and r.serial_no = ur.role_serial_no "
+            + "and ur.user_serial_no = u.serial_no " + "and p.parent_serial_no = '' " + "and u.serial_no = #{serialNo}")
     List<Permission> findParentByUserSerialNo(String userSerialNo);
+
+    /**
+     * 查询最顶级菜单
+     * @param userSerialNo
+     * @return
+     */
+    @Select("SELECT DISTINCT p.*  FROM auth_permission_info p " + "inner join auth_role_permission_info rp on p.serial_no = rp.permission_serial_no "
+            + "inner join auth_user_role_info ur on ur.role_serial_no = rp.role_serial_no "
+            + "where ur.user_serial_no = #{userSerialNo} and p.parent_serial_no ='' order by p.permission_code")
+    List<Permission> findTopPermission(String userSerialNo);
 
     /**
      * 根据父级权限编号查询权限

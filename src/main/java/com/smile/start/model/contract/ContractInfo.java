@@ -67,6 +67,31 @@ public class ContractInfo implements Serializable {
      */
     private Integer sealStatus;
 
+    /**
+     * 是否有保理合同：1、有；0、无
+     */
+    private Boolean factoringContract;
+
+    /**
+     * 是否有确认函：1、有；0、无
+     */
+    private Boolean confirmationLetter;
+
+    /**
+     * 是否有登记协议：1、有；0、无
+     */
+    private Boolean registrationAgreement;
+
+    /**
+     * 是否有财务协议：1、有；0、无
+     */
+    private Boolean financialAgreement;
+
+    /**
+     * 是否有股东会决议：1、有；0、无
+     */
+    private Boolean shareholderResolution;
+
     private String createUser;
     private String modifyUser;
     private Date gmtCreate;
@@ -190,5 +215,45 @@ public class ContractInfo implements Serializable {
 
     public void setGmtModify(Date gmtModify) {
         this.gmtModify = gmtModify;
+    }
+
+    public Boolean getFactoringContract() {
+        return factoringContract;
+    }
+
+    public void setFactoringContract(Boolean factoringContract) {
+        this.factoringContract = factoringContract;
+    }
+
+    public Boolean getConfirmationLetter() {
+        return confirmationLetter;
+    }
+
+    public void setConfirmationLetter(Boolean confirmationLetter) {
+        this.confirmationLetter = confirmationLetter;
+    }
+
+    public Boolean getRegistrationAgreement() {
+        return registrationAgreement;
+    }
+
+    public void setRegistrationAgreement(Boolean registrationAgreement) {
+        this.registrationAgreement = registrationAgreement;
+    }
+
+    public Boolean getFinancialAgreement() {
+        return financialAgreement;
+    }
+
+    public void setFinancialAgreement(Boolean financialAgreement) {
+        this.financialAgreement = financialAgreement;
+    }
+
+    public Boolean getShareholderResolution() {
+        return shareholderResolution;
+    }
+
+    public void setShareholderResolution(Boolean shareholderResolution) {
+        this.shareholderResolution = shareholderResolution;
     }
 }

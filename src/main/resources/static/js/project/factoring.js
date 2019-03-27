@@ -107,34 +107,39 @@ var vue = new Vue({
 		 */
 		commit:function(){
 			let self = this;
+			this.$Spin.show();
 			if(!this.detail.id){
 				this.$http.post("/factoring", this.detail).then(function(response) {
+					this.$Spin.hide();
 					if (response.data.success) {
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								
+								window.close();
 							}
 						});
 					} else {
 						self.$Message.error(response.data.errorMessage);
 					}
 				}, function(error) {
+					this.$Spin.hide();
 					self.$Message.error(error.data.message);
 				});
 			}else{
 				this.$http.put("/factoring", this.detail).then(function(response) {
+					this.$Spin.hide();
 					if (response.data.success) {
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								
+								window.close();
 							}
 						});
 					} else {
 						self.$Message.error(response.data.errorMessage);
 					}
 				}, function(error) {
+					this.$Spin.hide();
 					self.$Message.error(error.data.message);
 				});
 			}

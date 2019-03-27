@@ -2,72 +2,80 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout/layout">
+    <!--startprint-->
 	<div layout:fragment="content">
 		<div id="audit" v-cloak>
 			<row>
 				<i-col span="22" offset="1">
-					<br><h2>{{auditTypeShow}}</h2><br>
-					<card dis-hover title="审核流程">
-						 <Steps v-if="audit.auditType != 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
-						 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
-					    </Steps>
-						<Steps v-if="audit.auditType == 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
-							<Step v-for="flow in audit.flows" :title="flow.desc" v-if="flow.step > 0 && flow.step <= 6" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
-						</Steps>
-					</card>
 					<br>
-					<card dis-hover title="申请详情">
-						<i-form  :label-width="100" inline>
-							<row>
-								<i-col span="8">
-									<form-item label="申请类型">
-										{{auditTypeShow}}
-									</form-item>
-								</i-col>
-								<i-col span="8">
-									<form-item label="申请时间">
-										{{audit.createTime|timeFilter}}
-									</form-item>
-								</i-col>
-								<i-col span="8">
-									<form-item label="申请人">
-										{{audit.applicant.username}}
-									</form-item>
-								</i-col>
-							</row>
-							<row>
-								<i-col span="8">
-									<form-item label="项目编号">
-										{{audit.project.projectId}}
-									</form-item>
-								</i-col>
-								<i-col span="8">
-									<form-item label="项目名称">
-										{{audit.project.projectName}}
-									</form-item>
-								</i-col>
-							</row>
-							<form-item label="附件查看">
-								<div  v-for="item in audit.project.items" v-if="item.itemType==audit.auditType">
-									<Tag type="border" color="primary" style="width: 80px;" v-if="item.attachType == 1">标准模板</Tag>
-									<Tag type="border" color="warning" style="width: 80px;" v-if="item.attachType == 2">自定义模板</Tag>
-									<icon type="ios-attach" ></icon>
-									<a @click="downloadItem(item)">{{item.itemName}}</a>
-								</div>
-							</form-item>
-							<row type="flex" v-if="showAuditButton && audit.step > 0">
-			                    <i-col span="12" offset="2">
-		                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
-                                    	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
-			                    </i-col>
-	                		</row>
-
-						</i-form>
-					</card>
-					<br><br>
-					<card dis-hover title="操作日志">
-						<i-table  border :columns="tableColumns" :data="audit.records"></i-table>
-					</card>
+						<row>
+							<i-col span='6'><h2>{{auditTypeShow}}</h2></i-col>
+							<i-col span='2' offset='16'><i-button @click="print" type="text" icon='ios-print'>打印</i-button></i-col>
+						</row>
+					<br>
+					<div id="printDiv">
+						<card dis-hover title="审核流程">
+							 <Steps v-if="audit.auditType != 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
+							 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
+						    </Steps>
+							<Steps v-if="audit.auditType == 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
+								<Step v-for="flow in audit.flows" :title="flow.desc" v-if="flow.step > 0 && flow.step <= 6" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
+							</Steps>
+						</card>
+						<br>
+						<card dis-hover title="申请详情">
+							<i-form  :label-width="100" inline>
+								<row>
+									<i-col span="8">
+										<form-item label="申请类型">
+											{{auditTypeShow}}
+										</form-item>
+									</i-col>
+									<i-col span="8">
+										<form-item label="申请时间">
+											{{audit.createTime|timeFilter}}
+										</form-item>
+									</i-col>
+									<i-col span="8">
+										<form-item label="申请人">
+											{{audit.applicant.username}}
+										</form-item>
+									</i-col>
+								</row>
+								<row>
+									<i-col span="8">
+										<form-item label="项目编号">
+											{{audit.project.projectId}}
+										</form-item>
+									</i-col>
+									<i-col span="8">
+										<form-item label="项目名称">
+											{{audit.project.projectName}}
+										</form-item>
+									</i-col>
+								</row>
+								<form-item label="附件查看">
+									<div  v-for="item in audit.project.items" v-if="item.itemType==audit.auditType">
+										<Tag type="border" color="primary" style="width: 80px;" v-if="item.attachType == 1">标准模板</Tag>
+										<Tag type="border" color="warning" style="width: 80px;" v-if="item.attachType == 2">自定义模板</Tag>
+										<icon type="ios-attach" ></icon>
+										<a @click="downloadItem(item)">{{item.itemName}}</a>
+									</div>
+								</form-item>
+								<row type="flex" v-if="showAuditButton && audit.step > 0">
+				                    <i-col span="12" offset="2">
+			                    			<i-button type="success"  icon="ios-checkmark" @click="openPass">通过</i-button>
+	                                    	<i-button type="error" icon="ios-close"  @click="openReject" style="margin-left: 8px">驳回</i-button>
+				                    </i-col>
+		                		</row>
+	
+							</i-form>
+						</card>
+						<br>
+						<card dis-hover title="操作日志">
+							<i-table  border :columns="tableColumns" stripe :data="audit.records"></i-table>
+						</card>
+					</div>
 				</i-col>
 			</row>
 			<!-- 新增项目 -->
@@ -113,4 +121,5 @@
 	    <input th:value="${id}" id="auditId" style="display:none" ></input>	
 	    <script src="js/project/audit.js"></script>
 	</div>
+	<!--endprint-->
 </html>

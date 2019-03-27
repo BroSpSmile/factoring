@@ -103,6 +103,14 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         return detail;
     }
 
+    /** 
+     * @see com.smile.start.service.project.FactoringService#getInfos()
+     */
+    @Override
+    public List<FactoringsInfo> getInfos() {
+        return factoringDetailDao.factoringsInfos();
+    }
+
     @Transactional
     private BaseResult updateInstallments(FactoringDetail detail, List<Installment> installments) {
         if (!CollectionUtils.isEmpty(installments)) {

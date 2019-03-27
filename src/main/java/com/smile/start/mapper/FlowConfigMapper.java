@@ -20,11 +20,15 @@ public interface FlowConfigMapper {
 
     @Mapping(source = "gmtCreate", target = "gmtCreate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     FlowConfig dto2do(FlowConfigDTO dto);
+
     @Mapping(source = "gmtCreate", target = "gmtCreate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     FlowConfigDTO do2dto(FlowConfig flowConfig);
+
     List<FlowConfigDTO> doList2dtoListConfig(List<FlowConfig> doList);
 
     FlowStatus dto2do(FlowStatusDTO dto);
+
     FlowStatusDTO do2dto(FlowStatus flowStatus);
+
     List<FlowStatusDTO> doList2dtoListStatus(List<FlowStatus> doList);
 }

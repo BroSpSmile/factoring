@@ -41,7 +41,7 @@
 							<row type="flex">
 			                   	<i-col span="8" offset="1">
 			                       	<i-button type="success"  @click="past">关联三重一大会议</i-button>
-			                        <i-button  @click="skip" style="margin-left: 8px">此步骤后补</i-button>
+			                        <i-button  @click="skip" v-if="project.step==3" style="margin-left: 8px">此步骤后补</i-button>
 			                   	</i-col>
 			            	</row>
 						</i-form>

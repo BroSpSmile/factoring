@@ -48,18 +48,15 @@ var vue = new Vue({
 //            });
             if(this.contract.project.id){
             	 this.$http.get("contractInfo/project/"+this.contract.project.id).then(function(response){
-            		 let result = response.data;
-            		 if(result.success){
-            			 _self.signList = result.values;
-            			 _self.contract.signList = [];
-            			 for(let index in _self.signList){
-            				 if(_self.signList[index].filingStatus >=2){
-            					 _self.contract.signList.push(_self.signList[index].serialNo);
-            				 }
-            			 }
-            		 }else{
-            			 _self.$Message.error(result.message);
-            		 }
+        			 _self.signList = response.data;
+        			 console.log(_self.signList);
+        			 _self.contract.signList = [];
+        			 for(let index in _self.signList){
+        				 if(_self.signList[index].filingStatus >=2){
+        					 _self.contract.signList.push(_self.signList[index].serialNo);
+        				 }
+        			 }
+            		
             	 },function(error){
             		 console.error(error);
             	 })
@@ -77,7 +74,9 @@ var vue = new Vue({
             		filingStatus:2
             	})
             }
+            this.$Spin.show();
             this.$http.post("/filingApply/save", contract).then(function (response) {
+            	this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
                         content: "归档申请保存成功",
@@ -85,11 +84,12 @@ var vue = new Vue({
                             self.initDate();
                         },
                     });
-                    window.open(this.projectUrl, "_self");
+                    window.close();
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
             }, function (error) {
+            	this.$Spin.hide();
                 self.$Message.error(error);
             })
         },
@@ -103,7 +103,9 @@ var vue = new Vue({
             		filingStatus:2
             	})
             }
+            this.$Spin.show();
             this.$http.post("/filingApply/commit", contract).then(function (response) {
+            	this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
                         content: "归档申请提交成功",
@@ -111,11 +113,11 @@ var vue = new Vue({
                             window.close();
                         },
                     });
-                    window.open(this.projectUrl, "_self");
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
             }, function (error) {
+            	this.$Spin.hide();
                 self.$Message.error(error);
             })
         },

@@ -11,6 +11,8 @@ var vue = new Vue({
 			id : 0,
 			items:[]
 		},
+		showButton:true,
+		showLater:true,
 		items:[],
 		audit:null,
 		fileList:[]
@@ -19,6 +21,7 @@ var vue = new Vue({
 		if(document.getElementById("applyId").value){
 			this.project.id = document.getElementById("applyId").value;
 			this.getProject(this.project.id);
+			this.getSteps(this.project.id);
 			this.getAudit(this.project.id);
 		}
 	},
@@ -34,6 +37,23 @@ var vue = new Vue({
 					_self.items.push(_self.project.items[index]);
 				}
 				_self.project.items = [];
+			},function(error){
+				console.error(error);
+			})
+		},
+		
+		getSteps:function(id){
+			let _self = this;
+			this.$http.get("/project/steps/"+id).then(function(response){
+				var steps = response.data;
+				if(steps.length>=2){
+					if(steps.status=='COMPLETED'){
+						_self.showButton = false;
+					}
+				}
+				if(steps.lenght>2){
+					_self.showLater = false;
+				}
 			},function(error){
 				console.error(error);
 			})
@@ -93,8 +113,10 @@ var vue = new Vue({
 				}
 				this.project.items.push(item);
 			}
+			this.$Spin.show();
 			let self = this;
 			this.$http.post("/apply",this.project).then(function(response){
+				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({
 						content : "尽调申请成功",
@@ -106,9 +128,31 @@ var vue = new Vue({
 					self.$Message.error(response.data.errorMessage);
 				}
 			},function(error){
+				this.$Spin.hide();
 				self.$Message.error(error);
 			})
 			
+		},
+		
+		/**
+		 * 后补
+		 */
+		later:function(){
+			let _self = this;
+			this.$http.put("/apply",this.project).then(function(response){
+				if (response.data.success) {
+					_self.$Message.info({
+						content : "申请成功",
+						onClose : function() {
+							window.close();
+						}
+					});
+				} else {
+					_self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				_self.$Message.error(error.data.message);
+			})
 		},
 		
 		/**

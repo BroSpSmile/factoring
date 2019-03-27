@@ -4,8 +4,6 @@
  */
 package com.smile.start.model.common;
 
-import java.io.Serializable;
-
 /**
  * 文件信息
  *
@@ -16,7 +14,7 @@ public class InstallmentFileInfo extends FileInfo {
 
     private static final long serialVersionUID = 7606575168659710331L;
 
-    private String id;
+    private String            id;
 
     public String getId() {
         return id;

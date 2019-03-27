@@ -1,6 +1,5 @@
 package com.smile.start.event.listener;
 
-import com.smile.start.dao.FilingDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.event.AuditEvent;
@@ -25,13 +24,13 @@ public class InstallmentListener {
     /**
      * logger
      */
-    public Logger logger = LoggerFactory.getLogger(getClass());
+    public Logger          logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao     projectDao;
 
     @Resource
     private InstallmentDao installmentDao;
