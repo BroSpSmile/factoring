@@ -110,7 +110,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
      */
     @Override
     @Transactional
-    public SingleResult<StepRecord> skip(Project project) {
+    public BaseResult skip(Project project) {
         StepRecord record = new StepRecord();
         record.setProject(project);
         record.setStatus(StepStatus.LATER);
@@ -127,7 +127,20 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
             result = addOrUpate(recordAudit);
         }
         if (result.isSuccess()) {
-            return this.next(project, false);
+            BaseResult updataResult = projectService.turnover(project);
+            if (updataResult.isSuccess()) {
+                StepRecord newRecord = new StepRecord();
+                newRecord.setProject(project);
+                newRecord.setStatus(StepStatus.BEGIN);
+                newRecord.setStep(Step.getStep(project.getStep()));
+                newRecord.setCreateTime(new Date());
+
+                BaseResult addResult = addOrUpate(newRecord);
+                result.setSuccess(addResult.isSuccess());
+                return result;
+            } else {
+                throw new RuntimeException("更新项目进度失败");
+            }
         } else {
             throw new RuntimeException("更新项目进度失败");
         }
@@ -142,11 +155,9 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     public BaseResult addOrUpate(StepRecord record) {
         StepRecord exist = stepDao.getStep(record.getProject().getId(), record.getStep());
         if (null != exist) {
-            if (StepStatus.LATER.equals(exist.getStatus())) {
-                record.setId(exist.getId());
-                record.setModifyTime(new Date());
-                stepDao.update(record);
-            }
+            record.setId(exist.getId());
+            record.setModifyTime(new Date());
+            stepDao.update(record);
         } else {
             stepDao.insert(record);
         }

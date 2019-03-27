@@ -81,6 +81,7 @@
 							            <div class="ivu-steps-content" v-if="record.status!='LATER'">{{record.createTime|timeFilter}}</div>
 							            <div class="ivu-steps-content" v-if="record.status=='COMPLETED'">{{record.modifyTime|timeFilter}}</div>
 							            <div class="ivu-steps-content" v-if="record.status=='LATER'"><i-button type='text' @click='make(record)'>后补</i-button></div>
+							            <div class="ivu-steps-content" v-if="record.status=='PROCESSING'"><i-button type='text' @click='make(record)'>处理</i-button></div>
 							            <div class="ivu-steps-content"></div>
 							        </div>
 							    </div>
@@ -103,6 +104,7 @@
 							            <div class="ivu-steps-content" v-if="record.status!='LATER'">{{record.createTime|timeFilter}}</div>
 							            <div class="ivu-steps-content" v-if="record.status=='COMPLETED'">{{record.modifyTime|timeFilter}}</div>
 							            <div class="ivu-steps-content" v-if="record.status=='LATER'"><i-button size='small' type='text' @click='make(record)'>后补</i-button></div>
+							            <div class="ivu-steps-content" v-if="record.status=='PROCESSING'"><i-button size='small' type='text' @click='make(record)'>处理</i-button></div>
 							            <div class="ivu-steps-content"></div>
 							        </div>
 							    </div>

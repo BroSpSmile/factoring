@@ -51,7 +51,7 @@ var vue = new Vue({
 						_self.showButton = false;
 					}
 				}
-				if(steps.lenght>2){
+				if(steps.length>2){
 					_self.showLater = false;
 				}
 			},function(error){

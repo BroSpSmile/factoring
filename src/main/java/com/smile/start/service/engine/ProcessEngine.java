@@ -47,7 +47,7 @@ public interface ProcessEngine {
      * @param project
      * @return 最新业务节点
      */
-    SingleResult<StepRecord> skip(Project project);
+    BaseResult skip(Project project);
 
     /**
      * 变更业务节点状态
