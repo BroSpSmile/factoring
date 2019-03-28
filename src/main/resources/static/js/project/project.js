@@ -173,7 +173,11 @@ var vue = new Vue({
 		 * 新增项目
 		 */
 		addProject : function() {
-			window.open("factoring","_blank"); 
+			parent.window.menu.createNew({
+				name:"新建",
+				url:"factoring",
+				id:"factoring"
+			});
 		},
 
 		/** 保存项目 */
@@ -262,11 +266,19 @@ var vue = new Vue({
 		/**
 		 * 跳转菜单
 		 */
-		toMenu:function(menu,projectId){
+		toMenu:function(menu,menuName,projectId){
 			if(projectId){
-				window.open(menu+"?id="+projectId);
+				parent.window.menu.createNew({
+					name:menuName,
+					url:menu+"?id="+projectId,
+					id:menu
+				});
 			}else{
-				window.open(menu);
+				parent.window.menu.createNew({
+					name:menuName,
+					url:menu,
+					id:menu
+				});
 			}
 		},
 		
@@ -299,20 +311,14 @@ var vue = new Vue({
 			var step = item.step
 			var projectId = item.project.id
 			if(step=='APPROVAL'){
-				this.toMenu('meeting',projectId);
+				this.toMenu('meeting','立项申请',projectId);
 			}else if(step == 'TUNEUP'){
-				this.toMenu('apply',projectId);
+				this.toMenu('apply','尽调申请',projectId);
 			}else if(step == 'MEETING'){
-				this.toMenu('past',projectId);
+				this.toMenu('past','三重一大',projectId);
 			}
 		},
 		
-		/**
-		 * 尽调审核
-		 */
-		tuneup:function(projectId){
-			window.open("apply?id="+projectId,"_blank"); 
-		},
 
 		/**
 		 * 取消保存
@@ -526,7 +532,8 @@ vue.tableColumns=[{
 					props:{},
 					on:{
 						'on-click':(value)=>{
-							vue.toMenu(value,param.row.id);
+							var menus = value.split("-");
+							vue.toMenu(menus[0],menus[1],param.row.id);
 						}
 					}
 				},[
@@ -535,14 +542,14 @@ vue.tableColumns=[{
 						h('Icon',{props:{type:'ios-arrow-down'}})
 					]),
 					h('DropdownMenu',{slot:'list'},[
-						h('DropdownItem',{props:{name:'factoring'}},'编辑'),
-						param.row.step==-1||param.row.step==0?h('DropdownItem',{props:{name:'meeting'}},'立项会'):h('span'),
-						param.row.step==1?h('DropdownItem',{props:{name:'apply'}},'尽调'):h('span'),
-						param.row.step==3?h('DropdownItem',{props:{name:'past'}},'三重一大'):h('span'),
-						param.row.step==4?h('DropdownItem',{props:{name:'contractInfo'}},'合同拟定'):h('span'),
-						param.row.step==6?h('DropdownItem',{props:{name:'contractSign'}},'签署'):h('span'),
-						param.row.step==7?h('DropdownItem',{props:{name:'loanApply'}},'放款'):h('span'),
-						param.row.step==10?h('DropdownItem',{props:{name:'filingApply'}},'归档'):h('span')
+						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑'),
+						param.row.step==-1||param.row.step==0?h('DropdownItem',{props:{name:'meeting-立项申请'}},'立项申请'):h('span'),
+						param.row.step==1?h('DropdownItem',{props:{name:'apply-尽调申请'}},'尽调'):h('span'),
+						param.row.step==3?h('DropdownItem',{props:{name:'past-三重一大'}},'三重一大'):h('span'),
+						param.row.step==4?h('DropdownItem',{props:{name:'contractInfo-合同拟定'}},'合同拟定'):h('span'),
+						param.row.step==6?h('DropdownItem',{props:{name:'contractSign-签署'}},'签署'):h('span'),
+						param.row.step==7?h('DropdownItem',{props:{name:'loanApply-放款'}},'放款'):h('span'),
+						param.row.step==10?h('DropdownItem',{props:{name:'filingApply-归档'}},'归档'):h('span')
 					])
 				])
 			])

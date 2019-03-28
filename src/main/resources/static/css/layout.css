@@ -40,19 +40,6 @@ html, body {
     z-index:10;
 }
 
-.ivu-menu {
-    z-index: 901;
-
-}
-
-.ivu-menu-light {
-    background: #fff;
-}
-
-.ivu-menu-horizontal {
-    height: 60px;
-    line-height: 60px;
-}
 
 .wrapper-header-nav {
     width: 95%;
@@ -138,7 +125,6 @@ html, body {
     height:60px;
     line-height:60px;
     width:100%;
-    position:absolute;
     z-index:999;
     top:0;
     text-align:center;

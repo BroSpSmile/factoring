@@ -7,8 +7,6 @@
 			<row>
 				<i-col span="22" offset="1">
 					<br>
-					<h2>放款申请</h2>
-					<br>
 					<i-form :label-width="130">
 						<form-item label="放款申请方式" prop="type">
 							 <radio-group v-model="loan.type">
@@ -21,7 +19,7 @@
 								<row>
 									<i-col span="8">
 										<form-item label="申请部门" prop="">
-											<i-input placeholder="输入申请部门"  v-model="loan.department.id"></i-input>
+											<i-input placeholder="输入申请部门"  ></i-input>
 										</form-item>
 									</i-col>
 									<i-col span="8">
@@ -83,23 +81,35 @@
 								<form-item label="单位名称" prop="">
 									<i-input placeholder="输入单位名称"  v-model="loan.payeeName"></i-input>
 								</form-item>
-								<form-item label="开户银行" prop="">
-									<i-input placeholder="输入开户银行"  v-model="loan.payeeBankName"></i-input>
-								</form-item>
-								<form-item label="银行账号" prop="">
-									<i-input placeholder="输入银行账号"  v-model="loan.payeeAccountNo"></i-input>
-								</form-item>
+								<row>
+									<i-col span="14">
+										<form-item label="开户银行" prop="">
+											<i-input placeholder="输入开户银行"  v-model="loan.payeeBankName"></i-input>
+										</form-item>
+									</i-col>
+									<i-col span="10">
+										<form-item label="银行账号" prop="">
+											<i-input placeholder="输入银行账号"  v-model="loan.payeeAccountNo"></i-input>
+										</form-item>
+									</i-col>
+								</row>
 							</card>
 							<card dis-hover title="出资方">
 								<form-item label="单位名称" prop="">
 									<i-input placeholder="输入单位名称"  v-model="loan.payerName"></i-input>
 								</form-item>
-								<form-item label="开户银行" prop="">
-									<i-input placeholder="输入开户银行"  v-model="loan.payerBankName"></i-input>
-								</form-item>
-								<form-item label="银行账号" prop="">
-									<i-input placeholder="输入银行账号"  v-model="loan.payerAccountNo"></i-input>
-								</form-item>
+								<row>
+									<i-col span="14">
+										<form-item label="开户银行" prop="">
+											<i-input placeholder="输入开户银行"  v-model="loan.payerBankName"></i-input>
+										</form-item>
+									</i-col>
+									<i-col span="10">
+										<form-item label="银行账号" prop="">
+											<i-input placeholder="输入银行账号"  v-model="loan.payerAccountNo"></i-input>
+										</form-item>
+									</i-col>
+								</row>
 							</card>
 						</div>
 						<div v-if="loan.type=='OFFLINE'">

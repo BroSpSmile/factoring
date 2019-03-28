@@ -1,7 +1,3 @@
-/**
- * 
- */
-common.pageName = "index";
 
 var vue = new Vue({
 	el : '#content',
@@ -27,6 +23,13 @@ var vue = new Vue({
 				}
 			}, function(error) {
 
+			});
+		},
+		openFactoring:function(){
+			parent.window.menu.createNew({
+				name:"保理业务",
+				url:"/project",
+				id:"/project"
 			});
 		}
 	}

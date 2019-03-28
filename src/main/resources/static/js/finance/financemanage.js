@@ -80,7 +80,11 @@ var vue = new Vue({
          * 编辑项目
          */
         edit: function (id) {
-            window.open("financeOperation?id=" + id, "_self");
+        	parent.window.menu.createNew({
+				name:"财务管理",
+				url:"financeOperation?id="+id,
+				id:"financeOperation"
+			});
 
         },
 

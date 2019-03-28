@@ -18,4 +18,13 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
+    /**
+     * 
+     * @return
+     */
+    @GetMapping("/nav")
+    public String nav() {
+        return "layout/nav";
+    }
 }

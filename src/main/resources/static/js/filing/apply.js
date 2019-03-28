@@ -124,7 +124,6 @@ var vue = new Vue({
        
         cancel: function () {
             this.removeAllFile();
-            window.open(this.projectUrl, "_self");
         },
         indexOf: function (array, val) {
             for (let i = 0; i < array.length; i++) {

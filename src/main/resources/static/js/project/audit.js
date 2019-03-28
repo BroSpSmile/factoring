@@ -22,6 +22,8 @@ var vue = new Vue({
 		nowStep:0,
 		tableColumns:[],
 		isLastFileStep: false,
+		cwItem: [],
+		fwItem: []
 	},
 	created : function() {
 		this.initDate();
@@ -93,12 +95,27 @@ var vue = new Vue({
 				let _self = this;
 				this.$http.get("/audit/"+id).then(function(response){
 					_self.audit = response.data.data;
+					_self.initItem(_self.audit.records);
 					_self.nowStep = _self.audit.step;
 					_self.showAuditButton = response.data.success;
 				},function(error){
 					console.log(error);
 				})
 			}
+		},
+		
+		initItem:function(records){
+			console.log(records);
+			for(var index in records){
+				if(records[index].type=='财务风控审核'){
+					this.cwItem = records[index].items;
+				}
+				if(records[index].type=='法务风控审核'){
+					this.fwItem = records[index].items;
+				}
+			}
+			console.log(this.cwItem);
+			console.log(this.fwItem);
 		},
 		
 		/**
@@ -236,7 +253,11 @@ var vue = new Vue({
          * 跳转财务放款
          */
         toLoan:function(){
-        	window.open("/finance");
+        	parent.window.menu.createNew({
+				name:"财务放款",
+				url:"/finance",
+				id:"finance"
+			});
         },
         
         print:function(){

@@ -7,8 +7,6 @@ var side = new Vue({
 		menus:[]
 	},
 	created : function() {
-		this.activeName = common.pageName;
-		this.openName = common.openName;
 		this.getUser();
 	},
 	methods : {

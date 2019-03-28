@@ -46,12 +46,10 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/project/steps/"+id).then(function(response){
 				var steps = response.data;
-				if(steps.length>=2){
-					if(steps.status=='COMPLETED'){
-						_self.showButton = false;
-					}
+				if(steps[1].status=='COMPLETED'){
+					_self.showButton = false;
 				}
-				if(steps.lenght>2){
+				if(steps[2].id){
 					_self.showLater = false;
 				}
 			},function(error){
@@ -183,7 +181,11 @@ var vue = new Vue({
 		 * 
 		 */
 		showAudit:function(audit){
-			window.open("/audit?id="+audit.id);
+			parent.window.menu.createNew({
+				name:"尽调审核",
+				url:"/audit?id="+audit.id,
+				id:"audit"
+			});
 		}
 	}
 });
