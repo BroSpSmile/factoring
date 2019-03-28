@@ -61,11 +61,6 @@ var vue = new Vue({
 		 */
 		initDate : function() {
 			var _self = this;
-			this.$http.get("/combo/progress").then(function(response) {
-				_self.statusItems = response.data;
-			}, function(error) {
-				console.error(error);
-			});
 			this.$http.get("/combo/projectModel").then(function(response) {
 				_self.models = response.data;
 			}, function(error) {

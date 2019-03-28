@@ -17,10 +17,13 @@
 						<form-item label="业务发起人" prop="person">
 							 <i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
 						</form-item>
-						<form-item label="当前进度" prop="progress">
-							<i-select class="inputw" v-model="formInline.progress" clearable>
-                        		<i-option v-for="item in statusItems"  :value="item.value">{{item.text}}</i-option>
+						<form-item label="当前进度" prop="step">
+							<i-select class="inputw" v-model="formInline.step" clearable>
+                        		<i-option v-for="item in indexsteps"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
+						</form-item>
+						<form-item label="创建时间" prop="createTime">
+							<date-picker type="date" placeholder="请选择项目创建时间" v-model="formInline.createTime"></date-picker>
 						</form-item>
 						<row type="flex">
 		                    <i-col span="12" offset="6">

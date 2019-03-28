@@ -93,7 +93,7 @@ public class LoanApplyController extends BaseController {
     @ResponseBody
     public BaseResult commit(HttpServletRequest request, @RequestBody Loan loan) {
         User user = getUserByToken(request);
-        loan.setUser(user);
+        loan.getProject().setUser(user);
         LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(loan));
         return loanService.commit(loan);
     }

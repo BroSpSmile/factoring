@@ -63,13 +63,17 @@
 							<i-col span="8">
 								<form-item label="保理费合计" prop="totalFactoringFee">
 									 <input-number placeholder="请输入保理费" min="0" :max="100000000000" readonly="true" class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(万元)
+									 <span v-if="showLater">+待定</span>
 								</form-item>
 							</i-col>
 						</row>
 						<row v-for="(installment,index) in detail.factoringInstallments" :key="index">
 							<i-col span="8">
-								<form-item label="分期金额" prop="">
+								<form-item label="分期金额" prop="" v-if="!installment.later">
 									 <input-number placeholder="输入保理费分期金额" min="0" :max="100000000000"  class="select-width-140" v-model="installment.amount" @on-blur="computeFee"></input-number>&nbsp;(万元)
+								</form-item>
+								<form-item label="分期金额" prop="" v-if="installment.later">
+									<i-input readonly  class="select-width-140" value="--"></i-input>&nbsp;(万元)
 								</form-item>
 							</i-col>
 							<i-col span="8">
@@ -77,9 +81,10 @@
 									<date-picker type="date" placeholder="请保理费到账日" v-model="installment.installmentDate"></date-picker>
 								</form-item>
 							</i-col>
-							<i-col span="3">&nbsp;&nbsp;
-								<i-button type="success" shape="circle"  ghost icon="md-add" v-if="index==0" @click="add">添加</i-button>
-								<i-button type="error" shape="circle"  ghost icon="md-close" v-if="index!=0" @click="remove(index)">删除</i-button>
+							<i-col span="4">&nbsp;&nbsp;
+								<i-button type="success" shape="circle" size="small" ghost icon="md-add" v-if="index==0" @click="add">添加</i-button>
+								<i-button type="error" shape="circle" size="small"  ghost icon="md-close" v-if="index!=0" @click="remove(index)">删除</i-button>
+								<Checkbox v-if="index==detail.factoringInstallments.length-1" v-model="installment.later" @on-change="changeInstallment(installment)">待定</Checkbox>
 							</i-col>
 						</row>
 						<!-- 

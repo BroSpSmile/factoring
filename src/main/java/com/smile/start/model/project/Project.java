@@ -5,6 +5,7 @@
 package com.smile.start.model.project;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import com.smile.start.model.auth.User;
@@ -25,7 +26,7 @@ public class Project implements Serializable {
     private static final long serialVersionUID = -530319698748537765L;
 
     /** ID */
-    private long              id = -1;
+    private long              id               = -1;
 
     /** 项目编号 */
     private String            projectId;
@@ -53,10 +54,6 @@ public class Project implements Serializable {
     /** 流程历史 */
     private List<StepRecord>  records;
 
-    /** 子流程进度 */
-    @Deprecated
-    private String            subProgress;
-
     /** 项目模式 */
     private ProjectModel      model;
 
@@ -65,6 +62,9 @@ public class Project implements Serializable {
 
     /** 项目明细 */
     private FactoringDetail   detail;
+
+    /** 创建时间 */
+    private Date              createTime;
 
     /**
      * 获取步骤枚举
@@ -230,24 +230,6 @@ public class Project implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>subProgress</tt>.
-     * 
-     * @return property value of subProgress
-     */
-    public String getSubProgress() {
-        return subProgress;
-    }
-
-    /**
-     * Setter method for property <tt>subProgress</tt>.
-     * 
-     * @param subProgress value to be assigned to property subProgress
-     */
-    public void setSubProgress(String subProgress) {
-        this.subProgress = subProgress;
-    }
-
-    /**
      * Getter method for property <tt>model</tt>.
      * 
      * @return property value of model
@@ -299,6 +281,24 @@ public class Project implements Serializable {
      */
     public void setDetail(FactoringDetail detail) {
         this.detail = detail;
+    }
+
+    /**
+     * Getter method for property <tt>createTime</tt>.
+     * 
+     * @return property value of createTime
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * Setter method for property <tt>createTime</tt>.
+     * 
+     * @param createTime value to be assigned to property createTime
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
 }
