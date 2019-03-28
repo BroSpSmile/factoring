@@ -13,8 +13,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.smile.start.commons.DateUtil;
-import com.smile.start.commons.DocUtil;
+import com.smile.start.commons.*;
 import com.smile.start.dao.*;
 import com.smile.start.dto.*;
 import com.smile.start.model.common.FileInfo;
@@ -35,8 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.commons.LoginHandler;
-import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.BaseResult;
@@ -270,7 +267,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         }
 
         //标准合同
-//        uploadStandardTemplate(contractInfoDTO, project);
+        uploadStandardTemplate(contractInfoDTO, project);
 
         //自定义附件合同
         insertAttachList(contractInfoDTO);
@@ -456,7 +453,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligorSignatureDate", DateUtil.format(contractReceivableConfirmation.getObligorSignatureDate(), DateUtil.spotFormat));
         data.put("nameOfSubject", Strings.nullToEmpty(contractReceivableConfirmation.getNameOfSubject()));
         data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
-        data.put("invoiceMoneyUpper", contractReceivableConfirmation.getInvoiceMoneyType());
+        data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(contractReceivableConfirmation.getInvoiceMoney().toString()));
         data.put("invoiceMoneyType", contractReceivableConfirmation.getInvoiceMoneyType());
         return data;
     }
@@ -612,7 +609,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         insertAttachList(contractInfoDTO);
 
         //生成标准合同文件
-//        uploadStandardTemplate(contractInfoDTO, project);
+        uploadStandardTemplate(contractInfoDTO, project);
     }
 
     /**
