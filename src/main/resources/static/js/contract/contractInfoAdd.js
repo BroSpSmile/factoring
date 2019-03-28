@@ -127,6 +127,7 @@ var vue = new Vue({
                                 self.$Message.info({
                                     content: "保存成功",
                                     onClose: function () {
+                                        self.addForm.baseInfo.status = 0;
                                         self.isDisable = false;
                                         self.cancel();
                                     }
