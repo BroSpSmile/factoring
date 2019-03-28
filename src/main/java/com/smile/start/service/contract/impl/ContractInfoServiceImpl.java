@@ -264,10 +264,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractShareholderMeetingDTO.setContractSerialNo(contractSerialNo);
             ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
             contractShareholderMeetingDao.insert(contractShareholderMeeting);
-        }
 
-        //标准合同
-        uploadStandardTemplate(contractInfoDTO, project);
+            //标准合同
+            uploadStandardTemplate(contractInfoDTO, project);
+        }
 
         //自定义附件合同
         insertAttachList(contractInfoDTO);
