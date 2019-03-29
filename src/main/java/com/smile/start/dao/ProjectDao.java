@@ -111,9 +111,8 @@ public interface ProjectDao {
             + "<if test = 'id!=-1'> and t1.id = #{id}</if>"
             + "<if test = 'projectName!=null'> and t1.project_name = #{projectName}</if>"
             + "<if test = 'user!=null'> and t1.person = #{user.id}</if>" 
-            + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
+            + "<if test = 'createTime!=null'> and to_days(t1.create_time) = to_days(#{createTime})</if>"
             + "<if test = 'step!=null'> and t1.step = #{step}</if>"
-            //有用，别删，不影响其他功能
             + "<if test = 'progresses!=null'> and t1.progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
             + "</script>")
     List<Project> findByParam(Project project);

@@ -6,9 +6,7 @@ package com.smile.start.event.listener;
 
 import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.ProjectDao;
-import com.smile.start.model.enums.Progress;
 import com.smile.start.model.project.AuditRecord;
-import com.smile.start.model.project.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,12 +14,7 @@ import org.springframework.stereotype.Service;
 import com.smile.start.event.AuditEvent;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.project.Audit;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 放款审核监听器
@@ -35,13 +28,13 @@ public class LoanAuditLinstener implements AuditListener {
     /**
      * logger
      */
-    public Logger logger = LoggerFactory.getLogger(getClass());
+    public Logger              logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao         projectDao;
 
     /**
      * 项目DAO

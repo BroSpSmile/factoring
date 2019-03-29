@@ -7,8 +7,6 @@ package com.smile.start.model.loan;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.smile.start.dto.OrganizationalDTO;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.LoanType;
 import com.smile.start.model.project.Project;
 
@@ -29,10 +27,10 @@ public class Loan implements Serializable {
     private LoanType          type;
 
     /** 申请部门 */
-    private OrganizationalDTO department;
+    private String            department;
 
     /** 申请人 */
-    private User              user;
+    private String            user;
 
     /** 申请时间 */
     private Date              createTime;
@@ -132,7 +130,7 @@ public class Loan implements Serializable {
      * 
      * @return property value of department
      */
-    public OrganizationalDTO getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
@@ -141,7 +139,7 @@ public class Loan implements Serializable {
      * 
      * @param department value to be assigned to property department
      */
-    public void setDepartment(OrganizationalDTO department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
@@ -150,7 +148,7 @@ public class Loan implements Serializable {
      * 
      * @return property value of user
      */
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
@@ -159,7 +157,7 @@ public class Loan implements Serializable {
      * 
      * @param user value to be assigned to property user
      */
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

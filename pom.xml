@@ -99,6 +99,13 @@
             <version>4.1.6</version>
         </dependency> 
         
+        <!-- POI -->
+        <dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+        
         <!-- aliyun oss -->
         <dependency>
 		    <groupId>com.aliyun.oss</groupId>

@@ -26,6 +26,7 @@ var vue = new Vue({
 			invoicing:"false",
 			paied:"false"
 		},
+		showLater:false,
 		validata:{
 			'project.projectName': [
             	{ required: true,  message: '项目名称不能为空',trigger:'blur'}
@@ -60,18 +61,31 @@ var vue = new Vue({
 			if(id){
 				this.$http.get("/factoring/"+id).then(function(response){
 					_self.detail = response.data;
+					for(let i in _self.detail.factoringInstallments){
+						if(_self.detail.factoringInstallments[i].amount==0&&i==_self.detail.factoringInstallments.length-1){
+							_self.detail.factoringInstallments[i].later =true;
+							_self.showLater = true;
+						}else{
+							_self.detail.factoringInstallments[i].later =false;
+						}
+					}
 				},function(error){
 					console.error(error);
 				})
 			}
 		},
 		
+		/** 添加保理费分期 */
 		add:function(){
+			for(let index in this.detail.factoringInstallments){
+				this.detail.factoringInstallments[index].later =false;
+			}
 			this.detail.factoringInstallments.push({
 				amount:0,
 				installmentDate:new Date(),
 				type:"FACTORING"
 			});
+			this.computeFee();
 		},
 		
 		/**
@@ -79,17 +93,44 @@ var vue = new Vue({
 		 */
 		remove:function(index){
 			this.detail.factoringInstallments.splice(index,1);
+			this.computeFee();
+			for(let i in this.detail.factoringInstallments){
+				this.showLater = false;
+				if(this.detail.factoringInstallments[i].later){
+					this.showLater = true;
+					break;
+				}
+			}
+			
+		},
+		
+		/**
+		 * 后补
+		 */
+		changeInstallment:function(installment){
+			installment.amount = 0;
+			if(installment.later){
+				this.showLater =true;
+				installment.installmentDate = null;
+			}else{
+				this.showLater =false;
+				installment.installmentDate = new Date();
+			}
+			this.computeFee();
 		},
 		
 		/** 计算保理费分期 */
 		computeFee:function(){
 			var total = 0;
 			for(let index in this.detail.factoringInstallments){
-				total += this.detail.factoringInstallments[index].amount;
+				if(!this.detail.factoringInstallments[index].later){
+					total += this.detail.factoringInstallments[index].amount;
+				}
 			}
 			this.detail.totalFactoringFee = total;
 		},
 		
+		/**  */
 		submit:function(){
 			let _self = this;
 			this.$refs['entityDataForm'].validate((valid) => {

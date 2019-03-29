@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @description：归档申请，项目查询
@@ -55,14 +54,8 @@ public class FilingProjectController extends BaseController {
     public PageInfo<Project> queryByParam(@RequestBody PageRequest<Project> query) {
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         PageInfo<Project> result = projectService.queryPage(query);
-        List<Project> projectList = result.getList();
-        projectList.stream().forEach(project -> project.setSubProgress(getSubProgress(project)));
+        //List<Project> projectList = result.getList();
+        // projectList.stream().forEach(project -> project.setSubProgress(getSubProgress(project)));
         return result;
-    }
-
-    private String getSubProgress(Project project) {
-        //        Optional<FilingApplyInfo> opt = Optional.ofNullable(filingService.findByProjectId(project.getId()));
-        //        return opt.isPresent() ? opt.get().getProgress().getCode() : "";
-        return null;
     }
 }

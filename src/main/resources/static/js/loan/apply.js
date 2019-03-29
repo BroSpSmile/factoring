@@ -15,8 +15,8 @@ var vue = new Vue({
 			accumulativeyments:0.00,
 			unpaid:0.00,
 			createTime:new Date(),
-			department:{},
-			user:{},
+			department:"",
+			user:"",
 			project:{
 				id:0,
 				items:[]
@@ -46,7 +46,7 @@ var vue = new Vue({
 				console.error(error);
 			});
 			this.$http.get("/login/user").then(function(response){
-				_self.loan.user = response.data;
+				_self.loan.user = response.data.username;
 			},function(error){
 				_self.$Message.error(error);
 			})
