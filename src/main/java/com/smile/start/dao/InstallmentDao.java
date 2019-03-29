@@ -186,6 +186,8 @@ public interface InstallmentDao {
         + "and t1.step in (9,12)"
         //有用，别删，不影响其他功能
         + "<if test = 'progresses!=null'> and t1.progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
+        + "<if test = 'projectIdList!=null'> and t1.id in  "
+        + "<foreach collection='projectIdList' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
         + "</script>")
     List<Project> findByParamProject(Project project);
 

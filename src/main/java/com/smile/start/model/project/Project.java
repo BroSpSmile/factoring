@@ -47,6 +47,8 @@ public class Project implements Serializable {
      */
     private List<String>      progresses;
 
+    private List<Long>      projectIdList;
+
     /** 当前步骤 */
     private Integer           step;
 
@@ -65,6 +67,14 @@ public class Project implements Serializable {
 
     /** 项目明细 */
     private FactoringDetail   detail;
+
+    public List<Long> getProjectIdList() {
+        return projectIdList;
+    }
+
+    public void setProjectIdList(List<Long> projectIdList) {
+        this.projectIdList = projectIdList;
+    }
 
     /**
      * 获取步骤枚举

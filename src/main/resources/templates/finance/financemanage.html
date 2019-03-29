@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	  layout:decorator="layout/layout">
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
 <div layout:fragment="content">
-	<div id="financeManage" v-cloak>
-		<br>
-		<card dis-hover title="搜索条件">
-			<p>
-				<i-form ref="searchForm" :model="formInline" :label-width="80" inline>
-					<form-item label="项目编号" prop="projectId">
-						<i-input placeholder="输入项目编号" class="inputw" v-model="formInline.projectId"></i-input>
-					</form-item>
-					<form-item label="项目名称" prop="projectName">
-						<i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
-					</form-item>
-					<form-item label="项目负责人" prop="person">
-						<i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
-					</form-item>
-					<form-item label="当前进度" prop="progress">
-						<i-select class="inputw" v-model="formInline.progress" clearable>
-							<i-option v-for="item in statusItems"  :value="item.value">{{item.text}}</i-option>
-						</i-select>
-					</form-item>
-					<row type="flex">
-						<i-col span="12" offset="6">
-							<i-button type="primary"  icon="ios-search" @click="search">查询</i-button>
-							<i-button  icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
-						</i-col>
-					</row>
-				</i-form>
-			</p>
-		</card>
-		<br>
-		<card dis-hover title="搜索结果" >
-			<i-table border :columns="tableColumns" :data="pageInfo.list" ></i-table>
-			<br/>
-			<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
-		</card>
-	</div>
-	<script src="js/finance/financemanage.js"></script>
-	<style scoped>
-		.ivu-table-cell {
-			padding-left: 0px;
-			padding-right: 0px;
-		}
-	</style>
+    <div id="financeManage" v-cloak>
+        <br>
+        <card dis-hover title="搜索条件">
+            <p>
+                <i-form ref="searchForm" :model="formInline" :label-width="80" inline>
+                    <form-item label="项目编号" prop="projectId">
+                        <i-input placeholder="输入项目编号" class="inputw" v-model="formInline.projectId"></i-input>
+                    </form-item>
+                    <form-item label="项目名称" prop="projectName">
+                        <i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
+                    </form-item>
+                    <form-item label="项目负责人" prop="person">
+                        <i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
+                    </form-item>
+                    <form-item label="当前进度" prop="progress">
+                        <i-select class="inputw" v-model="formInline.progress" clearable>
+                            <i-option v-for="item in statusItems" :value="item.value">{{item.text}}</i-option>
+                        </i-select>
+                    </form-item>
+                    <row type="flex">
+                        <i-col span="12" offset="6">
+                            <i-button type="primary" icon="ios-search" @click="search">查询</i-button>
+                            <i-button icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
+                        </i-col>
+                    </row>
+                </i-form>
+            </p>
+        </card>
+        <br>
+        <card dis-hover title="搜索结果">
+            <i-table border :columns="tableColumns" :data="pageInfo.list"></i-table>
+            <br/>
+            <page :total="pageInfo.total" show-elevator show-total :page-size="pageInfo.pageSize"
+                  @on-change="pageChange"></page>
+        </card>
+        <modal v-model="entrustModal" title="委托流转" mask-closable="false">
+            <div id="modalForm">
+                <i-form ref="entityDataForm" :label-width="120">
+                    <form-item label="流转至" prop="toUserId">
+                        <i-col span="12" style="padding-right:10px">
+                            <i-select  v-model="entrustForm.toUserId" filterable clearable>
+                                <i-option v-for="item in financeUserList" :label=item.text.split(',')[0]  :key="'financeUser'+item.value" :value="item.value">{{ item.text }}</i-option>
+                            </i-select>
+                        </i-col>
+                    </form-item>
+                    <form-item label="委托原因：" prop="remark">
+                        <i-input type="textarea" placeholder="请输入原因" v-model="entrustForm.remark"></i-input>
+                    </form-item>
+                </i-form>
+            </div>
+            <div slot="footer">
+                <i-button type="success" @click="entrustConfirm" style="margin-left: 8px">确认流转</i-button>
+                <i-button @click="entrustCancel" style="margin-left: 8px">取消</i-button>
+            </div>
+        </modal>
+    </div>
+
+    <!-- 委托流转 -->
+
+    <script src="js/finance/financemanage.js"></script>
+    <style scoped>
+        .ivu-table-cell {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    </style>
 </div>
 </html>

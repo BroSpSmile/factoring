@@ -120,6 +120,9 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     private void loadOrganizational(AuthUserInfoDTO user) {
         List<OrganizationalDTO> organizationals = organizationalService.findByUserSerialNo(user.getSerialNo());
+        if (null != organizationals && !organizationals.isEmpty()) {
+            user.setFirstOrganizationName(organizationals.get(0).getOrganizationalName());
+        }
         List<String> organizationalStrings = Lists.newArrayList();
         organizationals.forEach(e -> organizationalStrings.add(e.getSerialNo()));
         user.setCheckedOrganizationalList(organizationalStrings);

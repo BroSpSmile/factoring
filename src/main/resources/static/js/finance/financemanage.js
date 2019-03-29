@@ -35,11 +35,18 @@ var vue = new Vue({
             },
             installmentDate: ""
         },
-
+        entrustModal: false,
+        entrustForm: {
+            projectId: -1,
+            toUserId: '',
+            remark: '',
+        },
+        isFinanceAdmin: false,
+        financeUserList: []
     },
     created: function () {
         this.initDate();
-        this.query();
+        //this.query();
     },
     methods: {
         /**
@@ -62,6 +69,18 @@ var vue = new Vue({
             }, function (error) {
                 console.error(error);
             });
+            this.$http.get("/financeManage/isFinanceAdmin").then(function (response) {
+                let data = response.data;
+                this.isFinanceAdmin = data.data;
+                this.query();
+            }, function (error) {
+                console.error(error);
+            });
+            this.$http.get("/financeManage/financeUserList").then(function (response) {
+                this.financeUserList = response.data;
+            }, function (error) {
+                console.error(error);
+            });
         },
         query: function () {
             let self = this;
@@ -80,11 +99,11 @@ var vue = new Vue({
          * 编辑项目
          */
         edit: function (id) {
-        	parent.window.menu.createNew({
-				name:"财务管理",
-				url:"financeOperation?id="+id,
-				id:"financeOperation"
-			});
+            parent.window.menu.createNew({
+                name: "财务管理",
+                url: "financeOperation?id=" + id,
+                id: "financeOperation"
+            });
 
         },
 
@@ -148,6 +167,70 @@ var vue = new Vue({
          */
         reset: function () {
             this.$refs['searchForm'].resetFields();
+        },
+
+        /**
+         * 流程流转弹框
+         */
+        entrustModel: function (id) {
+            let _self = this;
+            this.entrustForm = {
+                projectId: id,
+                toUserId: '',
+                remark: '',
+            };
+            _self.entrustModal = true;
+            this.$http.get("/financeManage/entrustAuth/" + id).then(function (response) {
+                let entrustAuth = response.data.data;
+                if (null != entrustAuth) {
+                    _self.entrustForm = entrustAuth;
+                    _self.entrustForm.toUserId = _self.entrustForm.toUserId + '';
+                }
+            }, function (error) {
+                console.error(error);
+            });
+        },
+
+        /**
+         * 委托确认
+         */
+        entrustConfirm: function () {
+            let self = this;
+            this.$Spin.show();
+            self.entrustForm.type='LOANEN';
+            this.$http.post("/financeManage/entrustAuth", self.entrustForm).then(function (response) {
+                this.$Spin.hide();
+                if (response.data.success) {
+                    self.$Message.success({
+                        content: "流程流转成功",
+                        onClose: function () {
+                            window.close();
+                        },
+                    });
+                    self.entrustCancel();
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                this.$Spin.hide();
+                self.$Message.error(error);
+            })
+        },
+
+        /**
+         * 委托取消
+         */
+        entrustCancel: function () {
+            let _self = this;
+            _self.entrustModal = false;
+            _self.entrustForm = {
+                projectId: id,
+                toUserId: '',
+                remark: '',
+            };
+        },
+        getIsFinanceAdmin: function () {
+            return this.isFinanceAdmin;
         },
         columnRender: function (h, param) {
             let childArray = param.row[param.column.key];
@@ -285,14 +368,15 @@ vue.tableColumns = [{
 }, {
     title: '操作',
     align: 'center',
+    width: 120,
     render: (h, param) => {
         return h('div', [
-                h('span'),
                 h('Button', {
                     props: {
                         size: "small",
-                        type: "warning",
+                        type: "success",
                         ghost: true
+
                     },
                     style: {
                         marginRight: '5px'
@@ -302,7 +386,21 @@ vue.tableColumns = [{
                             vue.edit(param.row.id);
                         }
                     }
-                }, '编辑')
+                }, '编辑'), vue.getIsFinanceAdmin() ? h('Button', {
+                    props: {
+                        size: "small",
+                        type: "info",
+                        ghost: true
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            vue.entrustModel(param.row.id);
+                        }
+                    }
+                }, '委托') : h('span')
             ]
         )
     }

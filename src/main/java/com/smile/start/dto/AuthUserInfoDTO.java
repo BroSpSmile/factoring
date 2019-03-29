@@ -46,6 +46,16 @@ public class AuthUserInfoDTO implements Serializable {
 
     private List<String> checkedOrganizationalList;
 
+    private String firstOrganizationName;
+
+    public String getFirstOrganizationName() {
+        return firstOrganizationName;
+    }
+
+    public void setFirstOrganizationName(String firstOrganizationName) {
+        this.firstOrganizationName = firstOrganizationName;
+    }
+
     public Long getId() {
         return id;
     }
