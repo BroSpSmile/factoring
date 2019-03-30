@@ -99,12 +99,13 @@ var vue = new Vue({
          * 编辑项目
          */
         edit: function (id) {
-            parent.window.menu.createNew({
-                name: "财务管理",
-                url: "financeOperation?id=" + id,
-                id: "financeOperation"
-            });
-            //window.open(this.projectUrl, "_self");
+            // parent.window.menu.createNew({
+            //     name: "财务管理",
+            //     url: "financeOperation?id=" + id,
+            //     id: "financeOperation"
+            // });
+            // //window.open(this.projectUrl, "_self");
+            window.location.href="financeOperation?id=" + id;
         },
 
         /**

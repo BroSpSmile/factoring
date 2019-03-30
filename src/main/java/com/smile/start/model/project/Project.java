@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
@@ -48,7 +49,10 @@ public class Project implements Serializable {
      */
     private List<String>      progresses;
 
-    private List<Long>      projectIdList;    /** 当前步骤 */
+    //查询时使用
+    private List<Long>      projectIdList;
+
+    /** 当前步骤 */
     private Integer           step;
 
     /** 流程历史 */
@@ -65,6 +69,29 @@ public class Project implements Serializable {
 
     /** 创建时间 */
     private Date              createTime;
+
+    //查询时使用
+    private String person;
+
+    //查询时使用
+    private List<Long> userList;
+
+    public List<Long> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<Long> userList) {
+        this.userList = userList;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
     public List<Long> getProjectIdList() {
         return projectIdList;
     }

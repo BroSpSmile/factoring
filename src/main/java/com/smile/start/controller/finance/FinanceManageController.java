@@ -25,6 +25,7 @@ import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.entrustauth.EntrustAuthService;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,7 +87,7 @@ public class FinanceManageController extends BaseController {
      */
     @PostMapping("/query")
     @ResponseBody
-    public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query,HttpServletRequest request) {
+    public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query, HttpServletRequest request) {
 
         //project.step  LOANEN(9, "放款操作") 可以查询 begin
         //project.step END(12, "完结") 可以查询 begin
@@ -95,6 +96,24 @@ public class FinanceManageController extends BaseController {
             query.getCondition()
                 .setProjectIdList(entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN));
         }
+
+        if (StringUtils.isNotBlank(query.getCondition().getPerson())) {
+            PageRequest<UserSearchDTO> userSearch = new PageRequest<UserSearchDTO>();
+            UserSearchDTO userSearchDTO = new UserSearchDTO();
+            userSearchDTO.setUsername(query.getCondition().getPerson());
+            userSearch.setCondition(userSearchDTO);
+            List<Long> userList = userInfoService.findAll(userSearch)
+                .getList()
+                .stream()
+                .map(item -> item.getId())
+                .collect(Collectors.toList());
+            if (null != userList && userList.isEmpty()) {
+                userList.add(-1l);
+            }
+            query.getCondition()
+                .setUserList(userList);
+        }
+
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         List<ProjectForView> projectForViewList = Lists.newArrayList();
         PageInfo<Project> projectPageInfo = financeService.queryPageProject(query);
@@ -175,7 +194,7 @@ public class FinanceManageController extends BaseController {
      */
     @PostMapping("/entrustAuth")
     @ResponseBody
-    public BaseResult entrustAuth(@RequestBody EntrustAuth entrustAuth,HttpServletRequest request) {
+    public BaseResult entrustAuth(@RequestBody EntrustAuth entrustAuth, HttpServletRequest request) {
         User user = getUserByToken(request);
         entrustAuth.setFromUserId(user.getId());
         if (null == entrustAuthService.query(entrustAuth.getProjectId())) {
@@ -210,10 +229,10 @@ public class FinanceManageController extends BaseController {
         projectForView.setUsername(project.getUser().getUsername());
         FactoringDetail detail = project.getDetail();
         projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
-        projectForView.setReceivable(detail.getReceivable()/10000);
+        projectForView.setReceivable(detail.getReceivable() / 10000);
         projectForView.setDropAmount(detail.getLoanInstallments()
             .stream()
-            .map(installment -> installment.getAmount()/10000)
+            .map(installment -> installment.getAmount() / 10000)
             .collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments())
             .orElse(new ArrayList<Installment>())
@@ -223,7 +242,7 @@ public class FinanceManageController extends BaseController {
             .collect(Collectors.toList()));
         projectForView.setReturnAmount(detail.getReturnInstallments()
             .stream()
-            .map(installment -> installment.getAmount()/10000)
+            .map(installment -> installment.getAmount() / 10000)
             .collect(Collectors.toList()));
         projectForView.setReturnDates(Optional.of(detail.getReturnInstallments())
             .orElse(new ArrayList<Installment>())
@@ -231,12 +250,12 @@ public class FinanceManageController extends BaseController {
             .map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date))
             .collect(Collectors.toList()));
-        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee()/10000);
+        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() / 10000);
         projectForView.setFactoringInstallmentAmounts(
             Optional.of(detail.getFactoringInstallments())
                 .orElse(new ArrayList<Installment>())
                 .stream()
-                .map(installment -> installment.getAmount()/10000)
+                .map(installment -> installment.getAmount() / 10000)
                 .collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments()
             .stream()
