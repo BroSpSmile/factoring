@@ -19,6 +19,7 @@ import com.smile.start.commons.LoginHandler;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.login.LoginService;
@@ -54,6 +55,17 @@ public class LoginController extends BaseController {
     @ResponseBody
     public LoginUser getUser(HttpServletRequest request) {
         return LoginHandler.getLoginUser();
+    }
+
+    /**
+     * 获取微信登录用户
+     * @param request
+     * @return
+     */
+    @GetMapping("/user/wx")
+    @ResponseBody
+    public User getUserByWx(HttpServletRequest request) {
+        return getUserByToken(request);
     }
 
     /**
