@@ -26,6 +26,7 @@ import com.smile.start.service.entrustauth.EntrustAuthService;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +48,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/financeManage")
 public class FinanceManageController extends BaseController {
 
-    private static final String FINANCE_ADMIN_ROLE_CODE = "12";
+    //private static final String FINANCE_ADMIN_ROLE_CODE = "12";
 
-    private static final String FINANCE_ROLE_CODE = "12-1";
+    // private static final String FINANCE_ROLE_CODE = "12-1";
+
+    @Value("${finance.admin.role.code}")
+    private String financeAdminRoleCode;
+
+    @Value("${finance.role.code}")
+    private String financeRoleCode;
 
     /**
      * 项目服务
@@ -148,7 +155,7 @@ public class FinanceManageController extends BaseController {
         List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
         boolean isFinanceAdmin = false;
         for (AuthRoleInfoDTO authRoleInfoDTO : roles) {
-            if (authRoleInfoDTO.getRoleCode().equals(FINANCE_ADMIN_ROLE_CODE)) {
+            if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeAdminRoleCode)?"12":financeAdminRoleCode.trim())) {
                 isFinanceAdmin = true;
                 break;
             }
@@ -164,7 +171,7 @@ public class FinanceManageController extends BaseController {
     @GetMapping("/financeUserList")
     @ResponseBody
     public List<Item> getUserAll(HttpServletRequest request) {
-        ListResult<AuthUserInfoDTO> result = new ListResult<AuthUserInfoDTO>();
+        //ListResult<AuthUserInfoDTO> result = new ListResult<AuthUserInfoDTO>();
         PageRequest<UserSearchDTO> userSearch = new PageRequest<UserSearchDTO>();
         userSearch.setCondition(new UserSearchDTO());
         PageInfo<AuthUserInfoDTO> userListPageInfo = userInfoService.findAll(userSearch);
@@ -172,7 +179,7 @@ public class FinanceManageController extends BaseController {
         list.stream().filter(user -> {
             boolean hasRoleFinanceRole = false;
             for (AuthRoleInfoDTO authRoleInfoDTO : user.getRoleList()) {
-                if (authRoleInfoDTO.getRoleCode().equals(FINANCE_ROLE_CODE)) {
+                if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeRoleCode)?"12-1":financeRoleCode.trim() )) {
                     hasRoleFinanceRole = true;
                     break;
                 }
