@@ -42,7 +42,8 @@ var vue = new Vue({
             remark: '',
         },
         isFinanceAdmin: false,
-        financeUserList: []
+        financeUserList: [],
+        tableColumns:[]
     },
     created: function () {
         this.initDate();

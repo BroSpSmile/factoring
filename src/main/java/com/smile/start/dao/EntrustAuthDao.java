@@ -1,10 +1,7 @@
 package com.smile.start.dao;
 
 import com.smile.start.model.enums.Step;
-import com.smile.start.model.filing.FilingApplyInfo;
-import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.EntrustAuth;
-import com.smile.start.model.project.InstallmentDetail;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -34,15 +31,11 @@ public interface EntrustAuthDao {
      * @param entrustAuth
      * @return
      */
-    @Update("<script>" + "update entrust_auth" + " set id=#{id}"
-        + "<if test = 'type!=null'>, type = #{type}</if>"
-        + "<if test = 'projectId!=null'> , project_id = #{projectId}</if>"
-        + "<if test = 'fromUserId!=null'> , from_user_id = #{fromUserId}</if>"
-        + "<if test = 'toUserId!=null'> , to_user_id = #{toUserId}</if>"
-        + "<if test = 'auditId!=null'> , audit_id = #{auditId}</if>"
-        + "<if test = 'recordId!=null'> , record_id = #{recordId}</if>"
-        + "<if test = 'remark!=null'> , remark = #{remark}</if>" + " where project_id=#{projectId} "
-        + "</script>")
+    @Update("<script>" + "update entrust_auth" + " set id=#{id}" + "<if test = 'type!=null'>, type = #{type}</if>"
+            + "<if test = 'projectId!=null'> , project_id = #{projectId}</if>" + "<if test = 'fromUserId!=null'> , from_user_id = #{fromUserId}</if>"
+            + "<if test = 'toUserId!=null'> , to_user_id = #{toUserId}</if>" + "<if test = 'auditId!=null'> , audit_id = #{auditId}</if>"
+            + "<if test = 'recordId!=null'> , record_id = #{recordId}</if>" + "<if test = 'remark!=null'> , remark = #{remark}</if>" + " where project_id=#{projectId} "
+            + "</script>")
     int update(EntrustAuth entrustAuth);
 
     /**
