@@ -112,7 +112,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         if (installmentType == InstallmentType.LOAN) {
             installments = detail.getLoanInstallments();
         } else if (installmentType == InstallmentType.RETURN) {
-            installments = detail.getLoanInstallments();
+            installments = detail.getReturnInstallments();
         } else if (installmentType == InstallmentType.FACTORING) {
             installments = detail.getFactoringInstallments();
         }
@@ -210,11 +210,11 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
             Optional.ofNullable(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
         //放款金额总计
         double totalLoanAmount =
-            detail.getLoanInstallments().stream().map(installment -> installment.getAmount()).count();
+            detail.getLoanInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
 
         //回款金额总计
         double totalReturnAmount =
-            detail.getReturnInstallments().stream().map(installment -> installment.getAmount()).count();
+            detail.getReturnInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
 
         //detail表里没有回款金额，不更新
         detail.setDropAmount(totalLoanAmount);
@@ -224,24 +224,24 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
 
         //保理分期金额总计
         double totalFactoringAmount =
-            factoringInstallments.stream().map(installment -> installment.getAmount()).count();
+            factoringInstallments.stream().mapToDouble(installment -> installment.getAmount()).sum();
         boolean isAllPaied = true;
         for (Installment installment : factoringInstallments) {
             double totalInvoiceAmount = installment.getDetailList()
                 .stream()
-                .map(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.INVOICE ?
+                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.INVOICE ?
                     installmentDetail.getDetailAmount() :
                     0)
-                .count();
+                .sum();
             if (totalInvoiceAmount >= installment.getAmount()) {
                 installment.setInvoiced(true);
             }
             double totalPaymentAmount = installment.getDetailList()
                 .stream()
-                .map(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.PAYMENT ?
+                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.PAYMENT ?
                     installmentDetail.getDetailAmount() :
                     0)
-                .count();
+                .sum();
             if (totalPaymentAmount >= installment.getAmount()) {
                 installment.setPaied(true);
             }

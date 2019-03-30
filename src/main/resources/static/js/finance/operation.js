@@ -447,7 +447,7 @@ var vue = new Vue({
                                 window.close();
                             },
                         });
-                        window.open(this.projectUrl, "_self");
+                        //window.open(this.projectUrl, "_self");
                     } else {
                         self.$Message.error(response.data.errorMessage);
                     }

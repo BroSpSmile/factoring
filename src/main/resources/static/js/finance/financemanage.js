@@ -104,7 +104,7 @@ var vue = new Vue({
                 url: "financeOperation?id=" + id,
                 id: "financeOperation"
             });
-
+            //window.open(this.projectUrl, "_self");
         },
 
         /**
