@@ -326,31 +326,31 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Integer projectMode = contractInfoDTO.getBaseInfo().getProjectMode();
         String contractFileName;
         if (projectMode == 1) {
-            contractFileName = "保理合同（有追索权）" + contractExtendInfo.getContractCode();
+            contractFileName = "保理合同（有追索权）" + contractExtendInfo.getContractCode() + ".doc";
         } else {
-            contractFileName = "保理合同（无追索权）" + contractExtendInfo.getContractCode();
+            contractFileName = "保理合同（无追索权）" + contractExtendInfo.getContractCode() + ".doc";
         }
         File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml", buildTemplateData(contractExtendInfo, project.getProjectId() + "-4"));
         upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         ContractReceivableConfirmationDTO contractReceivableConfirmation = contractInfoDTO.getContractReceivableConfirmation();
-        String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode();
+        String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode() + ".doc";
         File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + projectMode + ".xml",
             buildTemplateData(contractReceivableConfirmation, contractExtendInfo));
         upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         ContractReceivableAgreementDTO contractReceivableAgreement = contractInfoDTO.getContractReceivableAgreement();
-        String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode();
+        String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".docx";
         File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + projectMode + ".xml",
             buildTemplateData(contractReceivableAgreement, contractExtendInfo));
         upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
         ContractFasaDTO contractFasa = contractInfoDTO.getContractFasa();
-        String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode();
+        String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode() + ".doc";
         File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + projectMode + ".xml", buildTemplateData(contractFasa, contractExtendInfo));
         upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
-        String shareholderFileName = "股东会决议";
+        String shareholderFileName = "股东会决议.docx";
         File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + projectMode + ".xml",
             buildTemplateData(contractInfoDTO.getContractShareholderMeeting(), contractExtendInfo));
         upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
