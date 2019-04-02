@@ -111,6 +111,19 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         return factoringDetailDao.factoringsInfos();
     }
 
+    /** 
+     * @see com.smile.start.service.project.FactoringService#getProfit(java.lang.String)
+     */
+    @Override
+    public Profit getProfit(String month) {
+        Profit profit = new Profit();
+        Double monthDouble = factoringDetailDao.monthProfit(month);
+        profit.setMonthProfit(monthDouble == null ? 0.00 : monthDouble);
+        Double yearDouble = factoringDetailDao.yearProfit(month.split("-")[0]);
+        profit.setYearProfit(yearDouble == null ? 0.00 : yearDouble);
+        return profit;
+    }
+
     @Transactional
     private BaseResult updateInstallments(FactoringDetail detail, List<Installment> installments) {
         if (!CollectionUtils.isEmpty(installments)) {
