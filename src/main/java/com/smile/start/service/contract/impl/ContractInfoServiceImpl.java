@@ -542,8 +542,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligorEnjoyMoneyUpper", contractExtendInfo.getObligorEnjoyMoneyUpper());
         data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney());
         data.put("receivableAssigneeMoneyUpper", contractExtendInfo.getReceivableAssigneeMoneyUpper());
-        data.put("receivableAssigneeFirstMoney", contractExtendInfo.getReceivableAssigneeFirstMoney());
-        data.put("receivableAssigneeFirstMoneyUpper", contractExtendInfo.getReceivableAssigneeMoneyUpper());
         data.put("interestRate", contractExtendInfo.getInterestRate());
         data.put("billingStartDate", DateUtil.format(contractExtendInfo.getBillingStartDate(), DateUtil.spotFormat));
 
