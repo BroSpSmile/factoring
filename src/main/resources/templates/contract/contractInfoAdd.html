@@ -249,6 +249,9 @@
 										<form-item label="应收账款回收款" prop="contractReceivableConfirmation.receivableRecoveryMoney">
 											<input-number placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></input-number>&nbsp;元
 										</form-item>
+										<form-item label="应收账款回收款（大写）" prop="contractReceivableConfirmation.receivableRecoveryMoneyUpper">
+											<i-input placeholder="请输入应收账款回收款（大写）" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoneyUpper"></i-input>
+										</form-item>
 										<form-item label="应收账款回收款截止日期" prop="contractReceivableConfirmation.receivableExpiryDate">
 											<date-picker type="date" placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate" format="yyyy-MM-dd"></date-picker>
 										</form-item>
