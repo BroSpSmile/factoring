@@ -4,11 +4,17 @@
  */
 package com.smile.start.controller.report;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.smile.start.controller.BaseController;
+import com.smile.start.model.project.Profit;
+import com.smile.start.service.project.FactoringService;
 
 /**
  * 利润报表
@@ -18,6 +24,11 @@ import com.smile.start.controller.BaseController;
 @Controller
 @RequestMapping("/profit")
 public class ProfitController extends BaseController {
+
+    /** 保理服务 */
+    @Resource
+    private FactoringService factoringService;
+
     /**
      * 
      * @return
@@ -25,5 +36,16 @@ public class ProfitController extends BaseController {
     @GetMapping
     public String index() {
         return "report/profit";
+    }
+
+    /**
+     * 获取利润报表
+     * @param month
+     * @return
+     */
+    @GetMapping("/{month}")
+    @ResponseBody
+    public Profit getProsfit(@PathVariable String month) {
+        return factoringService.getProfit(month);
     }
 }

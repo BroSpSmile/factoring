@@ -9,6 +9,7 @@ import java.util.List;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.FactoringsInfo;
+import com.smile.start.model.project.Profit;
 
 /**
  * 保理服务
@@ -42,4 +43,11 @@ public interface FactoringService {
      * @return
      */
     List<FactoringsInfo> getInfos();
+    
+    /**
+     * 获取利润
+     * @param month
+     * @return
+     */
+    Profit getProfit(String month);
 }

@@ -7,11 +7,12 @@ common.openName = [ '7' ];
 var vue = new Vue({
     el : '#profit',
     data : {
+    	queryMonth:new Date(),
     	list:[
     		{
     			zctitle:"营业收入",
-    			zcamount:50000000,
-    			zctotalamount:50000000
+    			zcamount:0.00,
+    			zctotalamount:0.00
     		}
     	],
     	tableColumns:[
@@ -31,7 +32,18 @@ var vue = new Vue({
     	]
     },
     created : function() {
+    	this.getProfit();
     },
     methods : {
+    	getProfit:function(){
+    		let _self = this;
+    		let param = moment(this.queryMonth).format('YYYY-MM')
+    		this.$http.get("/profit/"+param).then(function(response){
+    			_self.list[0].zcamount = response.data.monthProfit +"万元";
+    			_self.list[0].zctotalamount = response.data.yearProfit +"万元";
+    		},function(error){
+    			console.log(error);
+    		})
+    	}
     }
 });
