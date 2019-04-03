@@ -112,15 +112,15 @@ public class ContractExtendInfoDTO implements Serializable {
      */
     private String receivableAssigneeMoneyUpper;
 
-    /**
-     * 应收账款受让款首付款
-     */
-    private BigDecimal receivableAssigneeFirstMoney;
-
-    /**
-     * 应收账款受让款首付款大写
-     */
-    private String receivableAssigneeFirstMoneyUpper;
+//    /**
+//     * 应收账款受让款首付款
+//     */
+//    private BigDecimal receivableAssigneeFirstMoney;
+//
+//    /**
+//     * 应收账款受让款首付款大写
+//     */
+//    private String receivableAssigneeFirstMoneyUpper;
 
     /**
      * 应收账款回收款
@@ -382,22 +382,6 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setReceivableRecoveryMoneyUpper(String receivableRecoveryMoneyUpper) {
         this.receivableRecoveryMoneyUpper = receivableRecoveryMoneyUpper;
-    }
-
-    public BigDecimal getReceivableAssigneeFirstMoney() {
-        return receivableAssigneeFirstMoney;
-    }
-
-    public void setReceivableAssigneeFirstMoney(BigDecimal receivableAssigneeFirstMoney) {
-        this.receivableAssigneeFirstMoney = receivableAssigneeFirstMoney;
-    }
-
-    public String getReceivableAssigneeFirstMoneyUpper() {
-        return receivableAssigneeFirstMoneyUpper;
-    }
-
-    public void setReceivableAssigneeFirstMoneyUpper(String receivableAssigneeFirstMoneyUpper) {
-        this.receivableAssigneeFirstMoneyUpper = receivableAssigneeFirstMoneyUpper;
     }
 
     public Date getReceivableRecoveryMoneyPaytime() {
