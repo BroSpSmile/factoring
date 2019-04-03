@@ -738,6 +738,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //        }
         //TODO 查询数据库次数太多，可能影响性能
         Project project = projectService.getProject(contractInfo.getProjectId());
+        project.setItems(null);
         //        audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
         //        audit.setProject(project);
         //        audit.setCreateTime(new Date());
