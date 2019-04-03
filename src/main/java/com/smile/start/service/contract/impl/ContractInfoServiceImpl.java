@@ -345,10 +345,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             buildTemplateData(contractReceivableAgreement, contractExtendInfo));
         upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
 
-        ContractFasaDTO contractFasa = contractInfoDTO.getContractFasa();
-        String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode() + ".doc";
-        File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + projectMode + ".xml", buildTemplateData(contractFasa, contractExtendInfo));
-        upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
+        //无追模式下有财务顾问协议
+        if (projectMode == 2) {
+            ContractFasaDTO contractFasa = contractInfoDTO.getContractFasa();
+            String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode() + ".doc";
+            File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + projectMode + ".xml", buildTemplateData(contractFasa, contractExtendInfo));
+            upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
+        }
 
         String shareholderFileName = "股东会决议.docx";
         File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + projectMode + ".xml",
@@ -536,7 +539,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("contractName", Strings.nullToEmpty(contractExtendInfo.getContractName()));
         data.put("receivableMoney", contractExtendInfo.getReceivableMoney());
         data.put("receivableMoneyUpper", contractExtendInfo.getReceivableMoneyUpper());
-        data.put("receivableMone", contractExtendInfo.getReceivableMoneyType());
+        data.put("receivableMoneyType", contractExtendInfo.getReceivableMoneyType());
         data.put("receivableMoneyAdditional", contractExtendInfo.getReceivableMoneyAdditional());
         data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney());
         data.put("obligorEnjoyMoneyUpper", contractExtendInfo.getObligorEnjoyMoneyUpper());
