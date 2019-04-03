@@ -170,7 +170,7 @@ vue.tableColumns=[
             render:(h,param)=>{
             return h('div', [
                 h('span'),
-                h('Button', {
+                param.row.sealStatus === 0 ? h('Button', {
                     props: {
                         size: "small",
                         type: "warning",
@@ -184,7 +184,7 @@ vue.tableColumns=[
                             vue.sealFinishWarn(param.row.projectId);
                         }
                     }
-                }, '用印完成')
+                }, '用印完成') : h('span')
             ])
         }
     }
