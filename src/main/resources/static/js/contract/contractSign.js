@@ -51,7 +51,7 @@ var vue = new Vue({
          */
         saveSign : function() {
             let self = this;
-
+            this.addForm.finished = false;
             //检查是否有选中
             let checked = false;
             for(index in self.addForm.signList) {
