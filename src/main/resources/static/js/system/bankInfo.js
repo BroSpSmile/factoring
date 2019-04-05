@@ -223,6 +223,10 @@ vue.tableColumns=[
         key: 'amount',
         align: 'right'
     },{
+        title: '所属组织',
+        key: 'organizationalName',
+        align: 'left'
+    },{
         title: '操作',
             align: 'center',
             render:(h,param)=>{
