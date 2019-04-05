@@ -113,6 +113,13 @@ var vue = new Vue({
             if (index > -1) {
                 array.splice(index, 1);
             }
+        },
+        toAudit : function(auditId){
+            parent.window.menu.createNew({
+                name:"审核",
+                url:"/audit?id="+auditId,
+                id:"audit"
+            });
         }
     }
 });
@@ -158,7 +165,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            // vue.signFinishWarn(param.row.serialNo);
+                            vue.toAudit(param.row.auditId);
                         }
                     }
                 }, '查看审批信息')

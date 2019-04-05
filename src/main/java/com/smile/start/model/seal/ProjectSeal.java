@@ -18,6 +18,11 @@ public class ProjectSeal implements Serializable {
     private Long projectId;
 
     /**
+     * 合同审核进度ID
+     */
+    private Long auditId;
+
+    /**
      * 项目编号
      */
     private String projectCode;
@@ -48,6 +53,14 @@ public class ProjectSeal implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public Long getAuditId() {
+        return auditId;
+    }
+
+    public void setAuditId(Long auditId) {
+        this.auditId = auditId;
     }
 
     public String getProjectCode() {
