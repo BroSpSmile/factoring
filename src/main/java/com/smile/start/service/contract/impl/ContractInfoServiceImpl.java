@@ -484,9 +484,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("receivableExpiryDate", DateUtil.format(contractReceivableConfirmation.getReceivableExpiryDate(), DateUtil.chineseDtFormat));
 
         data.put("receivableRecoveryMoney", contractReceivableConfirmation.getReceivableRecoveryMoney());
-        // TODO
-        data.put("receivableRecoveryMoneyUpper", "");
-//        data.put("receivableRecoveryMoneyUpper", contractReceivableConfirmation.getReceivableRecoveryMoneyUpper());
+        String receivableRecoveryMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getReceivableRecoveryMoney().toString());
+        data.put("receivableRecoveryMoneyUpper", MoneyToChineseUtil.convert(receivableRecoveryMoneyFormat));
         data.put("contractReceivable", contractReceivableConfirmation.getContractReceivable());
         data.put("contractReceivableUpper", contractReceivableConfirmation.getContractReceivableUpper());
         data.put("assignorAbligorReceivable", contractReceivableConfirmation.getAssignorAbligorReceivable());
@@ -508,9 +507,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligorSignatureDate", DateUtil.format(contractReceivableConfirmation.getObligorSignatureDate(), DateUtil.spotFormat));
         data.put("nameOfSubject", Strings.nullToEmpty(contractReceivableConfirmation.getNameOfSubject()));
         data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
-        //TODO
-        data.put("invoiceMoneyUpper", "");
-        //data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(contractReceivableConfirmation.getInvoiceMoney().toString()));
+        String invoiceMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getInvoiceMoney().toString());
+        data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(invoiceMoneyFormat));
         data.put("invoiceMoneyType", contractReceivableConfirmation.getInvoiceMoneyType());
         return data;
     }
