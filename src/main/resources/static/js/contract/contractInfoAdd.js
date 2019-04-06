@@ -403,13 +403,16 @@ var vue = new Vue({
             }
         },
         genFileInfo: function () {
+            console.log(this.fileList)
             for (let index in this.fileList) {
                 let item = {
-                    attachName: this.fileList[index].name,
-                    fileId: this.fileList[index].response.data.fileId
+                    attachName : this.fileList[index].name,
+                    fileId : this.fileList[index].response.data.fileId,
+                    attachType : 2
                 };
                 this.addForm.attachList.push(item);
             }
+            console.log(this.addForm.attachList)
             return true;
         },
         remove: function (array, val) {

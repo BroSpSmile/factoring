@@ -649,6 +649,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
                 contractShareholderMeetingDao.update(contractShareholderMeeting);
             }
+
+            //生成标准合同文件
+            uploadStandardTemplate(contractInfoDTO, project);
         }
 
         //更新签署清单
@@ -661,9 +664,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             typeItems.forEach(e -> projectItemDao.delete(e));
         }
         insertAttachList(contractInfoDTO);
-
-        //生成标准合同文件
-        uploadStandardTemplate(contractInfoDTO, project);
     }
 
     /**
