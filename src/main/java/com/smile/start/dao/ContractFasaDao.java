@@ -25,7 +25,7 @@ public interface ContractFasaDao {
      * @param contractFasa
      * @return
      */
-    @Update("update contract_fasa set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},fasa_code=#{fasaCode},fp_company_name=#{fpCompanyName},fp_residence=#{fpResidence},fp_legal_person=#{fpLegalPerson},fp_post_code=#{fpPostCode},fp_telephone=#{fpTelephone},fp_fax=#{fpFax},sign_address=#{signAddress},sing_date=#{singDate},advisory_service_money=#{advisoryServiceMoney},advisory_service_money_upper=#{advisoryServiceMoneyUpper},advisory_service_money_appointment=#{advisoryServiceMoneyAppointment},sp_bank_name=#{spBankName},sp_account=#{spAccount},expiry_date_month=#{expiryDateMonth},fp_signature_date=#{fpSignatureDate},sp_signature_date=#{spSignatureDate} where id=#{id}")
+    @Update("update contract_fasa set contract_serial_no=#{contractSerialNo},fasa_code=#{fasaCode},fp_company_name=#{fpCompanyName},fp_residence=#{fpResidence},fp_legal_person=#{fpLegalPerson},fp_post_code=#{fpPostCode},fp_telephone=#{fpTelephone},fp_fax=#{fpFax},sign_address=#{signAddress},sing_date=#{singDate},advisory_service_money=#{advisoryServiceMoney},advisory_service_money_upper=#{advisoryServiceMoneyUpper},advisory_service_money_appointment=#{advisoryServiceMoneyAppointment},sp_bank_name=#{spBankName},sp_account=#{spAccount},expiry_date_month=#{expiryDateMonth},fp_signature_date=#{fpSignatureDate},sp_signature_date=#{spSignatureDate} where id=#{id}")
     int update(ContractFasa contractFasa);
 
     /**

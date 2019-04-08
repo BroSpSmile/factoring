@@ -28,7 +28,7 @@ public interface ContractShareholderMeetingDao {
      * @param contractShareholderMeeting
      * @return
      */
-    @Update("update contract_shareholder_meeting set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},meeting_time=#{meetingTime},meeting_address=#{meetingAddress},sp_company_name=#{spCompanyName},attending_shareholders=#{attendingShareholders},meeting_number=#{meetingNumber},passing_rate=#{passingRate},signature_date=#{signatureDate} where id=#{id}")
+    @Update("update contract_shareholder_meeting set contract_serial_no=#{contractSerialNo},meeting_time=#{meetingTime},meeting_address=#{meetingAddress},sp_company_name=#{spCompanyName},attending_shareholders=#{attendingShareholders},meeting_number=#{meetingNumber},passing_rate=#{passingRate},signature_date=#{signatureDate} where id=#{id}")
     int update(ContractShareholderMeeting contractShareholderMeeting);
 
     /**

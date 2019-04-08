@@ -63,7 +63,6 @@ public class ContractInfoController extends BaseController {
     public SingleResult<ContractInfoDTO> get(@PathVariable Long projectId) {
         try {
             ContractInfoDTO contractInfoDTO = contractInfoService.getByProjectId(projectId);
-            logger.info(JSON.toJSONString(contractInfoDTO));
             SingleResult<ContractInfoDTO> result = new SingleResult<>();
             result.setSuccess(true);
             result.setData(contractInfoDTO);

@@ -25,7 +25,7 @@ public interface ContractReceivableAgreementDao {
      * @param contractReceivableAgreement
      * @return
      */
-    @Update("update contract_receivable_agreement set serial_no=#{serialNo},contract_serial_no=#{contractSerialNo},sp_name=#{spName},sp_residence=#{spResidence},sp_legal_person=#{spLegalPerson},sp_contact_address=#{spContactAddress},sp_post_code=#{spPostCode},sp_telephone=#{spTelephone},sp_fax=#{spFax},sign_date=#{signDate},fp_signature_date=#{fpSignatureDate},sp_signature_date=#{spSignatureDate} where id=#{id}")
+    @Update("update contract_receivable_agreement set contract_serial_no=#{contractSerialNo},sp_name=#{spName},sp_residence=#{spResidence},sp_legal_person=#{spLegalPerson},sp_contact_address=#{spContactAddress},sp_post_code=#{spPostCode},sp_telephone=#{spTelephone},sp_fax=#{spFax},sign_date=#{signDate},fp_signature_date=#{fpSignatureDate},sp_signature_date=#{spSignatureDate} where id=#{id}")
     int update(ContractReceivableAgreement contractReceivableAgreement);
 
     /**

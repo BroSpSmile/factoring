@@ -394,13 +394,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spPostCode", Strings.nullToEmpty(contractReceivableAgreement.getSpPostCode()));
         data.put("spTelephone", Strings.nullToEmpty(contractReceivableAgreement.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractReceivableAgreement.getSpFax()));
-        data.put("signDate", DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat));
-        data.put("fpSignatureDate", DateUtil.format(contractReceivableAgreement.getFpSignatureDate(), DateUtil.spotFormat));
-        data.put("spSignatureDate", DateUtil.format(contractReceivableAgreement.getSpSignatureDate(), DateUtil.spotFormat));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat)));
+        data.put("fpSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getFpSignatureDate(), DateUtil.spotFormat)));
+        data.put("spSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSpSignatureDate(), DateUtil.spotFormat)));
         data.put("contractCode", Strings.nullToEmpty(contractExtendInfo.getContractCode()));
-        data.put("contractSignDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
-        data.put("contractSignDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
-        data.put("contractSignDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        if(contractExtendInfo.getSignDate() != null) {
+            data.put("contractSignDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
+            data.put("contractSignDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
+            data.put("contractSignDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        } else {
+            data.put("contractSignDateYear", "");
+            data.put("contractSignDateMonth", "");
+            data.put("contractSignDateDay", "");
+        }
         return data;
     }
 
@@ -413,17 +419,29 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private Map<String, Object> buildTemplateData(ContractShareholderMeetingDTO contractShareholderMeeting, ContractExtendInfoDTO contractExtendInfo) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", Strings.nullToEmpty(contractExtendInfo.getContractCode()));
-        data.put("meetingTimeYear", DateUtil.getYeah(contractShareholderMeeting.getMeetingTime()));
-        data.put("meetingTimeMonth", DateUtil.getMonth(contractShareholderMeeting.getMeetingTime()));
-        data.put("meetingTimeDay", DateUtil.getDay(contractShareholderMeeting.getMeetingTime()));
+        if(contractShareholderMeeting.getMeetingTime() != null) {
+            data.put("meetingTimeYear", DateUtil.getYeah(contractShareholderMeeting.getMeetingTime()));
+            data.put("meetingTimeMonth", DateUtil.getMonth(contractShareholderMeeting.getMeetingTime()));
+            data.put("meetingTimeDay", DateUtil.getDay(contractShareholderMeeting.getMeetingTime()));
+        } else {
+            data.put("meetingTimeYear", "");
+            data.put("meetingTimeMonth", "");
+            data.put("meetingTimeDay", "");
+        }
         data.put("meetingAddress", Strings.nullToEmpty(contractShareholderMeeting.getMeetingAddress()));
         data.put("spCompanyName", Strings.nullToEmpty(contractShareholderMeeting.getSpCompanyName()));
         data.put("attendingShareholders", Strings.nullToEmpty(contractShareholderMeeting.getAttendingShareholders()));
-        data.put("meetingNumber", contractShareholderMeeting.getMeetingNumber());
+        data.put("meetingNumber", contractShareholderMeeting.getMeetingNumber() == null ? "" : contractShareholderMeeting.getMeetingNumber());
         data.put("passingRate", Strings.nullToEmpty(contractShareholderMeeting.getPassingRate()));
-        data.put("signatureDateYear", DateUtil.getYeah(contractShareholderMeeting.getSignatureDate()));
-        data.put("signatureDateMonth", DateUtil.getMonth(contractShareholderMeeting.getSignatureDate()));
-        data.put("signatureDateDay", DateUtil.getDay(contractShareholderMeeting.getSignatureDate()));
+        if(contractShareholderMeeting.getSignatureDate() != null) {
+            data.put("signatureDateYear", DateUtil.getYeah(contractShareholderMeeting.getSignatureDate()));
+            data.put("signatureDateMonth", DateUtil.getMonth(contractShareholderMeeting.getSignatureDate()));
+            data.put("signatureDateDay", DateUtil.getDay(contractShareholderMeeting.getSignatureDate()));
+        } else {
+            data.put("signatureDateYear", "");
+            data.put("signatureDateMonth", "");
+            data.put("signatureDateDay", "");
+        }
         return data;
     }
 
@@ -444,18 +462,23 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("fpTelephone", Strings.nullToEmpty(contractFasa.getFpTelephone()));
         data.put("fpFax", Strings.nullToEmpty(contractFasa.getFpFax()));
         data.put("signAddress", Strings.nullToEmpty(contractFasa.getSignAddress()));
-        data.put("signDateYear", DateUtil.getYeah(contractFasa.getSingDate()));
-        data.put("signDateMonth", DateUtil.getMonth(contractFasa.getSingDate()));
-        data.put("signDateDay", DateUtil.getDay(contractFasa.getSingDate()));
-
-        data.put("advisoryServiceMoney", contractFasa.getAdvisoryServiceMoney());
-        data.put("advisoryServiceMoneyUpper", contractFasa.getAdvisoryServiceMoneyUpper());
+        if(contractFasa.getSingDate() != null) {
+            data.put("signDateYear", DateUtil.getYeah(contractFasa.getSingDate()));
+            data.put("signDateMonth", DateUtil.getMonth(contractFasa.getSingDate()));
+            data.put("signDateDay", DateUtil.getDay(contractFasa.getSingDate()));
+        } else {
+            data.put("signDateYear", "");
+            data.put("signDateMonth", "");
+            data.put("signDateDay", "");
+        }
+        data.put("advisoryServiceMoney", contractFasa.getAdvisoryServiceMoney() == null ? "" : contractFasa.getAdvisoryServiceMoney());
+        data.put("advisoryServiceMoneyUpper", Strings.nullToEmpty(contractFasa.getAdvisoryServiceMoneyUpper()));
         data.put("advisoryServiceMoneyAppointment", Strings.nullToEmpty(contractFasa.getAdvisoryServiceMoneyAppointment()));
         data.put("spBankName", Strings.nullToEmpty(contractFasa.getSpBankName()));
         data.put("spAccount", Strings.nullToEmpty(contractFasa.getSpAccount()));
-        data.put("expiryDateMonth", contractFasa.getExpiryDateMonth());
-        data.put("fpSignatureDate", DateUtil.format(contractFasa.getFpSignatureDate(), DateUtil.spotFormat));
-        data.put("spSignatureDate", DateUtil.format(contractFasa.getSpSignatureDate(), DateUtil.spotFormat));
+        data.put("expiryDateMonth", contractFasa.getExpiryDateMonth() == null ? "" : contractFasa.getExpiryDateMonth());
+        data.put("fpSignatureDate", Strings.nullToEmpty(DateUtil.format(contractFasa.getFpSignatureDate(), DateUtil.spotFormat)));
+        data.put("spSignatureDate", Strings.nullToEmpty(DateUtil.format(contractFasa.getSpSignatureDate(), DateUtil.spotFormat)));
         return data;
     }
 
@@ -469,48 +492,62 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", Strings.nullToEmpty(contractExtendInfo.getContractCode()));
         data.put("confirmationCode", Strings.nullToEmpty(contractReceivableConfirmation.getConfirmationCode()));
-        data.put("signDate", DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat)));
         data.put("assignor", Strings.nullToEmpty(contractReceivableConfirmation.getAssignor()));
-        data.put("signDateYear", DateUtil.getYeah(contractReceivableConfirmation.getSignDate()));
-        data.put("signDateMonth", DateUtil.getMonth(contractReceivableConfirmation.getSignDate()));
-        data.put("signDateDay", DateUtil.getDay(contractReceivableConfirmation.getSignDate()));
-
+        if(contractReceivableConfirmation.getSignDate() != null) {
+            data.put("signDateYear", DateUtil.getYeah(contractReceivableConfirmation.getSignDate()));
+            data.put("signDateMonth", DateUtil.getMonth(contractReceivableConfirmation.getSignDate()));
+            data.put("signDateDay", DateUtil.getDay(contractReceivableConfirmation.getSignDate()));
+        } else {
+            data.put("signDateYear", "");
+            data.put("signDateMonth", "");
+            data.put("signDateDay", "");
+        }
         data.put("obligor", Strings.nullToEmpty(contractReceivableConfirmation.getObligor()));
         data.put("businessContractName", Strings.nullToEmpty(contractReceivableConfirmation.getBusinessContractName()));
-        data.put("receivableAssigneeMoneyUpper", contractReceivableConfirmation.getReceivableAssigneeMoneyUpper());
-        data.put("receivableAssigneeMoneyType", contractReceivableConfirmation.getReceivableAssigneeMoneyType());
-        data.put("unpaidReceivableAssigneeMoney", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoney());
-        data.put("unpaidReceivableAssigneeMoneyUpper", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyUpper());
-        data.put("unpaidReceivableAssigneeMoneyType", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyType());
-        data.put("receivableExpiryDate", DateUtil.format(contractReceivableConfirmation.getReceivableExpiryDate(), DateUtil.chineseDtFormat));
+        data.put("receivableAssigneeMoneyUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
+        data.put("receivableAssigneeMoneyType", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyType()));
+        data.put("unpaidReceivableAssigneeMoney", contractReceivableConfirmation.getUnpaidReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getUnpaidReceivableAssigneeMoney());
+        data.put("unpaidReceivableAssigneeMoneyUpper", Strings.nullToEmpty(contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyUpper()));
+        data.put("unpaidReceivableAssigneeMoneyType", Strings.nullToEmpty(contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyType()));
+        data.put("receivableExpiryDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getReceivableExpiryDate(), DateUtil.chineseDtFormat)));
+        if(contractReceivableConfirmation.getReceivableRecoveryMoney() != null) {
+            String receivableRecoveryMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getReceivableRecoveryMoney().toString());
+            data.put("receivableRecoveryMoneyUpper", MoneyToChineseUtil.convert(receivableRecoveryMoneyFormat));
+            data.put("receivableRecoveryMoney", contractReceivableConfirmation.getReceivableRecoveryMoney());
+        } else {
+            data.put("receivableRecoveryMoneyUpper", "");
+            data.put("receivableRecoveryMoney", "");
+        }
+        data.put("contractReceivable", contractReceivableConfirmation.getContractReceivable() == null ? "" : contractReceivableConfirmation.getContractReceivable());
+        data.put("contractReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getContractReceivableUpper()));
+        data.put("assignorAbligorReceivable", contractReceivableConfirmation.getAssignorAbligorReceivable() == null ? "" : contractReceivableConfirmation.getAssignorAbligorReceivable());
+        data.put("assignorAbligorReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getAssignorAbligorReceivableUpper()));
+        data.put("unpaidAssignorAbligorReceivable", contractReceivableConfirmation.getUnpaidAssignorAbligorReceivable() == null ? "" : contractReceivableConfirmation.getUnpaidAssignorAbligorReceivable());
+        data.put("unpaidAssignorAbligorReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getUnpaidAssignorAbligorReceivableUpper()));
+        data.put("receivableAssigneeMoneyPaid", contractReceivableConfirmation.getReceivableAssigneeMoneyPaid() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoneyPaid());
+        data.put("receivableAssigneeMoneyPaidUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyPaidUpper()));
 
-        data.put("receivableRecoveryMoney", contractReceivableConfirmation.getReceivableRecoveryMoney());
-        String receivableRecoveryMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getReceivableRecoveryMoney().toString());
-        data.put("receivableRecoveryMoneyUpper", MoneyToChineseUtil.convert(receivableRecoveryMoneyFormat));
-        data.put("contractReceivable", contractReceivableConfirmation.getContractReceivable());
-        data.put("contractReceivableUpper", contractReceivableConfirmation.getContractReceivableUpper());
-        data.put("assignorAbligorReceivable", contractReceivableConfirmation.getAssignorAbligorReceivable());
-        data.put("assignorAbligorReceivableUpper", contractReceivableConfirmation.getAssignorAbligorReceivableUpper());
-        data.put("unpaidAssignorAbligorReceivable", contractReceivableConfirmation.getUnpaidAssignorAbligorReceivable());
-        data.put("unpaidAssignorAbligorReceivableUpper", contractReceivableConfirmation.getUnpaidAssignorAbligorReceivableUpper());
-        data.put("receivableAssigneeMoneyPaid", contractReceivableConfirmation.getReceivableAssigneeMoneyPaid());
-        data.put("receivableAssigneeMoneyPaidUpper", contractReceivableConfirmation.getReceivableAssigneeMoneyPaidUpper());
-
-        data.put("assignorCommitDate", DateUtil.format(contractReceivableConfirmation.getAssignorCommitDate(), DateUtil.spotFormat));
+        data.put("assignorCommitDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getAssignorCommitDate(), DateUtil.spotFormat)));
         data.put("assigneeAccountName", Strings.nullToEmpty(contractReceivableConfirmation.getAssigneeAccountName()));
         data.put("assigneeBankName", Strings.nullToEmpty(contractReceivableConfirmation.getAssigneeBankName()));
         data.put("assigneeAccount", Strings.nullToEmpty(contractReceivableConfirmation.getAssigneeAccount()));
 
-        data.put("assigneeSignatureDate", DateUtil.format(contractReceivableConfirmation.getAssigneeSignatureDate(), DateUtil.spotFormat));
+        data.put("assigneeSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getAssigneeSignatureDate(), DateUtil.spotFormat)));
         data.put("assignorCompanyName", Strings.nullToEmpty(contractReceivableConfirmation.getAssignorCompanyName()));
-        data.put("assignorSignatureDate", DateUtil.format(contractReceivableConfirmation.getAssignorSignatureDate(), DateUtil.spotFormat));
+        data.put("assignorSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getAssignorSignatureDate(), DateUtil.spotFormat)));
         data.put("obligorCompanyName", Strings.nullToEmpty(contractReceivableConfirmation.getObligorCompanyName()));
-        data.put("obligorSignatureDate", DateUtil.format(contractReceivableConfirmation.getObligorSignatureDate(), DateUtil.spotFormat));
+        data.put("obligorSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getObligorSignatureDate(), DateUtil.spotFormat)));
         data.put("nameOfSubject", Strings.nullToEmpty(contractReceivableConfirmation.getNameOfSubject()));
-        data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
-        String invoiceMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getInvoiceMoney().toString());
-        data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(invoiceMoneyFormat));
-        data.put("invoiceMoneyType", contractReceivableConfirmation.getInvoiceMoneyType());
+        if(contractReceivableConfirmation.getInvoiceMoney() != null) {
+            String invoiceMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getInvoiceMoney().toString());
+            data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(invoiceMoneyFormat));
+            data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
+        } else {
+            data.put("invoiceMoneyUpper", "");
+            data.put("invoiceMoney", "");
+        }
+        data.put("invoiceMoneyType", Strings.nullToEmpty(contractReceivableConfirmation.getInvoiceMoneyType()));
         return data;
     }
 
@@ -522,7 +559,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private Map<String, Object> buildTemplateData(ContractExtendInfoDTO contractExtendInfo, String fasaCode) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", Strings.nullToEmpty(contractExtendInfo.getContractCode()));
-        data.put("signDate", DateUtil.format(contractExtendInfo.getSignDate(), DateUtil.chineseDtFormat));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getSignDate(), DateUtil.chineseDtFormat)));
         data.put("spCompanyName", Strings.nullToEmpty(contractExtendInfo.getSpCompanyName()));
         data.put("spResidence", Strings.nullToEmpty(contractExtendInfo.getSpResidence()));
         data.put("spLegalPerson", Strings.nullToEmpty(contractExtendInfo.getSpLegalPerson()));
@@ -531,26 +568,31 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", Strings.nullToEmpty(contractExtendInfo.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractExtendInfo.getSpFax()));
         data.put("obligor", Strings.nullToEmpty(contractExtendInfo.getObligor()));
-        data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
-        data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
-        data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
-
+        if(contractExtendInfo.getSignDate() != null) {
+            data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
+            data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
+            data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        } else {
+            data.put("signDateYear", "");
+            data.put("signDateMonth", "");
+            data.put("signDateDay", "");
+        }
         data.put("contractName", Strings.nullToEmpty(contractExtendInfo.getContractName()));
-        data.put("receivableMoney", contractExtendInfo.getReceivableMoney());
-        data.put("receivableMoneyUpper", contractExtendInfo.getReceivableMoneyUpper());
-        data.put("receivableMoneyType", contractExtendInfo.getReceivableMoneyType());
-        data.put("receivableMoneyAdditional", contractExtendInfo.getReceivableMoneyAdditional());
-        data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney());
-        data.put("obligorEnjoyMoneyUpper", contractExtendInfo.getObligorEnjoyMoneyUpper());
-        data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney());
-        data.put("receivableAssigneeMoneyUpper", contractExtendInfo.getReceivableAssigneeMoneyUpper());
-        data.put("interestRate", contractExtendInfo.getInterestRate());
-        data.put("billingStartDate", DateUtil.format(contractExtendInfo.getBillingStartDate(), DateUtil.spotFormat));
+        data.put("receivableMoney", contractExtendInfo.getReceivableMoney() == null ? "" : contractExtendInfo.getReceivableMoney());
+        data.put("receivableMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyUpper()));
+        data.put("receivableMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyType()));
+        data.put("receivableMoneyAdditional", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyAdditional()));
+        data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney() == null ? "" : contractExtendInfo.getObligorEnjoyMoney());
+        data.put("obligorEnjoyMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getObligorEnjoyMoneyUpper()));
+        data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney() == null ? "" : contractExtendInfo.getReceivableAssigneeMoney());
+        data.put("receivableAssigneeMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableAssigneeMoneyUpper()));
+        data.put("interestRate", contractExtendInfo.getInterestRate() == null ? "" : contractExtendInfo.getInterestRate());
+        data.put("billingStartDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getBillingStartDate(), DateUtil.spotFormat)));
 
-        data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableRecoveryMoney());
-        data.put("receivableRecoveryMoneyUpper", contractExtendInfo.getReceivableRecoveryMoneyUpper());
-        data.put("receivableRecoveryMoneyType", contractExtendInfo.getReceivableRecoveryMoneyType());
-        data.put("receivableRecoveryMoneyPaytime", DateUtil.format(contractExtendInfo.getReceivableRecoveryMoneyPaytime(), DateUtil.spotFormat));
+        data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableRecoveryMoney() == null ? "" : contractExtendInfo.getReceivableRecoveryMoney());
+        data.put("receivableRecoveryMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyUpper()));
+        data.put("receivableRecoveryMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyType()));
+        data.put("receivableRecoveryMoneyPaytime", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getReceivableRecoveryMoneyPaytime(), DateUtil.spotFormat)));
         data.put("fpAccountName", Strings.nullToEmpty(contractExtendInfo.getFpAccountName()));
         data.put("fpBankName", Strings.nullToEmpty(contractExtendInfo.getFpBankName()));
         data.put("fpAccount", Strings.nullToEmpty(contractExtendInfo.getFpAccount()));
@@ -558,11 +600,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spBankName", Strings.nullToEmpty(contractExtendInfo.getSpBankName()));
         data.put("spAccount", Strings.nullToEmpty(contractExtendInfo.getSpAccount()));
 
-        data.put("compulsoryRescissionDateYear", DateUtil.getYeah(contractExtendInfo.getCompulsoryRescissionDate()));
-        data.put("compulsoryRescissionDateMonth", DateUtil.getMonth(contractExtendInfo.getCompulsoryRescissionDate()));
-        data.put("compulsoryRescissionDateDay", DateUtil.getDay(contractExtendInfo.getCompulsoryRescissionDate()));
-        data.put("fpSignatureDate", DateUtil.format(contractExtendInfo.getFpSignatureDate(), DateUtil.spotFormat));
-        data.put("spSignatureDate", DateUtil.format(contractExtendInfo.getSpSignatureDate(), DateUtil.spotFormat));
+        if(contractExtendInfo.getCompulsoryRescissionDate() != null) {
+            data.put("compulsoryRescissionDateYear", DateUtil.getYeah(contractExtendInfo.getCompulsoryRescissionDate()));
+            data.put("compulsoryRescissionDateMonth", DateUtil.getMonth(contractExtendInfo.getCompulsoryRescissionDate()));
+            data.put("compulsoryRescissionDateDay", DateUtil.getDay(contractExtendInfo.getCompulsoryRescissionDate()));
+        } else {
+            data.put("compulsoryRescissionDateYear", "");
+            data.put("compulsoryRescissionDateMonth", "");
+            data.put("compulsoryRescissionDateDay", "");
+        }
+        data.put("fpSignatureDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getFpSignatureDate(), DateUtil.spotFormat)));
+        data.put("spSignatureDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getSpSignatureDate(), DateUtil.spotFormat)));
         data.put("fasaCode", Strings.nullToEmpty(fasaCode));
         return data;
     }
@@ -575,19 +623,20 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(ContractInfoDTO contractInfoDTO) throws Exception {
-        final ContractInfo contractInfo = contractInfoMapper.dto2do(contractInfoDTO.getBaseInfo());
+        final ContractInfo contractInfo = contractInfoDao.get(contractInfoDTO.getBaseInfo().getId());
         contractInfo.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         contractInfo.setModifyUser(loginUser.getSerialNo());
+        contractInfo.setContractTemplate(contractInfoDTO.getBaseInfo().getContractTemplate());
         contractInfoDao.update(contractInfo);
 
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
 
         if (contractInfo.getContractTemplate() == ContractTemplateEnum.STANDARD.getValue()) {
-            //更新合同信息
-
+            //更新保理合同信息
+            final ContractExtendInfo oldContractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractExtendInfoDTO contractExtendInfoDTO = contractInfoDTO.getContractExtendInfo();
-            if (Strings.isNullOrEmpty(contractExtendInfoDTO.getSerialNo())) {
+            if (oldContractExtendInfo == null) {
                 contractExtendInfoDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CEI", 5));
                 contractExtendInfoDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractExtendInfoDTO.setContractCode(project.getProjectId() + "-1");
@@ -595,12 +644,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractExtendInfoDao.insert(contractExtendInfo);
             } else {
                 ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
+                contractExtendInfo.setContractSerialNo(oldContractExtendInfo.getContractSerialNo());
+                contractExtendInfo.setId(oldContractExtendInfo.getId());
                 contractExtendInfoDao.update(contractExtendInfo);
             }
 
             //更新应收账款转让确认函
+            ContractReceivableConfirmation oldContractReceivableConfirmation = contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractReceivableConfirmationDTO contractReceivableConfirmationDTO = contractInfoDTO.getContractReceivableConfirmation();
-            if (Strings.isNullOrEmpty(contractReceivableConfirmationDTO.getSerialNo())) {
+            if (oldContractReceivableConfirmation == null) {
                 contractReceivableConfirmationDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRC", 5));
                 contractReceivableConfirmationDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractReceivableConfirmationDTO.setConfirmationCode(project.getProjectId() + "-2");
@@ -608,12 +660,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
             } else {
                 ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
+                contractReceivableConfirmation.setContractSerialNo(oldContractReceivableConfirmation.getContractSerialNo());
+                contractReceivableConfirmation.setId(oldContractReceivableConfirmation.getId());
                 contractReceivableConfirmationDao.update(contractReceivableConfirmation);
             }
 
             //更新应收账款转让登记协议
+            ContractReceivableAgreement oldContractReceivableAgreement = contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractReceivableAgreementDTO contractReceivableAgreementDTO = contractInfoDTO.getContractReceivableAgreement();
-            if (Strings.isNullOrEmpty(contractReceivableAgreementDTO.getSerialNo())) {
+            if (oldContractReceivableAgreement == null) {
                 contractReceivableAgreementDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CRA", 5));
                 contractReceivableAgreementDTO.setContractSerialNo(contractInfo.getSerialNo());
                 contractReceivableAgreementDTO.setProtocolCode(project.getProjectId() + "-3");
@@ -621,13 +676,16 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractReceivableAgreementDao.insert(contractReceivableAgreement);
             } else {
                 ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
+                contractReceivableAgreement.setContractSerialNo(oldContractReceivableAgreement.getContractSerialNo());
+                contractReceivableAgreement.setId(oldContractReceivableAgreement.getId());
                 contractReceivableAgreementDao.update(contractReceivableAgreement);
             }
 
             //保存财务顾问协议，无追合同才有
             if (contractInfoDTO.getBaseInfo().getProjectMode() == 2) {
+                ContractFasa oldContractFasa = contractFasaDao.findByContractSerialNo(contractInfo.getSerialNo());
                 ContractFasaDTO contractFasaDTO = contractInfoDTO.getContractFasa();
-                if (Strings.isNullOrEmpty(contractFasaDTO.getSerialNo())) {
+                if (oldContractFasa == null) {
                     contractFasaDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CF", 5));
                     contractFasaDTO.setContractSerialNo(contractInfo.getSerialNo());
                     contractFasaDTO.setFasaCode(project.getProjectId() + "-4");
@@ -635,19 +693,24 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                     contractFasaDao.insert(contractFasa);
                 } else {
                     ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
+                    contractFasa.setContractSerialNo(oldContractFasa.getContractSerialNo());
+                    contractFasa.setId(oldContractFasa.getId());
                     contractFasaDao.update(contractFasa);
                 }
             }
 
             //保存股东会决议
+            ContractShareholderMeeting oldContractShareholderMeeting = contractShareholderMeetingDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractShareholderMeetingDTO contractShareholderMeetingDTO = contractInfoDTO.getContractShareholderMeeting();
-            if (Strings.isNullOrEmpty(contractShareholderMeetingDTO.getSerialNo())) {
+            if (oldContractShareholderMeeting == null) {
                 contractShareholderMeetingDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
                 contractShareholderMeetingDTO.setContractSerialNo(contractInfo.getSerialNo());
                 ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
                 contractShareholderMeetingDao.insert(contractShareholderMeeting);
             } else {
                 ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
+                contractShareholderMeeting.setContractSerialNo(oldContractShareholderMeeting.getContractSerialNo());
+                contractShareholderMeeting.setId(oldContractShareholderMeeting.getId());
                 contractShareholderMeetingDao.update(contractShareholderMeeting);
             }
 

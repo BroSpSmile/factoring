@@ -41,6 +41,9 @@ var vue = new Vue({
             ],
             'contractReceivableConfirmation.receivableAssigneeMoneyPaid' : [
                 { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'baseInfo.contractTemplate' : [
+                { required : true, type: 'number', message: '请选择合同模板', trigger: 'change' }
             ]
         },
         pageInfo:{},
