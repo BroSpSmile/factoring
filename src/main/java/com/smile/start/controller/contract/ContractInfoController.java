@@ -87,16 +87,17 @@ public class ContractInfoController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult add(@RequestBody ContractInfoDTO contractInfoDTO) {
+    public SingleResult add(@RequestBody ContractInfoDTO contractInfoDTO) {
         try {
-            contractInfoService.insert(contractInfoDTO);
-            BaseResult result = new BaseResult();
+            Long id = contractInfoService.insert(contractInfoDTO);
+            SingleResult<Long> result = new SingleResult<>();
+            result.setData(id);
             result.setSuccess(true);
             result.setErrorMessage("新增合同成功");
             return result;
         } catch (Exception e) {
             logger.error("新增合同失败", e);
-            return toResult(e);
+            return toResult(e, Long.class);
         }
     }
 

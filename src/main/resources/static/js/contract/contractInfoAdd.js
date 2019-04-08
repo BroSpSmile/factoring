@@ -124,11 +124,13 @@ var vue = new Vue({
                     if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                         this.$http.post("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
+                                console.log("id=" + response.data.data)
+                                self.addForm.baseInfo.id = response.data.data;
+                                self.addForm.baseInfo.status = 0;
+                                self.isDisable = false;
                                 self.$Message.info({
                                     content: "保存成功",
                                     onClose: function () {
-                                        self.addForm.baseInfo.status = 0;
-                                        self.isDisable = false;
                                         self.cancel();
                                     }
                                 });

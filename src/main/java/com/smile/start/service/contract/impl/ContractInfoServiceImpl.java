@@ -318,7 +318,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //自定义附件合同
         insertAttachList(contractInfoDTO);
-        return contractInfoDao.insert(contractInfo);
+        contractInfoDao.insert(contractInfo);
+        return contractInfo.getId();
     }
 
     private void uploadStandardTemplate(ContractInfoDTO contractInfoDTO, Project project) throws IOException, TemplateException {

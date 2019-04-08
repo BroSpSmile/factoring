@@ -38,11 +38,6 @@ public class ContractInfo implements Serializable {
     private String serialNo;
 
     /**
-     * 合同名称
-     */
-    private String contractName;
-
-    /**
      * 项目模式：1、有追索权模式；2、无追索权模式
      */
     private Integer projectMode;
@@ -135,14 +130,6 @@ public class ContractInfo implements Serializable {
 
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
-    }
-
-    public String getContractName() {
-        return contractName;
-    }
-
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
     }
 
     public Integer getProjectMode() {
