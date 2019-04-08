@@ -632,6 +632,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         final Project project = projectService.getProject(contractInfoDTO.getBaseInfo().getProjectId());
 
+        //更新附件信息，先批量删除再插入
+        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
+        if (!CollectionUtils.isEmpty(typeItems)) {
+            typeItems.forEach(e -> projectItemDao.delete(e));
+        }
+
+        //插入自定义附件
+        insertAttachList(contractInfoDTO);
+
         if (contractInfo.getContractTemplate() == ContractTemplateEnum.STANDARD.getValue()) {
             //更新保理合同信息
             final ContractExtendInfo oldContractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
@@ -721,13 +730,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
-
-        //更新附件信息，先批量删除再插入
-        List<ProjectItem> typeItems = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
-        if (!CollectionUtils.isEmpty(typeItems)) {
-            typeItems.forEach(e -> projectItemDao.delete(e));
-        }
-        insertAttachList(contractInfoDTO);
     }
 
     /**
