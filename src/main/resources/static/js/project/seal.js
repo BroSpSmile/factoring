@@ -138,8 +138,8 @@ vue.tableColumns=[
         key: 'projectPerson',
         align: 'left'
     },{
-        title: '合同通过时间',
-        key: 'contractPassTime',
+        title: '用印完成时间',
+        key: 'sealFinishTime',
         align: 'left'
     },{
         title: '用印状态',

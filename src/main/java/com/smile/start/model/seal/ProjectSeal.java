@@ -38,9 +38,9 @@ public class ProjectSeal implements Serializable {
     private String projectPerson;
 
     /**
-     * 合同通过时间
+     * 用印完成时间
      */
-    private Date contractPassTime;
+    private Date sealFinishTime;
 
     /**
      * 用印状态：0、未用印；1、已用印
@@ -79,12 +79,12 @@ public class ProjectSeal implements Serializable {
         this.projectName = projectName;
     }
 
-    public Date getContractPassTime() {
-        return contractPassTime;
+    public Date getSealFinishTime() {
+        return sealFinishTime;
     }
 
-    public void setContractPassTime(Date contractPassTime) {
-        this.contractPassTime = contractPassTime;
+    public void setSealFinishTime(Date sealFinishTime) {
+        this.sealFinishTime = sealFinishTime;
     }
 
     public String getProjectPerson() {

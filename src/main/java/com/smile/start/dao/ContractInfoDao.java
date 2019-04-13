@@ -54,7 +54,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set project_id=#{projectId},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},factoring_contract=#{factoringContract},confirmation_letter=#{confirmationLetter},registration_agreement=#{registrationAgreement},financial_agreement=#{financialAgreement},shareholder_resolution=#{shareholderResolution},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},seal_finish_time=#{sealFinishTime},factoring_contract=#{factoringContract},confirmation_letter=#{confirmationLetter},registration_agreement=#{registrationAgreement},financial_agreement=#{financialAgreement},shareholder_resolution=#{shareholderResolution},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**

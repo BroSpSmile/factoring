@@ -63,6 +63,11 @@ public class ContractInfo implements Serializable {
     private Integer sealStatus;
 
     /**
+     * 用印完成时间
+     */
+    private Date sealFinishTime;
+
+    /**
      * 是否有保理合同：1、有；0、无
      */
     private Boolean factoringContract;
@@ -170,6 +175,14 @@ public class ContractInfo implements Serializable {
 
     public void setSealStatus(Integer sealStatus) {
         this.sealStatus = sealStatus;
+    }
+
+    public Date getSealFinishTime() {
+        return sealFinishTime;
+    }
+
+    public void setSealFinishTime(Date sealFinishTime) {
+        this.sealFinishTime = sealFinishTime;
     }
 
     public String getCreateUser() {

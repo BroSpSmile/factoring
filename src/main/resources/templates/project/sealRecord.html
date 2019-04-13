@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout/layout">
 	<div layout:fragment="content">
-		<div id="seal" v-cloak>
+		<div id="sealRecord" v-cloak>
 			<card dis-hover title="搜索条件" style="width:100%">
 				<p>
 					<i-form ref="searchForm" :model="formInline" :label-width="120" inline>
@@ -38,6 +38,6 @@
 				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
 			</card>
 		</div>
-	    <script src="js/project/seal.js"></script>
+	    <script src="js/project/sealRecord.js"></script>
 	</div>
 </html>

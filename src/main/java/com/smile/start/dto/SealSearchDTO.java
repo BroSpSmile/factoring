@@ -30,6 +30,11 @@ public class SealSearchDTO implements Serializable {
      */
     private Integer sealStatus;
 
+    /**
+     * 用印人
+     */
+    private String sealUser;
+
     public String getProjectCode() {
         return projectCode;
     }
@@ -60,5 +65,13 @@ public class SealSearchDTO implements Serializable {
 
     public void setSealStatus(Integer sealStatus) {
         this.sealStatus = sealStatus;
+    }
+
+    public String getSealUser() {
+        return sealUser;
+    }
+
+    public void setSealUser(String sealUser) {
+        this.sealUser = sealUser;
     }
 }
