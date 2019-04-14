@@ -71,7 +71,7 @@ public class ContractFasa implements Serializable {
     /**
      * 协议签署日期
      */
-    private Date singDate;
+    private Date signDate;
 
     /**
      * 财务顾问费
@@ -201,12 +201,12 @@ public class ContractFasa implements Serializable {
         this.signAddress = signAddress;
     }
 
-    public Date getSingDate() {
-        return singDate;
+    public Date getSignDate() {
+        return signDate;
     }
 
-    public void setSingDate(Date singDate) {
-        this.singDate = singDate;
+    public void setSignDate(Date signDate) {
+        this.signDate = signDate;
     }
 
     public BigDecimal getAdvisoryServiceMoney() {
