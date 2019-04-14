@@ -55,7 +55,7 @@
 							<i-input placeholder="请输入菜单路径" v-model="addForm.url"></i-input>
 						</form-item>
 						<form-item label="排序值" prop="sort">
-							<input-number v-model="addForm.sort" placeholder="请输入排序值" :max="100000000000" :min="1" class="select-width-180"></input-number>
+							<input-number v-model="addForm.sort" placeholder="请输入排序值，值越小越靠前" :max="100000000000" :min="1" class="select-width-180"></input-number>
 						</form-item>
 						<form-item label="备注" prop="remark">
 							<i-input type="textarea" placeholder="请输入备注" v-model="addForm.remark"></i-input>

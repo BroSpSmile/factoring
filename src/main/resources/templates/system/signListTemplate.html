@@ -53,7 +53,7 @@
 						<i-input placeholder="输入签署清单名称" v-model="addForm.signListName"></i-input>
 					</form-item>
 					<form-item label="排序值" prop="sort">
-						<i-input placeholder="输入排序值，值越小越靠前" v-model="addForm.sort"></i-input>
+						<input-number v-model="addForm.sort" placeholder="请输入排序值，值越小越靠前" :max="100000000000" :min="1" class="select-width-180"></input-number>
 					</form-item>
 				</i-form>
 			</div>
