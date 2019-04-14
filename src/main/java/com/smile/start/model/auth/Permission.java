@@ -30,6 +30,8 @@ public class Permission implements Serializable {
 
     private Integer deleteFlag;
 
+    private Integer sort;
+
     private String createUser;
 
     private String modifyUser;
@@ -108,6 +110,14 @@ public class Permission implements Serializable {
 
     public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getCreateUser() {
