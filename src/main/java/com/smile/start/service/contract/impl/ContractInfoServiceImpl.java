@@ -198,19 +198,20 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoDTO.setSignList(contractInfoMapper.doList2dtoListSign(signList));
 
         //获取合同附件
-        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
-        if (!CollectionUtils.isEmpty(attachs)) {
-            List<ContractAttachDTO> attachList = Lists.newArrayList();
-            attachs.forEach(e -> {
-                ContractAttachDTO attachDTO = new ContractAttachDTO();
-                attachDTO.setContractSerialNo(contractInfo.getSerialNo());
-                attachDTO.setAttachType(e.getAttachType());
-                attachDTO.setAttachName(e.getItemName());
-                attachDTO.setFileId(e.getItemValue());
-                attachList.add(attachDTO);
-            });
-            contractInfoDTO.setAttachList(attachList);
-        }
+        contractInfoDTO.setAttachList(getAttachList(contractInfo.getProjectId()));
+//        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
+//        if (!CollectionUtils.isEmpty(attachs)) {
+//            List<ContractAttachDTO> attachList = Lists.newArrayList();
+//            attachs.forEach(e -> {
+//                ContractAttachDTO attachDTO = new ContractAttachDTO();
+//                attachDTO.setContractSerialNo(contractInfo.getSerialNo());
+//                attachDTO.setAttachType(e.getAttachType());
+//                attachDTO.setAttachName(e.getItemName());
+//                attachDTO.setFileId(e.getItemValue());
+//                attachList.add(attachDTO);
+//            });
+//
+//        }
 
         final Project project = projectService.getProject(contractInfo.getProjectId());
         contractInfoDTO.setProject(project);
@@ -403,6 +404,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
                 contractExtendInfoDao.insert(contractExtendInfo);
             } else {
+                contractExtendInfoDTO.setContractCode(oldContractExtendInfo.getContractCode());
                 ContractExtendInfo contractExtendInfo = contractInfoMapper.dto2do(contractExtendInfoDTO);
                 contractExtendInfo.setContractSerialNo(oldContractExtendInfo.getContractSerialNo());
                 contractExtendInfo.setId(oldContractExtendInfo.getId());
@@ -434,6 +436,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
                 contractReceivableConfirmationDao.insert(contractReceivableConfirmation);
             } else {
+                contractReceivableConfirmationDTO.setConfirmationCode(oldContractReceivableConfirmation.getConfirmationCode());
                 ContractReceivableConfirmation contractReceivableConfirmation = contractInfoMapper.dto2do(contractReceivableConfirmationDTO);
                 contractReceivableConfirmation.setContractSerialNo(oldContractReceivableConfirmation.getContractSerialNo());
                 contractReceivableConfirmation.setId(oldContractReceivableConfirmation.getId());
@@ -459,6 +462,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
                 contractReceivableAgreementDao.insert(contractReceivableAgreement);
             } else {
+                contractReceivableAgreementDTO.setProtocolCode(oldContractReceivableAgreement.getProtocolCode());
                 ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
                 contractReceivableAgreement.setContractSerialNo(oldContractReceivableAgreement.getContractSerialNo());
                 contractReceivableAgreement.setId(oldContractReceivableAgreement.getId());
@@ -484,6 +488,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
                 contractFasaDao.insert(contractFasa);
             } else {
+                contractFasaDTO.setFasaCode(oldContractFasa.getFasaCode());
                 ContractFasa contractFasa = contractInfoMapper.dto2do(contractFasaDTO);
                 contractFasa.setContractSerialNo(oldContractFasa.getContractSerialNo());
                 contractFasa.setId(oldContractFasa.getId());
@@ -1088,6 +1093,28 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
         }
         return new BaseResult();
+    }
+
+    /**
+     * 获取合同附件列表
+     * @param projectId
+     * @return
+     */
+    @Override
+    public List<ContractAttachDTO> getAttachList(Long projectId) {
+        final List<ProjectItem> attachs = projectItemDao.getTypeItems(projectId, ProjectItemType.DRAWUP);
+        if (!CollectionUtils.isEmpty(attachs)) {
+            List<ContractAttachDTO> attachList = Lists.newArrayList();
+            attachs.forEach(e -> {
+                ContractAttachDTO attachDTO = new ContractAttachDTO();
+                attachDTO.setAttachType(e.getAttachType());
+                attachDTO.setAttachName(e.getItemName());
+                attachDTO.setFileId(e.getItemValue());
+                attachList.add(attachDTO);
+            });
+            return attachList;
+        }
+        return null;
     }
 
 }

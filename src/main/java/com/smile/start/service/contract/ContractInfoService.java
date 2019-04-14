@@ -108,4 +108,11 @@ public interface ContractInfoService {
      * @return
      */
     BaseResult updateFilingStatus(List<ContractSignListDTO> signs);
+
+    /**
+     * 获取合同附件列表
+     * @param projectId
+     * @return
+     */
+    List<ContractAttachDTO> getAttachList(Long projectId);
 }

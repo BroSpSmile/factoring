@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.smile.start.dto.ContractAttachDTO;
+import com.smile.start.model.base.ListResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,11 +102,6 @@ public class ContractInfoController extends BaseController {
         }
     }
 
-    /**
-     *
-     * @param contractInfoDTO
-     * @return
-     */
     @PutMapping
     @ResponseBody
     public BaseResult update(@RequestBody ContractInfoDTO contractInfoDTO) {
@@ -169,5 +166,21 @@ public class ContractInfoController extends BaseController {
     @ResponseBody
     public List<ContractSignList> getSignList(@PathVariable Long id) {
         return contractInfoService.findSinListByProject(id);
+    }
+
+    @GetMapping("/attach/{id}")
+    @ResponseBody
+    public ListResult<ContractAttachDTO> getAttachList(@PathVariable Long id) {
+        try {
+            List<ContractAttachDTO> attachList = contractInfoService.getAttachList(id);
+            ListResult<ContractAttachDTO> result = new ListResult<>();
+            result.setValues(attachList);
+            result.setSuccess(true);
+            result.setErrorMessage("删除合同成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("删除合同失败", e);
+            return toListResult(e, ContractAttachDTO.class);
+        }
     }
 }
