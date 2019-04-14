@@ -433,6 +433,12 @@ var vue = new Vue({
             if (index > -1) {
                 array.splice(index, 1);
             }
+        },
+        /**
+         * 下载文件
+         */
+        downloadItem:function(item){
+            window.open("/file?fileId=" + item.fileId+"&fileName="+item.attachName);
         }
     }
 });

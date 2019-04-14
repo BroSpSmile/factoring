@@ -45,6 +45,13 @@
 											<Checkbox v-model="addForm.baseInfo.shareholderResolution">股东会决议</Checkbox>
 										</form-item>
 									</i-col>
+                                    <i-col span="20">
+                                        <form-item label="已生成标准模板">
+                                            <div v-for="item in addForm.attachList" v-if="item.attachType == 1">
+                                                <a @click="downloadItem(item)">{{item.attachName}}</a>
+                                            </div>
+                                        </form-item>
+                                    </i-col>
 								</row>
 							</div>
 						</Panel>
