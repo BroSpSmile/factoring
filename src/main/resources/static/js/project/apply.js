@@ -184,7 +184,7 @@ var vue = new Vue({
 			parent.window.menu.createNew({
 				name:"尽调审核",
 				url:"/audit?id="+audit.id,
-				id:"audit"
+				id:"/audit?id="+audit.id
 			});
 		}
 	}
