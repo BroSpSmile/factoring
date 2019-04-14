@@ -124,6 +124,14 @@ var vue = new Vue({
             this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
+                    //清单验证
+                    for (let index in self.addForm.signList) {
+                        if (self.addForm.signList[index].type === 'add' && self.addForm.signList[index].signListName === '') {
+                            self.$Message.error('签署清单名称必须输入');
+                            self.isDisable = false;
+                            return;
+                        }
+                    }
                     if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                         this.$http.post("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {

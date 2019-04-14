@@ -506,7 +506,7 @@
 										</Radio-Group>
 									</i-col>
 									<i-col span="1" offset="1">
-										<Icon v-if="item.isRequired == 2" @click="handleRemove(index)" type="ios-remove-circle" style="color:#ed4014;cursor:pointer" size="20" />
+										<Icon v-if="item.isRequired == 2 || item.type == 'add'" @click="handleRemove(index)" type="ios-remove-circle" style="color:#ed4014;cursor:pointer" size="20" />
 									</i-col>
 								</row>
 								<br/>
