@@ -27,12 +27,6 @@ var vue = new Vue({
             projectMode : 1
         },
         ruleValidate: {
-            'contractExtendInfo.receivableAssigneeMoney' : [
-                { type: 'number', message: '请输入数字', trigger: 'blur' }
-            ],
-            'contractExtendInfo.receivableRecoveryMoney' : [
-                { type: 'number', message: '请输入数字', trigger: 'blur' }
-            ],
             'contractReceivableConfirmation.contractReceivable' : [
                 { type: 'number', message: '请输入数字', trigger: 'blur' }
             ],
@@ -44,6 +38,168 @@ var vue = new Vue({
             ],
             'baseInfo.contractTemplate' : [
                 { required : true, type: 'number', message: '请选择合同模板', trigger: 'change' }
+            ],
+            'contractShareholderMeeting.spCompanyName' : [
+                { required : true, message: '请输入乙方公司名称', trigger: 'blur' }
+            ],
+            'contractFasa.fpCompanyName' : [
+                { required : true, message: '请输入甲方公司名称', trigger: 'blur' }
+            ],
+            'contractFasa.fpResidence' : [
+                { required : true, message: '请输入甲方住所', trigger: 'blur' }
+            ],
+            'contractFasa.fpLegalPerson' : [
+                { required : true, message: '请输入甲方法定代表人', trigger: 'blur' }
+            ],
+            'contractFasa.signAddress' : [
+                { required : true, message: '请输入协议签署地', trigger: 'blur' }
+            ],
+            'contractFasa.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoney' : [
+                { required : true, type: 'number', message: '请输入财务顾问费', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoneyUpper' : [
+                { required : true, message: '请输入财务顾问费大写', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoneyAppointment' : [
+                { required : true, message: '请输入财务顾问费约定', trigger: 'blur' }
+            ],
+            'contractFasa.spBankName' : [
+                { required : true, message: '请输入乙方银行名称', trigger: 'blur' }
+            ],
+            'contractFasa.spAccount' : [
+                { required : true, message: '请输入乙方银行账户', trigger: 'blur' }
+            ],
+            'contractFasa.expiryDateMonth' : [
+                { required : true, type: 'number', message: '请输入协议有效期月数', trigger: 'blur' }
+            ],
+
+            'contractExtendInfo.spCompanyName' : [
+                { required : true, message: '请输入乙方公司名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spResidence' : [
+                { required : true, message: '请输入乙方住所', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spLegalPerson' : [
+                { required : true, message: '请输入乙方法定代表人', trigger: 'blur' }
+            ],
+            'contractExtendInfo.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligor' : [
+                { required : true, message: '请输入债务人', trigger: 'blur' }
+            ],
+            'contractExtendInfo.contractName' : [
+                { required : true, message: '请输入合同名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableMoneyUpper' : [
+                { required : true, message: '请输入应收账款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligorEnjoyMoney' : [
+                { required : true, type: 'number', message: '请输入债务人享有金额', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligorEnjoyMoneyUpper' : [
+                { required : true, message: '请输入债务人享有金额大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableAssigneeMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款受让款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableAssigneeMoneyUpper' : [
+                { required : true, message: '请输入应收账款受让款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款回收款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoneyUpper' : [
+                { required : true, message: '请输入应收账款回收款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoneyPaytime' : [
+                { required : true, type: 'date', message: '请输入应收账款支付日期', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpAccountName' : [
+                { required : true, message: '请输入甲方户名', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpBankName' : [
+                { required : true, message: '请输入甲方银行名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpAccount' : [
+                { required : true, message: '请输入甲方银行账户', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spAccountName' : [
+                { required : true, message: '请输入乙方户名', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spBankName' : [
+                { required : true, message: '请输入乙方银行名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spAccount' : [
+                { required : true, message: '请输入乙方银行账户', trigger: 'blur' }
+            ],
+            'contractExtendInfo.compulsoryRescissionDate' : [
+                { required : true, type: 'date', message: '请输入合同强制解除日期', trigger: 'blur' }
+            ],
+
+            'contractReceivableConfirmation.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignor' : [
+                { required : true, message: '请输入让与人', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.obligor' : [
+                { required : true, message: '请输入债务人', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.businessContractName' : [
+                { required : true, message: '请输入商务合同名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款受让款', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoneyUpper' : [
+                { required : true, message: '请输入应收账款受让款大写', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableExpiryDate' : [
+                { required : true, type: 'date', message: '请输入应收账款回收款截止日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignorCommitDate' : [
+                { required : true, type: 'date', message: '请输入让与人提交资料日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeAccountName' : [
+                { required : true, message: '请输入受让人户名', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeBankName' : [
+                { required : true, message: '请输入受让人开户银行', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeAccount' : [
+                { required : true, message: '请输入受让人账户', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignorCompanyName' : [
+                { required : true, message: '请输入让与人公司名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.obligorCompanyName' : [
+                { required : true, message: '请输入债务人公司名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.nameOfSubject' : [
+                { required : true, message: '请输入商务合同标的物名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.invoiceMoney' : [
+                { required : true, type: 'number', message: '请输入发票/收据所载金额（元）', trigger: 'blur' }
+            ],
+
+            'contractReceivableAgreement.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spName' : [
+                { required : true, message: '请输入乙方名称', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spResidence' : [
+                { required : true, message: '请输入乙方住所', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spLegalPerson' : [
+                { required : true, message: '请输入乙方法定代表人', trigger: 'blur' }
             ]
         },
         pageInfo:{},
