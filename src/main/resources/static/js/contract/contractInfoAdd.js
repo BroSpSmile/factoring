@@ -142,6 +142,7 @@ var vue = new Vue({
                                 self.$Message.info({
                                     content: "保存成功",
                                     onClose: function () {
+                                        self.getAttachList();
                                         self.cancel();
                                     }
                                 });
@@ -160,6 +161,7 @@ var vue = new Vue({
                                     content: "更新成功",
                                     onClose: function () {
                                         self.isDisable = false;
+                                        self.getAttachList();
                                         self.cancel();
                                     }
                                 });
@@ -178,9 +180,22 @@ var vue = new Vue({
             });
         },
         /**
+         * 获取附件列表
+         */
+        getAttachList : function() {
+            let self = this;
+            this.$http.get("/contractInfo/attach/" + this.project.id).then(function(response){
+                if (response.data.success) {
+                    self.addForm.attachList = response.data.values;
+                } else {
+                    console.log(response);
+                }
+            });
+        },
+        /**
          * 提交审核警告
          */
-        submitAuditWarn:function(id){
+        submitAuditWarn : function(id){
             this.$Modal.confirm({
                 title: '审核提示',
                 content: '<p>确认要提交审核</p>',

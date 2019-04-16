@@ -80,18 +80,18 @@ public class SealServiceImpl implements SealService {
         contractInfoDao.update(contractInfo);
 
         //判断签署清单中是否存在 用印完成 项，如果有直接更新状态，没有则插入一条
-        ContractSignList contractSignList = contractSignListDao.findByContractSerialNoAndName(contractInfo.getSerialNo(), "用印完成");
-        if(contractSignList != null) {
-            contractSignList.setStatus(true);
-            contractSignListDao.update(contractSignList);
-        } else {
-            contractSignList = new ContractSignList();
-            contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
-            contractSignList.setContractSerialNo(contractInfo.getSerialNo());
-            contractSignList.setSignListName("用印完成");
-            contractSignList.setStatus(true);
-            contractSignList.setIsRequired(1);
-            contractSignListDao.insert(contractSignList);
-        }
+//        ContractSignList contractSignList = contractSignListDao.findByContractSerialNoAndName(contractInfo.getSerialNo(), "用印完成");
+//        if(contractSignList != null) {
+//            contractSignList.setStatus(true);
+//            contractSignListDao.update(contractSignList);
+//        } else {
+//            contractSignList = new ContractSignList();
+//            contractSignList.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
+//            contractSignList.setContractSerialNo(contractInfo.getSerialNo());
+//            contractSignList.setSignListName("用印完成");
+//            contractSignList.setStatus(true);
+//            contractSignList.setIsRequired(1);
+//            contractSignListDao.insert(contractSignList);
+//        }
     }
 }

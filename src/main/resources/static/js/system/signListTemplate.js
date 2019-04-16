@@ -24,7 +24,7 @@ var vue = new Vue({
                 { required: true, message: '签署清单名称不能为空', trigger: 'blur' }
             ],
             sort: [
-                { required: true, message: '排序值不能为空', trigger: 'blur' }
+                { required: true, message: '排序值不能为空', trigger: 'blur', type:'number' }
             ]
         },
         pageInfo:{},

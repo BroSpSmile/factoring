@@ -29,6 +29,8 @@ public class AuthPermissionInfoDTO implements Serializable {
 
     private Integer deleteFlag;
 
+    private Integer sort;
+
     private String createUser;
 
     private String modifyUser;
@@ -109,6 +111,14 @@ public class AuthPermissionInfoDTO implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
     public String getCreateUser() {
         return createUser;
     }
@@ -153,6 +163,7 @@ public class AuthPermissionInfoDTO implements Serializable {
                 ", parentSerialNo='" + parentSerialNo + '\'' +
                 ", url='" + url + '\'' +
                 ", deleteFlag=" + deleteFlag +
+                ", sort=" + sort +
                 ", createUser='" + createUser + '\'' +
                 ", modifyUser='" + modifyUser + '\'' +
                 ", gmtCreate=" + gmtCreate +
