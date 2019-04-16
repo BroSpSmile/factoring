@@ -24,6 +24,11 @@ public class SignListTemplateDTO implements Serializable {
      */
     private Integer isRequired;
 
+    /**
+     * 类别：1、债权人；2、债务人；3、内部决策；4、签署文件；5、出款依据；6、其他
+     */
+    private Integer category;
+
     public Long getId() {
         return id;
     }
@@ -72,6 +77,14 @@ public class SignListTemplateDTO implements Serializable {
         this.isRequired = isRequired;
     }
 
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "SignListTemplateDTO{" +
@@ -81,6 +94,7 @@ public class SignListTemplateDTO implements Serializable {
                 ", sort=" + sort +
                 ", projectMode=" + projectMode +
                 ", isRequired=" + isRequired +
+                ", category=" + category +
                 '}';
     }
 }

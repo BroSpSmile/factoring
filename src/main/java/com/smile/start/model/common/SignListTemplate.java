@@ -41,6 +41,11 @@ public class SignListTemplate implements Serializable {
      */
     private Integer isRequired;
 
+    /**
+     * 类别：1、债权人；2、债务人；3、内部决策；4、签署文件；5、出款依据；6、其他
+     */
+    private Integer category;
+
     public Long getId() {
         return id;
     }
@@ -87,5 +92,13 @@ public class SignListTemplate implements Serializable {
 
     public void setIsRequired(Integer isRequired) {
         this.isRequired = isRequired;
+    }
+
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
     }
 }
