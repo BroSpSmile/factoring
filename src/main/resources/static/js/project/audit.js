@@ -12,6 +12,8 @@ var vue = new Vue({
 		auditResult:[],
 		modal1:false,
 		modal2:false,
+		passBt:false,
+		rejectBt:false,
 		fileList:[],
 		record:{
 			items:[]
@@ -122,8 +124,10 @@ var vue = new Vue({
 		 * 
 		 */
 		openPass:function(){
-			this.audit.remark = "";
+			this.fileList = [];
+			this.record.remark = "";
 			this.audit.step = this.nowStep;
+			this.passBt = false;
 			this.modal1 = true;
 		},
 		
@@ -131,8 +135,10 @@ var vue = new Vue({
 		 * 
 		 */
 		openReject:function(){
-			this.audit.remark = "";
+			this.fileList = [];
+			this.record.remark = "";
 			this.audit.step = this.nowStep;
+			this.rejectBt = false;
 			this.modal2 = true;
 		},
 		/**
@@ -140,6 +146,7 @@ var vue = new Vue({
 		 */
 		pass:function(){
 			let _self = this;
+			this.passBt = true;
 			this.record.audit = this.audit;
 			if(this.audit.auditType=='TUNEUP'&& (this.audit.step==4||this.audit.step==3)){
 				if(this.fileList === undefined || this.fileList.length == 0){
@@ -179,6 +186,7 @@ var vue = new Vue({
 		 */
 		reject:function(){
 			let _self = this;
+			this.rejectBt = true;
 			this.$Spin.show();
 			//非合同审核驳回
 			if(this.audit.auditType !== 'CONTRACT') {
@@ -266,6 +274,7 @@ var vue = new Vue({
     	    window.document.body.innerHTML=printHtml;
     	    window.print();
     	    window.document.body.innerHTML=bdhtml;
+    	    location.reload();
         },
         
 		cancel:function(){

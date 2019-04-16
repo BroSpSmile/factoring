@@ -118,7 +118,7 @@ var vue = new Vue({
             parent.window.menu.createNew({
                 name:"审核",
                 url:"/audit?id="+auditId,
-                id:"audit"
+                id:"/audit?id="+auditId
             });
         }
     }

@@ -266,7 +266,7 @@ var vue = new Vue({
 				parent.window.menu.createNew({
 					name:menuName,
 					url:menu+"?id="+projectId,
-					id:menu
+					id:menu+"?id="+projectId
 				});
 			}else{
 				parent.window.menu.createNew({
