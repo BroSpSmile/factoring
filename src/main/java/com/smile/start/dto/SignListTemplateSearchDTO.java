@@ -17,6 +17,11 @@ public class SignListTemplateSearchDTO implements Serializable {
      */
     private Integer projectMode;
 
+    /**
+     * 类别：1、债权人；2、债务人；3、内部决策；4、签署文件；5、出款依据；6、其他
+     */
+    private Integer category;
+
     public String getSignListName() {
         return signListName;
     }
@@ -33,11 +38,20 @@ public class SignListTemplateSearchDTO implements Serializable {
         this.projectMode = projectMode;
     }
 
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "SignListTemplateSearchDTO{" +
                 "signListName='" + signListName + '\'' +
                 ", projectMode=" + projectMode +
+                ", category=" + category +
                 '}';
     }
 }
