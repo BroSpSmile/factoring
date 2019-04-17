@@ -107,17 +107,16 @@ var vue = new Vue({
 		},
 		
 		initItem:function(records){
-			console.log(records);
+			this.cwItem = [];
+			this.fwItem = [];
 			for(var index in records){
-				if(records[index].type=='财务风控审核'){
+				if(records[index].type=='财务风控审核' && this.cwItem.length<1){
 					this.cwItem = records[index].items;
 				}
-				if(records[index].type=='法务风控审核'){
+				if(records[index].type=='法务风控审核' && this.fwItem.length<1){
 					this.fwItem = records[index].items;
 				}
 			}
-			console.log(this.cwItem);
-			console.log(this.fwItem);
 		},
 		
 		/**

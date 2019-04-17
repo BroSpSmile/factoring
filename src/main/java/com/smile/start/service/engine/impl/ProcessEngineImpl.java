@@ -155,9 +155,11 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     public BaseResult addOrUpate(StepRecord record) {
         StepRecord exist = stepDao.getStep(record.getProject().getId(), record.getStep());
         if (null != exist) {
-            record.setId(exist.getId());
-            record.setModifyTime(new Date());
-            stepDao.update(record);
+            if (!Step.MEETING.equals(record.getStep())) {
+                record.setId(exist.getId());
+                record.setModifyTime(new Date());
+                stepDao.update(record);
+            }
         } else {
             stepDao.insert(record);
         }
