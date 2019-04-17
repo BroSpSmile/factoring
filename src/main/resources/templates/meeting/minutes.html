@@ -57,7 +57,7 @@
 							<br>
 							<row type="flex">
 			                    <i-col span="12" offset="">
-			                    		<i-button type="success"  v-if="meeting.kind=='APPROVAL'" icon="ios-cloud-done-outline" @click="save('APPROVAL')" >立项通过</i-button>
+			                    		<i-button type="success"  v-if="meeting.kind=='APPROVAL'&& !meeting.minutesKind " icon="ios-cloud-done-outline" @click="save('APPROVAL')" >立项通过</i-button>
 			                        	<i-button type="success"  v-if="meeting.kind!='APPROVAL'" icon="ios-cloud-done-outline" @click="save('APPROVAL')" >保存纪要</i-button>
 			                        	<i-button type="error" ghost  v-if="meeting.kind=='APPROVAL' && !meeting.minutesKind && meeting.minutesKind !='CUSTOM'" @click="save('INITIATE_REJECT')" >立项失败</i-button>
 			                       <!--     <i-button type="success" ghost v-if="meeting.kind!='APPROVAL'"  icon="ios-cloud-download-outline" style="margin-left: 8px" @click="save">保存并下载</i-button>

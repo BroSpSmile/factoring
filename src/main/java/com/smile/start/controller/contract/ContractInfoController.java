@@ -87,7 +87,7 @@ public class ContractInfoController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public SingleResult add(@RequestBody ContractInfoDTO contractInfoDTO) {
+    public SingleResult<Long> add(@RequestBody ContractInfoDTO contractInfoDTO) {
         try {
             Long id = contractInfoService.insert(contractInfoDTO);
             SingleResult<Long> result = new SingleResult<>();

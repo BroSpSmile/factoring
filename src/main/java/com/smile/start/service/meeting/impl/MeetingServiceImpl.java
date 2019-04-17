@@ -196,7 +196,6 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                     List<ProjectMeeting> result = projectMeetingDao.find(pm);
                     if (result.size() > 0) {
                         projectMeetingDao.delete(pm);
-                        // throw new RuntimeException("当前项目已关联此会议纪要");
                     }
                     long peffect = projectMeetingDao.insert(pm);
                     if (peffect < 0) {
@@ -206,9 +205,14 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         } else {
             Project project = meeting.getProjects().get(0);
-            project.setProgress(Progress.APPROVAL);
-            project.setStep(0);
-            processEngine.next(project, false);
+            if (Progress.INITIATE_REJECT.equals(project.getProgress())) {
+                project.setStep(-2);
+                projectService.turnover(project);
+            } else {
+                project.setProgress(Progress.APPROVAL);
+                project.setStep(0);
+                processEngine.next(project, false);
+            }
         }
         return new BaseResult();
     }
