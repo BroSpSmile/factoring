@@ -30,8 +30,8 @@ import com.smile.start.service.audit.AuditService;
  * @version $Id: AuditsController.java, v 0.1 Mar 3, 2019 2:05:37 AM smile.jing Exp $
  */
 @Controller
-@RequestMapping("/audits")
-public class AuditsController extends BaseController {
+@RequestMapping("/auditsHistory")
+public class AuditsHistoryController extends BaseController {
 
     /** auditService */
     @Resource
@@ -43,7 +43,7 @@ public class AuditsController extends BaseController {
      */
     @GetMapping
     public String index() {
-        return "audit/audits";
+        return "audit/auditsHistory";
     }
 
     /**
@@ -51,13 +51,13 @@ public class AuditsController extends BaseController {
      * @param query
      * @return
      */
-    @PostMapping("/query")
+    @PostMapping("/queryHistory")
     @ResponseBody
-    public PageInfo<Audit> query(HttpServletRequest request, @RequestBody PageRequest<AuditParam> query) {
+    public PageInfo<Audit> queryHistory(HttpServletRequest request, @RequestBody PageRequest<AuditParam> query) {
         User user = getUserByToken(request);
         query.getCondition().setAudit(user);
         LoggerUtils.info(logger, "查询参数={}", FastJsonUtils.toJSONString(query));
-        PageInfo<Audit> result = auditService.query(query);
+        PageInfo<Audit> result = auditService.queryHistory(query);
         return result;
     }
 }

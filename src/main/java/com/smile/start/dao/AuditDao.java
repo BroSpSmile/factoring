@@ -56,7 +56,7 @@ public interface AuditDao {
      * @return
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
-                                      @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
+                                        @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
     @Select("<script>" + "select * from audit t1 where 1 =1 " + "<if test='null != applicant and null!= applicant.id'>and t1.applicant = #{applicant.id}</if>"
             + "<if test='null != projectId and \"\" != projectId'>and exists (select * from factoring_project t2 where t1.project = t2.id and t2.project_id = #{projectId})</if>"
             + "<if test='null != auditType'>and t1.audit_type = #{auditType}</if>" + "<if test='null != beginTime'>and t1.create_time &gt; #{beginTime}</if>"
@@ -66,13 +66,30 @@ public interface AuditDao {
     List<Audit> query(AuditParam param);
 
     /**
+     * 审核历史查询
+     * @param param
+     * @return
+     */
+    @Results(id = "queryHistoryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
+                                               @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
+    @Select("<script>"
+            + "select * from audit t1 where step = -1 " + "<if test='null != applicant and null!= applicant.id'>and t1.applicant = #{applicant.id}</if>"
+            + "<if test='null != projectId and \"\" != projectId'>and exists (select * from factoring_project t2 where t1.project = t2.id and t2.project_id = #{projectId})</if>"
+            + "<if test='null != auditType'>and t1.audit_type = #{auditType}</if>" 
+            + "<if test='null != beginTime'>and t1.create_time &gt; #{beginTime}</if>"
+            + "<if test='null != endTime'>and t1.create_time &lt; #{endTime}</if>"
+            + "<if test='null != audit and null!=audit.id'>and exists (select * from audit_record t3 where t1.id = t3.audit and t3.auditor = #{audit.id})</if>"
+            + "</script>")
+    List<Audit> queryHistory(AuditParam param);
+
+    /**
      *
      * @param id
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
                                       @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo"),
-                                      @Result(column = "username", property = "applicant.username")})
+                                      @Result(column = "username", property = "applicant.username") })
     @Select("select t1.*,t2.username from audit t1 inner join auth_user_info t2 on t1.applicant = t2.id where t1.id = #{id}")
     Audit get(Long id);
 
@@ -83,7 +100,7 @@ public interface AuditDao {
      * @return
      */
     @Results(id = "getByProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "applicant", property = "applicant.id"),
-        @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
+                                               @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
     @Select("select * from audit where project = #{project} and audit_type= #{type}")
-    Audit getByProjectAndType(Long project,String type);
+    Audit getByProjectAndType(Long project, String type);
 }

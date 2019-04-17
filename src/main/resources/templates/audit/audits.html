@@ -6,8 +6,7 @@
 		<div id="audits" v-cloak>
 			<row>
 				<i-col span="24" >
-					<br>
-					<card dis-hover title="业务筛选">
+		        	<card dis-hover title="业务筛选">
 						<i-form ref="searchForm" :model="formInline" :label-width="80" inline>
 							<form-item label="项目编号" prop="projectId">
 								 <i-input placeholder="输入项目编号"  v-model="formInline.projectId"></i-input>
@@ -49,6 +48,6 @@
 				</i-col>
 			</row>
 	    </div>
-	    <script src="js/project/audits.js"></script>
+	    <script src="js/audit/audits.js"></script>
 	</div>
 </html>

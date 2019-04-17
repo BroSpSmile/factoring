@@ -51,6 +51,13 @@ public interface AuditService {
     PageInfo<Audit> query(PageRequest<AuditParam> param);
 
     /**
+     * 查询审核历史
+     * @param param
+     * @return
+     */
+    PageInfo<Audit> queryHistory(PageRequest<AuditParam> param);
+
+    /**
      * 获取审核明细
      * @param id
      * @return
@@ -63,5 +70,5 @@ public interface AuditService {
      * @param type
      * @return
      */
-    Audit getAuditByProjectFlowAndType(Long id,String type);
+    Audit getAuditByProjectFlowAndType(Long id, String type);
 }
