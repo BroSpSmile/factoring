@@ -48,6 +48,11 @@ public class ContractShareholderMeetingDTO implements Serializable {
     private String attendingShareholders;
 
     /**
+     * 出席股东人数
+     */
+    private Integer shareholderNumber;
+
+    /**
      * 会议次数
      */
     private Integer meetingNumber;
@@ -116,6 +121,14 @@ public class ContractShareholderMeetingDTO implements Serializable {
 
     public void setAttendingShareholders(String attendingShareholders) {
         this.attendingShareholders = attendingShareholders;
+    }
+
+    public Integer getShareholderNumber() {
+        return shareholderNumber;
+    }
+
+    public void setShareholderNumber(Integer shareholderNumber) {
+        this.shareholderNumber = shareholderNumber;
     }
 
     public Integer getMeetingNumber() {

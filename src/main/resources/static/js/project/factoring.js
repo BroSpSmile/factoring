@@ -156,7 +156,7 @@ var vue = new Vue({
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								window.close();
+								self.close();
 							}
 						});
 					} else {
@@ -173,7 +173,7 @@ var vue = new Vue({
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								window.close();
+								self.close();
 							}
 						});
 					} else {
@@ -203,5 +203,10 @@ var vue = new Vue({
 			value = ""+value;
 			return value.replace(/￥s?|(,*)/g, '')
 		},
+		
+		close:function(){
+		//	console.log($(window.parent.document).contents().find("iframe:first").html));
+			//$('[data-id="/project"]', parent.document).parent().attr('src', $('[data-id="/project"]').attr('src'));
+		}
 	}
 });

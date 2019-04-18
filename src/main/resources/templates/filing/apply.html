@@ -13,8 +13,8 @@
                     <form-item label="归档清单：(请将已准备好的资料打钩)" >
                         <checkbox-group v-model="contract.signList">
                         	<div v-for="(sign,index) in signList">
-                        		<checkbox :label="sign.serialNo"><span v-if="sign.isRequired==1" style="color:#F00">*</span><span>{{sign.signListName}}</span></checkbox>
-                            	<br>
+                        		<checkbox v-if="sign.signListName!='用印完成'" :label="sign.serialNo"><span v-if="sign.isRequired==1" style="color:#F00">*</span><span>{{sign.signListName}}</span></checkbox>
+                            	<br v-if="sign.signListName!='用印完成'" >
                         	</div>
                         </checkbox-group>
                     </form-item>

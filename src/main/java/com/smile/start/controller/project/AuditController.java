@@ -53,7 +53,7 @@ public class AuditController extends BaseController {
         String id = request.getParameter("id");
         LoggerUtils.info(logger, "项目ID={}", id);
         model.addAttribute("id", id);
-        return "project/audit";
+        return "audit/audit";
     }
 
     /**

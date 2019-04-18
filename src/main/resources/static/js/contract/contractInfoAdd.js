@@ -27,12 +27,6 @@ var vue = new Vue({
             projectMode : 1
         },
         ruleValidate: {
-            'contractExtendInfo.receivableAssigneeMoney' : [
-                { type: 'number', message: '请输入数字', trigger: 'blur' }
-            ],
-            'contractExtendInfo.receivableRecoveryMoney' : [
-                { type: 'number', message: '请输入数字', trigger: 'blur' }
-            ],
             'contractReceivableConfirmation.contractReceivable' : [
                 { type: 'number', message: '请输入数字', trigger: 'blur' }
             ],
@@ -41,6 +35,171 @@ var vue = new Vue({
             ],
             'contractReceivableConfirmation.receivableAssigneeMoneyPaid' : [
                 { type: 'number', message: '请输入数字', trigger: 'blur' }
+            ],
+            'baseInfo.contractTemplate' : [
+                { required : true, type: 'number', message: '请选择合同模板', trigger: 'change' }
+            ],
+            'contractShareholderMeeting.spCompanyName' : [
+                { required : true, message: '请输入乙方公司名称', trigger: 'blur' }
+            ],
+            'contractFasa.fpCompanyName' : [
+                { required : true, message: '请输入甲方公司名称', trigger: 'blur' }
+            ],
+            'contractFasa.fpResidence' : [
+                { required : true, message: '请输入甲方住所', trigger: 'blur' }
+            ],
+            'contractFasa.fpLegalPerson' : [
+                { required : true, message: '请输入甲方法定代表人', trigger: 'blur' }
+            ],
+            'contractFasa.signAddress' : [
+                { required : true, message: '请输入协议签署地', trigger: 'blur' }
+            ],
+            'contractFasa.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoney' : [
+                { required : true, type: 'number', message: '请输入财务顾问费', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoneyUpper' : [
+                { required : true, message: '请输入财务顾问费大写', trigger: 'blur' }
+            ],
+            'contractFasa.advisoryServiceMoneyAppointment' : [
+                { required : true, message: '请输入财务顾问费约定', trigger: 'blur' }
+            ],
+            'contractFasa.spBankName' : [
+                { required : true, message: '请输入乙方银行名称', trigger: 'blur' }
+            ],
+            'contractFasa.spAccount' : [
+                { required : true, message: '请输入乙方银行账户', trigger: 'blur' }
+            ],
+            'contractFasa.expiryDateMonth' : [
+                { required : true, type: 'number', message: '请输入协议有效期月数', trigger: 'blur' }
+            ],
+
+            'contractExtendInfo.spCompanyName' : [
+                { required : true, message: '请输入乙方公司名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spResidence' : [
+                { required : true, message: '请输入乙方住所', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spLegalPerson' : [
+                { required : true, message: '请输入乙方法定代表人', trigger: 'blur' }
+            ],
+            'contractExtendInfo.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligor' : [
+                { required : true, message: '请输入债务人', trigger: 'blur' }
+            ],
+            'contractExtendInfo.contractName' : [
+                { required : true, message: '请输入合同名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableMoneyUpper' : [
+                { required : true, message: '请输入应收账款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligorEnjoyMoney' : [
+                { required : true, type: 'number', message: '请输入债务人享有金额', trigger: 'blur' }
+            ],
+            'contractExtendInfo.obligorEnjoyMoneyUpper' : [
+                { required : true, message: '请输入债务人享有金额大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableAssigneeMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款受让款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableAssigneeMoneyUpper' : [
+                { required : true, message: '请输入应收账款受让款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款回收款', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoneyUpper' : [
+                { required : true, message: '请输入应收账款回收款大写', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableRecoveryMoneyPaytime' : [
+                { required : true, type: 'date', message: '请输入应收账款支付日期', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpAccountName' : [
+                { required : true, message: '请输入甲方户名', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpBankName' : [
+                { required : true, message: '请输入甲方银行名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.fpAccount' : [
+                { required : true, message: '请输入甲方银行账户', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spAccountName' : [
+                { required : true, message: '请输入乙方户名', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spBankName' : [
+                { required : true, message: '请输入乙方银行名称', trigger: 'blur' }
+            ],
+            'contractExtendInfo.spAccount' : [
+                { required : true, message: '请输入乙方银行账户', trigger: 'blur' }
+            ],
+            'contractExtendInfo.compulsoryRescissionDate' : [
+                { required : true, type: 'date', message: '请输入合同强制解除日期', trigger: 'blur' }
+            ],
+
+            'contractReceivableConfirmation.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignor' : [
+                { required : true, message: '请输入让与人', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.obligor' : [
+                { required : true, message: '请输入债务人', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.businessContractName' : [
+                { required : true, message: '请输入商务合同名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoney' : [
+                { required : true, type: 'number', message: '请输入应收账款受让款', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoneyUpper' : [
+                { required : true, message: '请输入应收账款受让款大写', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableExpiryDate' : [
+                { required : true, type: 'date', message: '请输入应收账款回收款截止日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignorCommitDate' : [
+                { required : true, type: 'date', message: '请输入让与人提交资料日期', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeAccountName' : [
+                { required : true, message: '请输入受让人户名', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeBankName' : [
+                { required : true, message: '请输入受让人开户银行', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assigneeAccount' : [
+                { required : true, message: '请输入受让人账户', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.assignorCompanyName' : [
+                { required : true, message: '请输入让与人公司名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.obligorCompanyName' : [
+                { required : true, message: '请输入债务人公司名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.nameOfSubject' : [
+                { required : true, message: '请输入商务合同标的物名称', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.invoiceMoney' : [
+                { required : true, type: 'number', message: '请输入发票/收据所载金额（元）', trigger: 'blur' }
+            ],
+
+            'contractReceivableAgreement.signDate' : [
+                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spName' : [
+                { required : true, message: '请输入乙方名称', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spResidence' : [
+                { required : true, message: '请输入乙方住所', trigger: 'blur' }
+            ],
+            'contractReceivableAgreement.spLegalPerson' : [
+                { required : true, message: '请输入乙方法定代表人', trigger: 'blur' }
             ]
         },
         pageInfo:{},
@@ -121,14 +280,25 @@ var vue = new Vue({
             this.isDisable = true;
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
+                    //清单验证
+                    for (let index in self.addForm.signList) {
+                        if (self.addForm.signList[index].type === 'add' && self.addForm.signList[index].signListName === '') {
+                            self.$Message.error('签署清单名称必须输入');
+                            self.isDisable = false;
+                            return;
+                        }
+                    }
                     if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                         this.$http.post("/contractInfo", this.addForm).then(function (response) {
                             if (response.data.success) {
+                                console.log("id=" + response.data.data)
+                                self.addForm.baseInfo.id = response.data.data;
+                                self.addForm.baseInfo.status = 0;
+                                self.isDisable = false;
                                 self.$Message.info({
                                     content: "保存成功",
                                     onClose: function () {
-                                        self.addForm.baseInfo.status = 0;
-                                        self.isDisable = false;
+                                        self.getAttachList();
                                         self.cancel();
                                     }
                                 });
@@ -147,6 +317,7 @@ var vue = new Vue({
                                     content: "更新成功",
                                     onClose: function () {
                                         self.isDisable = false;
+                                        self.getAttachList();
                                         self.cancel();
                                     }
                                 });
@@ -165,17 +336,76 @@ var vue = new Vue({
             });
         },
         /**
+         * 获取附件列表
+         */
+        getAttachList : function() {
+            let self = this;
+            this.$http.get("/contractInfo/attach/" + this.project.id).then(function(response){
+                if (response.data.success) {
+                    self.addForm.attachList = response.data.values;
+                } else {
+                    console.log(response);
+                }
+            });
+        },
+        /**
          * 提交审核警告
          */
-        submitAuditWarn:function(id){
+        submitAuditWarn : function(id){
             this.$Modal.confirm({
                 title: '审核提示',
                 content: '<p>确认要提交审核</p>',
                 onOk: () => {
-                this.submitAudit(id);
+                    this.submitAudit(id);
+                },
+                onCancel: () => {}
+            })
         },
-            onCancel: () => {}
-        })
+        /**
+         * 转换大写金额
+         */
+        toChinese : function(value, upper){
+            console.log(value)
+            console.log(upper)
+            if(null == value){
+                value = 0;
+            }
+            let _self = this;
+            this.$http.get("/common/chinese/" + value).then(function(response){
+                // upper = response.data;
+            },function(error){
+                _self.$Message.error(error.data.errorMessage);
+            });
+        },
+        /**
+         * 小写转大写
+         * @param n
+         * @returns {string}
+         */
+        smallToBig : function (n) {
+            var fraction = ['角', '分'];
+            var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+            var unit = [ ['元', '万', '亿'], ['', '拾', '佰', '仟']  ];
+            var head = n < 0 ? '欠': '';
+            n = Math.abs(n);
+
+            var s = '';
+
+            for (var i = 0; i < fraction.length; i++) {
+                s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+            }
+            s = s || '整';
+            n = Math.floor(n);
+
+            for (var i = 0; i < unit[0].length && n > 0; i++) {
+                var p = '';
+                for (var j = 0; j < unit[1].length && n > 0; j++) {
+                    p = digit[n % 10] + unit[1][j] + p;
+                    n = Math.floor(n / 10);
+                }
+                s = p.replace(/(零.)*零$/, '').replace(/^$/, '零')  + unit[0][i] + s;
+            }
+            return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
         },
         /**
          * 状态流转
@@ -357,13 +587,16 @@ var vue = new Vue({
             }
         },
         genFileInfo: function () {
+            console.log(this.fileList)
             for (let index in this.fileList) {
                 let item = {
-                    attachName: this.fileList[index].name,
-                    fileId: this.fileList[index].response.data.fileId
+                    attachName : this.fileList[index].name,
+                    fileId : this.fileList[index].response.data.fileId,
+                    attachType : 2
                 };
                 this.addForm.attachList.push(item);
             }
+            console.log(this.addForm.attachList)
             return true;
         },
         remove: function (array, val) {
@@ -371,6 +604,12 @@ var vue = new Vue({
             if (index > -1) {
                 array.splice(index, 1);
             }
+        },
+        /**
+         * 下载文件
+         */
+        downloadItem:function(item){
+            window.open("/file?fileId=" + item.fileId+"&fileName="+item.attachName);
         }
     }
 });

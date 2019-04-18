@@ -23,7 +23,7 @@ public interface PermissionDao {
      * @param permission
      * @return
      */
-    @Insert("insert into auth_permission_info (serial_no,permission_code,permission_name,permission_type,remark,parent_serial_no,url,delete_flag,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{permissionCode},#{permissionName},#{permissionType},#{remark},#{parentSerialNo},#{url},#{deleteFlag},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into auth_permission_info (serial_no,permission_code,permission_name,permission_type,remark,parent_serial_no,url,delete_flag,sort,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{permissionCode},#{permissionName},#{permissionType},#{remark},#{parentSerialNo},#{url},#{deleteFlag},#{sort},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(Permission permission);
 
     /**
@@ -31,7 +31,7 @@ public interface PermissionDao {
      * @param permission
      * @return
      */
-    @Update("update auth_permission_info set permission_code=#{permissionCode},permission_name=#{permissionName},permission_type=#{permissionType},remark=#{remark},parent_serial_no=#{parentSerialNo},url=#{url},delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update auth_permission_info set permission_code=#{permissionCode},permission_name=#{permissionName},permission_type=#{permissionType},remark=#{remark},parent_serial_no=#{parentSerialNo},url=#{url},delete_flag=#{deleteFlag},sort=#{sort},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(Permission permission);
 
     /**
@@ -103,6 +103,6 @@ public interface PermissionDao {
      * @param parentSerialNo
      * @return
      */
-    @Select("select * from auth_permission_info where parent_serial_no=#{parentSerialNo}")
+    @Select("select * from auth_permission_info where parent_serial_no=#{parentSerialNo} order by sort")
     List<Permission> findByParentSerialNo(String parentSerialNo);
 }

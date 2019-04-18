@@ -246,7 +246,7 @@ var vue = new Vue({
 			parent.window.menu.createNew({
 				name:"会议纪要",
 				url:"minutes?id="+meeting.id,
-				id:"minutes"
+				id:"minutes?id="+meeting.id
 			});
 		},
 		

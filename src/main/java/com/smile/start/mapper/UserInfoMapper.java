@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
 public interface UserInfoMapper {
+
     AuthUserInfoDTO do2dto(User user);
 
     User dto2do(AuthUserInfoDTO authUserInfoDTO);

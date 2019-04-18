@@ -22,8 +22,6 @@ import com.smile.start.service.AbstractService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -42,13 +40,10 @@ import java.util.Optional;
 public class FinanceServiceImpl extends AbstractService implements FinanceService {
 
     @Resource
-    private InstallmentDao installmentDao;
+    private InstallmentDao     installmentDao;
 
     @Resource
-    private ProjectService projectService;
-
-    @Autowired
-    private ApplicationContext applicationContext;
+    private ProjectService     projectService;
 
     /**
      * 项目DAO
@@ -60,7 +55,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
      * 流程引擎
      */
     @Resource
-    private ProcessEngine processEngine;
+    private ProcessEngine      processEngine;
 
     /**
      * 保存放款信息
@@ -96,8 +91,7 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
     @Override
     @Transactional
     public BaseResult saveInstallments(Project project, InstallmentType installmentType) {
-        FactoringDetail detail =
-            Optional.of(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
+        FactoringDetail detail = Optional.of(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
 
         //放款操作中
         if (project.getStep() == Step.LOANEN.getIndex()) {
@@ -207,15 +201,12 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
      * @return
      */
     private void financeOperate(Project project) {
-        FactoringDetail detail =
-            Optional.ofNullable(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
+        FactoringDetail detail = Optional.ofNullable(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
         //放款金额总计
-        double totalLoanAmount =
-            detail.getLoanInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
+        double totalLoanAmount = detail.getLoanInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
 
         //回款金额总计
-        double totalReturnAmount =
-            detail.getReturnInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
+        double totalReturnAmount = detail.getReturnInstallments().stream().mapToDouble(installment -> installment.getAmount()).sum();
 
         //detail表里没有回款金额，不更新
         detail.setDropAmount(totalLoanAmount);
@@ -223,26 +214,16 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
 
         List<Installment> factoringInstallments = detail.getFactoringInstallments();
 
-        //保理分期金额总计
-        double totalFactoringAmount =
-            factoringInstallments.stream().mapToDouble(installment -> installment.getAmount()).sum();
+        factoringInstallments.stream().mapToDouble(installment -> installment.getAmount()).sum();
         boolean isAllPaied = true;
         for (Installment installment : factoringInstallments) {
-            double totalInvoiceAmount = installment.getDetailList()
-                .stream()
-                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.INVOICE ?
-                    installmentDetail.getDetailAmount() :
-                    0)
-                .sum();
+            double totalInvoiceAmount = installment.getDetailList().stream()
+                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.INVOICE ? installmentDetail.getDetailAmount() : 0).sum();
             if (totalInvoiceAmount >= installment.getAmount()) {
                 installment.setInvoiced(true);
             }
-            double totalPaymentAmount = installment.getDetailList()
-                .stream()
-                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.PAYMENT ?
-                    installmentDetail.getDetailAmount() :
-                    0)
-                .sum();
+            double totalPaymentAmount = installment.getDetailList().stream()
+                .mapToDouble(installmentDetail -> installmentDetail.getType() == InstallmentDetailType.PAYMENT ? installmentDetail.getDetailAmount() : 0).sum();
             if (totalPaymentAmount >= installment.getAmount()) {
                 installment.setPaied(true);
             }

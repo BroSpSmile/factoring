@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.smile.start.dto.ContractAttachDTO;
+import com.smile.start.model.base.ListResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.ContractBaseInfoDTO;
@@ -63,7 +64,6 @@ public class ContractInfoController extends BaseController {
     public SingleResult<ContractInfoDTO> get(@PathVariable Long projectId) {
         try {
             ContractInfoDTO contractInfoDTO = contractInfoService.getByProjectId(projectId);
-            logger.info(JSON.toJSONString(contractInfoDTO));
             SingleResult<ContractInfoDTO> result = new SingleResult<>();
             result.setSuccess(true);
             result.setData(contractInfoDTO);
@@ -87,24 +87,20 @@ public class ContractInfoController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult add(@RequestBody ContractInfoDTO contractInfoDTO) {
+    public SingleResult<Long> add(@RequestBody ContractInfoDTO contractInfoDTO) {
         try {
-            contractInfoService.insert(contractInfoDTO);
-            BaseResult result = new BaseResult();
+            Long id = contractInfoService.insert(contractInfoDTO);
+            SingleResult<Long> result = new SingleResult<>();
+            result.setData(id);
             result.setSuccess(true);
             result.setErrorMessage("新增合同成功");
             return result;
         } catch (Exception e) {
             logger.error("新增合同失败", e);
-            return toResult(e);
+            return toResult(e, Long.class);
         }
     }
 
-    /**
-     *
-     * @param contractInfoDTO
-     * @return
-     */
     @PutMapping
     @ResponseBody
     public BaseResult update(@RequestBody ContractInfoDTO contractInfoDTO) {
@@ -169,5 +165,21 @@ public class ContractInfoController extends BaseController {
     @ResponseBody
     public List<ContractSignList> getSignList(@PathVariable Long id) {
         return contractInfoService.findSinListByProject(id);
+    }
+
+    @GetMapping("/attach/{id}")
+    @ResponseBody
+    public ListResult<ContractAttachDTO> getAttachList(@PathVariable Long id) {
+        try {
+            List<ContractAttachDTO> attachList = contractInfoService.getAttachList(id);
+            ListResult<ContractAttachDTO> result = new ListResult<>();
+            result.setValues(attachList);
+            result.setSuccess(true);
+            result.setErrorMessage("删除合同成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("删除合同失败", e);
+            return toListResult(e, ContractAttachDTO.class);
+        }
     }
 }

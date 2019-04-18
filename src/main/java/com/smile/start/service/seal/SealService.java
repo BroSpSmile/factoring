@@ -13,10 +13,16 @@ import com.smile.start.model.seal.ProjectSeal;
 public interface SealService {
 
     /**
-     * 查询所有待签署项目信息
+     * 查询所有待用印项目信息
      * @return
      */
     PageInfo<ProjectSeal> findAll(PageRequest<SealSearchDTO> pageRequest);
+
+    /**
+     * 查询当前登录用户所有用印记录
+     * @return
+     */
+    PageInfo<ProjectSeal> findAllRecord(PageRequest<SealSearchDTO> pageRequest);
 
     /**
      * 用印完成

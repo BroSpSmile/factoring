@@ -113,6 +113,13 @@ var vue = new Vue({
             if (index > -1) {
                 array.splice(index, 1);
             }
+        },
+        toAudit : function(auditId){
+            parent.window.menu.createNew({
+                name:"审核",
+                url:"/audit?id="+auditId,
+                id:"/audit?id="+auditId
+            });
         }
     }
 });
@@ -131,8 +138,8 @@ vue.tableColumns=[
         key: 'projectPerson',
         align: 'left'
     },{
-        title: '合同通过时间',
-        key: 'contractPassTime',
+        title: '用印完成时间',
+        key: 'sealFinishTime',
         align: 'left'
     },{
         title: '用印状态',
@@ -158,7 +165,7 @@ vue.tableColumns=[
                     },
                     on: {
                         click: () => {
-                            // vue.signFinishWarn(param.row.serialNo);
+                            vue.toAudit(param.row.auditId);
                         }
                     }
                 }, '查看审批信息')
@@ -170,7 +177,7 @@ vue.tableColumns=[
             render:(h,param)=>{
             return h('div', [
                 h('span'),
-                h('Button', {
+                param.row.sealStatus === 0 ? h('Button', {
                     props: {
                         size: "small",
                         type: "warning",
@@ -184,7 +191,7 @@ vue.tableColumns=[
                             vue.sealFinishWarn(param.row.projectId);
                         }
                     }
-                }, '用印完成')
+                }, '用印完成') : h('span')
             ])
         }
     }

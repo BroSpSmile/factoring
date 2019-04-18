@@ -266,7 +266,7 @@ var vue = new Vue({
 				parent.window.menu.createNew({
 					name:menuName,
 					url:menu+"?id="+projectId,
-					id:menu
+					id:menu+"?id="+projectId
 				});
 			}else{
 				parent.window.menu.createNew({
@@ -377,7 +377,7 @@ vue.tableColumns=[{
 	    					]),
 	    					h('br'),
 	    					h('Row',{},[
-	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已投放金额(万元)')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已投放金额(元)')]),
 	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'放款日')]),
 	    					]),
 	    					params.row.detail.factoringInstallments.map(item=>{
@@ -392,7 +392,7 @@ vue.tableColumns=[{
 	    				h('div',{},[
 	    					h('Divider',{props:{size:'small'}}),
 	    					h('Row',{},[
-	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'回款金额(万元)')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'回款金额(元)')]),
 	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已回款')]),
 	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'实际回款日')])
 	    					]),
@@ -411,12 +411,12 @@ vue.tableColumns=[{
 	    					h('Row',{},[
 	    						h('Col',{},[
 	    							h('span',{style:{color:'#2db7f5'}},'保理费合计:'),
-	    							h('span',{},"￥"+params.row.detail.totalFactoringFee+"万元")
+	    							h('span',{},"￥"+params.row.detail.totalFactoringFee+"元")
 	    						])
 	    					]),
 	    					h('br'),
 	    					h('Row',{},[
-	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'保理费分期金额(万元)')]),
+	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'保理费分期金额(元)')]),
 	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'保理费到账日(前)')]),
 	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已开发票')]),
 	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已支付')])
@@ -473,7 +473,7 @@ vue.tableColumns=[{
         	return h('span',vue.toModelName(param.row.model))
         }
     },{
-        title: '受让款(万元)',
+        title: '受让款(元)',
         key: 'projectName',
         align: 'center',
         width:80,
@@ -481,7 +481,7 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.assignee)
         }
     },{
-        title: '应收账款(万元)',
+        title: '应收账款(元)',
         key: 'projectName',
         align: 'center',
         width:80,

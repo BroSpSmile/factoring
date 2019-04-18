@@ -80,4 +80,19 @@ public interface FactoringDetailDao {
             + "    sum( d.total_factoring_fee ) profit " + "FROM factoring_project p" + "    INNER JOIN factoring_detail d ON p.id = d.project_id " + "GROUP BY months")
     List<FactoringsInfo> factoringsInfos();
 
+    /**
+     * 月利润
+     * @param month
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where DATE_FORMAT( p.create_time, '%Y-%m' ) = #{month}")
+    Double monthProfit(String month);
+
+    /**
+     * 年利润
+     * @param year
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where DATE_FORMAT( p.create_time, '%Y' ) = #{year}")
+    Double yearProfit(String year);
 }

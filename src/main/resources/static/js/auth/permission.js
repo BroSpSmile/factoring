@@ -31,6 +31,9 @@ var vue = new Vue({
             ],
             permissionType: [
                 { required: true, message: '权限类型不能为空', trigger: 'change', type:'number'}
+            ],
+            sort: [
+                { required: true, message: '排序值不能为空', trigger: 'blur', type:'number'}
             ]
         },
         pageInfo:{},
@@ -227,50 +230,54 @@ vue.tableColumns=[
         key: 'permissionType',
         align: 'left',
         render:(h,param)=> {
-        return h('span', vue.getTypeDesc(param.row.permissionType));
-}
-},{
-    title: '菜单路径',
-        key: 'url',
-        align: 'left'
-},{
-    title: '操作',
-        align: 'center',
-        render:(h,param)=>{
-        return h('div', [
-            h('span'),
+            return h('span', vue.getTypeDesc(param.row.permissionType));
+        }
+    },{
+        title: '菜单路径',
+            key: 'url',
+            align: 'left'
+    },{
+        title: '排序值',
+            key: 'sort',
+            align: 'left'
+    },{
+        title: '操作',
+            align: 'center',
+            render:(h,param)=>{
+            return h('div', [
+                h('span'),
+                h('Button', {
+                    props: {
+                        size: "small",
+                        type: "warning",
+                        ghost:true
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                        vue.updatePermission(param.row);
+        }
+        }
+        }, '编辑'),
             h('Button', {
                 props: {
                     size: "small",
-                    type: "warning",
-					ghost:true
+                    type: "error",
+                    ghost:true
                 },
                 style: {
                     marginRight: '5px'
                 },
                 on: {
                     click: () => {
-                    vue.updatePermission(param.row);
+                    vue.deleteWarn(param.row.id);
+        }
+        }
+        }, '删除')
+        ]
+        )
+        }
     }
-    }
-    }, '编辑'),
-        h('Button', {
-            props: {
-                size: "small",
-                type: "error",
-				ghost:true
-            },
-            style: {
-                marginRight: '5px'
-            },
-            on: {
-                click: () => {
-                vue.deleteWarn(param.row.id);
-    }
-    }
-    }, '删除')
-    ]
-    )
-    }
-}
 ];

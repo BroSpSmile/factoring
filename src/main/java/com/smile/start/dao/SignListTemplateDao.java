@@ -19,7 +19,7 @@ public interface SignListTemplateDao {
      * @param signListTemplate
      * @return
      */
-    @Insert("insert into sign_list_template (serial_no,sign_list_name,sort,project_mode,is_required) values (#{serialNo},#{signListName},#{sort},#{projectMode},#{isRequired})")
+    @Insert("insert into sign_list_template (serial_no,sign_list_name,sort,project_mode,is_required,category) values (#{serialNo},#{signListName},#{sort},#{projectMode},#{isRequired},#{category})")
     long insert(SignListTemplate signListTemplate);
 
     /**
@@ -27,7 +27,7 @@ public interface SignListTemplateDao {
      * @param signListTemplate
      * @return
      */
-    @Update("update sign_list_template set sign_list_name=#{signListName},sort=#{sort},project_mode=#{projectMode},is_required=#{isRequired} where id=#{id}")
+    @Update("update sign_list_template set sign_list_name=#{signListName},sort=#{sort},project_mode=#{projectMode},is_required=#{isRequired},category=#{category} where id=#{id}")
     int update(SignListTemplate signListTemplate);
 
     /**
@@ -70,6 +70,7 @@ public interface SignListTemplateDao {
     @Select("<script>" + "select * from sign_list_template where 1=1 "
             + "<if test = 'signListName!=null'> and sign_list_name like CONCAT('%',#{signListName},'%')</if>"
             + "<if test = 'projectMode!=null'> and project_mode = #{projectMode}</if>"
+            + "<if test = 'category!=null'> and category = #{category}</if>"
             + "</script>")
     List<SignListTemplate> findByParam(SignListTemplateSearchDTO signListTemplateSearchDTO);
 

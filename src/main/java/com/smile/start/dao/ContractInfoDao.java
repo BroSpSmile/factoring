@@ -3,11 +3,7 @@ package com.smile.start.dao;
 import com.smile.start.dto.ContractAuditSearchDTO;
 import com.smile.start.dto.ContractInfoSearchDTO;
 import com.smile.start.model.contract.ContractInfo;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -49,7 +45,8 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Insert("insert into contract_info (project_id,serial_no,contract_name,project_mode,contract_template,status,delete_flag,seal_status,factoring_contract,confirmation_letter,registration_agreement,financial_agreement,shareholder_resolution,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{contractName},#{projectMode},#{contractTemplate},#{status},#{deleteFlag},#{sealStatus},#{factoringContract},#{confirmationLetter},#{registrationAgreement},#{financialAgreement},#{shareholderResolution},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into contract_info (project_id,serial_no,project_mode,contract_template,status,delete_flag,seal_status,factoring_contract,confirmation_letter,registration_agreement,financial_agreement,shareholder_resolution,create_user,modify_user,gmt_create,gmt_modify) values (#{projectId},#{serialNo},#{projectMode},#{contractTemplate},#{status},#{deleteFlag},#{sealStatus},#{factoringContract},#{confirmationLetter},#{registrationAgreement},#{financialAgreement},#{shareholderResolution},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(ContractInfo contractInfo);
 
     /**
@@ -57,7 +54,7 @@ public interface ContractInfoDao {
      * @param contractInfo
      * @return
      */
-    @Update("update contract_info set project_id=#{projectId},serial_no=#{serialNo},contract_name=#{contractName},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},factoring_contract=#{factoringContract},confirmation_letter=#{confirmationLetter},registration_agreement=#{registrationAgreement},financial_agreement=#{financialAgreement},shareholder_resolution=#{shareholderResolution},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
+    @Update("update contract_info set project_id=#{projectId},project_mode=#{projectMode},contract_template=#{contractTemplate},status=#{status},delete_flag=#{deleteFlag},seal_status=#{sealStatus},seal_finish_time=#{sealFinishTime},factoring_contract=#{factoringContract},confirmation_letter=#{confirmationLetter},registration_agreement=#{registrationAgreement},financial_agreement=#{financialAgreement},shareholder_resolution=#{shareholderResolution},modify_user=#{modifyUser},gmt_modify=#{gmtModify} where id=#{id}")
     int update(ContractInfo contractInfo);
 
     /**

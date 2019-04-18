@@ -24,7 +24,10 @@ var vue = new Vue({
                 { required: true, message: '签署清单名称不能为空', trigger: 'blur' }
             ],
             sort: [
-                { required: true, message: '排序值不能为空', trigger: 'blur' }
+                { required: true, message: '排序值不能为空', trigger: 'blur', type:'number' }
+            ],
+            category: [
+                { required: true, message: '清单类别不能为空', trigger: 'change', type:'number' }
             ]
         },
         pageInfo:{},
@@ -178,6 +181,25 @@ var vue = new Vue({
             return "";
         },
         /**
+         * 清单另类
+         */
+        getCategoryDesc : function(value){
+            if(value === 1) {
+                return "债权人";
+            } else if(value === 2) {
+                return "债务人";
+            } else if(value === 3) {
+                return "内部决策";
+            } else if(value === 4) {
+                return "签署文件";
+            } else if(value === 5) {
+                return "出款依据";
+            } else if(value === 6) {
+                return "其他";
+            }
+            return "";
+        },
+        /**
          * 重置
          */
         reset: function () {
@@ -195,13 +217,19 @@ vue.tableColumns=[
         title: '签署清单名称',
         key: 'signListName',
         align: 'left'
-    },
-    {
+    },{
         title: '项目模式',
         key: 'projectMode',
         align: 'left',
         render:(h,param)=> {
             return h('span', vue.getProjectModeDesc(param.row.projectMode));
+        }
+    },{
+        title: '清单类别',
+            key: 'category',
+            align: 'left',
+            render:(h,param)=> {
+            return h('span', vue.getCategoryDesc(param.row.category));
         }
     },{
         title: '排序值',

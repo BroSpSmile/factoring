@@ -38,11 +38,6 @@ public class ContractInfo implements Serializable {
     private String serialNo;
 
     /**
-     * 合同名称
-     */
-    private String contractName;
-
-    /**
      * 项目模式：1、有追索权模式；2、无追索权模式
      */
     private Integer projectMode;
@@ -66,6 +61,11 @@ public class ContractInfo implements Serializable {
      * 用印状态：0、未用印；1、已用印
      */
     private Integer sealStatus;
+
+    /**
+     * 用印完成时间
+     */
+    private Date sealFinishTime;
 
     /**
      * 是否有保理合同：1、有；0、无
@@ -137,14 +137,6 @@ public class ContractInfo implements Serializable {
         this.serialNo = serialNo;
     }
 
-    public String getContractName() {
-        return contractName;
-    }
-
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
-    }
-
     public Integer getProjectMode() {
         return projectMode;
     }
@@ -183,6 +175,14 @@ public class ContractInfo implements Serializable {
 
     public void setSealStatus(Integer sealStatus) {
         this.sealStatus = sealStatus;
+    }
+
+    public Date getSealFinishTime() {
+        return sealFinishTime;
+    }
+
+    public void setSealFinishTime(Date sealFinishTime) {
+        this.sealFinishTime = sealFinishTime;
     }
 
     public String getCreateUser() {

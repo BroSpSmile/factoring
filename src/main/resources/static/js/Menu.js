@@ -19,7 +19,7 @@ Menu.prototype.createNew = function(options){
 	var name = options.name;
 	var href = options.url;
 	var $li = $('<li  class="subnav-li current" href="'+href+'" data-id="'+id+'">'+name+'</li>');
-	this._createContent($li);
+	this._select($li);
 }
 
 /*创建内容，包括tab 和 iframe*/
