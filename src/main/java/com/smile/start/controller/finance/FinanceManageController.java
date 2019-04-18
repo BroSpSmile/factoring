@@ -96,7 +96,12 @@ public class FinanceManageController extends BaseController {
         //project.step  LOANEN(9, "放款操作") 可以查询 begin
         //project.step END(12, "完结") 可以查询 begin
         User user = getUserByToken(request);
-        if (!isFinanceAdmin(user)) {
+        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+        if (!isFinanceAdmin(roles) && !isFinanceOper(roles)) {
+            PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
+            return result;
+        }
+        if (!isFinanceAdmin(roles)) {
             query.getCondition().setProjectIdList(entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN));
         }
 
@@ -137,13 +142,13 @@ public class FinanceManageController extends BaseController {
     public BaseResult getUser(HttpServletRequest request) {
         SingleResult<Boolean> result = new SingleResult<Boolean>();
         User user = getUserByToken(request);
-        boolean isFinanceAdmin = isFinanceAdmin(user);
+        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+        boolean isFinanceAdmin = isFinanceAdmin(roles);
         result.setData(isFinanceAdmin);
         return result;
     }
 
-    private boolean isFinanceAdmin(User user) {
-        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+    private boolean isFinanceAdmin(List<AuthRoleInfoDTO> roles) {
         boolean isFinanceAdmin = false;
         for (AuthRoleInfoDTO authRoleInfoDTO : roles) {
             if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeAdminRoleCode) ? "12" : financeAdminRoleCode.trim())) {
@@ -152,6 +157,17 @@ public class FinanceManageController extends BaseController {
             }
         }
         return isFinanceAdmin;
+    }
+
+    private boolean isFinanceOper(List<AuthRoleInfoDTO> roles) {
+        boolean isFinanceOper = false;
+        for (AuthRoleInfoDTO authRoleInfoDTO : roles) {
+            if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeRoleCode) ? "12-1" : financeRoleCode.trim())) {
+                isFinanceOper = true;
+                break;
+            }
+        }
+        return isFinanceOper;
     }
 
     /**
@@ -224,7 +240,7 @@ public class FinanceManageController extends BaseController {
         projectForView.setProjectName(project.getProjectName());
         projectForView.setUsername(project.getUser().getUsername());
         FactoringDetail detail = project.getDetail();
-        projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
+        projectForView.setLoanAuditPassTime(DateUtil.getWebDateString(detail.getLoanAuditPassTime()));
         projectForView.setReceivable(detail.getReceivable());
         projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
