@@ -102,7 +102,12 @@ public class FinanceManageController extends BaseController {
             return result;
         }
         if (!isFinanceAdmin(roles)) {
-            query.getCondition().setProjectIdList(entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN));
+            List<Long> projectIdList = entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN);
+            if (null == projectIdList || projectIdList.isEmpty()) {
+                PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
+                return result;
+            }
+            query.getCondition().setProjectIdList(projectIdList);
         }
 
         if (StringUtils.isNotBlank(query.getCondition().getPerson())) {
