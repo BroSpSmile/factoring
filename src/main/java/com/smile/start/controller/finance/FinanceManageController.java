@@ -225,16 +225,16 @@ public class FinanceManageController extends BaseController {
         projectForView.setUsername(project.getUser().getUsername());
         FactoringDetail detail = project.getDetail();
         projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
-        projectForView.setReceivable(detail.getReceivable() / 10000);
-        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+        projectForView.setReceivable(detail.getReceivable());
+        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() / 10000);
+        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() );
         projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>()).stream()
-            .map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+            .map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments().stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments().stream().map(installment -> installment.isInvoiced()).collect(Collectors.toList()));
