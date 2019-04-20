@@ -552,7 +552,8 @@ var vue = new Vue({
                 status: 0,
                 signListName : '',
                 isRequired : 2,
-                type : 'add'
+                type : 'add',
+                category : 6
             });
         },
         /**

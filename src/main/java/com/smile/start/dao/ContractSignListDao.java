@@ -19,7 +19,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name,status,is_required) values (#{serialNo},#{contractSerialNo},#{signListName},#{status},#{isRequired})")
+    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name,status,is_required,category) values (#{serialNo},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category})")
     long insert(ContractSignList contractSignList);
 
     /**
@@ -38,7 +38,7 @@ public interface ContractSignListDao {
     void deleteByContractSerialNo(String contractSerialNo);
 
     /**
-     * 按合同业务流水查询确认函
+     * 按合同业务流水查询签署清单
      * @param contractSerialNo
      */
     @Select("select * from contract_sign_list where contract_serial_no = #{contractSerialNo}")

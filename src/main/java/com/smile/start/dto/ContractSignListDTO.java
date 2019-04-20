@@ -40,6 +40,26 @@ public class ContractSignListDTO implements Serializable {
      */
     private Integer           isRequired;
 
+    /**
+     * 类别：1、债权人；2、债务人；3、内部决策；4、签署文件；5、出款依据；6、其他
+     */
+    private Integer category;
+
+    /**
+     * 原件或复件件：1、原件；0、复印件
+     */
+    private Integer isOriginalCopy;
+
+    /**
+     * 文件页数
+     */
+    private Integer pageCount;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
     /** 文件归档状态 */
     private Integer           filingStatus;
 
@@ -180,4 +200,35 @@ public class ContractSignListDTO implements Serializable {
         this.filingStatus = filingStatus;
     }
 
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
+    public Integer getIsOriginalCopy() {
+        return isOriginalCopy;
+    }
+
+    public void setIsOriginalCopy(Integer isOriginalCopy) {
+        this.isOriginalCopy = isOriginalCopy;
+    }
+
+    public Integer getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(Integer pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }
