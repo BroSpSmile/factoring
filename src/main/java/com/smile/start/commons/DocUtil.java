@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,9 +48,9 @@ public class DocUtil {
      */
     public static File createDoc(String docName, String templateName, Map<String, Object> data) throws IOException, TemplateException {
         Configuration configuration = getConfiguration();
-        Template template = configuration.getTemplate(templateName);
+        Template template = configuration.getTemplate(templateName,"UTF-8");
         File file = File.createTempFile(docName, ".doc");
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file));
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         template.process(data, writer);
         writer.close();
         return file;
@@ -57,8 +58,8 @@ public class DocUtil {
 
     private static Configuration getConfiguration() throws IOException {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
-        configuration.setDefaultEncoding("utf-8");
-        configuration.setDirectoryForTemplateLoading(new File(DocUtil.class.getResource("/static/template").getPath()));
+        configuration.setDefaultEncoding("UTF-8");
+        configuration.setClassForTemplateLoading(DocUtil.class, "/static/template");
         return configuration;
     }
 
