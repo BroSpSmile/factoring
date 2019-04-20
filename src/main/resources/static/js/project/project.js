@@ -304,6 +304,15 @@ var vue = new Vue({
 			this.modal2=true;
 		},
 		
+		toAudit:function(record){
+			console.log(record);
+			parent.window.menu.createNew({
+				name:"审核历史",
+				url:"/audit?id="+record.audit.id,
+				id:"/audit?id="+record.audit.id
+			});
+		},
+		
 		/**
 		 * 后补
 		 */

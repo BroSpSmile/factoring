@@ -67,7 +67,7 @@ public interface ProjectStepDao {
      * @return
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id"),
-                                        @Result(column = "audit", property = "audit.id") })
+                                        @Result(column = "audit_id", property = "audit.id") })
     @Select("select * from project_step where project_id = #{id}")
     List<StepRecord> query(Project project);
 }
