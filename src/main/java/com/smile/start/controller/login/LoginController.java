@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.smile.start.commons.LoginHandler;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
 import com.smile.start.dto.LoginRequestDTO;
@@ -37,7 +36,7 @@ public class LoginController extends BaseController {
 
     /** 登录服务 */
     @Resource
-    private LoginService loginService;
+    private LoginService    loginService;
 
     @Resource
     private UserInfoService userInfoService;
