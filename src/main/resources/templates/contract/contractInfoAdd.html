@@ -459,10 +459,10 @@
 									<i-input placeholder="请输入出席股东" v-model="addForm.contractShareholderMeeting.attendingShareholders"></i-input>
 								</form-item>
 								<form-item label="出席股东人数" prop="contractShareholderMeeting.shareholderNumber">
-									<input-number placeholder="请输入出席股东人数" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractShareholderMeeting.shareholderNumber"></input-number>
+									<input-number placeholder="请输入出席股东人数" :max="100000000000" :min="1" empty class="select-width-180" v-model="addForm.contractShareholderMeeting.shareholderNumber"></input-number>
 								</form-item>
 								<form-item label="会议次数" prop="contractShareholderMeeting.meetingNumber">
-									<input-number placeholder="请输入会议次数" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractShareholderMeeting.meetingNumber"></input-number>
+									<input-number placeholder="请输入会议次数" :max="100000000000" :min="0" empty class="select-width-180" v-model="addForm.contractShareholderMeeting.meetingNumber"></input-number>
 								</form-item>
 								<form-item label="表决权通过率" prop="contractShareholderMeeting.passingRate">
 									<i-input placeholder="请输入表决权通过率" v-model="addForm.contractShareholderMeeting.passingRate"></i-input>

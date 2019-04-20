@@ -17,11 +17,26 @@ var vue = new Vue({
         },
         addForm : {
             baseInfo : {},
-            contractExtendInfo : {},
+            contractExtendInfo : {
+                receivableRecoveryMoneyUpper : null,
+                interestRate : null,
+                receivableAssigneeMoney : null,
+                obligorEnjoyMoney : null,
+                receivableMoney : null
+            },
             contractReceivableAgreement : {},
-            contractReceivableConfirmation : {},
-            contractShareholderMeeting : {},
-            contractFasa : {},
+            contractReceivableConfirmation : {
+                invoiceMoney : null,
+                receivableAssigneeMoney : null
+            },
+            contractShareholderMeeting : {
+                meetingNumber : null,
+                shareholderNumber : null
+            },
+            contractFasa : {
+                expiryDateMonth : null,
+                advisoryServiceMoney : null
+            },
             signList : [],
             attachList : [],
             projectMode : 1
@@ -233,19 +248,34 @@ var vue = new Vue({
                     if (response.data.success && response.data.data !== null) {
                         self.addForm = response.data.data;
                         if(response.data.data.contractShareholderMeeting === null) {
-                            self.addForm.contractShareholderMeeting = {};
+                            self.addForm.contractShareholderMeeting = {
+                                meetingNumber : null,
+                                shareholderNumber : null
+                            };
                         }
                         if(response.data.data.contractFasa === null) {
-                            self.addForm.contractFasa = {};
+                            self.addForm.contractFasa = {
+                                expiryDateMonth : null,
+                                advisoryServiceMoney : null
+                            };
                         }
                         if(response.data.data.contractExtendInfo === null) {
-                            self.addForm.contractExtendInfo = {};
+                            self.addForm.contractExtendInfo = {
+                                receivableRecoveryMoneyUpper : null,
+                                interestRate : null,
+                                receivableAssigneeMoney : null,
+                                obligorEnjoyMoney : null,
+                                receivableMoney : null
+                            };
                         }
                         if(response.data.data.contractReceivableAgreement === null) {
                             self.addForm.contractReceivableAgreement = {};
                         }
                         if(response.data.data.contractReceivableConfirmation === null) {
-                            self.addForm.contractReceivableConfirmation = {};
+                            self.addForm.contractReceivableConfirmation = {
+                                invoiceMoney : null,
+                                receivableAssigneeMoney : null
+                            };
                         }
                         if(response.data.data.attachList === null) {
                             self.addForm.attachList = [];
