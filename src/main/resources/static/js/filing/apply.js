@@ -19,11 +19,44 @@ var vue = new Vue({
         fileList:[],
         signList:[],
         isInitFileRow: false,
+        isEdit:false,
         projectUrl: 'filingProject?type=0'
     },
     created: function () {
         this.contract.project.id = document.getElementById("projectId").value;
         this.initDate();
+    },
+    filters:{
+        /**
+         * 清单类别
+         */
+        getCategoryDesc : function(value){
+            if(value === 1) {
+                return "债权人";
+            } else if(value === 2) {
+                return "债务人";
+            } else if(value === 3) {
+                return "内部决策";
+            } else if(value === 4) {
+                return "签署文件";
+            } else if(value === 5) {
+                return "出款依据";
+            } else if(value === 6) {
+                return "其他";
+            }
+            return "";
+        },
+        /**
+         * 原件/复印件
+         */
+        getIsOriginalCopyDesc : function(value){
+            if(value === 1) {
+                return "原件";
+            } else if(value === 0) {
+                return "复印件";
+            }
+            return "";
+        }
     },
     methods: {
         /**
@@ -49,31 +82,61 @@ var vue = new Vue({
             if(this.contract.project.id){
             	 this.$http.get("contractInfo/project/"+this.contract.project.id).then(function(response){
         			 _self.signList = response.data;
-        			 console.log(_self.signList);
         			 _self.contract.signList = [];
         			 for(let index in _self.signList){
         				 if(_self.signList[index].filingStatus >=2){
-        					 _self.contract.signList.push(_self.signList[index].serialNo);
+                             _self.signList[index].getReady = true;
+        					 // _self.contract.signList.push(_self.signList[index].serialNo);
         				 }
         			 }
-            		
             	 },function(error){
             		 console.error(error);
             	 })
             }
-           
         },
 
         save: function () {
             let self = this;
             let contract = JSON.parse(JSON.stringify(this.contract));
-            contract.signList = [];
-            for(let index in this.contract.signList){
-            	contract.signList.push({
-            		serialNo:this.contract.signList[index],
-            		filingStatus:2
-            	})
+            console.log(contract)
+            // contract.signList = [];
+            // for(let index in this.contract.signList){
+            // 	contract.signList.push({
+            // 		serialNo:this.contract.signList[index],
+            // 		filingStatus:2
+            // 	})
+            // }
+
+            //录入项验证
+            for (let index in this.signList) {
+                if (this.signList[index].type === 'add') {
+                    if(this.signList[index].category === undefined || this.signList[index].category === null) {
+                        self.$Message.error('请选择文件类型');
+                        return;
+                    }
+                    if(this.signList[index].signListName === '') {
+                        self.$Message.error('文件名称必须输入');
+                        return;
+                    }
+                    if(this.signList[index].isOriginalCopy === undefined || this.signList[index].isOriginalCopy === null) {
+                        self.$Message.error('请选择原件/复印件');
+                        return;
+                    }
+                    if(this.signList[index].copies === null) {
+                        self.$Message.error('文件份数必须输入');
+                        return;
+                    }
+                    if(this.signList[index].pageCount === null) {
+                        self.$Message.error('文件页数必须输入');
+                        return;
+                    }
+                }
             }
+
+            for(let index in this.signList){
+                this.signList[index].filingStatus = 2;
+            }
+            contract.signList = this.signList;
             this.$Spin.show();
             this.$http.post("/filingApply/save", contract).then(function (response) {
             	this.$Spin.hide();
@@ -121,7 +184,6 @@ var vue = new Vue({
                 self.$Message.error(error);
             })
         },
-       
         cancel: function () {
             this.removeAllFile();
         },
@@ -136,6 +198,22 @@ var vue = new Vue({
             if (index > -1) {
                 array.splice(index, 1);
             }
+        },
+        handleRemove : function(index) {
+            this.signList.splice(index,1);
+        },
+        handleAdd : function() {
+            console.log(this.contract.project.id)
+            this.signList.push({
+                projectId : this.contract.project.id,
+                status: 0,
+                signListName : '',
+                isRequired : 2,
+                type : 'add',
+                pageCount : null,
+                copies : null,
+                remark : ''
+            });
         }
     }
 });

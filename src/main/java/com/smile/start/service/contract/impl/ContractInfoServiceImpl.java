@@ -1089,10 +1089,27 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         for (ContractSignListDTO sign : signs) {
             ContractSignList list = new ContractSignList();
             list.setSerialNo(sign.getSerialNo());
-            list.setFilingStatus(sign.getFilingStatus());
-            int effct = contractSignListDao.updateFilingStatus(list);
-            if (effct <= 0) {
-                throw new RuntimeException("更新签署附件归档状态异常");
+            list.setSignListName(sign.getSignListName());
+            list.setCategory(sign.getCategory());
+            list.setPageCount(sign.getPageCount());
+            list.setIsOriginalCopy(sign.getIsOriginalCopy());
+            list.setRemark(sign.getRemark());
+            list.setCopies(sign.getCopies());
+            if(sign.getGetReady() != null && sign.getGetReady()) {
+                list.setFilingStatus(2);
+            }
+            long effect;
+            if(Strings.isNullOrEmpty(sign.getSerialNo())) {
+                list.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
+                list.setProjectId(sign.getProjectId());
+                list.setStatus(sign.getStatus());
+                list.setIsRequired(sign.getIsRequired());
+                effect = contractSignListDao.insert(list);
+            } else {
+                effect = contractSignListDao.updateFilingStatus(list);
+            }
+            if (effect <= 0) {
+                throw new RuntimeException("保存签署附件信息异常");
             }
         }
         return new BaseResult();

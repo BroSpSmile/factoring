@@ -19,7 +19,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,project_id,contract_serial_no,sign_list_name,status,is_required,category) values (#{serialNo},#{projectId},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category})")
+    @Insert("insert into contract_sign_list (serial_no,project_id,contract_serial_no,sign_list_name,status,is_required,category,copies,page_count,is_original_copy,remark) values (#{serialNo},#{projectId},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category},#{copies},#{pageCount},#{isOriginalCopy},#{remark})")
     long insert(ContractSignList contractSignList);
 
     /**
@@ -57,8 +57,8 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Update("update contract_sign_list set filing_status = #{filingStatus} where serial_no = #{serialNo}")
-    int updateFilingStatus(ContractSignList contractSignList);
+    @Update("update contract_sign_list set filing_status = #{filingStatus},sign_list_name=#{signListName},category=#{category},is_original_copy=#{isOriginalCopy},copies=#{copies},page_count=#{pageCount},remark=#{remark} where serial_no = #{serialNo}")
+    long updateFilingStatus(ContractSignList contractSignList);
 
     /**
      * 指定合同流水、签署清单名称查询

@@ -57,6 +57,11 @@ public class ContractSignList implements Serializable {
     private Integer isOriginalCopy;
 
     /**
+     * 份数
+     */
+    private Integer copies;
+
+    /**
      * 文件页数
      */
     private Integer pageCount;
@@ -244,5 +249,13 @@ public class ContractSignList implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public Integer getCopies() {
+        return copies;
+    }
+
+    public void setCopies(Integer copies) {
+        this.copies = copies;
     }
 }
