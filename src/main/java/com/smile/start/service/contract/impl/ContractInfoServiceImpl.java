@@ -835,6 +835,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setSignListName(e.getSignListName());
                 contractSignList.setStatus(false);
                 contractSignList.setIsRequired(e.getIsRequired());
+                contractSignList.setCategory(e.getCategory());
                 contractSignListDao.insert(contractSignList);
             });
         }
