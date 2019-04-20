@@ -264,7 +264,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfo.setGmtModify(nowDate);
 
         //保存签署清单
-        insertSignList(contractInfoDTO.getSignList(), contractSerialNo);
+        insertSignList(contractInfoDTO.getSignList(), contractSerialNo, project.getId());
 
         //保理合同编号
         String contractCode = project.getProjectId() + "-1";
@@ -526,7 +526,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //更新签署清单
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
-        insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
+        insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo(), project.getId());
     }
 
     /*private void uploadStandardTemplate(ContractInfoDTO contractInfoDTO, Project project) throws IOException, TemplateException {
@@ -825,8 +825,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * 插入签署清单
      * @param signList
      * @param contractSerialNo
+     * @param projectId
      */
-    private void insertSignList(List<ContractSignListDTO> signList, String contractSerialNo) {
+    private void insertSignList(List<ContractSignListDTO> signList, String contractSerialNo, Long projectId) {
         if (!CollectionUtils.isEmpty(signList)) {
             signList.forEach(e -> {
                 ContractSignList contractSignList = new ContractSignList();
@@ -836,6 +837,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setStatus(false);
                 contractSignList.setIsRequired(e.getIsRequired());
                 contractSignList.setCategory(e.getCategory());
+                contractSignList.setProjectId(projectId);
                 contractSignListDao.insert(contractSignList);
             });
         }
