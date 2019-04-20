@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.smile.start.service.auth.UserInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,9 @@ public class LoginController extends BaseController {
     @Resource
     private LoginService loginService;
 
+    @Resource
+    private UserInfoService userInfoService;
+
     /**
      * 登录页
      * @return
@@ -55,7 +59,7 @@ public class LoginController extends BaseController {
     @GetMapping("/user")
     @ResponseBody
     public LoginUser getUser(HttpServletRequest request) {
-        return LoginHandler.getLoginUser();
+        return userInfoService.getLoginUserByToken(getToken(request));
     }
 
     /**
