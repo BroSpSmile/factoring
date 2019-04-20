@@ -73,15 +73,11 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/minutes/meeting/"+document.getElementById("meetingId").value).then(function(response) {
 				_self.meeting = response.data;
-				//if(_self.meeting.kind=='APPROVAL'){
 					let projects = [];
 					for (let index in _self.meeting.projects){
 						projects.push(_self.meeting.projects[index].id);
 					}
 					_self.meeting.projects = projects;
-//					CKEDITOR.replace( 'myedit');
-//					CKEDITOR.instances.myedit.setData(_self.meeting.minutes);
-			//	}
 				this.getItems();
 			}, function(error) {
 				console.error(error);
@@ -99,15 +95,6 @@ var vue = new Vue({
 				}
 				this.meetingItems.push(item);
 			}
-//			let _self = this;
-//			if(this.meeting.minutesKind == 'CUSTOM'){
-//				console.log(this.meeting.projects);
-//				this.$http.post("/approval/items/"+this.meeting.projects[0]+"/INITIATE").then(function(response){
-//					_self.meetingItems = response.data;
-//				}, function(error) {
-//					console.error(error);
-//				});
-//			}
 		},
 		
 		/**
@@ -115,14 +102,6 @@ var vue = new Vue({
 		 */
 		save:function(progress){
 			let meeting = JSON.parse(JSON.stringify(this.meeting));
-//			if(meeting.kind!='APPROVAL'){
-//				meeting.minutes = CKEDITOR.instances.myedit.getData();
-//				let projects = [];
-//				for(let index in meeting.projects){
-//					projects.push({id:meeting.projects[index]});
-//				}
-//				meeting.projects = projects;
-//			}else{
 				if(this.fileList === undefined || this.fileList.length == 0){
 					this.$Message.error("请上传会议纪要文件");
 					return false;
@@ -147,7 +126,6 @@ var vue = new Vue({
 					meeting.minutesKind = 'CUSTOM';
 					meeting.minutes= this.fileList[index].response.data.fileId+"|"+this.fileList[index].name;
 				}
-			//}
 			let self = this;
 			this.$Spin.show();
 			this.$http.post("/minutes",meeting).then(function(response){

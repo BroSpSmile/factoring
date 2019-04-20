@@ -41,7 +41,7 @@ public class ProjectForView implements Serializable {
     /**
      * 放款审核通过时间
      */
-    private Date loanAuditPassTime;
+    private String loanAuditPassTime;
 
     /**
      * 应收账款
@@ -120,11 +120,11 @@ public class ProjectForView implements Serializable {
         this.username = username;
     }
 
-    public Date getLoanAuditPassTime() {
+    public String getLoanAuditPassTime() {
         return loanAuditPassTime;
     }
 
-    public void setLoanAuditPassTime(Date loanAuditPassTime) {
+    public void setLoanAuditPassTime(String loanAuditPassTime) {
         this.loanAuditPassTime = loanAuditPassTime;
     }
 

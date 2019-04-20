@@ -487,6 +487,7 @@ var vue = new Vue({
         /** 分页查询 */
         queryProject: function () {
             let self = this;
+            let offset_GMT= new Date().getTimezoneOffset();
             self.queryParam.condition = self.formInline;
             this.$http.post("/project/query", self.queryParam).then(
                 function (response) {
@@ -494,6 +495,10 @@ var vue = new Vue({
                     self.project = data.list[0];
                     self.project.detail.loanInstallments.forEach(cur => {
                         self.totalLoanAmount += cur.amount;
+                        cur.installmentDate = new Date(cur.installmentDate);
+                    });
+                    self.project.detail.returnInstallments.forEach(cur => {
+                        cur.installmentDate = new Date(cur.installmentDate);
                     });
 
                     self.factoringInstallmentsPayment = [];
@@ -520,11 +525,11 @@ var vue = new Vue({
                                     indexView: j == 0 ? indexView : null,
                                     id: factoringInstallment.id,
                                     amount: j == 0 ? factoringInstallment.amount : -1,
-                                    installmentDate: factoringInstallment.installmentDate,
+                                    installmentDate:  new Date(factoringInstallment.installmentDate),
                                     type: 'PAYMENT',
                                     bankInfoId: detailListPayment[j].bankInfoId + '',
                                     detailAmount: detailListPayment[j].detailAmount,
-                                    detailDate: detailListPayment[j].detailDate,
+                                    detailDate:  new Date(detailListPayment[j].detailDate),
                                     item: detailListPayment[j].item,
                                     detailId: detailListPayment[j].id
                                 });
@@ -534,7 +539,7 @@ var vue = new Vue({
                                 indexView: indexView,
                                 id: factoringInstallment.id,
                                 amount: factoringInstallment.amount,
-                                installmentDate: factoringInstallment.installmentDate,
+                                installmentDate:  new Date(factoringInstallment.installmentDate),
                                 type: 'PAYMENT',
                                 bankInfoId: null,
                                 detailAmount: 0,
@@ -548,11 +553,11 @@ var vue = new Vue({
                                     indexView: k == 0 ? indexView : null,
                                     id: factoringInstallment.id,
                                     amount: k == 0 ? factoringInstallment.amount : -1,
-                                    installmentDate: factoringInstallment.installmentDate,
+                                    installmentDate:  new Date(factoringInstallment.installmentDate),
                                     type: 'INVOICE',
                                     bankInfoId: detailListInvoice[k].bankInfoId + '',
                                     detailAmount: detailListInvoice[k].detailAmount,
-                                    detailDate: detailListInvoice[k].detailDate,
+                                    detailDate:  new Date(detailListInvoice[k].detailDate),
                                     item: detailListInvoice[k].item,
                                     detailId: detailListInvoice[k].id
                                 });
@@ -562,7 +567,7 @@ var vue = new Vue({
                                 indexView: indexView,
                                 id: factoringInstallment.id,
                                 amount: factoringInstallment.amount,
-                                installmentDate: factoringInstallment.installmentDate,
+                                installmentDate:  new Date(factoringInstallment.installmentDate),
                                 type: 'INVOICE',
                                 bankInfoId: null,
                                 detailAmount: 0,

@@ -96,8 +96,18 @@ public class FinanceManageController extends BaseController {
         //project.step  LOANEN(9, "放款操作") 可以查询 begin
         //project.step END(12, "完结") 可以查询 begin
         User user = getUserByToken(request);
-        if (!isFinanceAdmin(user)) {
-            query.getCondition().setProjectIdList(entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN));
+        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+        if (!isFinanceAdmin(roles) && !isFinanceOper(roles)) {
+            PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
+            return result;
+        }
+        if (!isFinanceAdmin(roles)) {
+            List<Long> projectIdList = entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN);
+            if (null == projectIdList || projectIdList.isEmpty()) {
+                PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
+                return result;
+            }
+            query.getCondition().setProjectIdList(projectIdList);
         }
 
         if (StringUtils.isNotBlank(query.getCondition().getPerson())) {
@@ -137,13 +147,13 @@ public class FinanceManageController extends BaseController {
     public BaseResult getUser(HttpServletRequest request) {
         SingleResult<Boolean> result = new SingleResult<Boolean>();
         User user = getUserByToken(request);
-        boolean isFinanceAdmin = isFinanceAdmin(user);
+        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+        boolean isFinanceAdmin = isFinanceAdmin(roles);
         result.setData(isFinanceAdmin);
         return result;
     }
 
-    private boolean isFinanceAdmin(User user) {
-        List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
+    private boolean isFinanceAdmin(List<AuthRoleInfoDTO> roles) {
         boolean isFinanceAdmin = false;
         for (AuthRoleInfoDTO authRoleInfoDTO : roles) {
             if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeAdminRoleCode) ? "12" : financeAdminRoleCode.trim())) {
@@ -152,6 +162,17 @@ public class FinanceManageController extends BaseController {
             }
         }
         return isFinanceAdmin;
+    }
+
+    private boolean isFinanceOper(List<AuthRoleInfoDTO> roles) {
+        boolean isFinanceOper = false;
+        for (AuthRoleInfoDTO authRoleInfoDTO : roles) {
+            if (authRoleInfoDTO.getRoleCode().equals(StringUtils.isEmpty(financeRoleCode) ? "12-1" : financeRoleCode.trim())) {
+                isFinanceOper = true;
+                break;
+            }
+        }
+        return isFinanceOper;
     }
 
     /**
@@ -224,17 +245,17 @@ public class FinanceManageController extends BaseController {
         projectForView.setProjectName(project.getProjectName());
         projectForView.setUsername(project.getUser().getUsername());
         FactoringDetail detail = project.getDetail();
-        projectForView.setLoanAuditPassTime(detail.getLoanAuditPassTime());
-        projectForView.setReceivable(detail.getReceivable() / 10000);
-        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+        projectForView.setLoanAuditPassTime(DateUtil.getWebDateString(detail.getLoanAuditPassTime()));
+        projectForView.setReceivable(detail.getReceivable());
+        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() / 10000);
+        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() );
         projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>()).stream()
-            .map(installment -> installment.getAmount() / 10000).collect(Collectors.toList()));
+            .map(installment -> installment.getAmount() ).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments().stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments().stream().map(installment -> installment.isInvoiced()).collect(Collectors.toList()));

@@ -1,7 +1,6 @@
 package com.smile.start.service.contract.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +85,6 @@ import com.smile.start.service.common.FileService;
 import com.smile.start.service.contract.ContractInfoService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
-
-import freemarker.template.TemplateException;
 
 /**
  * @author Joseph
@@ -199,19 +196,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         //获取合同附件
         contractInfoDTO.setAttachList(getAttachList(contractInfo.getProjectId()));
-//        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
-//        if (!CollectionUtils.isEmpty(attachs)) {
-//            List<ContractAttachDTO> attachList = Lists.newArrayList();
-//            attachs.forEach(e -> {
-//                ContractAttachDTO attachDTO = new ContractAttachDTO();
-//                attachDTO.setContractSerialNo(contractInfo.getSerialNo());
-//                attachDTO.setAttachType(e.getAttachType());
-//                attachDTO.setAttachName(e.getItemName());
-//                attachDTO.setFileId(e.getItemValue());
-//                attachList.add(attachDTO);
-//            });
-//
-//        }
+        //        final List<ProjectItem> attachs = projectItemDao.getTypeItems(contractInfo.getProjectId(), ProjectItemType.DRAWUP);
+        //        if (!CollectionUtils.isEmpty(attachs)) {
+        //            List<ContractAttachDTO> attachList = Lists.newArrayList();
+        //            attachs.forEach(e -> {
+        //                ContractAttachDTO attachDTO = new ContractAttachDTO();
+        //                attachDTO.setContractSerialNo(contractInfo.getSerialNo());
+        //                attachDTO.setAttachType(e.getAttachType());
+        //                attachDTO.setAttachName(e.getItemName());
+        //                attachDTO.setFileId(e.getItemValue());
+        //                attachList.add(attachDTO);
+        //            });
+        //
+        //        }
 
         final Project project = projectService.getProject(contractInfo.getProjectId());
         contractInfoDTO.setProject(project);
@@ -289,7 +286,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractFileName = "保理合同（无追索权）" + contractExtendInfo.getContractCode() + ".doc";
             }
             File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml",
-                    buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
+                buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
             upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
 
@@ -304,7 +301,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode() + ".doc";
             File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractReceivableConfirmationDTO, contractCode));
+                buildTemplateData(contractReceivableConfirmationDTO, contractCode));
             upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
 
@@ -319,7 +316,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".docx";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractReceivableAgreementDTO, contractCode));
+                buildTemplateData(contractReceivableAgreementDTO, contractCode));
             upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
 
@@ -334,12 +331,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode() + ".doc";
             File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractFasaDTO, contractCode));
+                buildTemplateData(contractFasaDTO, contractCode));
             upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
 
         //保存股东会决议
-        if (contractInfo.getShareholderResolution() != null && contractInfo.getShareholderResolution()){
+        if (contractInfo.getShareholderResolution() != null && contractInfo.getShareholderResolution()) {
             ContractShareholderMeetingDTO contractShareholderMeetingDTO = contractInfoDTO.getContractShareholderMeeting();
             contractShareholderMeetingDTO.setSerialNo(SerialNoGenerator.generateSerialNo("CSM", 5));
             contractShareholderMeetingDTO.setContractSerialNo(contractSerialNo);
@@ -348,7 +345,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String shareholderFileName = "股东会决议.docx";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractShareholderMeetingDTO, contractCode));
+                buildTemplateData(contractShareholderMeetingDTO, contractCode));
             upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
 
@@ -394,7 +391,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         String contractCode = project.getProjectId() + "-1";
 
         //更新保理合同信息
-        if(baseInfo.getFactoringContract() != null && baseInfo.getFactoringContract()) {
+        if (baseInfo.getFactoringContract() != null && baseInfo.getFactoringContract()) {
             final ContractExtendInfo oldContractExtendInfo = contractExtendInfoDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractExtendInfoDTO contractExtendInfoDTO = contractInfoDTO.getContractExtendInfo();
             if (oldContractExtendInfo == null) {
@@ -419,14 +416,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractFileName = "保理合同（无追索权）" + contractExtendInfoDTO.getContractCode() + ".doc";
             }
             File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml",
-                    buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
+                buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
             upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } else {
             contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
 
         //更新应收账款转让确认函
-        if(baseInfo.getConfirmationLetter() != null && baseInfo.getConfirmationLetter()) {
+        if (baseInfo.getConfirmationLetter() != null && baseInfo.getConfirmationLetter()) {
             ContractReceivableConfirmation oldContractReceivableConfirmation = contractReceivableConfirmationDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractReceivableConfirmationDTO contractReceivableConfirmationDTO = contractInfoDTO.getContractReceivableConfirmation();
             if (oldContractReceivableConfirmation == null) {
@@ -445,14 +442,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmationDTO.getConfirmationCode() + ".doc";
             File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractReceivableConfirmationDTO, contractCode));
+                buildTemplateData(contractReceivableConfirmationDTO, contractCode));
             upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } else {
             contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
 
         //更新应收账款转让登记协议
-        if(baseInfo.getRegistrationAgreement() != null && baseInfo.getRegistrationAgreement()) {
+        if (baseInfo.getRegistrationAgreement() != null && baseInfo.getRegistrationAgreement()) {
             ContractReceivableAgreement oldContractReceivableAgreement = contractReceivableAgreementDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractReceivableAgreementDTO contractReceivableAgreementDTO = contractInfoDTO.getContractReceivableAgreement();
             if (oldContractReceivableAgreement == null) {
@@ -471,7 +468,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreementDTO.getProtocolCode() + ".docx";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractReceivableAgreementDTO, contractCode));
+                buildTemplateData(contractReceivableAgreementDTO, contractCode));
             upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } else {
             contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
@@ -497,14 +494,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String fasaFileName = "财务顾问服务协议" + contractFasaDTO.getFasaCode() + ".doc";
             File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractFasaDTO, contractCode));
+                buildTemplateData(contractFasaDTO, contractCode));
             upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } else {
             contractFasaDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
 
         //保存股东会决议
-        if(baseInfo.getShareholderResolution() != null && baseInfo.getShareholderResolution()) {
+        if (baseInfo.getShareholderResolution() != null && baseInfo.getShareholderResolution()) {
             ContractShareholderMeeting oldContractShareholderMeeting = contractShareholderMeetingDao.findByContractSerialNo(contractInfo.getSerialNo());
             ContractShareholderMeetingDTO contractShareholderMeetingDTO = contractInfoDTO.getContractShareholderMeeting();
             if (oldContractShareholderMeeting == null) {
@@ -521,7 +518,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             String shareholderFileName = "股东会决议.docx";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
-                    buildTemplateData(contractShareholderMeetingDTO, contractCode));
+                buildTemplateData(contractShareholderMeetingDTO, contractCode));
             upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
         } else {
             contractShareholderMeetingDao.deleteByContractSerialNo(contractInfo.getSerialNo());
@@ -531,7 +528,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractSignListDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         insertSignList(contractInfoDTO.getSignList(), contractInfo.getSerialNo());
     }
-
 
     /*private void uploadStandardTemplate(ContractInfoDTO contractInfoDTO, Project project) throws IOException, TemplateException {
         ContractExtendInfoDTO contractExtendInfo = contractInfoDTO.getContractExtendInfo();
@@ -544,19 +540,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         }
         File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml", buildTemplateData(contractExtendInfo, project.getProjectId() + "-4"));
         upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
+    
         ContractReceivableConfirmationDTO contractReceivableConfirmation = contractInfoDTO.getContractReceivableConfirmation();
         String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode() + ".doc";
         File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + projectMode + ".xml",
             buildTemplateData(contractReceivableConfirmation, contractExtendInfo));
         upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
+    
         ContractReceivableAgreementDTO contractReceivableAgreement = contractInfoDTO.getContractReceivableAgreement();
         String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".docx";
         File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + projectMode + ".xml",
             buildTemplateData(contractReceivableAgreement, contractExtendInfo));
         upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
-
+    
         //无追模式下有财务顾问协议
         if (projectMode == 2) {
             ContractFasaDTO contractFasa = contractInfoDTO.getContractFasa();
@@ -564,7 +560,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + projectMode + ".xml", buildTemplateData(contractFasa, contractExtendInfo));
             upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
         }
-
+    
         String shareholderFileName = "股东会决议.docx";
         File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + projectMode + ".xml",
             buildTemplateData(contractInfoDTO.getContractShareholderMeeting(), contractExtendInfo));
@@ -624,7 +620,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private Map<String, Object> buildTemplateData(ContractShareholderMeetingDTO contractShareholderMeeting, String contractCode) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", contractCode);
-        if(contractShareholderMeeting.getMeetingTime() != null) {
+        if (contractShareholderMeeting.getMeetingTime() != null) {
             data.put("meetingTimeYear", DateUtil.getYeah(contractShareholderMeeting.getMeetingTime()));
             data.put("meetingTimeMonth", DateUtil.getMonth(contractShareholderMeeting.getMeetingTime()));
             data.put("meetingTimeDay", DateUtil.getDay(contractShareholderMeeting.getMeetingTime()));
@@ -639,7 +635,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("shareholderNumber", contractShareholderMeeting.getShareholderNumber() == null ? "" : contractShareholderMeeting.getShareholderNumber());
         data.put("meetingNumber", contractShareholderMeeting.getMeetingNumber() == null ? "" : contractShareholderMeeting.getMeetingNumber());
         data.put("passingRate", Strings.nullToEmpty(contractShareholderMeeting.getPassingRate()));
-        if(contractShareholderMeeting.getSignatureDate() != null) {
+        if (contractShareholderMeeting.getSignatureDate() != null) {
             data.put("signatureDateYear", DateUtil.getYeah(contractShareholderMeeting.getSignatureDate()));
             data.put("signatureDateMonth", DateUtil.getMonth(contractShareholderMeeting.getSignatureDate()));
             data.put("signatureDateDay", DateUtil.getDay(contractShareholderMeeting.getSignatureDate()));
@@ -668,7 +664,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("fpTelephone", Strings.nullToEmpty(contractFasa.getFpTelephone()));
         data.put("fpFax", Strings.nullToEmpty(contractFasa.getFpFax()));
         data.put("signAddress", Strings.nullToEmpty(contractFasa.getSignAddress()));
-        if(contractFasa.getSignDate() != null) {
+        if (contractFasa.getSignDate() != null) {
             data.put("signDateYear", DateUtil.getYeah(contractFasa.getSignDate()));
             data.put("signDateMonth", DateUtil.getMonth(contractFasa.getSignDate()));
             data.put("signDateDay", DateUtil.getDay(contractFasa.getSignDate()));
@@ -700,7 +696,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("confirmationCode", Strings.nullToEmpty(contractReceivableConfirmation.getConfirmationCode()));
         data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat)));
         data.put("assignor", Strings.nullToEmpty(contractReceivableConfirmation.getAssignor()));
-        if(contractReceivableConfirmation.getSignDate() != null) {
+        if (contractReceivableConfirmation.getSignDate() != null) {
             data.put("signDateYear", DateUtil.getYeah(contractReceivableConfirmation.getSignDate()));
             data.put("signDateMonth", DateUtil.getMonth(contractReceivableConfirmation.getSignDate()));
             data.put("signDateDay", DateUtil.getDay(contractReceivableConfirmation.getSignDate()));
@@ -713,7 +709,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("businessContractName", Strings.nullToEmpty(contractReceivableConfirmation.getBusinessContractName()));
         data.put("receivableAssigneeMoneyUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
         data.put("receivableAssigneeMoneyType", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyType()));
-        data.put("unpaidReceivableAssigneeMoney", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
+        data.put("unpaidReceivableAssigneeMoney",
+            contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("unpaidReceivableAssigneeMoneyUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
         data.put("unpaidReceivableAssigneeMoneyType", Strings.nullToEmpty(contractReceivableConfirmation.getUnpaidReceivableAssigneeMoneyType()));
         data.put("receivableExpiryDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getReceivableExpiryDate(), DateUtil.chineseDtFormat)));
@@ -721,11 +718,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("receivableRecoveryMoney", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("contractReceivable", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("contractReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
-        data.put("assignorAbligorReceivable", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
+        data.put("assignorAbligorReceivable",
+            contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("assignorAbligorReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
-        data.put("unpaidAssignorAbligorReceivable", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
+        data.put("unpaidAssignorAbligorReceivable",
+            contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("unpaidAssignorAbligorReceivableUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
-        data.put("receivableAssigneeMoneyPaid", contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
+        data.put("receivableAssigneeMoneyPaid",
+            contractReceivableConfirmation.getReceivableAssigneeMoney() == null ? "" : contractReceivableConfirmation.getReceivableAssigneeMoney());
         data.put("receivableAssigneeMoneyPaidUpper", Strings.nullToEmpty(contractReceivableConfirmation.getReceivableAssigneeMoneyUpper()));
 
         data.put("assignorCommitDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getAssignorCommitDate(), DateUtil.spotFormat)));
@@ -739,7 +739,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("obligorCompanyName", Strings.nullToEmpty(contractReceivableConfirmation.getObligorCompanyName()));
         data.put("obligorSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.spotFormat)));
         data.put("nameOfSubject", Strings.nullToEmpty(contractReceivableConfirmation.getNameOfSubject()));
-        if(contractReceivableConfirmation.getInvoiceMoney() != null) {
+        if (contractReceivableConfirmation.getInvoiceMoney() != null) {
             String invoiceMoneyFormat = MoneyToChineseUtil.moneyFormat(contractReceivableConfirmation.getInvoiceMoney().toString());
             data.put("invoiceMoneyUpper", MoneyToChineseUtil.convert(invoiceMoneyFormat));
             data.put("invoiceMoney", contractReceivableConfirmation.getInvoiceMoney());
@@ -768,7 +768,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", Strings.nullToEmpty(contractExtendInfo.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractExtendInfo.getSpFax()));
         data.put("obligor", Strings.nullToEmpty(contractExtendInfo.getObligor()));
-        if(contractExtendInfo.getSignDate() != null) {
+        if (contractExtendInfo.getSignDate() != null) {
             data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
             data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
             data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
@@ -789,11 +789,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("interestRate", contractExtendInfo.getInterestRate() == null ? "" : contractExtendInfo.getInterestRate());
         data.put("billingStartDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getBillingStartDate(), DateUtil.spotFormat)));
 
-        if(projectMode == 1) {
+        if (projectMode == 1) {
             data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableRecoveryMoney() == null ? "" : contractExtendInfo.getReceivableRecoveryMoney());
             data.put("receivableRecoveryMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyUpper()));
             data.put("receivableRecoveryMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyType()));
-        } else if(projectMode == 2) {
+        } else if (projectMode == 2) {
             data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableMoney() == null ? "" : contractExtendInfo.getReceivableMoney());
             data.put("receivableRecoveryMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyUpper()));
             data.put("receivableRecoveryMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyType()));
@@ -806,7 +806,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spBankName", Strings.nullToEmpty(contractExtendInfo.getSpBankName()));
         data.put("spAccount", Strings.nullToEmpty(contractExtendInfo.getSpAccount()));
 
-        if(contractExtendInfo.getCompulsoryRescissionDate() != null) {
+        if (contractExtendInfo.getCompulsoryRescissionDate() != null) {
             data.put("compulsoryRescissionDateYear", DateUtil.getYeah(contractExtendInfo.getCompulsoryRescissionDate()));
             data.put("compulsoryRescissionDateMonth", DateUtil.getMonth(contractExtendInfo.getCompulsoryRescissionDate()));
             data.put("compulsoryRescissionDateDay", DateUtil.getDay(contractExtendInfo.getCompulsoryRescissionDate()));

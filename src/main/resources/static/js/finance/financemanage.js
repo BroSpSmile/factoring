@@ -307,11 +307,11 @@ vue.tableColumns = [{
     align: 'center',
     width: 105
 }, {
-    title: '应收账款（万元）',
+    title: '应收账款（元）',
     key: 'receivable',
     align: 'center',
 }, {
-    title: '已投放金额（万元）',
+    title: '已投放金额（元）',
     key: 'dropAmount',
     align: 'center',
     render: (h, param) => {
@@ -326,7 +326,7 @@ vue.tableColumns = [{
         return vue.columnRender(h, param);
     }
 }, {
-    title: '回款金额（万元）',
+    title: '回款金额（元）',
     key: 'returnAmount',
     align: 'center',
     render: (h, param) => {
@@ -341,11 +341,11 @@ vue.tableColumns = [{
         return vue.columnRender(h, param);
     }
 }, {
-    title: '保理费合计（万元）',
+    title: '保理费合计（元）',
     key: 'totalFactoringFee',
     align: 'center',
 }, {
-    title: '保理费分期（万元）',
+    title: '保理费分期（元）',
     key: 'factoringInstallmentAmounts',
     align: 'center',
     render: (h, param) => {

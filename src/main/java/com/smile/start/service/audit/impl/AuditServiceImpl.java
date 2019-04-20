@@ -205,6 +205,23 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     /** 
+     * @see com.smile.start.service.audit.AuditService#queryHistory(com.smile.start.model.base.PageRequest)
+     */
+    @Override
+    public PageInfo<Audit> queryHistory(PageRequest<AuditParam> param) {
+        PageHelper.startPage(param.getPageNum(), param.getPageSize(), "id desc");
+        List<Audit> audits = auditDao.queryHistory(param.getCondition());
+        for (Audit audit : audits) {
+            Project project = projectService.getProject(audit.getProject().getId());
+            audit.setProject(project);
+            User user = userInfoService.getUserById(audit.getApplicant().getId());
+            audit.setApplicant(user);
+        }
+        PageInfo<Audit> result = new PageInfo<>(audits);
+        return result;
+    }
+
+    /** 
      * @see com.smile.start.service.audit.AuditService#getAudit(java.lang.Long)
      */
     @Override
