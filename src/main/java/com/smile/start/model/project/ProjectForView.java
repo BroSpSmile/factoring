@@ -5,7 +5,6 @@
 package com.smile.start.model.project;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,72 +20,72 @@ public class ProjectForView implements Serializable {
     /**
      * 项目编号
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 项目编号
      */
-    private String projectId;
+    private String            projectId;
 
     /**
      * 项目名称
      */
-    private String projectName;
+    private String            projectName;
 
     /**
      * 项目发起人 业务负责人
      */
-    private String username;
+    private String            username;
 
     /**
      * 放款审核通过时间
      */
-    private String loanAuditPassTime;
+    private String            loanAuditPassTime;
 
     /**
      * 应收账款
      */
-    private double receivable;
+    private double            receivable;
 
     /**
      * 已投放金额
      */
-    private List<Double> dropAmount;
+    private List<Double>      dropAmount;
 
     /**
      * 投放日期
      */
-    private List<String> dropDates;
+    private List<String>      dropDates;
 
     /**
      * 回款金额
      */
-    private List<Double> returnAmount;
+    private List<Double>      returnAmount;
 
     /**
      * 回款日期
      */
-    private List<String> returnDates;
+    private List<String>      returnDates;
 
     /**
      * 保理费合计
      */
-    private double totalFactoringFee;
+    private double            totalFactoringFee;
 
     /**
      * 保理费分期金额
      */
-    private List<Double> factoringInstallmentAmounts;
+    private List<Double>      factoringInstallmentAmounts;
 
     /**
      * 保理费分期到账日期
      */
-    private List<String> factoringInstallmentDates;
+    private List<String>      factoringInstallmentDates;
 
     /**
      * 是否已经开票 列表
      */
-    private List<Boolean> factoringInstallmentInvoiceds;
+    private List<Boolean>     factoringInstallmentInvoiceds;
 
     public Long getId() {
         return id;

@@ -194,9 +194,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Override
     public PageInfo<Project> queryPage(PageRequest<Project> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
-        List<Project> projects = projectDao.findByParam(page.getCondition());
-        projects.stream().forEach(project -> setDetail(project));
-        //4. 根据返回的集合，创建PageInfo对象
+        List<Project> projects = projectDao.queryFactoringProject(page.getCondition());
         PageInfo<Project> result = new PageInfo<>(projects);
         return result;
     }
