@@ -19,7 +19,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,contract_serial_no,sign_list_name,status,is_required,category) values (#{serialNo},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category})")
+    @Insert("insert into contract_sign_list (serial_no,project_id,contract_serial_no,sign_list_name,status,is_required,category) values (#{serialNo},#{projectId},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category})")
     long insert(ContractSignList contractSignList);
 
     /**
@@ -49,7 +49,7 @@ public interface ContractSignListDao {
      * @param projectId
      * @return
      */
-    @Select("select t1.* from contract_sign_list t1 inner join contract_info t2 on t1.contract_serial_no = t2.serial_no where t2.project_id = #{projectId}")
+    @Select("select * from contract_sign_list where project_id = #{projectId}")
     List<ContractSignList> findByProjectId(Long projectId);
 
     /**
