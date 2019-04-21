@@ -218,20 +218,33 @@ var vue = new Vue({
             });
         },
         handleUp : function (index) {
-            console.log(index)
-            // var temp = this.signList[index];
-            // this.signList[index] = this.signList[index - 1];
-            // this.signList[index - 1] = temp;
-
+            if(index === 0) {
+                this.$Message.error("已经是第一行，不能再上移");
+                return;
+            }
             var tempOption = this.signList[index];
-            this.$set(this.signList, index, this.signList[index - 1]);
+            var upOption = this.signList[index - 1];
+            if(tempOption.category !== upOption.category) {
+                this.$Message.error("不同分类不能移动");
+                return;
+            }
+            this.$set(this.signList, index, upOption);
             this.$set(this.signList, index - 1, tempOption);
 
             console.log(this.signList);
         },
         handleDown : function (index) {
+            if(index === this.signList.length - 1) {
+                this.$Message.error("已经是最后行，不能再下移");
+                return;
+            }
             var tempOption = this.signList[index];
-            this.$set(this.signList, index, this.signList[index + 1]);
+            var downOption = this.signList[index + 1];
+            if(tempOption.category !== downOption.category) {
+                this.$Message.error("不同分类不能移动");
+                return;
+            }
+            this.$set(this.signList, index, downOption);
             this.$set(this.signList, index + 1, tempOption);
         }
     }
