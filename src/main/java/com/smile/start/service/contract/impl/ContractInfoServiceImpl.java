@@ -1,12 +1,25 @@
 package com.smile.start.service.contract.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.enums.*;
+import com.smile.start.model.project.*;
+import com.smile.start.service.project.FactoringService;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -63,21 +76,7 @@ import com.smile.start.model.contract.ContractReceivableAgreement;
 import com.smile.start.model.contract.ContractReceivableConfirmation;
 import com.smile.start.model.contract.ContractShareholderMeeting;
 import com.smile.start.model.contract.ContractSignList;
-import com.smile.start.model.enums.AuditResult;
-import com.smile.start.model.enums.AuditType;
-import com.smile.start.model.enums.ContractStatusEnum;
-import com.smile.start.model.enums.ContractTemplateEnum;
-import com.smile.start.model.enums.DeleteFlagEnum;
-import com.smile.start.model.enums.FlowTypeEnum;
-import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectItemType;
-import com.smile.start.model.enums.SealStatusEnum;
-import com.smile.start.model.enums.Step;
 import com.smile.start.model.login.LoginUser;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.AuditRecord;
-import com.smile.start.model.project.Project;
-import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
@@ -93,6 +92,7 @@ import com.smile.start.service.project.ProjectService;
  */
 @Service
 public class ContractInfoServiceImpl implements ContractInfoService {
+    private Logger logger = LoggerFactory.getLogger(ContractInfoServiceImpl.class);
 
     @Resource
     private ContractInfoDao                   contractInfoDao;
@@ -144,6 +144,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     @Resource
     private ProjectService                    projectService;
+
+    @Resource
+    private FactoringService                  factoringService;
 
     @Resource
     private FileService                       fileService;
@@ -287,7 +290,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
             File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml",
                 buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
-            upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         }
 
         //保存应收账款转让确认函
@@ -302,7 +305,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmation.getConfirmationCode() + ".doc";
             File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableConfirmationDTO, contractCode));
-            upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         }
 
         //保存应收账款转让登记协议
@@ -317,7 +320,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".docx";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableAgreementDTO, contractCode));
-            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         }
 
         //保存财务顾问协议，无追合同才有
@@ -332,7 +335,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String fasaFileName = "财务顾问服务协议" + contractFasa.getFasaCode() + ".doc";
             File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractFasaDTO, contractCode));
-            upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         }
 
         //保存股东会决议
@@ -346,7 +349,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String shareholderFileName = "股东会决议.docx";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractShareholderMeetingDTO, contractCode));
-            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         }
 
         //自定义附件合同
@@ -417,7 +420,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
             File contractFile = DocUtil.createDoc(contractFileName, "factoringContract_" + projectMode + ".xml",
                 buildTemplateData(contractExtendInfoDTO, project.getProjectId() + "-4", projectMode));
-            upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(contractFile, contractFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         } else {
             contractExtendInfoDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
@@ -443,7 +446,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String confirmationFileName = "附件1：应收账款转让确认函" + contractReceivableConfirmationDTO.getConfirmationCode() + ".doc";
             File confirmationFile = DocUtil.createDoc(confirmationFileName, "confirmationLetter_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableConfirmationDTO, contractCode));
-            upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(confirmationFile, confirmationFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         } else {
             contractReceivableConfirmationDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
@@ -469,7 +472,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreementDTO.getProtocolCode() + ".docx";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableAgreementDTO, contractCode));
-            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         } else {
             contractReceivableAgreementDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
@@ -495,7 +498,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String fasaFileName = "财务顾问服务协议" + contractFasaDTO.getFasaCode() + ".doc";
             File fasaFile = DocUtil.createDoc(fasaFileName, "financialAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractFasaDTO, contractCode));
-            upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(fasaFile, fasaFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         } else {
             contractFasaDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
@@ -519,7 +522,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             String shareholderFileName = "股东会决议.docx";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractShareholderMeetingDTO, contractCode));
-            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId());
+            upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
         } else {
             contractShareholderMeetingDao.deleteByContractSerialNo(contractInfo.getSerialNo());
         }
@@ -572,13 +575,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @param file
      * @param fileName
      */
-    private void upload(File file, String fileName, Long projectId) {
+    private void upload(File file, String fileName, Long projectId, ProjectItemType projectItemType) {
         if (file.exists()) {
             final FileInfo upload = fileService.upload(file, fileName);
             ProjectItem projectItem = new ProjectItem();
             projectItem.setAttachType(ContractTemplateEnum.STANDARD.getValue());
             projectItem.setProjectId(projectId);
-            projectItem.setItemType(ProjectItemType.DRAWUP);
+            projectItem.setItemType(projectItemType);
             projectItem.setItemName(fileName);
             projectItem.setItemValue(upload.getFileId());
             projectItemDao.insert(projectItem);
@@ -838,6 +841,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractSignList.setIsRequired(e.getIsRequired());
                 contractSignList.setCategory(e.getCategory());
                 contractSignList.setProjectId(projectId);
+                contractSignList.setFilingStatus(1);
                 contractSignListDao.insert(contractSignList);
             });
         }
@@ -1089,10 +1093,27 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         for (ContractSignListDTO sign : signs) {
             ContractSignList list = new ContractSignList();
             list.setSerialNo(sign.getSerialNo());
-            list.setFilingStatus(sign.getFilingStatus());
-            int effct = contractSignListDao.updateFilingStatus(list);
-            if (effct <= 0) {
-                throw new RuntimeException("更新签署附件归档状态异常");
+            list.setSignListName(sign.getSignListName());
+            list.setCategory(sign.getCategory());
+            list.setPageCount(sign.getPageCount());
+            list.setIsOriginalCopy(sign.getIsOriginalCopy());
+            list.setRemark(sign.getRemark());
+            list.setCopies(sign.getCopies());
+            if(sign.getGetReady() != null && sign.getGetReady()) {
+                list.setFilingStatus(2);
+            }
+            long effect;
+            if(Strings.isNullOrEmpty(sign.getSerialNo())) {
+                list.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
+                list.setProjectId(sign.getProjectId());
+                list.setStatus(sign.getStatus());
+                list.setIsRequired(sign.getIsRequired());
+                effect = contractSignListDao.insert(list);
+            } else {
+                effect = contractSignListDao.updateFilingStatus(list);
+            }
+            if (effect <= 0) {
+                throw new RuntimeException("保存签署附件信息异常");
             }
         }
         return new BaseResult();
@@ -1118,6 +1139,171 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             return attachList;
         }
         return null;
+    }
+
+    /**
+     * 上传移交清单
+     * @param projectId
+     * @throws FileNotFoundException
+     */
+    @Override
+    public void uploadTransferList(Long projectId) throws IOException {
+        List<ContractSignList> transferList = contractSignListDao.findByProjectId(projectId);
+        Project project = projectService.getProject(projectId);
+        FactoringDetail factoringDetail = factoringService.get(projectId);
+        List<ContractSignList> collect = transferList.stream()
+                .sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
+
+        String fileName = "移交清单" + project.getProjectId() + ".docx";
+        File transferFile = new File(fileName);
+        logger.info("transferFilePath : {}", transferFile.getAbsolutePath());
+
+        //Blank Document
+        XWPFDocument document= new XWPFDocument();
+
+        //Write the Document in file system
+        FileOutputStream out = new FileOutputStream(transferFile);  // 下载路径/文件名称
+
+        //添加标题
+        XWPFParagraph titleParagraph = document.createParagraph();
+        //设置段落居中
+        titleParagraph.setAlignment(ParagraphAlignment.CENTER);
+
+        XWPFRun titleParagraphRun = titleParagraph.createRun();
+        titleParagraphRun.setText("苏州市相城融金商业保理有限公司 移交清册");
+        titleParagraphRun.setColor("000000");
+        titleParagraphRun.setFontSize(16);
+
+        //段落
+        XWPFParagraph firstParagraph = document.createParagraph();
+        //设置段落居中
+        firstParagraph.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun run = firstParagraph.createRun();
+        run.setText(buildSubtitle(project, factoringDetail));
+        run.setColor("000000");
+        run.setFontSize(16);
+
+        //移交清单表格
+        XWPFTable comTable = document.createTable();
+        buildFirstRow(comTable);
+
+        int category = 0;
+        for(int i = 0; i < collect.size(); i++) {
+            ContractSignList signList = collect.get(i);
+            XWPFTableRow comTableRowTwo = comTable.createRow();
+            comTableRowTwo.getCell(0).setText(String.valueOf(i + 1));
+            XWPFTableCell cell1 = comTableRowTwo.getCell(1);
+            cell1.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            cell1.setText(SignListCategoryEnum.fromValue(signList.getCategory()).getDesc());
+            if(category != signList.getCategory()) {
+                category = signList.getCategory();
+                cell1.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            } else {
+                cell1.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            }
+            comTableRowTwo.getCell(2).setText(signList.getSignListName());
+            //原件
+            if(signList.getIsOriginalCopy() == 1) {
+                comTableRowTwo.getCell(3).setText(String.format("%d份/各%d页", signList.getCopies(), signList.getPageCount()));
+                comTableRowTwo.getCell(4).setText("--");
+            } else {
+                comTableRowTwo.getCell(3).setText("--");
+                comTableRowTwo.getCell(4).setText(String.format("%d份/各%d页", signList.getCopies(), signList.getPageCount()));
+            }
+            comTableRowTwo.getCell(5).setText(signList.getRemark());
+        }
+
+        document.write(out);
+        out.close();
+        upload(transferFile, fileName, projectId, ProjectItemType.FILE);
+        transferFile.delete();
+    }
+
+    /**
+     * 构建第一行
+     * @param comTable
+     */
+    private void buildFirstRow(XWPFTable comTable) {
+        //列宽自动分割
+        CTTblWidth comTableWidth = comTable.getCTTbl().addNewTblPr().addNewTblW();
+        comTableWidth.setType(STTblWidth.DXA);
+        comTableWidth.setW(BigInteger.valueOf(9072));
+
+        //表格第一行
+        XWPFTableRow comTableRowOne = comTable.getRow(0);
+        XWPFTableCell serialNumberCell = comTableRowOne.getCell(0);
+        setVerticalAlignment(serialNumberCell);
+        setHorizontalAlignment(serialNumberCell);
+        serialNumberCell.setText("序号");
+
+        XWPFTableCell categoryCell = comTableRowOne.addNewTableCell();
+        setVerticalAlignment(categoryCell);
+        setHorizontalAlignment(categoryCell);
+        categoryCell.setText("文件分类");
+
+//        cell00.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+        XWPFTableCell fileNameCell = comTableRowOne.addNewTableCell();
+        setVerticalAlignment(fileNameCell);
+        setHorizontalAlignment(fileNameCell);
+        fileNameCell.setText("文件名称");
+
+//        cell01.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+        XWPFTableCell pageCountCell_1 = comTableRowOne.addNewTableCell();
+        setVerticalAlignment(pageCountCell_1);
+        setHorizontalAlignment(pageCountCell_1);
+        //内容换行处理
+        XWPFParagraph para1 = pageCountCell_1.getParagraphs().get(0);
+        XWPFRun run11 = para1.createRun();
+        run11.setText("件/页数");
+        run11.addBreak();
+        XWPFRun run12 = para1.createRun();
+        run12.setText("（原件）");
+
+//        cell02.setText("件/页数\r\n（原件）");
+        XWPFTableCell pageCountCell_2 = comTableRowOne.addNewTableCell();
+        setVerticalAlignment(pageCountCell_2);
+        setHorizontalAlignment(pageCountCell_2);
+        //内容换行处理
+        XWPFParagraph para2 = pageCountCell_2.getParagraphs().get(0);
+        XWPFRun run21 = para2.createRun();
+        run21.setText("件/页数");
+        run21.addBreak();
+        XWPFRun run22 = para2.createRun();
+        run22.setText("（复印件）");
+
+
+        XWPFTableCell remarkCell = comTableRowOne.addNewTableCell();
+        setVerticalAlignment(remarkCell);
+        setHorizontalAlignment(remarkCell);
+        remarkCell.setText("备注");
+    }
+
+    /**
+     * 构建副标题
+     * @param project
+     * @param factoringDetail
+     * @return
+     */
+    private String buildSubtitle(Project project, FactoringDetail factoringDetail) {
+        return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), String.valueOf(factoringDetail.getAssignee()));
+    }
+
+    /**
+     * 垂直对齐
+     * @param cell
+     */
+    private void setVerticalAlignment(XWPFTableCell cell) {
+        cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+    }
+
+    /**
+     * 水平对齐
+     * @param cell
+     */
+    private void setHorizontalAlignment(XWPFTableCell cell) {
+        CTTc ctTc = cell.getCTTc();
+        ctTc.addNewTcPr().addNewVAlign().setVal(STVerticalJc.CENTER);
+        ctTc.getPList().get(0).addNewPPr().addNewJc().setVal(STJc.CENTER);
     }
 
 }

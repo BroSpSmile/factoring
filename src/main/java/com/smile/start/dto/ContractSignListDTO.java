@@ -56,6 +56,11 @@ public class ContractSignListDTO implements Serializable {
     private Integer isOriginalCopy;
 
     /**
+     * 份数
+     */
+    private Integer copies;
+
+    /**
      * 文件页数
      */
     private Integer pageCount;
@@ -67,6 +72,11 @@ public class ContractSignListDTO implements Serializable {
 
     /** 文件归档状态 */
     private Integer           filingStatus;
+
+    /**
+     * 是否已备齐
+     */
+    private Boolean getReady;
 
     /** 
      * @see java.lang.Object#toString()
@@ -243,5 +253,21 @@ public class ContractSignListDTO implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public Boolean getGetReady() {
+        return getReady;
+    }
+
+    public void setGetReady(Boolean getReady) {
+        this.getReady = getReady;
+    }
+
+    public Integer getCopies() {
+        return copies;
+    }
+
+    public void setCopies(Integer copies) {
+        this.copies = copies;
     }
 }

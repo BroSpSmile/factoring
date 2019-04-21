@@ -181,7 +181,7 @@ var vue = new Vue({
             return "";
         },
         /**
-         * 清单另类
+         * 清单类别
          */
         getCategoryDesc : function(value){
             if(value === 1) {
