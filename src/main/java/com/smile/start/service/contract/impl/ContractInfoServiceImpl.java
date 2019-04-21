@@ -1191,9 +1191,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         for(int i = 0; i < collect.size(); i++) {
             ContractSignList signList = collect.get(i);
             XWPFTableRow comTableRowTwo = comTable.createRow();
-            comTableRowTwo.getCell(0).setText(String.valueOf(i + 1));
+            XWPFTableCell cell0 = comTableRowTwo.getCell(0);
+            cell0.setText(String.valueOf(i + 1));
+            setVerticalAlignment(cell0);
+            setHorizontalAlignment(cell0);
             XWPFTableCell cell1 = comTableRowTwo.getCell(1);
-            cell1.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             cell1.setText(SignListCategoryEnum.fromValue(signList.getCategory()).getDesc());
             if(category != signList.getCategory()) {
                 category = signList.getCategory();
@@ -1213,10 +1215,42 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             comTableRowTwo.getCell(5).setText(signList.getRemark());
         }
 
+        XWPFParagraph paragraph = document.createParagraph();
+        XWPFRun paragraphRun = paragraph.createRun();
+        paragraphRun.setText("\r");
+
+        //添加签字栏
+        XWPFParagraph transferDateParagraph = document.createParagraph();
+        transferDateParagraph.setAlignment(ParagraphAlignment.LEFT);
+        transferDateParagraph.setIndentationLeft(567 * 10);
+
+        XWPFRun transferDateParagraphRun = transferDateParagraph.createRun();
+        transferDateParagraphRun.setText("移交日期：" + DateUtil.format(new Date(), DateUtil.spotFormat));
+        transferDateParagraphRun.setColor("000000");
+        transferDateParagraphRun.setFontSize(12);
+        transferDateParagraphRun.addBreak();
+
+        XWPFRun transferUserParagraphRun = transferDateParagraph.createRun();
+        transferUserParagraphRun.setText("移交人：" + LoginHandler.getLoginUser().getUsername());
+        transferUserParagraphRun.setColor("000000");
+        transferUserParagraphRun.setFontSize(12);
+        transferUserParagraphRun.addBreak();
+
+        XWPFRun transferReceiveParagraphRun = transferDateParagraph.createRun();
+        transferReceiveParagraphRun.setText("接收人：");
+        transferReceiveParagraphRun.setColor("000000");
+        transferReceiveParagraphRun.setFontSize(12);
+        transferReceiveParagraphRun.addBreak();
+
+        XWPFRun transferRiskParagraphRun = transferDateParagraph.createRun();
+        transferRiskParagraphRun.setText("风控：");
+        transferRiskParagraphRun.setColor("000000");
+        transferRiskParagraphRun.setFontSize(12);
+
         document.write(out);
         out.close();
         upload(transferFile, fileName, projectId, ProjectItemType.FILE);
-        transferFile.delete();
+//        transferFile.delete();
     }
 
     /**
