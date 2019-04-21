@@ -65,7 +65,7 @@ var vue = new Vue({
 				this.$http.get("/loanApply/"+id).then(function(response){
 					if(response.data){
 						_self.loan = response.data;
-						if(!_self.loan.groups){
+						if(!_self.loan.groups||_self.loan.groups.length==0){
 							_self.loan.groups = [];
 							_self.loan.groups.push({
 								payments:0
@@ -160,13 +160,23 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.post("/loanApply",this.loan).then(function(response){
 				_self.$Message.info({
-					content : "申请成功",
+					content : "保存成功",
 					onClose : function() {
 					}
 				});
 			},function(error){
 				_self.$Message.error(error);
 			})
+		},
+		
+		add:function(){
+			this.loan.groups.push({
+				payments:0
+			});
+		},
+		
+		remove:function(index){
+			this.loan.groups.splice(index,1);
 		},
 		
 		commit:function(){
@@ -190,7 +200,7 @@ var vue = new Vue({
 			this.$http.post("/loanApply/commit",this.loan).then(function(response){
 				this.$Spin.hide();
 				_self.$Message.info({
-					content : "保存成功",
+					content : "申请成功",
 					onClose : function() {
 						window.close();
 					}

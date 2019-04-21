@@ -11,10 +11,26 @@ import java.io.Serializable;
  * @author smile.jing
  * @version $Id: LoanGroup.java, v 0.1 Apr 20, 2019 5:38:56 PM smile.jing Exp $
  */
+/**
+ * 
+ * @author smile.jing
+ * @version $Id: LoanGroup.java, v 0.1 Apr 21, 2019 8:53:28 PM smile.jing Exp $
+ */
+/**
+ * 
+ * @author smile.jing
+ * @version $Id: LoanGroup.java, v 0.1 Apr 21, 2019 8:53:31 PM smile.jing Exp $
+ */
 public class LoanGroup implements Serializable {
 
     /**  */
     private static final long serialVersionUID = -4668462814100988957L;
+
+    /** 编号 */
+    private Long              id;
+
+    /** 放款编号 */
+    private Long              loanId;
 
     /** 收款单位名称 */
     private String            payeeName;
@@ -42,10 +58,47 @@ public class LoanGroup implements Serializable {
      */
     @Override
     public String toString() {
-        return "{\"" + (payeeName != null ? "payeeName\":\"" + payeeName + "\", \"" : "") + (payeeBankName != null ? "payeeBankName\":\"" + payeeBankName + "\", \"" : "")
+        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (loanId != null ? "loanId\":\"" + loanId + "\", \"" : "")
+               + (payeeName != null ? "payeeName\":\"" + payeeName + "\", \"" : "") + (payeeBankName != null ? "payeeBankName\":\"" + payeeBankName + "\", \"" : "")
                + (payeeAccountNo != null ? "payeeAccountNo\":\"" + payeeAccountNo + "\", \"" : "") + (payerName != null ? "payerName\":\"" + payerName + "\", \"" : "")
                + (payerBankName != null ? "payerBankName\":\"" + payerBankName + "\", \"" : "") + (payerAccountNo != null ? "payerAccountNo\":\"" + payerAccountNo + "\", \"" : "")
                + "payments\":\"" + payments + "\"}  ";
+    }
+
+    /**
+     * Getter method for property <tt>id</tt>.
+     * 
+     * @return property value of id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Setter method for property <tt>id</tt>.
+     * 
+     * @param id value to be assigned to property id
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * Getter method for property <tt>loanId</tt>.
+     * 
+     * @return property value of loanId
+     */
+    public Long getLoanId() {
+        return loanId;
+    }
+
+    /**
+     * Setter method for property <tt>loanId</tt>.
+     * 
+     * @param loanId value to be assigned to property loanId
+     */
+    public void setLoanId(Long loanId) {
+        this.loanId = loanId;
     }
 
     /**

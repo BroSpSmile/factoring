@@ -92,7 +92,7 @@ import com.smile.start.service.project.ProjectService;
  */
 @Service
 public class ContractInfoServiceImpl implements ContractInfoService {
-    private Logger logger = LoggerFactory.getLogger(ContractInfoServiceImpl.class);
+    private Logger                            logger = LoggerFactory.getLogger(ContractInfoServiceImpl.class);
 
     @Resource
     private ContractInfoDao                   contractInfoDao;
@@ -577,6 +577,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     private void upload(File file, String fileName, Long projectId, ProjectItemType projectItemType) {
         if (file.exists()) {
+            projectItemDao.deleteItems(projectId, ProjectItemType.FILE);
             final FileInfo upload = fileService.upload(file, fileName);
             ProjectItem projectItem = new ProjectItem();
             projectItem.setAttachType(ContractTemplateEnum.STANDARD.getValue());
@@ -1099,11 +1100,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             list.setIsOriginalCopy(sign.getIsOriginalCopy());
             list.setRemark(sign.getRemark());
             list.setCopies(sign.getCopies());
-            if(sign.getGetReady() != null && sign.getGetReady()) {
+            if (sign.getGetReady() != null && sign.getGetReady()) {
                 list.setFilingStatus(2);
             }
             long effect;
-            if(Strings.isNullOrEmpty(sign.getSerialNo())) {
+            if (Strings.isNullOrEmpty(sign.getSerialNo())) {
                 list.setSerialNo(SerialNoGenerator.generateSerialNo("CSL", 5));
                 list.setProjectId(sign.getProjectId());
                 list.setStatus(sign.getStatus());
@@ -1151,18 +1152,18 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         List<ContractSignList> transferList = contractSignListDao.findByProjectId(projectId);
         Project project = projectService.getProject(projectId);
         FactoringDetail factoringDetail = factoringService.get(projectId);
-        List<ContractSignList> collect = transferList.stream()
-                .sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
+        List<ContractSignList> collect = transferList.stream().sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
 
         String fileName = "移交清单" + project.getProjectId() + ".docx";
         File transferFile = new File(fileName);
         logger.info("transferFilePath : {}", transferFile.getAbsolutePath());
 
         //Blank Document
-        XWPFDocument document= new XWPFDocument();
+        @SuppressWarnings("resource")
+        XWPFDocument document = new XWPFDocument();
 
         //Write the Document in file system
-        FileOutputStream out = new FileOutputStream(transferFile);  // 下载路径/文件名称
+        FileOutputStream out = new FileOutputStream(transferFile); // 下载路径/文件名称
 
         //添加标题
         XWPFParagraph titleParagraph = document.createParagraph();
@@ -1188,14 +1189,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         buildFirstRow(comTable);
 
         int category = 0;
-        for(int i = 0; i < collect.size(); i++) {
+        for (int i = 0; i < collect.size(); i++) {
             ContractSignList signList = collect.get(i);
             XWPFTableRow comTableRowTwo = comTable.createRow();
             comTableRowTwo.getCell(0).setText(String.valueOf(i + 1));
             XWPFTableCell cell1 = comTableRowTwo.getCell(1);
             cell1.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             cell1.setText(SignListCategoryEnum.fromValue(signList.getCategory()).getDesc());
-            if(category != signList.getCategory()) {
+            if (category != signList.getCategory()) {
                 category = signList.getCategory();
                 cell1.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
             } else {
@@ -1203,7 +1204,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
             comTableRowTwo.getCell(2).setText(signList.getSignListName());
             //原件
-            if(signList.getIsOriginalCopy() == 1) {
+            if (signList.getIsOriginalCopy() == 1) {
                 comTableRowTwo.getCell(3).setText(String.format("%d份/各%d页", signList.getCopies(), signList.getPageCount()));
                 comTableRowTwo.getCell(4).setText("--");
             } else {
@@ -1241,13 +1242,13 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         setHorizontalAlignment(categoryCell);
         categoryCell.setText("文件分类");
 
-//        cell00.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+        //        cell00.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         XWPFTableCell fileNameCell = comTableRowOne.addNewTableCell();
         setVerticalAlignment(fileNameCell);
         setHorizontalAlignment(fileNameCell);
         fileNameCell.setText("文件名称");
 
-//        cell01.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+        //        cell01.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         XWPFTableCell pageCountCell_1 = comTableRowOne.addNewTableCell();
         setVerticalAlignment(pageCountCell_1);
         setHorizontalAlignment(pageCountCell_1);
@@ -1259,7 +1260,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         XWPFRun run12 = para1.createRun();
         run12.setText("（原件）");
 
-//        cell02.setText("件/页数\r\n（原件）");
+        //        cell02.setText("件/页数\r\n（原件）");
         XWPFTableCell pageCountCell_2 = comTableRowOne.addNewTableCell();
         setVerticalAlignment(pageCountCell_2);
         setHorizontalAlignment(pageCountCell_2);
@@ -1270,7 +1271,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         run21.addBreak();
         XWPFRun run22 = para2.createRun();
         run22.setText("（复印件）");
-
 
         XWPFTableCell remarkCell = comTableRowOne.addNewTableCell();
         setVerticalAlignment(remarkCell);

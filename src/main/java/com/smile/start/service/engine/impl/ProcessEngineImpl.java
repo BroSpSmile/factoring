@@ -96,13 +96,10 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         StepRecord record = new StepRecord();
         record.setProject(project);
         record.setStep(Step.getStep(project.getStep()));
-        int effect = stepDao.delete(record);
-        BaseResult result = toResult(effect);
-        if (result.isSuccess()) {
-            project.setStep(project.getStep() - 1);
-            result = projectService.turnover(project);
-        }
-        return result;
+        stepDao.delete(record);
+        project.setStep(project.getStep() - 1);
+        return projectService.updateProject(project);
+
     }
 
     /** 

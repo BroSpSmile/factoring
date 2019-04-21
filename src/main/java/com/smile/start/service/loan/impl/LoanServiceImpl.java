@@ -4,6 +4,8 @@
  */
 package com.smile.start.service.loan.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +15,9 @@ import com.smile.start.dao.LoanDao;
 import com.smile.start.dao.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.LoanType;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.loan.Loan;
+import com.smile.start.model.loan.LoanGroup;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
@@ -56,14 +60,26 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     @Override
     @Transactional
     public BaseResult save(Loan loan) {
+        projectItemDao.deleteItems(loan.getProject().getId(), ProjectItemType.LOAN);
+        Loan old = loanDao.getByProject(loan.getProject().getId());
+        if (null == old) {
+            loanDao.insert(loan);
+        } else {
+            loanDao.update(loan);
+        }
         //线下保存附件
         if (LoanType.OFFLINE.equals(loan.getType())) {
             for (ProjectItem item : loan.getProject().getItems()) {
                 projectItemDao.insert(item);
             }
+        } else {
+            loanDao.deleteItem(loan.getId());
+            for (LoanGroup group : loan.getGroups()) {
+                group.setLoanId(loan.getId());
+                loanDao.insertItem(group);
+            }
         }
-        long effect = loanDao.insert(loan);
-        return toResult(effect);
+        return new BaseResult();
     }
 
     /** 
@@ -86,7 +102,10 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
      */
     @Override
     public Loan getLoan(Project project) {
-        return loanDao.getByProject(project.getId());
+        Loan loan = loanDao.getByProject(project.getId());
+        List<LoanGroup> groups = loanDao.getByLoan(loan.getId());
+        loan.setGroups(groups);
+        return loan;
     }
 
 }
