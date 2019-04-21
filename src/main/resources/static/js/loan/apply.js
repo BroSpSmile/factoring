@@ -158,13 +158,17 @@ var vue = new Vue({
 				}
 			}
 			let _self = this;
+			this.$Spin.show();
 			this.$http.post("/loanApply",this.loan).then(function(response){
+				this.$Spin.hide();
 				_self.$Message.info({
 					content : "保存成功",
 					onClose : function() {
+						
 					}
 				});
 			},function(error){
+				this.$Spin.hide();
 				_self.$Message.error(error);
 			})
 		},
