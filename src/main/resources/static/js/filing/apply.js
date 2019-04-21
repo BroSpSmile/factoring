@@ -96,6 +96,7 @@ var vue = new Vue({
         },
 
         save: function () {
+            this.isEdit = false;
             let self = this;
             let contract = JSON.parse(JSON.stringify(this.contract));
             console.log(contract)
@@ -212,6 +213,7 @@ var vue = new Vue({
                 type : 'add',
                 pageCount : null,
                 copies : null,
+                getReady : false,
                 remark : ''
             });
         }
