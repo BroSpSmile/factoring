@@ -74,6 +74,11 @@ public class ContractSignList implements Serializable {
     /** 文件归档状态 */
     private Integer           filingStatus;
 
+    /**
+     * 排序，数字越小越靠前
+     */
+    private Integer sort;
+
     /** 
      * @see java.lang.Object#toString()
      */
@@ -257,5 +262,13 @@ public class ContractSignList implements Serializable {
 
     public void setCopies(Integer copies) {
         this.copies = copies;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

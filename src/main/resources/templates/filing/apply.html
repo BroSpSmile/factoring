@@ -26,6 +26,7 @@
                             <i-col span="2">页数</i-col>
                             <i-col span="5">备注</i-col>
                             <i-col span="2" v-if="!isEdit">是否已备齐</i-col>
+                            <i-col span="2" v-if="isEdit">调整顺序</i-col>
                         </row>
                         <row v-for="(item, index) in signList"
                              :key="index"
@@ -72,6 +73,12 @@
                             <i-col v-if="!isEdit" span="2">
                                 <checkbox v-model="item.getReady"></checkbox>
                                 <Icon v-if="item.type === 'add'" @click="handleRemove(index)" type="ios-remove-circle" style="color:#ed4014;cursor:pointer" size="20" />
+                            </i-col>
+                            <i-col v-if="isEdit" span="1" style="width:30px;">
+                                <Icon type="ios-arrow-up" @click="handleUp(index)" style="color:#2db7f5;cursor:pointer;" size="20"/>
+                            </i-col>
+                            <i-col v-if="isEdit" span="1" style="width:30px;">
+                                <Icon type="ios-arrow-down" @click="handleDown(index)" style="color:#2db7f5;cursor:pointer;" size="20"/>
                             </i-col>
                         </row>
                         <br>

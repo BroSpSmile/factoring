@@ -19,7 +19,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Insert("insert into contract_sign_list (serial_no,project_id,contract_serial_no,sign_list_name,status,is_required,category,copies,page_count,is_original_copy,remark,filing_status) values (#{serialNo},#{projectId},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category},#{copies},#{pageCount},#{isOriginalCopy},#{remark},#{filingStatus})")
+    @Insert("insert into contract_sign_list (serial_no,project_id,contract_serial_no,sign_list_name,status,is_required,category,copies,page_count,is_original_copy,remark,filing_status,sort) values (#{serialNo},#{projectId},#{contractSerialNo},#{signListName},#{status},#{isRequired},#{category},#{copies},#{pageCount},#{isOriginalCopy},#{remark},#{filingStatus},#{sort})")
     long insert(ContractSignList contractSignList);
 
     /**
@@ -49,7 +49,7 @@ public interface ContractSignListDao {
      * @param projectId
      * @return
      */
-    @Select("select * from contract_sign_list where project_id = #{projectId}")
+    @Select("select * from contract_sign_list where project_id = #{projectId} ORDER BY category,sort")
     List<ContractSignList> findByProjectId(Long projectId);
 
     /**
@@ -57,7 +57,7 @@ public interface ContractSignListDao {
      * @param contractSignList
      * @return
      */
-    @Update("update contract_sign_list set filing_status = #{filingStatus},sign_list_name=#{signListName},category=#{category},is_original_copy=#{isOriginalCopy},copies=#{copies},page_count=#{pageCount},remark=#{remark} where serial_no = #{serialNo}")
+    @Update("update contract_sign_list set filing_status = #{filingStatus},sign_list_name=#{signListName},category=#{category},is_original_copy=#{isOriginalCopy},copies=#{copies},page_count=#{pageCount},remark=#{remark},sort=#{sort} where serial_no = #{serialNo}")
     long updateFilingStatus(ContractSignList contractSignList);
 
     /**

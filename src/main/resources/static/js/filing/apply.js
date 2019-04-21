@@ -216,6 +216,23 @@ var vue = new Vue({
                 getReady : false,
                 remark : ''
             });
+        },
+        handleUp : function (index) {
+            console.log(index)
+            // var temp = this.signList[index];
+            // this.signList[index] = this.signList[index - 1];
+            // this.signList[index - 1] = temp;
+
+            var tempOption = this.signList[index];
+            this.$set(this.signList, index, this.signList[index - 1]);
+            this.$set(this.signList, index - 1, tempOption);
+
+            console.log(this.signList);
+        },
+        handleDown : function (index) {
+            var tempOption = this.signList[index];
+            this.$set(this.signList, index, this.signList[index + 1]);
+            this.$set(this.signList, index + 1, tempOption);
         }
     }
 });

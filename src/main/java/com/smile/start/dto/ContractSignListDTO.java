@@ -74,6 +74,11 @@ public class ContractSignListDTO implements Serializable {
     private Integer           filingStatus;
 
     /**
+     * 排序，数字越小越靠前
+     */
+    private Integer sort;
+
+    /**
      * 是否已备齐
      */
     private Boolean getReady;
@@ -269,5 +274,13 @@ public class ContractSignListDTO implements Serializable {
 
     public void setCopies(Integer copies) {
         this.copies = copies;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }
