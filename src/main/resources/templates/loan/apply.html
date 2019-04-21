@@ -16,6 +16,11 @@
 						</form-item>
 						<div v-if="loan.type=='ONLINE'">
 							<card dis-hover title="项目付款申请表">
+								<form-item label="项目名称" prop="">
+									<i-select filterable v-model="loan.project.id" :disabled="changeFlag" class="inputm" clearable>
+										<i-option v-for="project in projects" :value="project.id">{{project.projectName}}</i-option>
+									</i-select>
+								</form-item>
 								<row>
 									<i-col span="8">
 										<form-item label="申请部门" prop="">
@@ -33,11 +38,6 @@
 										</form-item>
 									</i-col>
 								</row>
-								<form-item label="项目名称" prop="">
-									<i-select filterable v-model="loan.project.id" :disabled="changeFlag" class="inputm" clearable>
-										<i-option v-for="project in projects" :value="project.id">{{project.projectName}}</i-option>
-									</i-select>
-								</form-item>
 								<row>
 									<i-col span="12">
 										<form-item label="认缴投资金额" prop="">
@@ -77,39 +77,62 @@
 									<i-input placeholder="输入付款用途"  v-model="loan.paymentPurpose"></i-input>
 								</form-item>
 							</card>
-							<card dis-hover title="收款方">
-								<form-item label="单位名称" prop="">
-									<i-input placeholder="输入单位名称"  v-model="loan.payeeName"></i-input>
-								</form-item>
-								<row>
-									<i-col span="14">
-										<form-item label="开户银行" prop="">
-											<i-input placeholder="输入开户银行"  v-model="loan.payeeBankName"></i-input>
-										</form-item>
-									</i-col>
-									<i-col span="10">
-										<form-item label="银行账号" prop="">
-											<i-input placeholder="输入银行账号"  v-model="loan.payeeAccountNo"></i-input>
-										</form-item>
-									</i-col>
-								</row>
-							</card>
-							<card dis-hover title="出资方">
-								<form-item label="单位名称" prop="">
-									<i-input placeholder="输入单位名称"  v-model="loan.payerName"></i-input>
-								</form-item>
-								<row>
-									<i-col span="14">
-										<form-item label="开户银行" prop="">
-											<i-input placeholder="输入开户银行"  v-model="loan.payerBankName"></i-input>
-										</form-item>
-									</i-col>
-									<i-col span="10">
-										<form-item label="银行账号" prop="">
-											<i-input placeholder="输入银行账号"  v-model="loan.payerAccountNo"></i-input>
-										</form-item>
-									</i-col>
-								</row>
+							<br>
+							<card dis-hover title="放款分组" v-for="(item,index) in loan.groups">
+								<p slot="extra">
+						           <i-button type="success" shape="circle" size="small" ghost icon="md-add" v-if="index==0">添加</i-button>
+						        </p>
+								<i-form :label-width="80">
+									<row>
+										<i-col span="12">
+											<row>
+												<i-col offset="1"><h4>收款方</h4></i-col>
+											</row>
+											<form-item label="单位名称" prop="">
+												<i-input placeholder="输入单位名称"  v-model="item.payeeName"></i-input>
+											</form-item>
+											<row>
+												<i-col span="14">
+													<form-item label="开户银行" prop="">
+														<i-input placeholder="输入开户银行"  v-model="item.payeeBankName"></i-input>
+													</form-item>
+												</i-col>
+												<i-col span="10">
+													<form-item label="银行账号" prop="">
+														<i-input placeholder="输入银行账号"  v-model="item.payeeAccountNo"></i-input>
+													</form-item>
+												</i-col>
+											</row>
+										</i-col>
+										<i-col span="12">
+											<row>
+												<i-col offset="1"><h4>出资方</h4></i-col>
+											</row>
+											<form-item label="单位名称" prop="">
+												<i-input placeholder="输入单位名称"  v-model="item.payerName"></i-input>
+											</form-item>
+											<row>
+												<i-col span="14">
+													<form-item label="开户银行" prop="">
+														<i-input placeholder="输入开户银行"  v-model="item.payerBankName"></i-input>
+													</form-item>
+												</i-col>
+												<i-col span="10">
+													<form-item label="银行账号" prop="">
+														<i-input placeholder="输入银行账号"  v-model="item.payerAccountNo"></i-input>
+													</form-item>
+												</i-col>
+											</row>
+										</i-col>
+										<i-col span="24">
+											<form-item label="付款金额" prop="">
+													<input-number placeholder="输入付款金额" :max="100000000000" class="inputw" 
+													:formatter="formatter" :parser="parser"  v-model="item.payments" >
+													</input-number>&nbsp;元
+												</form-item>
+										</i-col>
+									</row>
+								</i-form>
 							</card>
 						</div>
 						<div v-if="loan.type=='OFFLINE'">

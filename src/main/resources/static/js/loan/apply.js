@@ -20,7 +20,10 @@ var vue = new Vue({
 			project:{
 				id:0,
 				items:[]
-			}
+			},
+			groups:[{
+				
+			}]
 		},
 		changeFlag:false,
 		projects:[],
@@ -62,6 +65,12 @@ var vue = new Vue({
 				this.$http.get("/loanApply/"+id).then(function(response){
 					if(response.data){
 						_self.loan = response.data;
+						if(!_self.loan.groups){
+							_self.loan.groups = [];
+							_self.loan.groups.push({
+								payments:0
+							})
+						}
 					}
 				},function(error){
 					console.error(error);

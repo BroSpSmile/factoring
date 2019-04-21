@@ -68,7 +68,7 @@ public interface LoanDao {
      * @return
      */
     @Results(id = "getByProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id") })
-    @Select("select * from loan where project_id = #{projectId}")
+    @Select("select * from loan where project_id = #{projectId} limit 1")
     Loan getByProject(Long projectId);
 
     /**
