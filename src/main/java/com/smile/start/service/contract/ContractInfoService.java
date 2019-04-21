@@ -6,6 +6,8 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.contract.ContractSignList;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -115,4 +117,11 @@ public interface ContractInfoService {
      * @return
      */
     List<ContractAttachDTO> getAttachList(Long projectId);
+
+    /**
+     * 上传移交清单
+     * @param projectId
+     * @throws FileNotFoundException
+     */
+    void uploadTransferList(Long projectId) throws IOException;
 }

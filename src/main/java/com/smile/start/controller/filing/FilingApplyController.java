@@ -61,7 +61,7 @@ public class FilingApplyController extends BaseController {
     /**
      * 归档申请保存
      *
-     * @param filingApplyInfo
+     * @param contract
      * @return
      */
     @PostMapping("/save")
@@ -74,16 +74,21 @@ public class FilingApplyController extends BaseController {
     /**
      * 归档申请提交
      *
-     * @param filingApplyInfo
      * @return
      */
     @PostMapping("/commit")
     @ResponseBody
     public BaseResult commit(HttpServletRequest request, @RequestBody ContractInfoDTO contract) {
-        User user = getUserByToken(request);
-        Project project = contract.getProject();
-        project.setStep(Step.FILE.getIndex());
-        project.setUser(user);
-        return processEngine.next(project, true);
+        try {
+            User user = getUserByToken(request);
+            Project project = contract.getProject();
+            project.setStep(Step.FILE.getIndex());
+            project.setUser(user);
+            contractInfoService.uploadTransferList(project.getId());
+            return processEngine.next(project, true);
+        } catch (Exception e) {
+            logger.error("归档申请提交失败", e);
+            return toResult(e);
+        }
     }
 }
