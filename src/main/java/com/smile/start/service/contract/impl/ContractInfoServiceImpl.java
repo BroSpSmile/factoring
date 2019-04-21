@@ -1091,7 +1091,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     @Transactional
     public BaseResult updateFilingStatus(List<ContractSignListDTO> signs) {
-        for (ContractSignListDTO sign : signs) {
+        for (int i = 0; i < signs.size(); i++) {
+            ContractSignListDTO sign = signs.get(i);
             ContractSignList list = new ContractSignList();
             list.setSerialNo(sign.getSerialNo());
             list.setSignListName(sign.getSignListName());
@@ -1100,6 +1101,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             list.setIsOriginalCopy(sign.getIsOriginalCopy());
             list.setRemark(sign.getRemark());
             list.setCopies(sign.getCopies());
+
+            list.setSort(i);
             if (sign.getGetReady() != null && sign.getGetReady()) {
                 list.setFilingStatus(2);
             }
@@ -1109,6 +1112,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 list.setProjectId(sign.getProjectId());
                 list.setStatus(sign.getStatus());
                 list.setIsRequired(sign.getIsRequired());
+                list.setSort(i);
                 effect = contractSignListDao.insert(list);
             } else {
                 effect = contractSignListDao.updateFilingStatus(list);
@@ -1251,7 +1255,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         document.write(out);
         out.close();
         upload(transferFile, fileName, projectId, ProjectItemType.FILE);
-//        transferFile.delete();
+        //        transferFile.delete();
     }
 
     /**
