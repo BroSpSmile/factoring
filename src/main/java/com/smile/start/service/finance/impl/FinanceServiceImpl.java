@@ -21,6 +21,7 @@ import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.finance.FinanceService;
+import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +40,13 @@ import java.util.Optional;
 @Service
 public class FinanceServiceImpl extends AbstractService implements FinanceService {
 
+    /**  */
     @Resource
     private InstallmentDao     installmentDao;
+
+    /** factoringService */
+    @Resource
+    private FactoringService   factoringService;
 
     @Resource
     private ProjectService     projectService;
@@ -75,11 +81,10 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
     @Override
     public PageInfo<Project> queryPageProject(PageRequest<Project> page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize(), "id desc");
-        List<Project> projects = installmentDao.findByParamProject(page.getCondition());
-        projects.stream().forEach(project -> projectService.setDetail(project));
+        PageInfo<Project> projects = projectService.queryPage(page);
+        projects.getList().stream().forEach(project -> factoringService.setInstallments(project.getDetail()));
         //4. 根据返回的集合，创建PageInfo对象
-        PageInfo<Project> result = new PageInfo<>(projects);
-        return result;
+        return projects;
     }
 
     /**

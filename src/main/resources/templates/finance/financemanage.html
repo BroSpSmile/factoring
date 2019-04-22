@@ -17,7 +17,12 @@
                     <form-item label="项目负责人" prop="person">
                         <i-input placeholder="输入业务发起人" class="inputw" v-model="formInline.person"></i-input>
                     </form-item>
-                   
+                   <form-item label="当前进度" prop="step">
+						<i-select class="inputw" v-model="formInline.step" clearable>
+                       		<i-option value="9">放款操作</i-option>
+                       		<i-option value="12">完结</i-option>
+						</i-select>
+					</form-item>
                     <row type="flex">
                         <i-col span="12" offset="6">
                             <i-button type="primary" icon="ios-search" @click="search">查询</i-button>

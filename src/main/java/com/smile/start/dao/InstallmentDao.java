@@ -51,7 +51,7 @@ public interface InstallmentDao {
      */
     @Delete("delete from project_installment where id = #{id}")
     int delete(Long id);
-    
+
     /**
      * deleteByType
      * @param detailId
@@ -70,7 +70,6 @@ public interface InstallmentDao {
     @Select("select * from project_installment where detail = #{detailId}")
     List<Installment> queryByDetail(Long detailId);
 
-
     //add by xioutman  分期详情、附件操作
     /**
      * 根据project_id和分期类型查询分期信息列表
@@ -79,7 +78,7 @@ public interface InstallmentDao {
      */
     @Results(id = "getMapByType", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "detail", property = "detail.id") })
     @Select("select * from project_installment where detail = #{detailId} and type =#{type} ")
-    List<Installment> queryByProjectAndType(Long detailId,String type);
+    List<Installment> queryByProjectAndType(Long detailId, String type);
 
     /**
      * 插入分期附件
@@ -95,7 +94,7 @@ public interface InstallmentDao {
      * @return
      */
     @Insert("insert into installment_detail (type,installment_id,bankInfo_id,detail_amount,detail_date)"
-        + "values(#{type},#{installmentId},#{bankInfoId},#{detailAmount} ,#{detailDate} )")
+            + "values(#{type},#{installmentId},#{bankInfoId},#{detailAmount} ,#{detailDate} )")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insertInstallmentDetail(InstallmentDetail installmentDetail);
 
@@ -112,12 +111,9 @@ public interface InstallmentDao {
      * @param installmentDetail
      * @return
      */
-    @Update("<script>" + "update installment_detail set"
-        + "<if test = 'type!=null'> type = #{type}</if>"
-        + "<if test = 'bankInfoId!=null'>,bankInfo_id = #{bankInfoId}</if>"
-        + "<if test = 'detailDate!=null'>,detail_date = #{detailDate}</if>"
-        + "<if test = 'detailAmount!=null'>,detail_amount = #{detailAmount}</if>"
-        + "where id = #{id}</script>")
+    @Update("<script>" + "update installment_detail set" + "<if test = 'type!=null'> type = #{type}</if>" + "<if test = 'bankInfoId!=null'>,bankInfo_id = #{bankInfoId}</if>"
+            + "<if test = 'detailDate!=null'>,detail_date = #{detailDate}</if>" + "<if test = 'detailAmount!=null'>,detail_amount = #{detailAmount}</if>"
+            + "where id = #{id}</script>")
     int updateInstallmentDetail(InstallmentDetail installmentDetail);
 
     /**
@@ -144,6 +140,7 @@ public interface InstallmentDao {
      */
     @Select("select * from installment_item where installment_id = #{id}")
     InstallmentItem getInstallmentItem(Installment installment);
+
     /**
      * 获取
      * @param installmentDetail
@@ -174,23 +171,15 @@ public interface InstallmentDao {
      * @return
      */
     @Results(id = "findByParamProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id"),
-        @Result(column = "username", property = "user.username")})
+                                                     @Result(column = "username", property = "user.username") })
     @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id"
-        + " where 1=1 and t1.id in (select project_id from project_step  t3  where t3.step in ('LOANEN','END') and t3.status in ('BEGIN','PROCESSING'))"
-        + "<if test = 'projectId!=null and projectId!=\"\"'> and t1.project_id = #{projectId}</if>"
-        + "<if test = 'kind!=null and kind!=\"\"'> and t1.kind = #{kind}</if>"
-        + "<if test = 'id!=-1'> and t1.id = #{id}</if>"
-        + "<if test = 'projectName!=null and projectName!=\"\"'> and t1.project_name = #{projectName}</if>"
-        + "<if test = 'user!=null'> and t1.person = #{user.id}</if>"
-        + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
-        + "and t1.step in (9,12)"
-        //有用，别删，不影响其他功能
-        + "<if test = 'progresses!=null'> and t1.progress in  " + "<foreach collection='progresses' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
-        + "<if test = 'projectIdList!=null'> and t1.id in  "
-        + "<foreach collection='projectIdList' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
-        + "<if test = 'userList!=null'> and t1.person in  "
-        + "<foreach collection='userList' item='item' open='(' separator=',' close=')'>" + "#{item} " + "</foreach></if>"
-        + "</script>")
+            + " where 1=1 "
+            + "<if test = 'projectId!=null and projectId!=\"\"'> and t1.project_id = #{projectId}</if>" + "<if test = 'kind!=null and kind!=\"\"'> and t1.kind = #{kind}</if>"
+            + "<if test = 'id!=-1'> and t1.id = #{id}</if>" + "<if test = 'projectName!=null and projectName!=\"\"'> and t1.project_name = #{projectName}</if>"
+            + "<if test = 'user!=null'> and t1.person = #{user.id}</if>" + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
+            +"<if test = 'projectIdList!=null'> and t1.id in  " + "<foreach collection='projectIdList' item='item' open='(' separator=',' close=')'>"
+            + "#{item} " + "</foreach></if>" + "<if test = 'userList!=null'> and t1.person in  " + "<foreach collection='userList' item='item' open='(' separator=',' close=')'>"
+            + "#{item} " + "</foreach></if>" + "</script>")
     List<Project> findByParamProject(Project project);
-
+    
 }

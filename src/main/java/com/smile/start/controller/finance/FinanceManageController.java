@@ -4,6 +4,25 @@
  */
 package com.smile.start.controller.finance;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
@@ -11,28 +30,22 @@ import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.controller.combobox.Item;
-import com.smile.start.dto.*;
+import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.Step;
-import com.smile.start.model.project.*;
+import com.smile.start.model.project.EntrustAuth;
+import com.smile.start.model.project.FactoringDetail;
+import com.smile.start.model.project.Installment;
+import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectForView;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.entrustauth.EntrustAuthService;
 import com.smile.start.service.finance.FinanceService;
 import com.smile.start.service.project.ProjectService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author ：xioutman
@@ -92,48 +105,39 @@ public class FinanceManageController extends BaseController {
     @PostMapping("/query")
     @ResponseBody
     public PageInfo<ProjectForView> queryByParam(@RequestBody PageRequest<Project> query, HttpServletRequest request) {
-
-        //project.step  LOANEN(9, "放款操作") 可以查询 begin
-        //project.step END(12, "完结") 可以查询 begin
         User user = getUserByToken(request);
         List<AuthRoleInfoDTO> roles = roleInfoService.findByUserSerialNo(user.getSerialNo());
         if (!isFinanceAdmin(roles) && !isFinanceOper(roles)) {
             PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
             return result;
         }
-        if (!isFinanceAdmin(roles)) {
-            List<Long> projectIdList = entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN);
-            if (null == projectIdList || projectIdList.isEmpty()) {
-                PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
-                return result;
-            }
-            query.getCondition().setProjectIdList(projectIdList);
-        }
-
-        if (StringUtils.isNotBlank(query.getCondition().getPerson())) {
-            PageRequest<UserSearchDTO> userSearch = new PageRequest<UserSearchDTO>();
-            UserSearchDTO userSearchDTO = new UserSearchDTO();
-            userSearchDTO.setUsername(query.getCondition().getPerson());
-            userSearch.setCondition(userSearchDTO);
-            List<Long> userList = userInfoService.findAll(userSearch).getList().stream().map(item -> item.getId()).collect(Collectors.toList());
-            if (null != userList && userList.isEmpty()) {
-                userList.add(-1l);
-            }
-            query.getCondition().setUserList(userList);
-        }
-
+        //        if (!isFinanceAdmin(roles)) {
+        //            List<Long> projectIdList = entrustAuthService.getEntrustAuthProjectIds(user.getId(), Step.LOANEN);
+        //            if (null == projectIdList || projectIdList.isEmpty()) {
+        //                PageInfo<ProjectForView> result = new PageInfo<ProjectForView>(new ArrayList<ProjectForView>());
+        //                return result;
+        //            }
+        //            query.getCondition().setProjectIdList(projectIdList);
+        //        }
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         List<ProjectForView> projectForViewList = Lists.newArrayList();
         PageInfo<Project> projectPageInfo = financeService.queryPageProject(query);
+        Page<Project> page = null;
         if (null != projectPageInfo) {
             List<Project> list = projectPageInfo.getList();
             if (null != list && !list.isEmpty()) {
                 for (Project project : list) {
                     projectForViewList.add(getProjectForView(project));
                 }
+                page = (Page<Project>) list;
             }
         }
         PageInfo<ProjectForView> result = new PageInfo<>(projectForViewList);
+        if (null != page) {
+            result.setPageNum(page.getPageNum());
+            result.setTotal(page.getTotal());
+            result.setPageSize(page.getPageSize());
+        }
         return result;
     }
 
@@ -243,19 +247,23 @@ public class FinanceManageController extends BaseController {
         projectForView.setId(project.getId());
         projectForView.setProjectId(project.getProjectId());
         projectForView.setProjectName(project.getProjectName());
+        projectForView.setModel(project.getModel().getDesc());
         projectForView.setUsername(project.getUser().getUsername());
+        projectForView.setStep(project.getStep());
         FactoringDetail detail = project.getDetail();
-        projectForView.setLoanAuditPassTime(DateUtil.getWebDateString(detail.getLoanAuditPassTime()));
+        projectForView.setCreditor(detail.getCreditor());
+        projectForView.setDebtor(detail.getDebtor());
+        projectForView.setLoanAuditPassTime(DateUtil.getNewFormatDateString(detail.getLoanAuditPassTime()));
         projectForView.setReceivable(detail.getReceivable());
-        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
+        projectForView.setDropAmount(detail.getLoanInstallments().stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
         projectForView.setDropDates(Optional.of(detail.getLoanInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount() ).collect(Collectors.toList()));
+        projectForView.setReturnAmount(detail.getReturnInstallments().stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
         projectForView.setReturnDates(Optional.of(detail.getReturnInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
-        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee() );
-        projectForView.setFactoringInstallmentAmounts(Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>()).stream()
-            .map(installment -> installment.getAmount() ).collect(Collectors.toList()));
+        projectForView.setTotalFactoringFee(detail.getTotalFactoringFee());
+        projectForView.setFactoringInstallmentAmounts(
+            Optional.of(detail.getFactoringInstallments()).orElse(new ArrayList<Installment>()).stream().map(installment -> installment.getAmount()).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentDates(detail.getFactoringInstallments().stream().map(installment -> installment.getInstallmentDate())
             .map(date -> DateUtil.getWebDateString(date)).collect(Collectors.toList()));
         projectForView.setFactoringInstallmentInvoiceds(detail.getFactoringInstallments().stream().map(installment -> installment.isInvoiced()).collect(Collectors.toList()));

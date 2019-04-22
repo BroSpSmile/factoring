@@ -29,8 +29,7 @@ var vue = new Vue({
 		modal2:false,
 		statusItems : [],
 		models:[],
-		steps:[],
-		indexsteps:[]
+		steps:[]
 	},
 	created : function() {
 		this.initDate();
@@ -68,11 +67,6 @@ var vue = new Vue({
 			});
 			this.$http.get("/combo/steps").then(function(response) {
 				_self.steps = response.data;
-			}, function(error) {
-				console.error(error);
-			});
-			this.$http.get("/combo/indexsteps").then(function(response) {
-				_self.indexsteps = response.data;
 			}, function(error) {
 				console.error(error);
 			});

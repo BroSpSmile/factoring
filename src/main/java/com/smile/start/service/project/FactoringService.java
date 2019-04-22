@@ -43,11 +43,23 @@ public interface FactoringService {
      * @return
      */
     List<FactoringsInfo> getInfos();
-    
+
     /**
      * 获取利润
      * @param month
      * @return
      */
     Profit getProfit(String month);
+
+    /**
+     * 设置分期信息
+     * @param detail
+     */
+    void setInstallments(FactoringDetail detail);
+
+    /**
+     * 设置分期详情信息
+     * @param detail
+     */
+    void setInstallmentsDetail(FactoringDetail detail);
 }
