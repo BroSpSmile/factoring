@@ -16,7 +16,10 @@ var vue = new Vue({
 		rejectBt:false,
 		fileList:[],
 		record:{
-			items:[]
+			items:[],
+			audit:{
+				step:0
+			}
 		},
         contractAudit : {
         },
@@ -99,6 +102,7 @@ var vue = new Vue({
 					_self.audit = response.data.data;
 					_self.initItem(_self.audit.records);
 					_self.nowStep = _self.audit.step;
+					_self.record.audit.step = _self.nowStep-1;
 					_self.showAuditButton = response.data.success;
 				},function(error){
 					console.log(error);
@@ -189,6 +193,7 @@ var vue = new Vue({
 			this.$Spin.show();
 			//非合同审核驳回
 			if(this.audit.auditType !== 'CONTRACT') {
+				this.audit.step = this.record.audit.step;
                 this.record.audit = this.audit;
                 this.$http.put("/audit", this.record).then(function (response) {
                 	this.$Spin.hide();

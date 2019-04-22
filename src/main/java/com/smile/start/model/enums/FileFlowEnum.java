@@ -11,7 +11,7 @@ public enum FileFlowEnum {
                           FILE_APPLY(0, "提出归档申请") {
                               @Override
                               public FileFlowEnum getNextStatus() {
-                                  return FILE_LEGAL_AUDIT;
+                                  return REVIEWER_AUDIT;
                               }
 
                               @Override
@@ -19,7 +19,18 @@ public enum FileFlowEnum {
                                   return null;
                               }
                           },
-                          FILE_LEGAL_AUDIT(1, "法务风控审核") {
+                          REVIEWER_AUDIT(1, "复核人审核") {
+                              @Override
+                              public FileFlowEnum getNextStatus() {
+                                  return FILE_LEGAL_AUDIT;
+                              }
+
+                              @Override
+                              public FileFlowEnum getDefaultRejectStatus() {
+                                  return FILE_APPLY;
+                              }
+                          },
+                          FILE_LEGAL_AUDIT(2, "法务风控审核") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return FILE_OFFICER;
@@ -30,7 +41,7 @@ public enum FileFlowEnum {
                                   return FILE_APPLY;
                               }
                           },
-                          FILE_OFFICER(2, "办公室专员归档") {
+                          FILE_OFFICER(3, "办公室专员归档") {
                               @Override
                               public FileFlowEnum getNextStatus() {
                                   return null;

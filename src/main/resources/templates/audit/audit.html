@@ -104,7 +104,7 @@
 				<div id="modalForm">
 					<i-form  :label-width="120" >
 						<form-item label="驳回至" prop="step">
-							<i-select class="inputw" v-model="audit.step" clearable>
+							<i-select class="inputw" v-model="record.audit.step" clearable>
                         		<i-option v-for="flow in audit.flows" v-if="flow.step<nowStep" :value="flow.step">{{flow.desc}}</i-option>
 							</i-select>
 						</form-item>

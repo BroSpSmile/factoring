@@ -29,7 +29,7 @@ public interface ProjectItemDao {
      */
     @Insert("insert project_item (project_id,item_type,item_name,item_value,attach_type) values(#{projectId},#{itemType},#{itemName},#{itemValue},#{attachType})")
     long insert(ProjectItem iterm);
-    
+
     /**
      * 
      * @param item
@@ -45,7 +45,7 @@ public interface ProjectItemDao {
      */
     @Select("select * from project_item where project_id = #{id}")
     List<ProjectItem> getItems(Project project);
-    
+
     /**
      * 
      * @param projectId
@@ -53,5 +53,14 @@ public interface ProjectItemDao {
      * @return
      */
     @Select("select * from project_item where project_id = #{projectId} and item_type = #{type}")
-    List<ProjectItem> getTypeItems(Long projectId,ProjectItemType type);
+    List<ProjectItem> getTypeItems(Long projectId, ProjectItemType type);
+
+    /**
+     * 删除指定类型附件
+     * @param projectId
+     * @param type
+     * @return
+     */
+    @Delete("delete from project_item where project_id = #{projectId} and item_type = #{type}")
+    int deleteItems(Long projectId, ProjectItemType type);
 }
