@@ -55,7 +55,7 @@ var vue = new Vue({
             } else if(value === 0) {
                 return "复印件";
             }
-            return "";
+            return "-";
         }
     },
     methods: {
