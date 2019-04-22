@@ -94,6 +94,12 @@ var vue = new Vue({
             	 })
             }
         },
+        /**
+         * 清单项验证
+         * commitFla标志位判断是保存操作还是提交操作，如果是保存操作只针对新增行进行验证，如果是提交操作，则验证所有行
+         * @param commitFlag
+         * @returns {boolean}
+         */
         validate : function (commitFlag) {
             let self = this;
             //录入项验证
