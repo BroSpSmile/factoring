@@ -143,7 +143,7 @@ var vue = new Vue({
             	this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
-                        content: "归档申请保存成功",
+                        content: "归档清单保存成功",
                         onClose: function () {
                             self.initDate();
                         },
