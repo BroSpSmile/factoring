@@ -317,7 +317,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ContractReceivableAgreement contractReceivableAgreement = contractInfoMapper.dto2do(contractReceivableAgreementDTO);
             contractReceivableAgreementDao.insert(contractReceivableAgreement);
 
-            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".docx";
+            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreement.getProtocolCode() + ".doc";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableAgreementDTO, contractCode));
             upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
@@ -346,7 +346,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             ContractShareholderMeeting contractShareholderMeeting = contractInfoMapper.dto2do(contractShareholderMeetingDTO);
             contractShareholderMeetingDao.insert(contractShareholderMeeting);
 
-            String shareholderFileName = "股东会决议.docx";
+            String shareholderFileName = "股东会决议.doc";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractShareholderMeetingDTO, contractCode));
             upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
@@ -469,7 +469,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractReceivableAgreementDao.update(contractReceivableAgreement);
             }
 
-            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreementDTO.getProtocolCode() + ".docx";
+            String agreementFileName = "附件2：应收账款转让登记协议" + contractReceivableAgreementDTO.getProtocolCode() + ".doc";
             File agreementFile = DocUtil.createDoc(agreementFileName, "registrationAgreement_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractReceivableAgreementDTO, contractCode));
             upload(agreementFile, agreementFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
@@ -519,7 +519,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractShareholderMeetingDao.update(contractShareholderMeeting);
             }
 
-            String shareholderFileName = "股东会决议.docx";
+            String shareholderFileName = "股东会决议.doc";
             File shareholderFile = DocUtil.createDoc(shareholderFileName, "shareholderResolution_" + contractInfoDTO.getBaseInfo().getProjectMode() + ".xml",
                 buildTemplateData(contractShareholderMeetingDTO, contractCode));
             upload(shareholderFile, shareholderFileName, contractInfoDTO.getBaseInfo().getProjectId(), ProjectItemType.DRAWUP);
