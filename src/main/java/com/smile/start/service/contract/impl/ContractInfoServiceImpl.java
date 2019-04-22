@@ -968,6 +968,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
         Project project = projectService.getProject(contractInfo.getProjectId());
+        project.setItems(null);
         audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.DRAWUP);
@@ -1080,6 +1081,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             //            contractInfoDao.update(contractInfo);
 
             Project project = projectService.getProject(contractInfo.getProjectId());
+            project.setItems(null);
             project.setStep(Step.SIGN.getIndex());
             processEngine.next(project, false);
         }
