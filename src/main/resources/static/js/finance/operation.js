@@ -439,6 +439,7 @@ var vue = new Vue({
         },
         doPostSave: function (url) {
             let self = this;
+            this.project.detail.project={id:this.project.id};
             this.$http.post(url, this.project).then(function (response) {
                 if (response.data.success) {
                     self.$Message.info({
@@ -489,10 +490,11 @@ var vue = new Vue({
             let self = this;
             let offset_GMT= new Date().getTimezoneOffset();
             self.queryParam.condition = self.formInline;
-            this.$http.post("/project/query", self.queryParam).then(
+            this.$http.get("/factoring/"+this.formInline.id).then(
                 function (response) {
-                    let data = response.data;
-                    self.project = data.list[0];
+                	let detail = response.data;
+                	self.project = detail.project;
+                	self.project.detail = detail;
                     self.project.detail.loanInstallments.forEach(cur => {
                         self.totalLoanAmount += cur.amount;
                         cur.installmentDate = new Date(cur.installmentDate);

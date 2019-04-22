@@ -117,13 +117,13 @@ public interface ProjectDao {
     @Results(id = "queryFactoringProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id"),
                                                         @Result(column = "username", property = "user.username"), @Result(column = "creditor", property = "detail.creditor"),
                                                         @Result(column = "debtor", property = "detail.debtor"), @Result(column = "sign_date", property = "detail.signDate"),
-                                                        @Result(column = "base_contract", property = "detail.baseContract"),
+                                                        @Result(column = "detail_id", property = "detail.id"),@Result(column = "base_contract", property = "detail.baseContract"),
                                                         @Result(column = "assignee", property = "detail.assignee"), @Result(column = "receivable", property = "detail.receivable"),
                                                         @Result(column = "drop_amount", property = "detail.dropAmount"), @Result(column = "duration", property = "detail.duration"),
                                                         @Result(column = "remittance_day", property = "detail.remittanceDay"),
                                                         @Result(column = "total_factoring_fee", property = "detail.totalFactoringFee"),
                                                         @Result(column = "return_rate", property = "detail.returnRate") })
-    @Select("<script>" + "select t1.*,t2.username,t3.creditor,t3.debtor,t3.sign_date,t3.base_contract,t3.assignee,t3.receivable,"
+    @Select("<script>" + "select t1.*,t2.username,t3.id detail_id,t3.creditor,t3.debtor,t3.sign_date,t3.base_contract,t3.assignee,t3.receivable,"
             + "t3.drop_amount,t3.duration,t3.remittance_day, t3.total_factoring_fee ,t3.return_rate,t3.remark, t3.loan_audit_pass_time " + "from factoring_project t1 "
             + "left join auth_user_info t2  on t1.person = t2.id " + "inner join factoring_detail t3 on t1.id = t3.project_id" + " where 1=1 "
             + "<if test = 'projectId!=null'> and t1.project_id = #{projectId}</if>" + "<if test = 'kind!=null and kind!=\"\"'> and t1.kind = #{kind}</if>"
