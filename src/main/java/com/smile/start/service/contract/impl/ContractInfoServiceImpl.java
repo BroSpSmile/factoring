@@ -772,10 +772,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", Strings.nullToEmpty(contractExtendInfo.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractExtendInfo.getSpFax()));
         data.put("obligor", Strings.nullToEmpty(contractExtendInfo.getObligor()));
-        if (contractExtendInfo.getSignDate() != null) {
-            data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
-            data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
-            data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        if (contractExtendInfo.getBaseSignDate() != null) {
+            data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getBaseSignDate()));
+            data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getBaseSignDate()));
+            data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getBaseSignDate()));
         } else {
             data.put("signDateYear", "");
             data.put("signDateMonth", "");

@@ -91,8 +91,11 @@
 									<form-item label="债务人" prop="contractExtendInfo.obligor">
 										<i-input placeholder="请输入债务人" v-model="addForm.contractExtendInfo.obligor"></i-input>
 									</form-item>
-									<form-item label="签署日期" prop="contractExtendInfo.signDate">
-										<date-picker type="date" placeholder="请输入签署日期" v-model="addForm.contractExtendInfo.signDate" format="yyyy-MM-dd"></date-picker>
+									<form-item label="保理合同签署日期" prop="contractExtendInfo.signDate">
+										<date-picker type="date" placeholder="请输入保理合同签署日期" v-model="addForm.contractExtendInfo.signDate" format="yyyy-MM-dd"></date-picker>
+									</form-item>
+									<form-item label="基础合同签署日期" prop="contractExtendInfo.baseSignDate">
+										<date-picker type="date" placeholder="请输入基础合同签署日期" v-model="addForm.contractExtendInfo.baseSignDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item label="合同名称" prop="contractExtendInfo.contractName">
 										<i-input placeholder="请输入合同名称" v-model="addForm.contractExtendInfo.contractName"></i-input>
@@ -120,11 +123,11 @@
 									<form-item label="应收账款（大写）" prop="contractExtendInfo.receivableMoneyUpper">
 										<i-input readonly placeholder="请输入应收账款（大写）" v-model="addForm.contractExtendInfo.receivableMoneyUpper"></i-input>
 									</form-item>
-									<form-item label="债务人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
-										<input-number @on-change="addForm.contractExtendInfo.obligorEnjoyMoneyUpper = smallToBig(addForm.contractExtendInfo.obligorEnjoyMoney)" placeholder="请输入债务人享有金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></input-number>&nbsp;元
+									<form-item label="债权人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
+										<input-number @on-change="addForm.contractExtendInfo.obligorEnjoyMoneyUpper = smallToBig(addForm.contractExtendInfo.obligorEnjoyMoney)" placeholder="请输入债权人享有金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></input-number>&nbsp;元
 									</form-item>
-									<form-item readonly label="债务人享有金额（大写）" prop="contractExtendInfo.obligorEnjoyMoneyUpper">
-										<i-input placeholder="请输入债务人享有金额（大写）" v-model="addForm.contractExtendInfo.obligorEnjoyMoneyUpper"></i-input>
+									<form-item readonly label="债权人享有金额（大写）" prop="contractExtendInfo.obligorEnjoyMoneyUpper">
+										<i-input placeholder="请输入债权人享有金额（大写）" v-model="addForm.contractExtendInfo.obligorEnjoyMoneyUpper"></i-input>
 									</form-item>
 									<form-item label="应收账款受让款" prop="contractExtendInfo.receivableAssigneeMoney">
 										<input-number @on-change="addForm.contractExtendInfo.receivableAssigneeMoneyUpper = smallToBig(addForm.contractExtendInfo.receivableAssigneeMoney)" placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></input-number>&nbsp;元
