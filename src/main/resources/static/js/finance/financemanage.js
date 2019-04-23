@@ -390,7 +390,7 @@ vue.tableColumns = [{
     align: 'center',
     width: 120,
     render: (h, param) => {
-    	if(param.row.step==9||param.row.step==12){
+    	if(param.row.step>8&&param.row.step<13){
     		return  h('div', [
 	        		h('Button', {
 	                    props: {
@@ -425,7 +425,7 @@ vue.tableColumns = [{
 	                }, '委托') : h('span')
 	            ]
     		)
-    	}else{
+    	}else if(param.row.step==13){
     		return  h('div', [
 	        		h('Button', {
 	                    props: {

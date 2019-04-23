@@ -237,7 +237,7 @@ public enum Step {
                       }
 
                   },
-                  END(12, "完结") {
+                  BACK(12, "待回款") {
 
                       /** 
                        * @see com.smile.start.model.enums.Step#prev()
@@ -245,6 +245,25 @@ public enum Step {
                       @Override
                       public Step prev() {
                           return FILE_AUDIT;
+                      }
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#next()
+                       */
+                      @Override
+                      public Step next() {
+                          return END;
+                      }
+
+                  },
+                  END(13, "完结") {
+
+                      /** 
+                       * @see com.smile.start.model.enums.Step#prev()
+                       */
+                      @Override
+                      public Step prev() {
+                          return BACK;
                       }
 
                       /** 

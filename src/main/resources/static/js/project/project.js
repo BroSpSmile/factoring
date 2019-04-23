@@ -351,115 +351,6 @@ vue.tableColumns=[{
 	    			row:params.row
 	    		}
 	    	});
-//	    	return h('div', {
-//	    		style:{
-//	    			fontSize:'13px'
-//	    		}
-//	    	},[
-//	    		h('Row',{},[
-//	    			h('Col',{
-//	    				props:{span:24}
-//	    			},[
-//	    				h('span',{style:{color:'#2db7f5'}},'基础合同:'),
-//	    				h('span',{},params.row.detail.baseContract)
-//	    			])
-//	    		]),
-//	    		h('Divider',{props:{size:'small'}}),
-//	    		h('Row',{},[
-//	    			h('Col',{
-//	    				props:{span:6}
-//	    			},[
-//	    				h('span',{style:{color:'#2db7f5'}},'签署日期:'),
-//	    				h('span',{},params.row.detail.signDate?moment(params.row.detail.signDate).format('YYYY-MM-DD'):"")
-//	    			]),
-//	    			h('Col',{
-//	    				props:{span:6}
-//	    			},[
-//	    				h('span',{style:{color:'#2db7f5'}},'合同回款日:'),
-//	    				h('span',{},params.row.detail.remittanceDay?moment(params.row.detail.remittanceDay).format('YYYY-MM-DD'):"")
-//	    			]),
-//	    			h('Col',{
-//	    				props:{span:6}
-//	    			},[
-//	    				h('span',{style:{color:'#2db7f5'}},'收益率:'),
-//	    				h('span',{},params.row.detail.returnRate+"%")
-//	    			])
-//	    		]),
-//	    		params.row.detail.loanInstallments.length < 1?
-//	    				h('div'):
-//	    				h('div',{},[
-//	    					h('Divider',{props:{size:'small'}}),
-//	    					h('Row',{},[
-//	    						h('Col',{},[
-//	    							h('span',{style:{color:'#2db7f5'}},'已投放金额:'),
-//	    							h('span',{},params.row.detail.dropAmount)
-//	    						])
-//	    					]),
-//	    					h('br'),
-//	    					h('Row',{},[
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已投放金额(元)')]),
-//	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'放款日')]),
-//	    					]),
-//	    					params.row.detail.factoringInstallments.map(item=>{
-//	    						return h('Row',{},[
-//	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
-//	    							h('Col',{props:{span:6}},[h('span',{},item.installmentDate?moment(item.installmentDate).format('YYYY-MM-DD'):"")])
-//	    						])
-//	    					})
-//	    				]),
-//				params.row.detail.returnInstallments.length < 1?
-//	    				h('div'):
-//	    				h('div',{},[
-//	    					h('Divider',{props:{size:'small'}}),
-//	    					h('Row',{},[
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'回款金额(元)')]),
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已回款')]),
-//	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'实际回款日')])
-//	    					]),
-//	    					params.row.detail.factoringInstallments.map(item=>{
-//	    						return h('Row',{},[
-//	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
-//	    							h('Col',{props:{span:4}},[h('span',{},vue.toBoolean(item.paied))]),
-//	    							h('Col',{props:{span:6}},[h('span',{},item.installmentDate?moment(item.installmentDate).format('YYYY-MM-DD'):"")])
-//	    						])
-//	    					})
-//	    				]),
-//				params.row.detail.factoringInstallments.length < 1?
-//	    				h('div'):
-//	    				h('div',{},[
-//	    					h('Divider',{props:{size:'small'}}),
-//	    					h('Row',{},[
-//	    						h('Col',{},[
-//	    							h('span',{style:{color:'#2db7f5'}},'保理费合计:'),
-//	    							h('span',{},"￥"+params.row.detail.totalFactoringFee+"元")
-//	    						])
-//	    					]),
-//	    					h('br'),
-//	    					h('Row',{},[
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'保理费分期金额(元)')]),
-//	    						h('Col',{props:{span:6}},[h('span',{style:{fontWeight:'bold'}},'保理费到账日(前)')]),
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'已开发票')]),
-//	    						h('Col',{props:{span:4}},[h('span',{style:{fontWeight:'bold'}},'是否已支付')])
-//	    					]),
-//	    					params.row.detail.factoringInstallments.map(item=>{
-//	    						return h('Row',{},[
-//	    							h('Col',{props:{span:4}},[h('span',{},item.amount)]),
-//	    							h('Col',{props:{span:6}},[h('span',{},moment(item.installmentDate).format('YYYY-MM-DD'))]),
-//	    							h('Col',{props:{span:4}},[h('span',{},item.invoice==null?'否':item.invoice)]),
-//	    							h('Col',{props:{span:4}},[h('span',{},vue.toBoolean(item.paied))])
-//	    						])
-//	    					})
-//	    				]),
-//	    				h('Divider',{props:{size:'small'}}),
-//	    		h('Row',{},[
-//	    			h('Col',{
-//	    				props:{span:24}
-//	    			},[
-//	    				h('span',{style:{color:'#2db7f5'}},'备注:'),
-//	    				h('span',{},params.row.detail.remark)
-//	    			])
-//	    		]),
-//	    	])
 	    }
 	},{
         title: '项目编号',
@@ -501,7 +392,7 @@ vue.tableColumns=[{
         	return h('span',param.row.detail.assignee)
         }
     },{
-        title: '应收账款(元)',
+        title: '投放金额(元)',
         key: 'projectName',
         align: 'center',
         width:80,
