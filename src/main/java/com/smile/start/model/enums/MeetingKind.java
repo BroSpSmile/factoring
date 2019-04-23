@@ -20,11 +20,7 @@ public enum MeetingKind {
                          /** 立项会议 */
                          APPROVAL("APPROVAL", "立项会议"),
                          /** 董事会决议 */
-                         DIRECTORS("DIRECTORS", "董事会决议会"),
-                         /**党总支会议  */
-                         PARTY("PARTY", "党总支会议"),
-                         /** 董事会 */
-                         BOARD("BOARD", "董事会");
+                         DIRECTORS("DIRECTORS", "三重一大会议");
 
     MeetingKind(String code, String desc) {
         this.code = code;
