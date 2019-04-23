@@ -691,12 +691,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     /**
      * 构建确认函模板数据
      * @param contractReceivableConfirmation
-     * @param projectCode
+     * @param contractCode
      * @return
      */
-    private Map<String, Object> buildTemplateData(ContractReceivableConfirmationDTO contractReceivableConfirmation, String projectCode) {
+    private Map<String, Object> buildTemplateData(ContractReceivableConfirmationDTO contractReceivableConfirmation, String contractCode) {
         Map<String, Object> data = Maps.newHashMap();
-        data.put("contractCode", projectCode + "-1");
+        data.put("contractCode", contractCode);
         data.put("confirmationCode", Strings.nullToEmpty(contractReceivableConfirmation.getConfirmationCode()));
         data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat)));
         data.put("assignor", Strings.nullToEmpty(contractReceivableConfirmation.getAssignor()));
@@ -772,10 +772,10 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spTelephone", Strings.nullToEmpty(contractExtendInfo.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractExtendInfo.getSpFax()));
         data.put("obligor", Strings.nullToEmpty(contractExtendInfo.getObligor()));
-        if (contractExtendInfo.getSignDate() != null) {
-            data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getSignDate()));
-            data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getSignDate()));
-            data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getSignDate()));
+        if (contractExtendInfo.getBaseSignDate() != null) {
+            data.put("signDateYear", DateUtil.getYeah(contractExtendInfo.getBaseSignDate()));
+            data.put("signDateMonth", DateUtil.getMonth(contractExtendInfo.getBaseSignDate()));
+            data.put("signDateDay", DateUtil.getDay(contractExtendInfo.getBaseSignDate()));
         } else {
             data.put("signDateYear", "");
             data.put("signDateMonth", "");
@@ -786,8 +786,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("receivableMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyUpper()));
         data.put("receivableMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyType()));
         data.put("receivableMoneyAdditional", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyAdditional()));
-        data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney() == null ? "" : contractExtendInfo.getObligorEnjoyMoney());
-        data.put("obligorEnjoyMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getObligorEnjoyMoneyUpper()));
+        data.put("obligorEnjoyMoney", contractExtendInfo.getReceivableAssigneeMoney() == null ? "" : contractExtendInfo.getReceivableAssigneeMoney());
+        data.put("obligorEnjoyMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableAssigneeMoneyUpper()));
         data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney() == null ? "" : contractExtendInfo.getReceivableAssigneeMoney());
         data.put("receivableAssigneeMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableAssigneeMoneyUpper()));
         data.put("interestRate", contractExtendInfo.getInterestRate() == null ? "" : contractExtendInfo.getInterestRate());
@@ -968,6 +968,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         LoginUser loginUser = LoginHandler.getLoginUser();
         audit.setApplicant(userDao.findBySerialNo(loginUser.getSerialNo()));
         Project project = projectService.getProject(contractInfo.getProjectId());
+        project.setItems(null);
         audit.setProject(project);
         audit.setCreateTime(new Date());
         audit.setAuditType(AuditType.DRAWUP);
@@ -1080,6 +1081,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             //            contractInfoDao.update(contractInfo);
 
             Project project = projectService.getProject(contractInfo.getProjectId());
+            project.setItems(null);
             project.setStep(Step.SIGN.getIndex());
             processEngine.next(project, false);
         }

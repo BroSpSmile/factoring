@@ -55,7 +55,7 @@ var vue = new Vue({
             } else if(value === 0) {
                 return "复印件";
             }
-            return "";
+            return "-";
         }
     },
     methods: {
@@ -94,7 +94,41 @@ var vue = new Vue({
             	 })
             }
         },
-
+        /**
+         * 清单项验证
+         * commitFla标志位判断是保存操作还是提交操作，如果是保存操作只针对新增行进行验证，如果是提交操作，则验证所有行
+         * @param commitFlag
+         * @returns {boolean}
+         */
+        validate : function (commitFlag) {
+            let self = this;
+            //录入项验证
+            for (let index in this.signList) {
+                if (this.signList[index].type === 'add' || commitFlag) {
+                    if(this.signList[index].category === undefined || this.signList[index].category === null) {
+                        self.$Message.error('请选择文件类型');
+                        return false;
+                    }
+                    if(this.signList[index].signListName === '') {
+                        self.$Message.error('文件名称必须输入');
+                        return false;
+                    }
+                    if(this.signList[index].isOriginalCopy === undefined || this.signList[index].isOriginalCopy === null) {
+                        self.$Message.error('请选择原件/复印件');
+                        return false;
+                    }
+                    if(this.signList[index].copies === null) {
+                        self.$Message.error('文件份数必须输入');
+                        return false;
+                    }
+                    if(this.signList[index].pageCount === null) {
+                        self.$Message.error('文件页数必须输入');
+                        return false;
+                    }
+                }
+            }
+            return true;
+        },
         save: function () {
             this.isEdit = false;
             let self = this;
@@ -108,30 +142,8 @@ var vue = new Vue({
             // 	})
             // }
 
-            //录入项验证
-            for (let index in this.signList) {
-                if (this.signList[index].type === 'add') {
-                    if(this.signList[index].category === undefined || this.signList[index].category === null) {
-                        self.$Message.error('请选择文件类型');
-                        return;
-                    }
-                    if(this.signList[index].signListName === '') {
-                        self.$Message.error('文件名称必须输入');
-                        return;
-                    }
-                    if(this.signList[index].isOriginalCopy === undefined || this.signList[index].isOriginalCopy === null) {
-                        self.$Message.error('请选择原件/复印件');
-                        return;
-                    }
-                    if(this.signList[index].copies === null) {
-                        self.$Message.error('文件份数必须输入');
-                        return;
-                    }
-                    if(this.signList[index].pageCount === null) {
-                        self.$Message.error('文件页数必须输入');
-                        return;
-                    }
-                }
+            if(!this.validate(false)) {
+                return;
             }
 
             for(let index in this.signList){
@@ -143,7 +155,7 @@ var vue = new Vue({
             	this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
-                        content: "归档申请保存成功",
+                        content: "归档清单保存成功",
                         onClose: function () {
                             self.initDate();
                         },
@@ -167,6 +179,11 @@ var vue = new Vue({
             		filingStatus:2
             	})
             }
+
+            if(!this.validate(true)) {
+                return;
+            }
+
             this.$Spin.show();
             this.$http.post("/filingApply/commit", contract).then(function (response) {
             	this.$Spin.hide();

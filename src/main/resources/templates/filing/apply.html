@@ -68,7 +68,7 @@
                             </i-col>
                             <i-col span="5">
                                 <i-input v-model="item.remark" v-if="isEdit || item.type === 'add'" placeholder="输入备注信息" style="width: 240px"></i-input>
-                                <span v-if="!isEdit && item.type !== 'add'">{{item.remark == null ? '&nbsp;' : item.remark}}</span>
+                                <span v-if="!isEdit && item.type !== 'add'">{{(item.remark == null || item.remark == '') ? '&nbsp;' : item.remark}}</span>
                             </i-col>
                             <i-col v-if="!isEdit" span="2">
                                 <checkbox v-model="item.getReady"></checkbox>

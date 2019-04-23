@@ -73,9 +73,14 @@ public class ContractExtendInfoDTO implements Serializable {
     private String obligor;
 
     /**
-     * 签署日期
+     * 保理合同签署日期
      */
     private Date signDate;
+
+    /**
+     * 基础合同签署日期
+     */
+    private Date baseSignDate;
 
     /**
      * 合同名称
@@ -502,5 +507,13 @@ public class ContractExtendInfoDTO implements Serializable {
 
     public void setReceivableMoneyAdditional(String receivableMoneyAdditional) {
         this.receivableMoneyAdditional = receivableMoneyAdditional;
+    }
+
+    public Date getBaseSignDate() {
+        return baseSignDate;
+    }
+
+    public void setBaseSignDate(Date baseSignDate) {
+        this.baseSignDate = baseSignDate;
     }
 }

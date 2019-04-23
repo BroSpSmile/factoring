@@ -101,7 +101,10 @@ var vue = new Vue({
                 { required : true, message: '请输入乙方法定代表人', trigger: 'blur' }
             ],
             'contractExtendInfo.signDate' : [
-                { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
+                { required : true, type: 'date', message: '请输入保理合同签署日期', trigger: 'blur' }
+            ],
+            'contractExtendInfo.baseSignDate' : [
+                { required : true, type: 'date', message: '请输入基础合同签署日期', trigger: 'blur' }
             ],
             'contractExtendInfo.obligor' : [
                 { required : true, message: '请输入债务人', trigger: 'blur' }
