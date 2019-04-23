@@ -691,12 +691,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     /**
      * 构建确认函模板数据
      * @param contractReceivableConfirmation
-     * @param projectCode
+     * @param contractCode
      * @return
      */
-    private Map<String, Object> buildTemplateData(ContractReceivableConfirmationDTO contractReceivableConfirmation, String projectCode) {
+    private Map<String, Object> buildTemplateData(ContractReceivableConfirmationDTO contractReceivableConfirmation, String contractCode) {
         Map<String, Object> data = Maps.newHashMap();
-        data.put("contractCode", projectCode + "-1");
+        data.put("contractCode", contractCode);
         data.put("confirmationCode", Strings.nullToEmpty(contractReceivableConfirmation.getConfirmationCode()));
         data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat)));
         data.put("assignor", Strings.nullToEmpty(contractReceivableConfirmation.getAssignor()));
@@ -786,8 +786,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("receivableMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyUpper()));
         data.put("receivableMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyType()));
         data.put("receivableMoneyAdditional", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyAdditional()));
-        data.put("obligorEnjoyMoney", contractExtendInfo.getObligorEnjoyMoney() == null ? "" : contractExtendInfo.getObligorEnjoyMoney());
-        data.put("obligorEnjoyMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getObligorEnjoyMoneyUpper()));
+        data.put("obligorEnjoyMoney", contractExtendInfo.getReceivableAssigneeMoney() == null ? "" : contractExtendInfo.getReceivableAssigneeMoney());
+        data.put("obligorEnjoyMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableAssigneeMoneyUpper()));
         data.put("receivableAssigneeMoney", contractExtendInfo.getReceivableAssigneeMoney() == null ? "" : contractExtendInfo.getReceivableAssigneeMoney());
         data.put("receivableAssigneeMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableAssigneeMoneyUpper()));
         data.put("interestRate", contractExtendInfo.getInterestRate() == null ? "" : contractExtendInfo.getInterestRate());

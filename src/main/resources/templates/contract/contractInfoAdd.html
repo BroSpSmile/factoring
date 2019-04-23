@@ -94,7 +94,8 @@
 									<form-item label="保理合同签署日期" prop="contractExtendInfo.signDate">
 										<date-picker type="date" placeholder="请输入保理合同签署日期" v-model="addForm.contractExtendInfo.signDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
-									<form-item label="基础合同签署日期" prop="contractExtendInfo.baseSignDate">
+									<form-item label="基础合同签署日期" prop="contractExtendInfo.
+">
 										<date-picker type="date" placeholder="请输入基础合同签署日期" v-model="addForm.contractExtendInfo.baseSignDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item label="合同名称" prop="contractExtendInfo.contractName">
@@ -123,12 +124,12 @@
 									<form-item label="应收账款（大写）" prop="contractExtendInfo.receivableMoneyUpper">
 										<i-input readonly placeholder="请输入应收账款（大写）" v-model="addForm.contractExtendInfo.receivableMoneyUpper"></i-input>
 									</form-item>
-									<form-item label="债权人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
+									<!--<form-item label="债权人享有金额" prop="contractExtendInfo.obligorEnjoyMoney">
 										<input-number @on-change="addForm.contractExtendInfo.obligorEnjoyMoneyUpper = smallToBig(addForm.contractExtendInfo.obligorEnjoyMoney)" placeholder="请输入债权人享有金额" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.obligorEnjoyMoney"></input-number>&nbsp;元
 									</form-item>
 									<form-item readonly label="债权人享有金额（大写）" prop="contractExtendInfo.obligorEnjoyMoneyUpper">
 										<i-input placeholder="请输入债权人享有金额（大写）" v-model="addForm.contractExtendInfo.obligorEnjoyMoneyUpper"></i-input>
-									</form-item>
+									</form-item>-->
 									<form-item label="应收账款受让款" prop="contractExtendInfo.receivableAssigneeMoney">
 										<input-number @on-change="addForm.contractExtendInfo.receivableAssigneeMoneyUpper = smallToBig(addForm.contractExtendInfo.receivableAssigneeMoney)" placeholder="请输入应收账款受让款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractExtendInfo.receivableAssigneeMoney"></input-number>&nbsp;元
 									</form-item>
@@ -261,18 +262,15 @@
 										<i-input readonly placeholder="请输入应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyUpper"></i-input>
 									</form-item>
 								</Card>
-								<!--<Card>
+								<Card>
 									<p slot="title">
 										应收账款的确认和转让
 									</p>
-									<form-item label="应收账款回收款" prop="contractReceivableConfirmation.receivableRecoveryMoney">
+									<!--<form-item label="应收账款回收款" prop="contractReceivableConfirmation.receivableRecoveryMoney">
 										<input-number @on-change="addForm.contractReceivableConfirmation.receivableRecoveryMoneyUpper = smallToBig(addForm.contractReceivableConfirmation.receivableRecoveryMoney)" placeholder="请输入应收账款回收款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoney"></input-number>&nbsp;元
 									</form-item>
 									<form-item label="应收账款回收款（大写）" prop="contractReceivableConfirmation.receivableRecoveryMoneyUpper">
 										<i-input readonly placeholder="请输入应收账款回收款（大写）" v-model="addForm.contractReceivableConfirmation.receivableRecoveryMoneyUpper"></i-input>
-									</form-item>
-									<form-item label="应收账款回收款截止日期" prop="contractReceivableConfirmation.receivableExpiryDate">
-										<date-picker type="date" placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item v-if="project.model == 'DIS_RECOURSE_RIGHT'" label="合同应收账款" prop="contractReceivableConfirmation.contractReceivable">
 										<input-number @on-change="addForm.contractReceivableConfirmation.contractReceivableUpper = smallToBig(addForm.contractReceivableConfirmation.contractReceivable)" placeholder="请输入合同应收账款" :max="100000000000" :min="0" class="select-width-180" v-model="addForm.contractReceivableConfirmation.contractReceivable"></input-number>&nbsp;元
@@ -297,11 +295,14 @@
 									</form-item>
 									<form-item v-if="project.model == 'DIS_RECOURSE_RIGHT'" label="人民币（大写）" prop="contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper">
 										<i-input readonly placeholder="请输入受让人已向让与人支付的应收账款受让款（大写）" v-model="addForm.contractReceivableConfirmation.receivableAssigneeMoneyPaidUpper"></i-input>
+									</form-item>-->
+									<form-item label="应收账款回收款截止日期" prop="contractReceivableConfirmation.receivableExpiryDate">
+										<date-picker type="date" placeholder="请输入应收账款回收款截止日期" v-model="addForm.contractReceivableConfirmation.receivableExpiryDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
 									<form-item v-if="project.model == 'DIS_RECOURSE_RIGHT'" label="让与人提交资料日期" prop="contractReceivableConfirmation.assignorCommitDate">
 										<date-picker type="date" placeholder="请输入让与人提交资料日期" v-model="addForm.contractReceivableConfirmation.assignorCommitDate" format="yyyy-MM-dd"></date-picker>
 									</form-item>
-								</Card>-->
+								</Card>
 								<Card>
 									<p slot="title">
 										应收账款回款的支付
