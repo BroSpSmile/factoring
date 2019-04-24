@@ -45,6 +45,9 @@ public class DateUtil {
     /** yyyy年MM月dd日 日期格式 */
     public final static String  chineseDtFormat      = "yyyy年MM月dd日";
 
+    /** yyyy年M月d日 日期格式 */
+    public final static String  chineseShortFormat      = "yyyy年M月d日";
+
     /** yyyy-MM-dd HH:mm:ss日期格式 */
     public final static String  newFormat            = "yyyy-MM-dd HH:mm:ss";
 

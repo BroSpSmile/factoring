@@ -22,7 +22,8 @@ var vue = new Vue({
                 interestRate : null,
                 receivableAssigneeMoney : null,
                 obligorEnjoyMoney : null,
-                receivableMoney : null
+                receivableMoney : null,
+                receivableRecoveryMoney : null
             },
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {
@@ -160,6 +161,9 @@ var vue = new Vue({
             'contractExtendInfo.compulsoryRescissionDate' : [
                 { required : true, type: 'date', message: '请输入合同强制解除日期', trigger: 'blur' }
             ],
+            'contractExtendInfo.receivableMoneyType' : [
+                { required : true, message: '请选择应收账款类别', trigger: 'blur' }
+            ],
 
             'contractReceivableConfirmation.signDate' : [
                 { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
@@ -205,6 +209,15 @@ var vue = new Vue({
             ],
             'contractReceivableConfirmation.invoiceMoney' : [
                 { required : true, type: 'number', message: '请输入发票/收据所载金额（元）', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.unpaidReceivableAssigneeMoneyType' : [
+                { required : true, message: '请选择未支付应收账款受让款类别', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoneyType' : [
+                { required : true, message: '请选择应收账款受让款类别', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.invoiceMoneyType' : [
+                { required : true, message: '请选择发票/收据所载金额类别', trigger: 'blur' }
             ],
 
             'contractReceivableAgreement.signDate' : [
@@ -268,7 +281,8 @@ var vue = new Vue({
                                 interestRate : null,
                                 receivableAssigneeMoney : null,
                                 obligorEnjoyMoney : null,
-                                receivableMoney : null
+                                receivableMoney : null,
+                                receivableRecoveryMoney : null
                             };
                         }
                         if(response.data.data.contractReceivableAgreement === null) {
@@ -311,62 +325,71 @@ var vue = new Vue({
             let self = this;
             this.genFileInfo();
             this.isDisable = true;
-            this.$refs.addForm.validate((valid) => {
-                if(valid) {
-                    //清单验证
-                    for (let index in self.addForm.signList) {
-                        if (self.addForm.signList[index].type === 'add' && self.addForm.signList[index].signListName === '') {
-                            self.$Message.error('签署清单名称必须输入');
-                            self.isDisable = false;
-                            return;
-                        }
+            console.log(this.hasStandardTemplate())
+            if(this.hasStandardTemplate()) {
+                this.$refs.addForm.validate((valid) => {
+                    if(valid) {
+                        self.save();
+                    } else {
+                        this.isDisable = false;
                     }
-                    if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
-                        this.$http.post("/contractInfo", this.addForm).then(function (response) {
-                            if (response.data.success) {
-                                console.log("id=" + response.data.data)
-                                self.addForm.baseInfo.id = response.data.data;
-                                self.addForm.baseInfo.status = 0;
-                                self.isDisable = false;
-                                self.$Message.info({
-                                    content: "保存成功",
-                                    onClose: function () {
-                                        self.getAttachList();
-                                        self.cancel();
-                                    }
-                                });
-                            } else {
-                                self.isDisable = false;
-                                self.$Message.error(response.data.errorMessage);
+                });
+            } else {
+                this.save();
+            }
+        },
+        save : function () {
+            let self = this;
+            //清单验证
+            for (let index in self.addForm.signList) {
+                if (self.addForm.signList[index].type === 'add' && self.addForm.signList[index].signListName === '') {
+                    self.$Message.error('签署清单名称必须输入');
+                    self.isDisable = false;
+                    return;
+                }
+            }
+            if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
+                this.$http.post("/contractInfo", this.addForm).then(function (response) {
+                    if (response.data.success) {
+                        console.log("id=" + response.data.data)
+                        self.addForm.baseInfo.id = response.data.data;
+                        self.addForm.baseInfo.status = 0;
+                        self.isDisable = false;
+                        self.$Message.info({
+                            content: "保存成功",
+                            onClose: function () {
+                                self.getAttachList();
+                                self.cancel();
                             }
-                        }, function (error) {
-                            self.isDisable = false;
-                            self.$Message.error(error.data.message);
                         });
                     } else {
-                        this.$http.put("/contractInfo", this.addForm).then(function (response) {
-                            if (response.data.success) {
-                                self.$Message.info({
-                                    content: "更新成功",
-                                    onClose: function () {
-                                        self.isDisable = false;
-                                        self.getAttachList();
-                                        self.cancel();
-                                    }
-                                });
-                            } else {
-                                self.isDisable = false;
-                                self.$Message.error(response.data.errorMessage);
-                            }
-                        }, function (error) {
-                            self.isDisable = false;
-                            self.$Message.error(error.data.message);
-                        });
+                        self.isDisable = false;
+                        self.$Message.error(response.data.errorMessage);
                     }
-                } else {
-                    this.isDisable = false;
-                }
-            });
+                }, function (error) {
+                    self.isDisable = false;
+                    self.$Message.error(error.data.message);
+                });
+            } else {
+                this.$http.put("/contractInfo", this.addForm).then(function (response) {
+                    if (response.data.success) {
+                        self.$Message.info({
+                            content: "更新成功",
+                            onClose: function () {
+                                self.isDisable = false;
+                                self.getAttachList();
+                                self.cancel();
+                            }
+                        });
+                    } else {
+                        self.isDisable = false;
+                        self.$Message.error(response.data.errorMessage);
+                    }
+                }, function (error) {
+                    self.isDisable = false;
+                    self.$Message.error(error.data.message);
+                });
+            }
         },
         /**
          * 获取附件列表
@@ -644,6 +667,13 @@ var vue = new Vue({
          */
         downloadItem:function(item){
             window.open("/file?fileId=" + item.fileId+"&fileName="+item.attachName);
+        },
+        hasStandardTemplate : function () {
+            return this.addForm.baseInfo.factoringContract === true ||
+                this.addForm.baseInfo.confirmationLetter === true ||
+                this.addForm.baseInfo.registrationAgreement === true ||
+                this.addForm.baseInfo.financialAgreement === true ||
+                this.addForm.baseInfo.shareholderResolution === true;
         }
     }
 });
