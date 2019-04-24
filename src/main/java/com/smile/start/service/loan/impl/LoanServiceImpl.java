@@ -7,6 +7,7 @@ package com.smile.start.service.loan.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,6 +16,11 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -139,12 +145,23 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         String fileName = project.getProjectId() + "保理项目线上放款申请";
         XWPFDocument document = new XWPFDocument();
         //文档标题
-        createParagraph(document, ParagraphAlignment.CENTER, fileName, 20);
+        createParagraph(document, ParagraphAlignment.CENTER, "项目付款申请表", 20, true);
         document.createParagraph();
-        createParagraph(document, "项目名称:" + project.getProjectName());
-        createParagraph(document, "申请部门:" + loan.getDepartment());
-        createParagraph(document, "申请人:" + loan.getUser());
-        createParagraph(document, "申请时间:" + DateUtil.getWebDateString(loan.getCreateTime()));
+        createParagraph(document, ParagraphAlignment.RIGHT, "日期:"+ DateUtil.getWebDateString(loan.getCreateTime()), 12, true);
+      //移交清单表格
+        XWPFTable comTable = document.createTable();
+  
+        XWPFTableRow first = comTable.createRow();
+        first.getCell(0).setText("申请部门");
+        first.addNewTableCell().setText(loan.getDepartment());
+        first.addNewTableCell().setText("申请人");
+        first.addNewTableCell().setText(loan.getUser());
+        XWPFTableRow second = comTable.createRow();
+        second.getCell(0).setText("项目名称");
+        second.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+        second.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+        second.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+        second.getCell(1).setText(project.getProjectName());
         document.createParagraph();
         createParagraph(document, "认缴投资金额:" + loan.getSubscriptionAmount() + "元    本次付款金额:" + loan.getPayments() + "元");
         createParagraph(document, "金额(大写)人民币:" + loan.getChineseAmount());
@@ -176,18 +193,19 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     }
 
     private void createParagraph(XWPFDocument document, String doc, int size) {
-        createParagraph(document, ParagraphAlignment.LEFT, doc, size);
+        createParagraph(document, ParagraphAlignment.LEFT, doc, size, false);
     }
 
     private void createParagraph(XWPFDocument document, ParagraphAlignment alignment, String doc) {
-        createParagraph(document, alignment, doc, 12);
+        createParagraph(document, alignment, doc, 12, false);
     }
 
-    private void createParagraph(XWPFDocument document, ParagraphAlignment alignment, String doc, int size) {
+    private void createParagraph(XWPFDocument document, ParagraphAlignment alignment, String doc, int size, boolean bold) {
         XWPFParagraph titleParagraph = document.createParagraph();
         //设置段落居中
         titleParagraph.setAlignment(alignment);
         XWPFRun titleParagraphRun = titleParagraph.createRun();
+        titleParagraphRun.setBold(bold);
         titleParagraphRun.setText(doc);
         titleParagraphRun.setColor("000000");
         titleParagraphRun.setFontSize(size);
