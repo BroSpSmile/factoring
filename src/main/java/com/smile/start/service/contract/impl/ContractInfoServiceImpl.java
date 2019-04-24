@@ -605,7 +605,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("spPostCode", Strings.nullToEmpty(contractReceivableAgreement.getSpPostCode()));
         data.put("spTelephone", Strings.nullToEmpty(contractReceivableAgreement.getSpTelephone()));
         data.put("spFax", Strings.nullToEmpty(contractReceivableAgreement.getSpFax()));
-        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseDtFormat)));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.chineseShortFormat)));
         data.put("fpSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.spotFormat)));
         data.put("spSignatureDate", Strings.nullToEmpty(DateUtil.format(contractReceivableAgreement.getSignDate(), DateUtil.spotFormat)));
         data.put("contractCode", contractCode);
@@ -698,7 +698,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", contractCode);
         data.put("confirmationCode", Strings.nullToEmpty(contractReceivableConfirmation.getConfirmationCode()));
-        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseDtFormat)));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractReceivableConfirmation.getSignDate(), DateUtil.chineseShortFormat)));
         data.put("assignor", Strings.nullToEmpty(contractReceivableConfirmation.getAssignor()));
         if (contractReceivableConfirmation.getSignDate() != null) {
             data.put("signDateYear", DateUtil.getYeah(contractReceivableConfirmation.getSignDate()));
@@ -763,7 +763,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     private Map<String, Object> buildTemplateData(ContractExtendInfoDTO contractExtendInfo, String fasaCode, Integer projectMode) {
         Map<String, Object> data = Maps.newHashMap();
         data.put("contractCode", Strings.nullToEmpty(contractExtendInfo.getContractCode()));
-        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getSignDate(), DateUtil.chineseDtFormat)));
+        data.put("signDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getSignDate(), DateUtil.chineseShortFormat)));
         data.put("spCompanyName", Strings.nullToEmpty(contractExtendInfo.getSpCompanyName()));
         data.put("spResidence", Strings.nullToEmpty(contractExtendInfo.getSpResidence()));
         data.put("spLegalPerson", Strings.nullToEmpty(contractExtendInfo.getSpLegalPerson()));
@@ -793,11 +793,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         data.put("interestRate", contractExtendInfo.getInterestRate() == null ? "" : contractExtendInfo.getInterestRate());
         data.put("billingStartDate", Strings.nullToEmpty(DateUtil.format(contractExtendInfo.getBillingStartDate(), DateUtil.spotFormat)));
 
-        if (projectMode == 1) {
+        if (projectMode == 2) {
             data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableRecoveryMoney() == null ? "" : contractExtendInfo.getReceivableRecoveryMoney());
             data.put("receivableRecoveryMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyUpper()));
             data.put("receivableRecoveryMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableRecoveryMoneyType()));
-        } else if (projectMode == 2) {
+        } else if (projectMode == 1) {
             data.put("receivableRecoveryMoney", contractExtendInfo.getReceivableMoney() == null ? "" : contractExtendInfo.getReceivableMoney());
             data.put("receivableRecoveryMoneyUpper", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyUpper()));
             data.put("receivableRecoveryMoneyType", Strings.nullToEmpty(contractExtendInfo.getReceivableMoneyType()));

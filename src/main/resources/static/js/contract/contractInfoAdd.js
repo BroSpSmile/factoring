@@ -22,7 +22,8 @@ var vue = new Vue({
                 interestRate : null,
                 receivableAssigneeMoney : null,
                 obligorEnjoyMoney : null,
-                receivableMoney : null
+                receivableMoney : null,
+                receivableRecoveryMoney : null
             },
             contractReceivableAgreement : {},
             contractReceivableConfirmation : {
@@ -160,6 +161,12 @@ var vue = new Vue({
             'contractExtendInfo.compulsoryRescissionDate' : [
                 { required : true, type: 'date', message: '请输入合同强制解除日期', trigger: 'blur' }
             ],
+            'contractExtendInfo.receivableMoneyType' : [
+                { required : true, message: '请选择应收账款类别', trigger: 'blur' }
+            ],
+            'contractExtendInfo.receivableMoneyAdditional' : [
+                { required : true, message: '请选择应收账款附加', trigger: 'blur' }
+            ],
 
             'contractReceivableConfirmation.signDate' : [
                 { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
@@ -205,6 +212,15 @@ var vue = new Vue({
             ],
             'contractReceivableConfirmation.invoiceMoney' : [
                 { required : true, type: 'number', message: '请输入发票/收据所载金额（元）', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.unpaidReceivableAssigneeMoneyType' : [
+                { required : true, message: '请选择未支付应收账款受让款类别', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.receivableAssigneeMoneyType' : [
+                { required : true, message: '请选择应收账款受让款类别', trigger: 'blur' }
+            ],
+            'contractReceivableConfirmation.invoiceMoneyType' : [
+                { required : true, message: '请选择发票/收据所载金额类别', trigger: 'blur' }
             ],
 
             'contractReceivableAgreement.signDate' : [
@@ -268,7 +284,8 @@ var vue = new Vue({
                                 interestRate : null,
                                 receivableAssigneeMoney : null,
                                 obligorEnjoyMoney : null,
-                                receivableMoney : null
+                                receivableMoney : null,
+                                receivableRecoveryMoney : null
                             };
                         }
                         if(response.data.data.contractReceivableAgreement === null) {
