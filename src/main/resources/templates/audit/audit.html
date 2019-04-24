@@ -7,14 +7,10 @@
 		<div id="audit" v-cloak>
 			<row>
 				<i-col span="24">
-					<br>
-						<row>
-							<i-col span='6'><h2>{{auditTypeShow}}</h2></i-col>
-							<i-col span='2' offset='16'><i-button @click="print" type="text" icon='ios-print'>打印</i-button></i-col>
-						</row>
-					<br>
+					
 					<div id="printDiv">
-						<card dis-hover title="审核流程">
+						<card dis-hover :title="auditTypeShow">
+							<p slot="extra"><i-button @click="print" type="text" icon='ios-print'>打印</i-button></p>
 							 <Steps v-if="audit.auditType != 'CONTRACT'" :current="audit.step==-1?10000:audit.step" size="small">
 							 	<Step v-for="flow in audit.flows" :title="flow.desc" :content="flow.user==null?flow.role.roleName:flow.user.username"></Step>
 						    </Steps>

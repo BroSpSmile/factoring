@@ -154,7 +154,6 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         }
 
         if (result.isSuccess()) {
-            //applicationContext.publishEvent(new InstallmentEvent(this, project));
             financeOperate(project);
         }
         return result;
@@ -245,10 +244,10 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         }
 
         //回款操作
-        if (project.getStep() == Step.END.getIndex()) {
+        if (project.getStep() == Step.BACK.getIndex()) {
             if (totalReturnAmount >= totalLoanAmount && isAllPaied) {
                 //回款完成，更新step表,更新项目表
-                processEngine.changeStatus(project, StepStatus.COMPLETED);
+                processEngine.next(project, false);
             }
         }
     }

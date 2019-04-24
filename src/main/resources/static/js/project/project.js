@@ -326,6 +326,8 @@ var vue = new Vue({
 				this.toMenu('apply','尽调申请',projectId);
 			}else if(step == 'MEETING'){
 				this.toMenu('past','三重一大',projectId);
+			}else if(step == 'BACK'){
+				this.toMenu('financeManage','财务管理');
 			}
 		},
 		
@@ -344,7 +346,8 @@ var vue = new Vue({
 
 vue.tableColumns=[{
 		type: 'expand',
-	    width: 50,
+	    width: 40,
+	    fixed:'left',
 	    render: (h, params) => {
 	    	return h('factoring-detail',{
 	    		props:{
@@ -356,10 +359,12 @@ vue.tableColumns=[{
         title: '项目编号',
         key: 'projectId',
         align: 'center',
+        fixed:'left',
         width:125
     },{
         title: '项目名称',
         key: 'projectName',
+        fixed:'left',
         width:125,
         tooltip:true,
         align: 'center'
@@ -387,17 +392,17 @@ vue.tableColumns=[{
         title: '受让款(元)',
         key: 'projectName',
         align: 'center',
-        width:80,
+        width:130,
         render:(h,param)=>{
-        	return h('span',param.row.detail.assignee)
+        	return h('span',common.money.formatter(param.row.detail.assignee))
         }
     },{
         title: '投放金额(元)',
         key: 'projectName',
         align: 'center',
-        width:80,
+        width:130,
         render:(h,param)=>{
-        	return h('span',param.row.detail.receivable)
+        	return h('span',common.money.formatter(param.row.detail.receivable))
         }
     },{
         title: '年限',
@@ -411,6 +416,7 @@ vue.tableColumns=[{
         title: '负责人',
         key: 'user',
         align: 'center',
+        width:100,
         render:(h,param)=>{
         	return h('span',param.row.user.username)
         }
@@ -418,6 +424,8 @@ vue.tableColumns=[{
         title: '进度',
         key: 'progress',
         align: 'center',
+        width:100,
+        fixed:'right',
         render:(h,param)=>{
         	return h('a',{
         		props:{},
@@ -432,6 +440,7 @@ vue.tableColumns=[{
     	title: '操作',
     	align: 'center',
     	width:80,
+    	fixed:'right',
         render:(h,param)=>{
         	return h('div', [
 				h('Dropdown',{

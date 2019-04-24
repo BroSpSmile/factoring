@@ -4,10 +4,9 @@
       layout:decorator="layout/layout">
 	<div layout:fragment="content">
 		<div id="factoring" v-cloak>
-			<br>
 			<row>
-				<i-col span="22" offset="1">
-					<card>
+				<i-col span="24" >
+					<card dis-hover>
 						<p slot="title">{{detail.id?'项目明细':'新建项目'}}</p>
 						<p>
 					<i-form :label-width="120" ref="entityDataForm" :rules="validata" :model="detail">
@@ -52,17 +51,20 @@
 						<row>
 							<i-col span="8">
 								<form-item label="应收账款受让款" prop="assignee">
-									 <input-number placeholder="输入应收账款受让款" min="0" :max="100000000000"  class="select-width-140" v-model="detail.assignee"></input-number>&nbsp;(元)
+									 <input-number placeholder="输入应收账款受让款" min="0" :max="100000000000"  :formatter="formatter" :parser="parser"
+									  class="select-width-140" v-model="detail.assignee"></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 							<i-col span="8">
 								<form-item label="投放金额" prop="receivable">
-									 <input-number placeholder="输入应收账款" min="0" :max="100000000000" class="select-width-140"  v-model="detail.receivable"></input-number>&nbsp;(元)
+									 <input-number placeholder="输入应收账款" min="0" :max="100000000000"  :formatter="formatter" :parser="parser"
+									 class="select-width-140"  v-model="detail.receivable"></input-number>&nbsp;(元)
 								</form-item>
 							</i-col>
 							<i-col span="8">
 								<form-item label="保理费合计" prop="totalFactoringFee">
-									 <input-number placeholder="请输入保理费" min="0" :max="100000000000" readonly="true" class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(元)
+									 <input-number placeholder="请输入保理费" min="0" :max="100000000000" readonly="true" :formatter="formatter" :parser="parser"
+									  class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(元)
 									 <span v-if="showLater">+待定</span>
 								</form-item>
 							</i-col>
@@ -70,7 +72,8 @@
 						<row v-for="(installment,index) in detail.factoringInstallments" :key="index">
 							<i-col span="8">
 								<form-item label="分期金额" prop="" v-if="!installment.later">
-									 <input-number placeholder="输入保理费分期金额" min="0" :max="100000000000"  class="select-width-140" v-model="installment.amount" @on-blur="computeFee"></input-number>&nbsp;(元)
+									 <input-number placeholder="输入保理费分期金额" min="0" :max="100000000000" :formatter="formatter" :parser="parser"
+									  class="select-width-140" v-model="installment.amount" @on-blur="computeFee"></input-number>&nbsp;(元)
 								</form-item>
 								<form-item label="分期金额" prop="" v-if="installment.later">
 									<i-input readonly  class="select-width-140" value="--"></i-input>&nbsp;(元)

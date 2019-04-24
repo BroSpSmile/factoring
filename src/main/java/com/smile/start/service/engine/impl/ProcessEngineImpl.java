@@ -71,7 +71,11 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         if (updataResult.isSuccess()) {
             StepRecord record = new StepRecord();
             record.setProject(project);
-            record.setStatus(StepStatus.BEGIN);
+            if (project.getStep() == 13) {//完结节点
+                record.setStatus(StepStatus.COMPLETED);
+            } else {
+                record.setStatus(StepStatus.BEGIN);
+            }
             record.setStep(Step.getStep(project.getStep()));
             record.setCreateTime(new Date());
             if (null != auditResult && auditResult.isSuccess()) {
