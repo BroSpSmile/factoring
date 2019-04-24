@@ -164,9 +164,6 @@ var vue = new Vue({
             'contractExtendInfo.receivableMoneyType' : [
                 { required : true, message: '请选择应收账款类别', trigger: 'blur' }
             ],
-            'contractExtendInfo.receivableMoneyAdditional' : [
-                { required : true, message: '请选择应收账款附加', trigger: 'blur' }
-            ],
 
             'contractReceivableConfirmation.signDate' : [
                 { required : true, type: 'date', message: '请输入签署日期', trigger: 'blur' }
