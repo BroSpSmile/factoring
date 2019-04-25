@@ -365,19 +365,19 @@ vue.tableColumns=[{
         title: '项目名称',
         key: 'projectName',
         fixed:'left',
-        width:125,
+        minWidth:125,
         tooltip:true,
         align: 'center'
     },{
         title: '让与人',
         key: 'creditor',
-        width:150,
+        minWidth:150,
         tooltip:true,
         align: 'center'
     },{
         title: '债务人',
         key: 'debtor',
-        width:150,
+        minWidth:150,
         tooltip:true,
         align: 'center'
     },{
