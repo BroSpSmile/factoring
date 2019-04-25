@@ -102,6 +102,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         record.setStep(Step.getStep(project.getStep()));
         stepDao.delete(record);
         project.setStep(project.getStep() - 1);
+        changeStatus(project, StepStatus.PROCESSING);
         return projectService.updateProject(project);
 
     }

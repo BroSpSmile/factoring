@@ -18,7 +18,7 @@
 									&nbsp;&nbsp;&nbsp;<span>驳回原因:{{audit.records[0].remark}}</span>
 									<i-button  v-if="audit.records[0].result!='REJECTED'" size="small" type="primary" ghost @click="showAudit(audit)">{{audit.records[0].status}}</i-button>
 								</form-item>
-								<form-item label="尽调文件:">
+								<form-item label="尽调文件:" v-if="showUpdate">
 									<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
 								        <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
 								    </Upload>

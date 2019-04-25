@@ -15,6 +15,7 @@ var vue = new Vue({
 		showLater:true,
 		items:[],
 		audit:null,
+		showUpdate:true,
 		fileList:[]
 	},
 	created : function() {
@@ -34,7 +35,10 @@ var vue = new Vue({
 			this.$http.get("/project/"+id).then(function(response){
 				_self.project = response.data;
 				for(let index in _self.project.items){
-					_self.items.push(_self.project.items[index]);
+					if(_self.project.items[index].itemType=='TUNEUP'){
+						_self.items.push(_self.project.items[index]);
+						_self.showUpdate = false
+					}
 				}
 				_self.project.items = [];
 			},function(error){
@@ -168,6 +172,10 @@ var vue = new Vue({
 			this.$http.delete("/project/items",item).then(function(response){
 				if (response.data.success) {
 					_self.project.items.splice(index, 1);
+					_self.items.splice(index, 1);
+					if(_self.items.length<1){
+						_self.showUpdate = true;
+					}
 					_self.$Message.info("删除成功");
 				} else {
 					_self.$Message.error(response.data.errorMessage);

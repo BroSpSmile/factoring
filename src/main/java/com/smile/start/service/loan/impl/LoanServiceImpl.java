@@ -7,7 +7,7 @@ package com.smile.start.service.loan.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -18,9 +18,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,15 +79,16 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     @Override
     @Transactional
     public BaseResult save(Loan loan) {
-        projectItemDao.deleteItems(loan.getProject().getId(), ProjectItemType.LOAN);
         Loan old = loanDao.getByProject(loan.getProject().getId());
         if (null == old) {
             loanDao.insert(loan);
         } else {
+            loan.setId(old.getId());
             loanDao.update(loan);
         }
         //线下保存附件
         if (LoanType.OFFLINE.equals(loan.getType())) {
+            projectItemDao.deleteItems(loan.getProject().getId(), ProjectItemType.LOAN);
             for (ProjectItem item : loan.getProject().getItems()) {
                 projectItemDao.insert(item);
             }
@@ -117,6 +116,7 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         BaseResult result = this.save(loan);
         if (result.isSuccess()) {
             Project project = loan.getProject();
+            project.setItems(Collections.emptyList());
             project.setStep(7);
             processEngine.next(project, true);
         }
@@ -129,8 +129,10 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
     @Override
     public Loan getLoan(Project project) {
         Loan loan = loanDao.getByProject(project.getId());
-        List<LoanGroup> groups = loanDao.getByLoan(loan.getId());
-        loan.setGroups(groups);
+        if (null != loan) {
+            List<LoanGroup> groups = loanDao.getByLoan(loan.getId());
+            loan.setGroups(groups);
+        }
         return loan;
     }
 
@@ -147,10 +149,10 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         //文档标题
         createParagraph(document, ParagraphAlignment.CENTER, "项目付款申请表", 20, true);
         document.createParagraph();
-        createParagraph(document, ParagraphAlignment.RIGHT, "日期:"+ DateUtil.getWebDateString(loan.getCreateTime()), 12, true);
-      //移交清单表格
+        createParagraph(document, ParagraphAlignment.RIGHT, "日期:" + DateUtil.getWebDateString(loan.getCreateTime()), 12, true);
+        //移交清单表格
         XWPFTable comTable = document.createTable();
-  
+
         XWPFTableRow first = comTable.createRow();
         first.getCell(0).setText("申请部门");
         first.addNewTableCell().setText(loan.getDepartment());
