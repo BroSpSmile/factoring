@@ -476,7 +476,7 @@ var vue = new Vue({
             let self = this;
             this.$Spin.show();
             this.$http.put("/contractInfo/submitAudit/" + id).then(function(response) {
-                this.$Spin.hide();
+                self.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
                         content : "提交审核成功",
