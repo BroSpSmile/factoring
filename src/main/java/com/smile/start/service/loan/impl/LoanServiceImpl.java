@@ -153,13 +153,14 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         //移交清单表格
         XWPFTable comTable = document.createTable();
 
-        XWPFTableRow first = comTable.createRow();
+        XWPFTableRow first = comTable.getRow(0);
         first.getCell(0).setText("申请部门");
         first.addNewTableCell().setText(loan.getDepartment());
         first.addNewTableCell().setText("申请人");
-        first.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
-        first.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        first.getCell(3).setText(loan.getUser());
+        first.addNewTableCell().setText(loan.getUser());
+        first.addNewTableCell();
+        first.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+        first.getCell(4).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         XWPFTableRow second = comTable.createRow();
         second.getCell(0).setText("项目名称");
         second.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
@@ -174,28 +175,28 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         row3.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row3.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row3.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        row3.getCell(1).setText("￥"+loan.getSubscriptionAmount()+"元");
+        row3.getCell(1).setText("￥" + loan.getSubscriptionAmount() + "元");
         XWPFTableRow row4 = comTable.createRow();
         row4.getCell(0).setText("本次付款金额");
         row4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         row4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        row4.getCell(1).setText("￥"+loan.getPayments()+"元");
+        row4.getCell(1).setText("￥" + loan.getPayments() + "元");
         XWPFTableRow row5 = comTable.createRow();
         row5.getCell(0).setText("金额（大写）人民币");
         row5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         row5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        row5.getCell(1).setText("￥"+loan.getChineseAmount()+"元");
+        row5.getCell(1).setText("￥" + loan.getChineseAmount() + "元");
         XWPFTableRow row6 = comTable.createRow();
         row6.getCell(0).setText("累计付款金额");
-        row6.addNewTableCell().setText(loan.getAccumulativeyments()+"元");
+        row6.addNewTableCell().setText(loan.getAccumulativeyments() + "元");
         row6.addNewTableCell().setText("未付款金额");
         row6.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         row6.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        row6.getCell(3).setText(loan.getUnpaid()+"元");
+        row6.getCell(3).setText(loan.getUnpaid() + "元");
         XWPFTableRow row7 = comTable.createRow();
         row7.getCell(0).setText("付款用途");
         row7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
@@ -204,16 +205,57 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         row7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
         row7.getCell(1).setText(loan.getPaymentPurpose());
         for (LoanGroup group : loan.getGroups()) {
-            document.createParagraph();
-            createParagraph(document, "收款方", 14);
-            createParagraph(document, "单位名称:" + group.getPayeeName());
-            createParagraph(document, "开户银行:" + group.getPayeeBankName());
-            createParagraph(document, "银行账号:" + group.getPayeeAccountNo());
-            createParagraph(document, "出资方", 14);
-            createParagraph(document, "单位名称:" + group.getPayerName());
-            createParagraph(document, "开户银行:" + group.getPayerBankName());
-            createParagraph(document, "银行账号:" + group.getPayerAccountNo());
-            createParagraph(document, "付款金额:" + group.getPayments());
+            XWPFTableRow group1 = comTable.createRow();
+            group1.getCell(0).setText("收款方");
+            group1.addNewTableCell().setText("单位名称");
+            group1.addNewTableCell().setText(group.getPayeeName());
+            group1.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group1.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group1.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group1.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            XWPFTableRow group2 = comTable.createRow();
+            group2.addNewTableCell().setText("开户银行");
+            group2.addNewTableCell().setText(group.getPayeeBankName());
+            group2.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group2.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group2.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group2.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            XWPFTableRow group3 = comTable.createRow();
+            group3.addNewTableCell().setText("银行账号");
+            group3.addNewTableCell().setText(group.getPayeeAccountNo());
+            group3.getCell(3).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group3.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group3.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group3.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            XWPFTableRow group4 = comTable.createRow();
+            group4.getCell(0).setText("出资方");
+            group4.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            group4.addNewTableCell().setText("单位名称");
+            group4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group4.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group4.getCell(2).setText(group.getPayerName());
+            XWPFTableRow group5 = comTable.createRow();
+            group5.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            group5.addNewTableCell().setText("开户银行");
+            group5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group5.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group5.getCell(2).setText(group.getPayerBankName());
+            XWPFTableRow group6 = comTable.createRow();
+            group6.getCell(0).getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            group6.addNewTableCell().setText("银行账号");
+            group6.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group6.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group6.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group6.getCell(2).setText(group.getPayerAccountNo());
+            XWPFTableRow group7 = comTable.createRow();
+            group7.getCell(0).setText("付款金额");
+            group7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            group7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group7.addNewTableCell().getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            group7.getCell(1).setText(loan.getPaymentPurpose());
         }
 
         File tempFile = File.createTempFile("temp", fileName);
@@ -222,18 +264,6 @@ public class LoanServiceImpl extends AbstractService implements LoanService {
         out.close();
         upload(tempFile, fileName + ".docx", project.getId(), ProjectItemType.LOAN);
         return new BaseResult();
-    }
-
-    private void createParagraph(XWPFDocument document, String doc) {
-        createParagraph(document, ParagraphAlignment.LEFT, doc);
-    }
-
-    private void createParagraph(XWPFDocument document, String doc, int size) {
-        createParagraph(document, ParagraphAlignment.LEFT, doc, size, false);
-    }
-
-    private void createParagraph(XWPFDocument document, ParagraphAlignment alignment, String doc) {
-        createParagraph(document, alignment, doc, 12, false);
     }
 
     private void createParagraph(XWPFDocument document, ParagraphAlignment alignment, String doc, int size, boolean bold) {
