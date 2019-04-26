@@ -325,7 +325,6 @@ var vue = new Vue({
             let self = this;
             this.genFileInfo();
             this.isDisable = true;
-            console.log(this.hasStandardTemplate())
             if(this.hasStandardTemplate()) {
                 this.$refs.addForm.validate((valid) => {
                     if(valid) {
@@ -340,16 +339,19 @@ var vue = new Vue({
         },
         save : function () {
             let self = this;
+            this.$Spin.show();
             //清单验证
             for (let index in self.addForm.signList) {
                 if (self.addForm.signList[index].type === 'add' && self.addForm.signList[index].signListName === '') {
                     self.$Message.error('签署清单名称必须输入');
                     self.isDisable = false;
+                    self.$Spin.hide();
                     return;
                 }
             }
             if (this.addForm.baseInfo.id === undefined || this.addForm.baseInfo.id === null || this.addForm.baseInfo.id === "") {
                 this.$http.post("/contractInfo", this.addForm).then(function (response) {
+                    self.$Spin.hide();
                     if (response.data.success) {
                         console.log("id=" + response.data.data)
                         self.addForm.baseInfo.id = response.data.data;
@@ -367,11 +369,13 @@ var vue = new Vue({
                         self.$Message.error(response.data.errorMessage);
                     }
                 }, function (error) {
+                    self.$Spin.hide();
                     self.isDisable = false;
                     self.$Message.error(error.data.message);
                 });
             } else {
                 this.$http.put("/contractInfo", this.addForm).then(function (response) {
+                    self.$Spin.hide();
                     if (response.data.success) {
                         self.$Message.info({
                             content: "更新成功",
@@ -386,6 +390,7 @@ var vue = new Vue({
                         self.$Message.error(response.data.errorMessage);
                     }
                 }, function (error) {
+                    self.$Spin.hide();
                     self.isDisable = false;
                     self.$Message.error(error.data.message);
                 });
@@ -469,7 +474,9 @@ var vue = new Vue({
          */
         submitAudit : function(id) {
             let self = this;
+            this.$Spin.show();
             this.$http.put("/contractInfo/submitAudit/" + id).then(function(response) {
+                this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
                         content : "提交审核成功",
@@ -482,6 +489,7 @@ var vue = new Vue({
                     self.$Message.error(response.data.errorMessage);
                 }
             }, function(error) {
+                self.$Spin.hide();
                 self.$Message.error(error.data.message);
             });
         },
