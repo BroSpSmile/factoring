@@ -43,7 +43,7 @@ var vue = new Vue({
 			}
 		},
 		canUpload:function(){
-			if(this.fileList&& this.fileList.length>0){
+			if(this.fileList&& this.fileList.length>3){
 				return true;
 			}else{
 				return false;
@@ -88,12 +88,15 @@ var vue = new Vue({
 		getItems:function(){
 			this.meetingItems  = [];
 			if(this.meeting.minutes){
-				let minutes = this.meeting.minutes.split("|");
-				let item={
-						itemValue:minutes[0],
-						itemName:minutes[1]
+				let items = this.meeting.minutes.split("&");
+				for(let index in items){
+					let item = items[index].split("|");
+					let att={
+							itemValue:item[0],
+							itemName:item[1]
+					}
+					this.meetingItems.push(att);
 				}
-				this.meetingItems.push(item);
 			}
 		},
 		
@@ -122,9 +125,15 @@ var vue = new Vue({
 						meeting.projects[0].items = new Array();
 						meeting.projects[0].items.push(item);
 						meeting.projects[0].progress = progress;
+					}else{
+						meeting.minutesKind = 'CUSTOM';
+						if(index==0){
+							meeting.minutes = this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
+						}else{
+							meeting.minutes += "&"+this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
+						}
+						
 					}
-					meeting.minutesKind = 'CUSTOM';
-					meeting.minutes= this.fileList[index].response.data.fileId+"|"+this.fileList[index].name;
 				}
 			let self = this;
 			this.$Spin.show();
@@ -151,7 +160,6 @@ var vue = new Vue({
 		 */
 		uploadSuccess : function(response, file, fileList) {
 			this.fileList=fileList;
-			console.log(response);
 		},
 		
 		/**
@@ -189,7 +197,7 @@ var vue = new Vue({
 		 * 下载文件
 		 */
 		downloadItem:function(item){
-			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
+			window.open("/file?fileId="+item.itemValue+"&fileName="+encodeURI(item.itemName));
 		}
 	}
 });

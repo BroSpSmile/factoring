@@ -39,8 +39,8 @@ var vue = new Vue({
     		let _self = this;
     		let param = moment(this.queryMonth).format('YYYY-MM')
     		this.$http.get("/profit/"+param).then(function(response){
-    			_self.list[0].zcamount = response.data.monthProfit +"万元";
-    			_self.list[0].zctotalamount = response.data.yearProfit +"万元";
+    			_self.list[0].zcamount = response.data.monthProfit +"元";
+    			_self.list[0].zctotalamount = response.data.yearProfit +"元";
     		},function(error){
     			console.log(error);
     		})

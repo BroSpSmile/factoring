@@ -43,7 +43,8 @@ var vue = new Vue({
         },
         isFinanceAdmin: false,
         financeUserList: [],
-        tableColumns:[]
+        tableColumns:[],
+        indexsteps:[]
     },
     created: function () {
         this.initDate();
@@ -82,6 +83,11 @@ var vue = new Vue({
             }, function (error) {
                 console.error(error);
             });
+            this.$http.get("/combo/indexsteps").then(function(response) {
+				_self.indexsteps = response.data;
+			}, function(error) {
+				console.error(error);
+			});
         },
         query: function () {
             let self = this;
@@ -242,6 +248,8 @@ var vue = new Vue({
                 let value = childArray[0];
                 if (param.column.colType == 'boolean') {
                     value = this.toBoolean(value);
+                }else if(param.column.colType == 'money'){
+                	value = common.money.formatter(value);
                 }
                 return h('span', value);
             } else {
@@ -249,8 +257,9 @@ var vue = new Vue({
                 childArray.forEach((item, index) => {
                     if (param.column.colType == 'boolean') {
                         item = this.toBoolean(item);
+                    }else if(param.column.colType == 'money'){
+                    	item = common.money.formatter(item);
                     }
-
                     let aa = h('tr', {}, [
                         h('td', {
                             style: {
@@ -290,30 +299,61 @@ vue.tableColumns = [{
     title: '项目编号',
     key: 'projectId',
     align: 'center',
+    fixed:'left',
     width: 100
 }, {
     title: '项目名称',
     key: 'projectName',
     align: 'center',
-    width: 100
+    fixed:'left',
+    width: 120,
+    tooltip:true,
 }, {
     title: '业务负责人',
     key: 'username',
+    width: 100,
+    fixed:'left',
+    align: 'center',
+}, {
+    title: '追索权',
+    key: 'model',
+    width: 60,
+    align: 'center',
+}, {
+    title: '债务人',
+    key: 'debtor',
+    width: 120,
+    tooltip:true,
+    align: 'center',
+}, {   
+	title: '债权人',
+    key: 'creditor',
+    width: 120,
+    tooltip:true,
     align: 'center',
 }, {
     title: '放款审核通过时间',
     key: 'loanAuditPassTime',
     tooltip: true,
     align: 'center',
-    width: 105
+    width: 120
 }, {
     title: '应收账款（元）',
     key: 'receivable',
     align: 'center',
+    width: 100,
+    tooltip:true,
+    colType: 'money',
+    render:(h,param)=>{
+    	return h('span',common.money.formatter(param.row.receivable));
+    }
 }, {
     title: '已投放金额（元）',
     key: 'dropAmount',
     align: 'center',
+    width: 100,
+    tooltip:true,
+    colType: 'money',
     render: (h, param) => {
         return vue.columnRender(h, param);
     }
@@ -329,6 +369,9 @@ vue.tableColumns = [{
     title: '回款金额（元）',
     key: 'returnAmount',
     align: 'center',
+    width: 80,
+    tooltip:true,
+    colType: 'money',
     render: (h, param) => {
         return vue.columnRender(h, param);
     }
@@ -344,10 +387,18 @@ vue.tableColumns = [{
     title: '保理费合计（元）',
     key: 'totalFactoringFee',
     align: 'center',
+    width: 100,
+    tooltip:true,
+    render:(h,param)=>{
+    	return h('span',common.money.formatter(param.row.totalFactoringFee));
+    }
 }, {
     title: '保理费分期（元）',
     key: 'factoringInstallmentAmounts',
     align: 'center',
+    width: 100,
+    tooltip:true,
+    colType: 'money',
     render: (h, param) => {
         return vue.columnRender(h, param);
     }
@@ -363,6 +414,7 @@ vue.tableColumns = [{
     title: '是否已开发票',
     key: 'factoringInstallmentInvoiceds',
     align: 'center',
+    width: 60,
     colType: 'boolean',
     render: (h, param) => {
         return vue.columnRender(h, param);
@@ -370,41 +422,65 @@ vue.tableColumns = [{
 }, {
     title: '操作',
     align: 'center',
+    fixed:'right',
     width: 120,
     render: (h, param) => {
-        return h('div', [
-                h('Button', {
-                    props: {
-                        size: "small",
-                        type: "success",
-                        ghost: true
-
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.edit(param.row.id);
-                        }
-                    }
-                }, '编辑'), vue.getIsFinanceAdmin() ? h('Button', {
-                    props: {
-                        size: "small",
-                        type: "info",
-                        ghost: true
-                    },
-                    style: {
-                        marginRight: '5px'
-                    },
-                    on: {
-                        click: () => {
-                            vue.entrustModel(param.row.id);
-                        }
-                    }
-                }, '委托') : h('span')
-            ]
-        )
+    	if(param.row.step>8&&param.row.step<13){
+    		return  h('div', [
+	        		h('Button', {
+	                    props: {
+	                        size: "small",
+	                        type: "success",
+	                        ghost: true
+	
+	                    },
+	                    style: {
+	                        marginRight: '5px'
+	                    },
+	                    on: {
+	                        click: () => {
+	                            vue.edit(param.row.id);
+	                        }
+	                    }
+	                }, '编辑'),
+	                vue.getIsFinanceAdmin() ? h('Button', {
+	                    props: {
+	                        size: "small",
+	                        type: "info",
+	                        ghost: true
+	                    },
+	                    style: {
+	                        marginRight: '5px'
+	                    },
+	                    on: {
+	                        click: () => {
+	                            vue.entrustModel(param.row.id);
+	                        }
+	                    }
+	                }, '委托') : h('span')
+	            ]
+    		)
+    	}else if(param.row.step==13){
+    		return  h('div', [
+	        		h('Button', {
+	                    props: {
+	                        size: "small",
+	                        type: "primary",
+	                        ghost: true
+	                    },
+	                    style: {
+	                        marginRight: '5px'
+	                    },
+	                    on: {
+	                        click: () => {
+	                            vue.edit(param.row.id);
+	                        }
+	                    }
+	                }, '查看历史')
+	            ]
+			)
+    	}
+        
     }
 }
 ];

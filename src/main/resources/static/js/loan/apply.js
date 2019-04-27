@@ -27,7 +27,8 @@ var vue = new Vue({
 		},
 		changeFlag:false,
 		projects:[],
-		fileList:[]
+		fileList:[],
+		commitFlag:false,
 	},
 	created : function() {
 		this.initData();
@@ -84,7 +85,6 @@ var vue = new Vue({
 		 */
 		uploadSuccess : function(response, file, fileList) {
 			this.fileList=fileList;
-			console.log(response);
 		},
 		
 		/**
@@ -144,9 +144,10 @@ var vue = new Vue({
 		save:function(){
 			if(this.loan.type=='OFFLINE'){
 				if(this.fileList === undefined || this.fileList.length == 0){
-					this.$Message.error("请上传尽调文件");
+					this.$Message.error("请上传放款文件");
 					return false;
 				}
+				this.loan.project.items = [];
 				for(let index in this.fileList){
 					let item={
 							projectId:this.loan.project.id,
@@ -189,6 +190,7 @@ var vue = new Vue({
 					this.$Message.error("请上传尽调文件");
 					return false;
 				}
+				this.loan.project.items = [];
 				for(let index in this.fileList){
 					let item={
 							projectId:this.loan.project.id,
@@ -201,6 +203,7 @@ var vue = new Vue({
 			}
 			let _self = this;
 			this.$Spin.show();
+			this.commitFlag =true;
 			this.$http.post("/loanApply/commit",this.loan).then(function(response){
 				this.$Spin.hide();
 				_self.$Message.info({

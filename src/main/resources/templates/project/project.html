@@ -82,6 +82,9 @@
 							            <div class="ivu-steps-title" v-if="(record.step=='FILE_AUDIT'||record.step=='TUNEUP_AUDIT'||record.step=='DRAWUP_AUDIT'||record.step=='LOAN_AUDIT')&&record.audit">
 							            	<a @click="toAudit(record)" style="color:#2d8cf0">{{record.step|toStepName}}</a>
 							            </div>
+							            <div class="ivu-steps-title" v-else-if="record.step=='MEETING'&&record.status=='COMPLETED'">
+							            	<a @click="make(record)" style="color:#2d8cf0">{{record.step|toStepName}}</a>
+							            </div>
 							            <div class="ivu-steps-title" v-else>{{record.step|toStepName}}</div>
 							            <div class="ivu-steps-content" v-if="record.status=='LATER'">待补,滞留{{record.days}}天</div>
 							            <div class="ivu-steps-content" v-if="record.status!='LATER'">{{record.createTime|timeFilter}}</div>
@@ -95,7 +98,33 @@
 						</i-col>
 					</row>
 					<row>
-						<i-col span='4' v-for='(record,index) in flowInfo.records' v-if="index>=6">
+						<i-col span='4' v-for='(record,index) in flowInfo.records' v-if="index>=6&&index<12">
+							<div class="ivu-steps ivu-steps-horizontal">
+							    <div class="ivu-steps-item" v-bind:class="record.clazz">
+							        <div class="ivu-steps-head">
+							            <div class="ivu-steps-head-inner">
+							                <span v-if='record.status!="COMPLETED"'>{{index+1}}</span>
+							                <span v-if='record.status=="COMPLETED"' class="ivu-steps-icon ivu-icon ivu-icon-ios-checkmark"></span>
+							            </div>
+							        </div>
+							        <div class="ivu-steps-main">
+							        	<div class="ivu-steps-title" v-if="(record.step=='FILE_AUDIT'||record.step=='TUNEUP_AUDIT'||record.step=='DRAWUP_AUDIT'||record.step=='LOAN_AUDIT')&&record.audit">
+							            	<a @click="toAudit(record)" style="color:#2d8cf0">{{record.step|toStepName}}</a>
+							            </div>
+							            <div class="ivu-steps-title" v-else>{{record.step|toStepName}}</div>
+							            <div class="ivu-steps-content" v-if="record.status=='LATER'">待补,滞留{{record.days}}天</div>
+							            <div class="ivu-steps-content" v-if="record.status!='LATER'">{{record.createTime|timeFilter}}</div>
+							            <div class="ivu-steps-content" v-if="record.status=='COMPLETED'">{{record.modifyTime|timeFilter}}</div>
+							            <div class="ivu-steps-content" v-if="record.status=='LATER'"><i-button size='small' type='text' @click='make(record)'>后补</i-button></div>
+							            <div class="ivu-steps-content" v-if="record.status=='PROCESSING'"><i-button size='small' type='text' @click='make(record)'>处理</i-button></div>
+							            <div class="ivu-steps-content"></div>
+							        </div>
+							    </div>
+							</div>
+						</i-col>
+					</row>
+					<row>
+						<i-col span='4' v-for='(record,index) in flowInfo.records' v-if="index>=12">
 							<div class="ivu-steps ivu-steps-horizontal">
 							    <div class="ivu-steps-item" v-bind:class="record.clazz">
 							        <div class="ivu-steps-head">

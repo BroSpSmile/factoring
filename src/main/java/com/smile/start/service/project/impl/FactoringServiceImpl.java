@@ -80,26 +80,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
     @Override
     public FactoringDetail get(Long projectId) {
         FactoringDetail detail = factoringDetailDao.getByProject(projectId);
-        if (null != detail) {
-            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
-            for (Installment installment : installments) {
-                InstallmentItem installmentItem = installmentDao.getInstallmentItem(installment);
-                installment.setItem(installmentItem);
-                installment.setDetailList(installmentDao.getInstallmentDetail(installment.getId()));
-                for (InstallmentDetail installmentDetail : installment.getDetailList()) {
-                    installmentDetail.setItem(installmentDao.getInstallmentDetailItem(installmentDetail));
-                }
-                if (InstallmentType.FACTORING.equals(installment.getType())) {
-                    detail.addFactoringInstallment(installment);
-                }
-                if (InstallmentType.RETURN.equals(installment.getType())) {
-                    detail.addReturnInstallment(installment);
-                }
-                if (InstallmentType.LOAN.equals(installment.getType())) {
-                    detail.addLoanInstallment(installment);
-                }
-            }
-        }
+        this.setInstallmentsDetail(detail);
         return detail;
     }
 
@@ -122,6 +103,54 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         Double yearDouble = factoringDetailDao.yearProfit(month.split("-")[0]);
         profit.setYearProfit(yearDouble == null ? 0.00 : yearDouble);
         return profit;
+    }
+
+    /** 
+     * @see com.smile.start.service.project.FactoringService#setInstallments(com.smile.start.model.project.Project)
+     */
+    @Override
+    public void setInstallments(FactoringDetail detail) {
+        if (null != detail) {
+            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+            for (Installment installment : installments) {
+                if (InstallmentType.FACTORING.equals(installment.getType())) {
+                    detail.addFactoringInstallment(installment);
+                }
+                if (InstallmentType.RETURN.equals(installment.getType())) {
+                    detail.addReturnInstallment(installment);
+                }
+                if (InstallmentType.LOAN.equals(installment.getType())) {
+                    detail.addLoanInstallment(installment);
+                }
+            }
+        }
+    }
+
+    /** 
+     * @see com.smile.start.service.project.FactoringService#setInstallmentsDetail(com.smile.start.model.project.FactoringDetail)
+     */
+    @Override
+    public void setInstallmentsDetail(FactoringDetail detail) {
+        if (null != detail) {
+            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+            for (Installment installment : installments) {
+                InstallmentItem installmentItem = installmentDao.getInstallmentItem(installment);
+                installment.setItem(installmentItem);
+                installment.setDetailList(installmentDao.getInstallmentDetail(installment.getId()));
+                for (InstallmentDetail installmentDetail : installment.getDetailList()) {
+                    installmentDetail.setItem(installmentDao.getInstallmentDetailItem(installmentDetail));
+                }
+                if (InstallmentType.FACTORING.equals(installment.getType())) {
+                    detail.addFactoringInstallment(installment);
+                }
+                if (InstallmentType.RETURN.equals(installment.getType())) {
+                    detail.addReturnInstallment(installment);
+                }
+                if (InstallmentType.LOAN.equals(installment.getType())) {
+                    detail.addLoanInstallment(installment);
+                }
+            }
+        }
     }
 
     @Transactional

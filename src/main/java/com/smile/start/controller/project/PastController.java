@@ -129,14 +129,14 @@ public class PastController extends BaseController {
     @ResponseBody
     List<Meeting> getMeetings() {
         MeetingSearch search = new MeetingSearch();
-        search.setKind(MeetingKind.BOARD);
-        List<Meeting> boards = meetingService.getMeetings(search);
-        search.setKind(MeetingKind.PARTY);
-        List<Meeting> partys = meetingService.getMeetings(search);
+        //        search.setKind(MeetingKind.BOARD);
+        //        List<Meeting> boards = meetingService.getMeetings(search);
+        //        search.setKind(MeetingKind.PARTY);
+        //        List<Meeting> partys = meetingService.getMeetings(search);
         search.setKind(MeetingKind.DIRECTORS);
         List<Meeting> directors = meetingService.getMeetings(search);
-        boards.addAll(partys);
-        boards.addAll(directors);
-        return boards;
+        //        boards.addAll(partys);
+        //        boards.addAll(directors);
+        return directors;
     }
 }

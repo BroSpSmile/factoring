@@ -64,7 +64,7 @@ public class PastServiceImpl extends AbstractService implements PastService {
         BaseResult result = meetingService.relationMeeting(pms);
         if (result.isSuccess()) {
             project.setStep(3);
-            if (getMeetings(past.getProjectId()).size() > 2) {
+            if (getMeetings(past.getProjectId()).size() > 0) {
                 processEngine.next(project, false);
             } else {
                 project.setProgress(Progress.LATERMEETING);

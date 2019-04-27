@@ -12,7 +12,6 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.enums.ProjectModel;
-import com.smile.start.model.enums.Step;
 
 /**
  * 项目
@@ -43,14 +42,6 @@ public class Project implements Serializable {
     /** 当前进度 */
     private Progress          progress;
 
-    /**
-     * all进度 add by xioutman  有用 别删了
-     */
-    private List<String>      progresses;
-
-    //查询时使用
-    private List<Long>        projectIdList;
-
     /** 当前步骤 */
     private Integer           step;
 
@@ -69,50 +60,22 @@ public class Project implements Serializable {
     /** 创建时间 */
     private Date              createTime;
 
-    //查询时使用
-    private String            person;
-
-    //查询时使用
-    private List<Long>        userList;
-
-    public List<Long> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<Long> userList) {
-        this.userList = userList;
-    }
-
-    public String getPerson() {
-        return person;
-    }
-
-    public void setPerson(String person) {
-        this.person = person;
-    }
-
-    public List<Long> getProjectIdList() {
-        return projectIdList;
-    }
-
-    public void setProjectIdList(List<Long> projectIdList) {
-        this.projectIdList = projectIdList;
-    }
-
-    /**
-     * 获取步骤枚举
-     * @return
+    /** 
+     * @see java.lang.Object#toString()
      */
-    public Step getStepEnum() {
-        if (null != step) {
-            return Step.getStep(step);
-        }
-        return null;
+    @Override
+    public String toString() {
+        return "{\"id\":\"" + id + "\", \"" + (projectId != null ? "projectId\":\"" + projectId + "\", \"" : "") + (kind != null ? "kind\":\"" + kind + "\", \"" : "")
+               + (projectName != null ? "projectName\":\"" + projectName + "\", \"" : "") + (user != null ? "user\":\"" + user + "\", \"" : "")
+               + (progress != null ? "progress\":\"" + progress + "\", \"" : "") + (step != null ? "step\":\"" + step + "\", \"" : "")
+               + (records != null ? "records\":\"" + records + "\", \"" : "") + (model != null ? "model\":\"" + model + "\", \"" : "")
+               + (items != null ? "items\":\"" + items + "\", \"" : "") + (detail != null ? "detail\":\"" + detail + "\", \"" : "")
+               + (createTime != null ? "createTime\":\"" + createTime : "") + "\"}  ";
     }
 
     /**
      * Getter method for property <tt>id</tt>.
-     *
+     * 
      * @return property value of id
      */
     public long getId() {
@@ -121,7 +84,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>id</tt>.
-     *
+     * 
      * @param id value to be assigned to property id
      */
     public void setId(long id) {
@@ -130,7 +93,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>projectId</tt>.
-     *
+     * 
      * @return property value of projectId
      */
     public String getProjectId() {
@@ -139,7 +102,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>projectId</tt>.
-     *
+     * 
      * @param projectId value to be assigned to property projectId
      */
     public void setProjectId(String projectId) {
@@ -148,7 +111,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>kind</tt>.
-     *
+     * 
      * @return property value of kind
      */
     public ProjectKind getKind() {
@@ -157,7 +120,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>kind</tt>.
-     *
+     * 
      * @param kind value to be assigned to property kind
      */
     public void setKind(ProjectKind kind) {
@@ -166,7 +129,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>projectName</tt>.
-     *
+     * 
      * @return property value of projectName
      */
     public String getProjectName() {
@@ -175,7 +138,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>projectName</tt>.
-     *
+     * 
      * @param projectName value to be assigned to property projectName
      */
     public void setProjectName(String projectName) {
@@ -184,7 +147,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>user</tt>.
-     *
+     * 
      * @return property value of user
      */
     public User getUser() {
@@ -193,7 +156,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>user</tt>.
-     *
+     * 
      * @param user value to be assigned to property user
      */
     public void setUser(User user) {
@@ -202,7 +165,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>progress</tt>.
-     *
+     * 
      * @return property value of progress
      */
     public Progress getProgress() {
@@ -211,24 +174,16 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>progress</tt>.
-     *
+     * 
      * @param progress value to be assigned to property progress
      */
     public void setProgress(Progress progress) {
         this.progress = progress;
     }
 
-    public List<String> getProgresses() {
-        return progresses;
-    }
-
-    public void setProgresses(List<String> progresses) {
-        this.progresses = progresses;
-    }
-
     /**
      * Getter method for property <tt>step</tt>.
-     *
+     * 
      * @return property value of step
      */
     public Integer getStep() {
@@ -237,7 +192,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>step</tt>.
-     *
+     * 
      * @param step value to be assigned to property step
      */
     public void setStep(Integer step) {
@@ -246,7 +201,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>records</tt>.
-     *
+     * 
      * @return property value of records
      */
     public List<StepRecord> getRecords() {
@@ -255,7 +210,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>records</tt>.
-     *
+     * 
      * @param records value to be assigned to property records
      */
     public void setRecords(List<StepRecord> records) {
@@ -264,7 +219,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>model</tt>.
-     *
+     * 
      * @return property value of model
      */
     public ProjectModel getModel() {
@@ -273,7 +228,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>model</tt>.
-     *
+     * 
      * @param model value to be assigned to property model
      */
     public void setModel(ProjectModel model) {
@@ -282,7 +237,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>items</tt>.
-     *
+     * 
      * @return property value of items
      */
     public List<ProjectItem> getItems() {
@@ -291,7 +246,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>items</tt>.
-     *
+     * 
      * @param items value to be assigned to property items
      */
     public void setItems(List<ProjectItem> items) {
@@ -300,7 +255,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>detail</tt>.
-     *
+     * 
      * @return property value of detail
      */
     public FactoringDetail getDetail() {
@@ -309,7 +264,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>detail</tt>.
-     *
+     * 
      * @param detail value to be assigned to property detail
      */
     public void setDetail(FactoringDetail detail) {
@@ -318,7 +273,7 @@ public class Project implements Serializable {
 
     /**
      * Getter method for property <tt>createTime</tt>.
-     *
+     * 
      * @return property value of createTime
      */
     public Date getCreateTime() {
@@ -327,7 +282,7 @@ public class Project implements Serializable {
 
     /**
      * Setter method for property <tt>createTime</tt>.
-     *
+     * 
      * @param createTime value to be assigned to property createTime
      */
     public void setCreateTime(Date createTime) {

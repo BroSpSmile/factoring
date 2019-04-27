@@ -255,7 +255,7 @@ var vue = new Vue({
 		 */
 		downloadItem:function(item){
 			let ss = item.split("|");
-			window.open("/file?fileId="+ss[0]+"&fileName="+ss[1]);
+			window.open("/file?fileId="+ss[0]+"&fileName="+encodeURI(ss[1]));
 		}
 	}
 });

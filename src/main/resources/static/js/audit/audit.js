@@ -171,7 +171,7 @@ var vue = new Vue({
 					_self.$Message.info({
 						content : "审核成功",
 						onClose : function() {
-							_self.cancel();
+							location.reload();
 							_self.getAudit(document.getElementById("auditId").value);
 						}
 					});
@@ -201,7 +201,7 @@ var vue = new Vue({
                         _self.$Message.info({
                             content: "驳回成功",
                             onClose: function () {
-                                _self.cancel();
+                            	location.reload();
                                 _self.getAudit(document.getElementById("auditId").value);
                             }
                         });
@@ -224,7 +224,7 @@ var vue = new Vue({
                         _self.$Message.info({
                             content : "驳回成功",
                             onClose : function() {
-                                _self.cancel();
+                            	location.reload();
                             }
                         });
                     } else {
@@ -250,7 +250,7 @@ var vue = new Vue({
                     self.$Message.info({
                         content : "审核成功",
                         onClose : function() {
-                            self.cancel();
+                        	location.reload();
                         }
                     });
                 } else {

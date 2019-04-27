@@ -49,6 +49,11 @@ var vue = new Vue({
         this.initDate();
         this.queryProject();
     },
+    filters:{
+    	toMoney:function(value){
+    		return common.money.formatter(value);
+    	}
+    },
     methods: {
         addInstallment: function (type) {
             if (type == 'return') {
@@ -675,6 +680,20 @@ var vue = new Vue({
                 self.$Message.error(error.data.errorMessage);
             })
         },
+        
+        /**
+		 * formatter
+		 */
+		formatter:function(value){
+			value = value+'';
+			var intSum = value.replace( /\B(?=(?:\d{3})+$)/g, ',' );
+			return '￥'+intSum;
+		},
+		
+		parser:function(value){
+			value = ""+value;
+			return value.replace(/￥s?|(,*)/g, '')
+		},
 
         /**
          * 公用方法
