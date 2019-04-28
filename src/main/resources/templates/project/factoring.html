@@ -71,7 +71,7 @@
 								</i-col>
 								<i-col span="8">
 									<form-item label="保理费合计" prop="totalFactoringFee">
-										 <input-number placeholder="请输入保理费" min="0" :max="100000000000" readonly="true" :formatter="formatter" :parser="parser"
+										 <input-number placeholder="请输入保理费" min="0" :max="100000000000" disabled="true" :formatter="formatter" :parser="parser"
 										  class="select-width-140" v-model="detail.totalFactoringFee" ></input-number>&nbsp;(元)
 										 <span v-if="showLater">+待定</span>
 									</form-item>

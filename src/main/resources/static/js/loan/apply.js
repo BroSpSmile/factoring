@@ -69,7 +69,7 @@ var vue = new Vue({
 						if(!_self.loan.groups||_self.loan.groups.length==0){
 							_self.loan.groups = [];
 							_self.loan.groups.push({
-								payments:0
+								payments:0.00
 							})
 						}
 					}

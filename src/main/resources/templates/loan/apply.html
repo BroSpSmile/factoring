@@ -127,7 +127,7 @@
 										</i-col>
 										<i-col span="24">
 											<form-item label="付款金额" prop="">
-													<input-number placeholder="输入付款金额" :max="100000000000" class="inputw" 
+													<input-number placeholder="输入付款金额" :min="0" :max="100000000000" class="inputw" 
 													:formatter="formatter" :parser="parser"  v-model="item.payments" >
 													</input-number>&nbsp;元
 												</form-item>
