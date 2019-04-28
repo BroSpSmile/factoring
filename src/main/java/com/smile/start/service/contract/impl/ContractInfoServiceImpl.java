@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -1243,6 +1244,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         transferUserParagraphRun.setFontSize(12);
         transferUserParagraphRun.addBreak();
 
+        XWPFRun transferReviewerParagraphRun = transferDateParagraph.createRun();
+        transferReviewerParagraphRun.setText("复核人：");
+        transferReviewerParagraphRun.setColor("000000");
+        transferReviewerParagraphRun.setFontSize(12);
+        transferReviewerParagraphRun.addBreak();
+
         XWPFRun transferReceiveParagraphRun = transferDateParagraph.createRun();
         transferReceiveParagraphRun.setText("接收人：");
         transferReceiveParagraphRun.setColor("000000");
@@ -1325,7 +1332,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @return
      */
     private String buildSubtitle(Project project, FactoringDetail factoringDetail) {
-        return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), String.valueOf(factoringDetail.getAssignee()));
+        DecimalFormat df = new DecimalFormat("#");
+        return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), df.format(factoringDetail.getAssignee()));
     }
 
     /**
