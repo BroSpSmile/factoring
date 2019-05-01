@@ -28,6 +28,8 @@ import com.smile.start.service.auth.PermissionInfoService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -150,9 +152,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         user.setCreateUser(loginUser.getSerialNo());
         user.setStatus(StatusEnum.VALID.getValue());
         user.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        //TODO
-        //String md5Passwd = MD5Encoder.encode(authUserInfoDTO.getPasswd().getBytes());
-        //user.setPasswd(md5Passwd);
+        String md5Password = DigestUtils.md5Hex(authUserInfoDTO.getPasswd());
+        user.setPasswd(md5Password);
 
         insertRole(authUserInfoDTO);
         insertOrganizational(authUserInfoDTO);
@@ -167,6 +168,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void update(AuthUserInfoDTO authUserInfoDTO) {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
+        String md5Password = DigestUtils.md5Hex(authUserInfoDTO.getPasswd());
+        user.setPasswd(md5Password);
         user.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         user.setModifyUser(loginUser.getSerialNo());
