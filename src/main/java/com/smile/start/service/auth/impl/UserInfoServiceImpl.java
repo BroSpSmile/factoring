@@ -29,7 +29,6 @@ import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
