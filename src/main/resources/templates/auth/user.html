@@ -54,7 +54,7 @@
 					<form-item label="邮箱" prop="email">
 						<i-input placeholder="输入用户邮箱"  v-model="addForm.email"></i-input>
 					</form-item>
-					<form-item label="密码" prop="passwd">
+					<form-item label="密码" prop="passwd" v-if="addForm.serialNo == null">
 						<i-input type="password" placeholder="输入用户登录密码" v-model="addForm.passwd"></i-input>
 					</form-item>
 					<form-item label="选择组织" prop="checkedOrganizationalList">

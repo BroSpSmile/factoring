@@ -167,8 +167,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void update(AuthUserInfoDTO authUserInfoDTO) {
         final User user = userInfoMapper.dto2do(authUserInfoDTO);
-        String md5Password = DigestUtils.md5Hex(authUserInfoDTO.getPasswd());
-        user.setPasswd(md5Password);
         user.setGmtModify(new Date());
         LoginUser loginUser = LoginHandler.getLoginUser();
         user.setModifyUser(loginUser.getSerialNo());
@@ -359,6 +357,25 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public AuthUserInfoDTO findBySerialNo(String serialNo) {
         return userInfoMapper.do2dto(userDao.findBySerialNo(serialNo));
+    }
+
+    /**
+     * 密码更新
+     * @param updatePasswordDTO
+     */
+    @Override
+    public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
+        if(!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword())) {
+            throw new ValidateException("新密码跟确认密码不一致，请重新输入");
+        }
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        String oldPassword = DigestUtils.md5Hex(updatePasswordDTO.getOldPassword());
+        User user = userDao.findBySerialNo(loginUser.getSerialNo());
+        if(!oldPassword.equals(user.getPasswd())) {
+            throw new ValidateException("原密码不正确，请重新输入");
+        }
+        user.setPasswd(DigestUtils.md5Hex(updatePasswordDTO.getNewPassword()));
+        userDao.updatePassword(user);
     }
 
 }

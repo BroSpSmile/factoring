@@ -2,6 +2,7 @@ package com.smile.start.service.auth;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.UpdatePasswordDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
@@ -87,4 +88,10 @@ public interface UserInfoService {
      * @return
      */
     AuthUserInfoDTO findBySerialNo(String serialNo);
+
+    /**
+     * 密码更新
+     * @param updatePasswordDTO
+     */
+    void updatePassword(UpdatePasswordDTO updatePasswordDTO);
 }
