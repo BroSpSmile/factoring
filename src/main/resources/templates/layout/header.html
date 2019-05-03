@@ -10,13 +10,14 @@
 					<div class="wrapper-header-nav-list">
 						<div class="info-menu">
 							<span>欢迎你:{{user.username}}</span>
-							<a href="/logout">退出</a>
+							<!--<a href="/logout">退出</a>-->
 							<dropdown @on-click="changeMenu">
 								<a href="javascript:void(0)">
 									个人设置
 									<Icon type="ios-arrow-down"></Icon>
 								</a>
 								<dropdown-menu slot="list">
+									<dropdown-item name="logout">退出</dropdown-item>
 									<dropdown-item name="updatePassword">密码修改</dropdown-item>
 								</dropdown-menu>
 							</dropdown>

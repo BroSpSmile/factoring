@@ -40,6 +40,8 @@ var header = new Vue({
 			if(menuName === 'updatePassword') {
 				this.modal1 = true;
                 this.isDisable = false;
+			} else if(menuName === 'logout') {
+				window.location = '/logout';
 			}
         },
         /**
