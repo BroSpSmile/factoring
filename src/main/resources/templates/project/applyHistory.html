@@ -11,15 +11,15 @@
 							<form-item label="项目编号" prop="projectId">
 								 <i-input placeholder="输入项目编号"  v-model="formInline.projectId"></i-input>
 							</form-item>
-							<form-item label="申请类型" prop="projectName">
-								<i-select  v-model="formInline.auditType" class="inputs" clearable>
+							<form-item label="申请类型" prop="auditType">
+								<i-select v-model="formInline.auditType" class="inputs" clearable>
 	                        		<i-option v-for="item in auditType"  :value="item.value">{{item.text}}</i-option>
 								</i-select>
 							</form-item>
 							<form-item label="申请时间">
 								<row>
 					                <i-col span="11">
-					                	<form-item  prop="beginTime">
+					                	<form-item prop="beginTime">
 					                		<date-picker type="datetime" placeholder="选择开始日期" v-model="formInline.beginTime"></date-picker>
 					                	</form-item>
 					                </i-col>
