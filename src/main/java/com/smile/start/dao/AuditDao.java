@@ -6,6 +6,8 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import com.smile.start.model.project.ApplyHistory;
+import com.smile.start.model.project.ApplyHistoryParam;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -103,4 +105,24 @@ public interface AuditDao {
                                                @Result(column = "project", property = "project.id"), @Result(column = "role", property = "role.serialNo") })
     @Select("select * from audit where project = #{project} and audit_type= #{type}")
     Audit getByProjectAndType(Long project, String type);
+
+    /**
+     * 查询提交申请历史
+     * @param param
+     * @return
+     */
+    @Select("<script>" +
+            "SELECT fp.id,a.audit_type,a.create_time " +
+            "FROM audit_record ar,audit a,auth_user_info aui,factoring_project fp " +
+            "WHERE ar.audit=a.id " +
+            "AND a.applicant=aui.id " +
+            "AND a.project=fp.id " +
+            "AND ar.type='提出申请' " +
+            "<if test = 'projectId != null'> and fp.project_id = #{projectId}</if>" +
+            "<if test = 'auditType != null'> and a.audit_type = #{auditType}</if>" +
+            "<if test = 'applyUser != null'> and aui.serial_no = #{applyUser}</if>" +
+            "<if test = 'beginTime != null'> and a.create_time &gt; #{beginTime}</if>" +
+            "<if test = 'endTime != null'> and a.create_time &lt; #{endTime}</if>" +
+            "</script>")
+    List<ApplyHistory> queryApplyHistory(ApplyHistoryParam param);
 }

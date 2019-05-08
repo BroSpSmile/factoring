@@ -3,6 +3,7 @@ package com.smile.start.controller.auth;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.controller.BaseController;
 import com.smile.start.dto.AuthUserInfoDTO;
+import com.smile.start.dto.UpdatePasswordDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.model.base.BaseResult;
@@ -126,4 +127,23 @@ public class UserInfoController extends BaseController {
         }
     }
 
+    /**
+     * 密码更新
+     * @param updatePasswordDTO
+     * @return
+     */
+    @PutMapping(value = "/updatePassword")
+    @ResponseBody
+    public BaseResult updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        try {
+            BaseResult result = new BaseResult();
+            userInfoService.updatePassword(updatePasswordDTO);
+            result.setSuccess(true);
+            result.setErrorMessage("更新密码成功");
+            return result;
+        } catch (Exception e) {
+            logger.error("更新密码失败", e);
+            return toResult(e);
+        }
+    }
 }

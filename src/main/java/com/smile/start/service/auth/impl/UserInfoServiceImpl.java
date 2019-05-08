@@ -28,6 +28,7 @@ import com.smile.start.service.auth.PermissionInfoService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -150,9 +151,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         user.setCreateUser(loginUser.getSerialNo());
         user.setStatus(StatusEnum.VALID.getValue());
         user.setDeleteFlag(DeleteFlagEnum.UNDELETED.getValue());
-        //TODO
-        //String md5Passwd = MD5Encoder.encode(authUserInfoDTO.getPasswd().getBytes());
-        //user.setPasswd(md5Passwd);
+        String md5Password = DigestUtils.md5Hex(authUserInfoDTO.getPasswd());
+        user.setPasswd(md5Password);
 
         insertRole(authUserInfoDTO);
         insertOrganizational(authUserInfoDTO);
@@ -357,6 +357,25 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public AuthUserInfoDTO findBySerialNo(String serialNo) {
         return userInfoMapper.do2dto(userDao.findBySerialNo(serialNo));
+    }
+
+    /**
+     * 密码更新
+     * @param updatePasswordDTO
+     */
+    @Override
+    public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
+        if(!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword())) {
+            throw new ValidateException("新密码跟确认密码不一致，请重新输入");
+        }
+        LoginUser loginUser = LoginHandler.getLoginUser();
+        String oldPassword = DigestUtils.md5Hex(updatePasswordDTO.getOldPassword());
+        User user = userDao.findBySerialNo(loginUser.getSerialNo());
+        if(!oldPassword.equals(user.getPasswd())) {
+            throw new ValidateException("原密码不正确，请重新输入");
+        }
+        user.setPasswd(DigestUtils.md5Hex(updatePasswordDTO.getNewPassword()));
+        userDao.updatePassword(user);
     }
 
 }

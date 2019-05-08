@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.*;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.contract.ContractSignList;
 
 import java.io.FileNotFoundException;
@@ -23,6 +24,13 @@ public interface ContractInfoService {
      * @return
      */
     ContractInfoDTO get(Long id);
+
+    /**
+     * 根据主键获取合同基础信息
+     * @param projectId
+     * @return
+     */
+    ContractInfo getBaseInfo(Long projectId);
 
     /**
      * 根据项目主键获取合同信息
@@ -51,6 +59,12 @@ public interface ContractInfoService {
      * @return
      */
     void update(ContractInfoDTO contractInfoDTO) throws Exception;
+
+    /**
+     * 更新合同基础信息
+     * @param contractInfo
+     */
+    void updateBaseInfo(ContractInfo contractInfo);
 
     /**
      * 删除合同信息

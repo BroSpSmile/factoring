@@ -48,8 +48,16 @@ public interface UserDao {
      * @return
      */
     @Update("update auth_user_info set mobile = #{mobile},username=#{username},email=#{email},status=#{status},"
-            + "delete_flag=#{deleteFlag},passwd=#{passwd},modify_user=#{modifyUser},gmt_modify=#{gmtModify},openid = #{openid}" + " where id=#{id}")
+            + "delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify},openid = #{openid}" + " where id=#{id}")
     int update(User user);
+
+    /**
+     * 更新密码
+     * @param user
+     * @return
+     */
+    @Update("update auth_user_info set passwd=#{passwd}" + " where id=#{id}")
+    int updatePassword(User user);
 
     /**
      * 根据ID获取用户
@@ -124,5 +132,4 @@ public interface UserDao {
      */
     @Delete("delete from auth_user_organizational where user_serial_no = #{userSerialNo}")
     void deleteOrganizational(String userSerialNo);
-
 }
