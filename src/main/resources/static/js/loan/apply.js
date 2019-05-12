@@ -51,6 +51,7 @@ var vue = new Vue({
 			});
 			this.$http.get("/login/user").then(function(response){
 				_self.loan.user = response.data.username;
+				_self.loan.department = response.data.organizationalList[0].organizationalName;
 			},function(error){
 				_self.$Message.error(error);
 			})
