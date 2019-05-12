@@ -548,7 +548,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             projectItemDao.deleteItems(projectId, ProjectItemType.FILE);
             final FileInfo upload = fileService.upload(file, fileName);
             ProjectItem projectItem = new ProjectItem();
-            projectItem.setAttachType(ContractTemplateEnum.STANDARD.getValue());
+            if(projectItemType == ProjectItemType.DRAWUP) {
+                projectItem.setAttachType(ContractTemplateEnum.STANDARD.getValue());
+            }
             projectItem.setProjectId(projectId);
             projectItem.setItemType(projectItemType);
             projectItem.setItemName(fileName);
