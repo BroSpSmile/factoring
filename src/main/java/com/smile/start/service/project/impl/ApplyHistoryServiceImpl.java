@@ -45,7 +45,7 @@ public class ApplyHistoryServiceImpl implements ApplyHistoryService {
         condition.setApplyUser(loginUser.getSerialNo());
         List<ApplyHistory> applyHistoryList = auditDao.queryApplyHistory(condition);
         for (ApplyHistory applyHistory : applyHistoryList) {
-            Project project = projectService.getProject(applyHistory.getId());
+            Project project = projectService.getProject(applyHistory.getProjectId());
             applyHistory.setProject(project);
         }
         PageInfo<ApplyHistory> result = new PageInfo<>(applyHistoryList);

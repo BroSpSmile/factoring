@@ -14,9 +14,14 @@ public class ApplyHistory implements Serializable {
     private static final long serialVersionUID = 4249905687333440567L;
 
     /**
-     * 项目ID
+     * 审核记录ID
      */
     private Long id;
+
+    /**
+     * 项目ID
+     */
+    private Long projectId;
 
     /**
      * 申请类型
@@ -39,6 +44,14 @@ public class ApplyHistory implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public AuditType getAuditType() {
