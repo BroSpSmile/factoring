@@ -112,7 +112,7 @@ public interface AuditDao {
      * @return
      */
     @Select("<script>" +
-            "SELECT fp.id,a.audit_type,a.create_time " +
+            "SELECT DISTINCT fp.id,a.audit_type,a.create_time " +
             "FROM audit_record ar,audit a,auth_user_info aui,factoring_project fp " +
             "WHERE ar.audit=a.id " +
             "AND a.applicant=aui.id " +
