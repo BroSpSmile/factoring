@@ -151,6 +151,9 @@ var vue = new Vue({
 			for(let index in this.addMeeting.participant){
 				this.addMeeting.participantNo.push(''+this.addMeeting.participant[index].id);
 			}
+            this.addMeeting.meetingTime = [];
+            this.addMeeting.meetingTime.push(this.addMeeting.beginTime);
+            this.addMeeting.meetingTime.push(this.addMeeting.endTime);
 			console.log(this.addMeeting);
 			this.modal1 = true;
 		},
