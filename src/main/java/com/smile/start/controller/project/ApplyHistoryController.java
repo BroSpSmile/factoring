@@ -4,19 +4,14 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.project.ApplyHistory;
 import com.smile.start.model.project.ApplyHistoryParam;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.AuditParam;
 import com.smile.start.service.project.ApplyHistoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * 项目申请历史
