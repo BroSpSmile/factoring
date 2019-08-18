@@ -18,11 +18,14 @@ public class FundTargetItem implements Serializable {
     /** UID */
     private static final long serialVersionUID = 6572114648866342984L;
 
+    /** 编号 */
+    private Long              id;
+
     /** 所属项目 */
     private FundTarget        target;
 
     /** 上传步骤 */
-    private FundStatus        status;
+    private FundStatus        itemType;
 
     /** 附件名称 */
     private String            itemName;
@@ -30,13 +33,26 @@ public class FundTargetItem implements Serializable {
     /** 文件值 */
     private String            itemValue;
 
-    /** 
+    /** (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"" + (target != null ? "target\":\"" + target + "\", \"" : "") + (status != null ? "status\":\"" + status + "\", \"" : "")
-               + (itemName != null ? "itemName\":\"" + itemName + "\", \"" : "") + (itemValue != null ? "itemValue\":\"" + itemValue : "") + "\"}  ";
+        return "FundTargetItem [target=" + target + ", itemType=" + itemType + ", itemName=" + itemName + ", itemValue=" + itemValue + "]";
+    }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
@@ -58,21 +74,17 @@ public class FundTargetItem implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>status</tt>.
-     * 
-     * @return property value of status
+     * @return the itemType
      */
-    public FundStatus getStatus() {
-        return status;
+    public FundStatus getItemType() {
+        return itemType;
     }
 
     /**
-     * Setter method for property <tt>status</tt>.
-     * 
-     * @param status value to be assigned to property status
+     * @param itemType the itemType to set
      */
-    public void setStatus(FundStatus status) {
-        this.status = status;
+    public void setItemType(FundStatus itemType) {
+        this.itemType = itemType;
     }
 
     /**

@@ -67,27 +67,19 @@
 							<form-item label="主营业务" prop="mainBusiness">
 								 <i-input placeholder="输入主营业务" class="inputw" v-model="addForm.mainBusiness"></i-input>
 							</form-item>
-							<row>
-								<i-col span="8">
 									<form-item label="项目成员A角" prop="memberA.id">
 										 <i-select class="inputw" v-model="addForm.memberA.id" clearable>
 			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
 										</i-select>
 									</form-item>
-								</i-col>
-								<i-col span="8">
 									<form-item label="项目成员B角" prop="memberB.id">
 										 <i-select class="inputw" v-model="addForm.memberB.id" clearable>
 			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
 										</i-select>
 									</form-item>
-								</i-col>
-								<i-col span="8">
 									<form-item label="项目来源" prop="projectChannel">
 										 <i-input placeholder="输入项目来源" class="inputw" v-model="addForm.projectChannel"></i-input>
 									</form-item>
-								</i-col>
-							</row>
 							<form-item label="投资金额" prop="investment">
 								<input-number placeholder="输入投资金额" :max="100000000000" :min="0" class="inputw" 
 											:formatter="formatter" :parser="parser"  v-model="addForm.investment"></input-number>&nbsp;元
@@ -152,10 +144,8 @@
 									</form-item>
 								</i-col>
 							</row>
-							
 						</card>
 					</i-form>
-					
 					
 				</div>
 				<div slot="footer">

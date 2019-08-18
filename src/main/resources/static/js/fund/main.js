@@ -167,7 +167,7 @@ var vue = new Vue({
 		        align: 'center',
 		        width:100,
 		        render:(h,param)=>{
-		        	return h('span',moment(param.row.investemntTime).format('YYYY-MM-DD'))
+		        	return h('span',param.row.investemntTime?moment(param.row.investemntTime).format('YYYY-MM-DD'):"")
 		        }
 		    },{
 		        title: '项目明细',
@@ -201,7 +201,6 @@ var vue = new Vue({
 		 * 跳转菜单
 		 */
 		toMenu:function(project){
-			this.modal1 = true;
 			this.addForm = JSON.parse(JSON.stringify(project));
 			if(null == this.addForm.memberA){
 				this.addForm.memberA ={};
@@ -209,6 +208,8 @@ var vue = new Vue({
 			if(null == this.addForm.memberB){
 				this.addForm.memberB ={};
 			}
+			this.fileList = [];
+			this.modal1 = true;
 		},
 		
 		fliterStep:function(step){
@@ -228,12 +229,10 @@ var vue = new Vue({
 			this.$http.get("/combo/fundStatus").then(function(response) {
 				_self.fundStatus = response.data;
 			}, function(error) {
-				console.error(error);
 			});
 			this.$http.get("/combo/users").then(function(response) {
 				_self.users = response.data;
 			}, function(error) {
-				console.error(error);
 			});
 		},
 		
@@ -274,6 +273,12 @@ var vue = new Vue({
 		 * 
 		 */
 		open:function(){
+			this.addForm = {
+					memberA:{},
+					memberB:{},
+					items:[]
+			};
+			this.fileList = [];
 			this.modal1=true;
 		},
 		
@@ -304,6 +309,15 @@ var vue = new Vue({
 			let self = this;
 			console.log(this.addForm);
 			if(!this.addForm.projectId){
+				console.log(1);
+				for(let index in this.fileList){
+					let item={
+							itemName:this.fileList[index].name,
+							itemValue:this.fileList[index].response.data.fileId
+					}
+					this.addForm.items.push(item);
+				}
+				console.log(this.addForm);
 				this.$http.post("/fund", this.addForm).then(function(response) {
 					this.$Spin.hide();
 					if (response.data.success) {
