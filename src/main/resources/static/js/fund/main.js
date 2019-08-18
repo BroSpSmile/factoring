@@ -189,7 +189,14 @@ var vue = new Vue({
     	 						h('Icon',{props:{type:'ios-arrow-down'}})
     	 					]),
     	 					h('DropdownMenu',{slot:'list'},[
-    	 						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑')
+    	 						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑'),
+    	 						param.row.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'confidentiality-签署保密协议'}},'签署保密协议'):h('span'),
+    	 						param.row.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
+    	 						param.row.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'approval-项目立项'}},'项目立项'):h('span'),
+    	 					    param.row.projectStep == 'APPROVAL'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
+ 					    		param.row.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'contractSign-合同签署'}},'合同签署'):h('span'),
+    	 						param.row.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
+    	 					    param.row.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
     	 					])
     	 				])
     	 			])
