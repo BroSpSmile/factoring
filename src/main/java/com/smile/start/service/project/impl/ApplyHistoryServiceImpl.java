@@ -4,12 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.dao.AuditDao;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.model.project.ApplyHistory;
 import com.smile.start.model.project.ApplyHistoryParam;
-import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.project.ApplyHistoryService;
 import com.smile.start.service.project.ProjectService;
@@ -27,7 +25,7 @@ import java.util.List;
 public class ApplyHistoryServiceImpl implements ApplyHistoryService {
 
     @Resource
-    private AuditDao auditDao;
+    private AuditDao       auditDao;
 
     @Resource
     private ProjectService projectService;

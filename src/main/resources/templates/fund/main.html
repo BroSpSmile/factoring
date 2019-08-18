@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="fund" v-cloak>
+			<br>
+			<card dis-hover title="搜索条件">
+				<p>
+					<i-form ref="searchForm" :model="formInline" :label-width="80" inline>
+						<form-item label="项目编号" prop="projectId">
+							 <i-input placeholder="输入项目编号" class="inputw" v-model="formInline.projectId"></i-input>
+						</form-item>
+						<form-item label="项目名称" prop="projectName">
+							 <i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
+						</form-item>
+						<form-item label="项目进度" prop="projectStep">
+							 <i-select class="inputw" v-model="formInline.projectStep" clearable>
+                        		<i-option v-for="item in fundStatus"  :value="item.value">{{item.text}}</i-option>
+							</i-select>
+						</form-item>
+						<form-item label="投资时间" prop="">
+							 <date-picker type="daterange" placeholder="请选择投资时间" class="inputw"  v-model="formInline.stateDate"></date-picker>
+						</form-item>
+						<form-item label="投资主体" prop="investmentPart">
+							 <i-input placeholder="输入投资主体" class="inputw" v-model="formInline.investmentPart"></i-input>
+						</form-item>
+						<row type="flex">
+		                    <i-col span="12" offset="6">
+		                        	<i-button type="primary"  icon="ios-search" @click="search">查询</i-button>
+		                            <i-button type="success"  icon="ios-add" @click="open" style="margin-left: 8px">创建</i-button>
+		                            <i-button  icon="ios-refresh" @click="reset" style="margin:0 8px">重置</i-button>
+		                    </i-col>
+                		</row>
+					</i-form>
+				</p>
+			</card>
+			<br>
+			<card dis-hover title="搜索结果">
+				<i-table  border :columns="tableColumns" :data="pageInfo.list" ></i-table>
+				<br/>
+				<page :total="pageInfo.total" show-elevator show-total  :page-size="pageInfo.pageSize" @on-change="pageChange"></page>
+			</card>
+			
+			<modal v-model="modal1" title="新增项目"  mask-closable="false" fullscreen="true">
+				<div id="modalForm">
+					<i-form ref="entityDataForm"  :model="addForm" :rules="validata" :label-width="120" inline>
+						<card dis-hover title="项目信息">
+							<row>
+								<i-col span="8">
+									<form-item label="项目编号" prop="projectId" v-if="addForm.projectId && addForm.projectId!=''">
+										 <i-input placeholder="项目名称"  readOnly class="inputw" v-model="addForm.projectId"></i-input>
+									</form-item>
+								</i-col>
+								<i-col span="12">
+									<form-item label="项目名称" prop="projectName">
+										 <i-input placeholder="输入项目名称" class="inputm" v-model="addForm.projectName"></i-input>
+									</form-item>
+								</i-col>
+							</row>
+							<form-item label="所属地" prop="location">
+								 <i-input placeholder="输入所属地" class="inputw" v-model="addForm.location"></i-input>
+							</form-item>
+							<form-item label="所属行业" prop="industry">
+								 <i-input placeholder="输入所属行业" class="inputw" v-model="addForm.industry"></i-input>
+							</form-item>
+							<form-item label="主营业务" prop="mainBusiness">
+								 <i-input placeholder="输入主营业务" class="inputw" v-model="addForm.mainBusiness"></i-input>
+							</form-item>
+							<row>
+								<i-col span="8">
+									<form-item label="项目成员A角" prop="memberA.id">
+										 <i-select class="inputw" v-model="addForm.memberA.id" clearable>
+			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
+										</i-select>
+									</form-item>
+								</i-col>
+								<i-col span="8">
+									<form-item label="项目成员B角" prop="memberB.id">
+										 <i-select class="inputw" v-model="addForm.memberB.id" clearable>
+			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
+										</i-select>
+									</form-item>
+								</i-col>
+								<i-col span="8">
+									<form-item label="项目来源" prop="projectChannel">
+										 <i-input placeholder="输入项目来源" class="inputw" v-model="addForm.projectChannel"></i-input>
+									</form-item>
+								</i-col>
+							</row>
+							<form-item label="投资金额" prop="investment">
+								<input-number placeholder="输入投资金额" :max="100000000000" :min="0" class="inputw" 
+											:formatter="formatter" :parser="parser"  v-model="addForm.investment"></input-number>&nbsp;元
+							</form-item>
+							<form-item label="投资主体" prop="investmentPart">
+								 <i-input placeholder="输入投资主体" class="inputw" v-model="addForm.investmentPart"></i-input>
+							</form-item>
+							<form-item label="投后持股比例" prop="shareHodingRate">
+								<input-number placeholder="输入投后持股比例" :max="100" :min="0" class="inputw" v-model="addForm.shareHodingRate"></input-number>&nbsp;%
+							</form-item>
+							<form-item label="投前估值" prop="preVal">
+								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
+											:formatter="formatter" :parser="parser"  v-model="addForm.preVal"></input-number>&nbsp;元
+							</form-item>
+							<form-item label="投后估值" prop="postVal">
+								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
+											:formatter="formatter" :parser="parser"  v-model="addForm.postVal"></input-number>&nbsp;元
+							</form-item>
+							<form-item label="出资时间" prop="investemntTime">
+								<date-picker type="date" placeholder="请选择投资时间" class="inputw"  v-model="addForm.investemntTime"></date-picker>
+							</form-item>
+						</card>
+						<br>
+						<card dis-hover title="公司信息">
+							<row>
+								<i-col span="8">
+									<form-item label="公司简称" prop="companySortName">
+										 <i-input placeholder="输入公司简称" class="inputw" v-model="addForm.companySortName"></i-input>
+									</form-item>
+								</i-col>
+								<i-col span="12">
+									<form-item label="公司全称" prop="companyFullName">
+										 <i-input placeholder="输入公司全称" class="inputm" v-model="addForm.companyFullName"></i-input>
+									</form-item>
+								</i-col>
+							</row>
+							<form-item label="实际控制人" prop="controllerOwner">
+								 <i-input placeholder="输入实际控制人" class="inputw" v-model="addForm.controllerOwner"></i-input>
+							</form-item>
+							<form-item label="注册资本" prop="registeredCapital">
+								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
+											:formatter="formatter" :parser="parser"  v-model="addForm.registeredCapital"></input-number>&nbsp;元
+							</form-item>
+							<form-item label="董事长" prop="chairman">
+								 <i-input placeholder="输入董事长" class="inputw" v-model="addForm.chairman"></i-input>
+							</form-item>
+							<row>
+								<i-col>
+									<form-item label="地址" prop="address">
+										 <i-input placeholder="输入公司地址" class="inputm" v-model="addForm.address"></i-input>
+									</form-item>
+								</i-col>
+							</row>
+						</card>	
+						<card dis-hover title="项目附件">
+							<row>
+								<i-col span="12">
+									<form-item label="附件:">
+										<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
+									        <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
+									    </Upload>
+									</form-item>
+								</i-col>
+							</row>
+							
+						</card>
+					</i-form>
+					
+					
+				</div>
+				<div slot="footer">
+		            <i-button type="primary"  @click="save" style="margin-left: 8px">确定</i-button>
+		            <i-button  @click="cancel" style="margin-left: 8px">取消</i-button>
+		        </div>
+			</modal>
+	    </div>
+	    <script src="js/fund/main.js"></script>
+	</div>
+</html>

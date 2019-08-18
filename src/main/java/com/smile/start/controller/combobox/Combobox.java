@@ -30,10 +30,11 @@ public class Combobox extends BaseController {
 
     /** userDao */
     @Resource
-    private UserDao userDao;
+    private UserDao         userDao;
 
     @Resource
     private BankInfoService bankInfoService;
+
     /**
      * 
      * @return
@@ -173,6 +174,18 @@ public class Combobox extends BaseController {
     @RequestMapping("/banks")
     public List<Item> getBanks() {
         List<BankInfoDTO> banks = bankInfoService.findAll();
-        return banks.stream().map(bank->new Item(String.valueOf(bank.getId()),bank.getBankFullName())).collect(Collectors.toList());
+        return banks.stream().map(bank -> new Item(String.valueOf(bank.getId()), bank.getBankFullName())).collect(Collectors.toList());
+    }
+
+    /**
+    *
+    * @return
+    */
+    @RequestMapping("/fundStatus")
+    public List<Item> getFundStatus() {
+        FundStatus[] enums = FundStatus.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
     }
 }

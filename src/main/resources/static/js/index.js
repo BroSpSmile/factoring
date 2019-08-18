@@ -31,6 +31,13 @@ var vue = new Vue({
 				url:"/project",
 				id:"/project"
 			});
+		},
+		openFund:function(){
+			parent.window.menu.createNew({
+				name:"直投业务",
+				url:"/fund",
+				id:"/fund"
+			});
 		}
 	}
 });

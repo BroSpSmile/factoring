@@ -5,6 +5,7 @@ import com.smile.start.dto.AuthPermissionInfoDTO;
 import com.smile.start.dto.PermissionSearchDTO;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
+
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public interface PermissionInfoService {
 
     /**
      * 查询所有权限信息
+     *
      * @return
      */
     PageInfo<AuthPermissionInfoDTO> findAll(PageRequest<PermissionSearchDTO> page);
@@ -52,6 +54,7 @@ public interface PermissionInfoService {
 
     /**
      * 查询指定用户权限信息
+     *
      * @param userSerialNo
      * @return
      */
@@ -59,6 +62,7 @@ public interface PermissionInfoService {
 
     /**
      * 查询指定用户顶级权限信息
+     *
      * @param userSerialNo
      * @return
      */
@@ -66,6 +70,7 @@ public interface PermissionInfoService {
 
     /**
      * 查询用户顶级菜单
+     *
      * @param userSerialNo
      * @return
      */
@@ -73,6 +78,7 @@ public interface PermissionInfoService {
 
     /**
      * 获取权限树
+     *
      * @param roleSerialNo
      * @return
      */
@@ -80,6 +86,7 @@ public interface PermissionInfoService {
 
     /**
      * 指定参数查询权限信息
+     *
      * @param permissionSearchDTO
      * @return
      */
@@ -87,6 +94,7 @@ public interface PermissionInfoService {
 
     /**
      * 根据父级权限编号查询权限
+     *
      * @param parentSerialNo
      * @return
      */
