@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -95,4 +96,52 @@ public interface FactoringDetailDao {
      */
     @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where DATE_FORMAT( p.create_time, '%Y' ) = #{year}")
     Double yearProfit(String year);
+    
+    /**
+     * 应收年初余额
+     * @return
+     */
+    @Select("select sum(d.receivable) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  <![CDATA[ p.create_time <  #{year,jdbcType=DATE} ]]> ")
+    Double getLastReceivable(Date year);
+    
+    /**
+     * 应收期末余额
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select sum(d.receivable) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  p.create_time between #{begin,jdbcType=DATE} and #{end,jdbcType=DATE}")
+    Double getNowReceivable(@Param("begin") Date begin,@Param("end") Date end);
+    
+    /**
+     * 短期保理费年初余额
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  d.duration = 1 and p.create_time &lt; #{year,jdbcType=DATE} ")
+    Double getShotLastFactoringFee(Date year);
+    
+    /**
+     * 短期保理费期末余额
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where   d.duration = 1  and  p.create_time between #{begin,jdbcType=DATE} and #{end,jdbcType=DATE} "  )
+    Double getShotNowFactoringFee(@Param("begin") Date begin,@Param("end") Date end);
+    
+    /**
+     * 长期保理费年初余额
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  d.duration = 1  and p.create_time &lt; #{year,jdbcType=DATE} ")
+    Double getLongLastFactoringFee(Date year);
+    
+    /**
+     * 长期保理费期末余额
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where <![CDATA[duration > 1]]>  and  p.create_time between #{begin,jdbcType=DATE} and #{end,jdbcType=DATE}")
+    Double getLongNowFactoringFee(@Param("begin") Date begin,@Param("end") Date end);
 }

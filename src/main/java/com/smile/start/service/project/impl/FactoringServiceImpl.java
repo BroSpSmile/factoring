@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.collect.Lists;
 import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
@@ -103,6 +104,34 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         Double yearDouble = factoringDetailDao.yearProfit(month.split("-")[0]);
         profit.setYearProfit(yearDouble == null ? 0.00 : yearDouble);
         return profit;
+    }
+
+    /**
+     * @see com.smile.start.service.project.FactoringService#getAssets(java.lang.String)
+     */
+    @Override
+    public List<Assets> getAssets(String month) {
+        List<Assets> assetsList = Lists.newArrayListWithCapacity(3);
+        Assets receivable = new Assets();
+        receivable.setZcamount(formatDouble(factoringDetailDao.getNowReceivable(getYear(), getMonthLastDay(month))));
+     //  receivable.setZctotalamount(formatDouble(factoringDetailDao.getLastReceivable(getYear())));
+        assetsList.add(receivable);
+        Assets shotFactoring = new Assets();
+        shotFactoring.setZcamount(formatDouble(factoringDetailDao.getShotNowFactoringFee(getYear(), getMonthLastDay(month))));
+        shotFactoring.setZctotalamount(formatDouble(factoringDetailDao.getShotLastFactoringFee(getYear())));
+        assetsList.add(shotFactoring);
+        Assets longFactoring = new Assets();
+        longFactoring.setZcamount(formatDouble(factoringDetailDao.getLongNowFactoringFee(getYear(), getMonthLastDay(month))));
+        longFactoring.setZctotalamount(formatDouble(factoringDetailDao.getLongLastFactoringFee(getYear())));
+        assetsList.add(longFactoring);
+        return assetsList;
+    }
+
+    private double formatDouble(Double amount) {
+        if (null == amount) {
+            return 0.0d;
+        }
+        return amount;
     }
 
     /** 

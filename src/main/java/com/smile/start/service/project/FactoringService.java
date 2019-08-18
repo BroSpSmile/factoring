@@ -7,6 +7,7 @@ package com.smile.start.service.project;
 import java.util.List;
 
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.project.Assets;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.FactoringsInfo;
 import com.smile.start.model.project.Profit;
@@ -50,6 +51,12 @@ public interface FactoringService {
      * @return
      */
     Profit getProfit(String month);
+
+    /**
+     * 获取报表
+     * @return
+     */
+    List<Assets> getAssets(String month);
 
     /**
      * 设置分期信息

@@ -13,22 +13,22 @@ var vue = new Vue({
     			zcamount:50000000,
     			zctotalamount:50000000,
     			fztitle:"短期借款",
-    			fzamount:6000000,
-    			fztotalamount:6000000
+    			fzamount:"-",
+    			fztotalamount:"-"
     		},{
     			zctitle:"应收保理费",
     			zcamount:4200000,
     			zctotalamount:4200000,
     			fztitle:"应付票据",
-    			fzamount:6000000,
-    			fztotalamount:6000000
+    			fzamount:"-",
+    			fztotalamount:"-"
     		},{
     			zctitle:"长期应收保理费",
     			zcamount:50000000,
-    			zctotalamount:"",
+    			zctotalamount:"-",
     			fztitle:"长期借款",
-    			fzamount:4200000,
-    			fztotalamount:4200000
+    			fzamount:"-",
+    			fztotalamount:"-"
     		}
     	],
     	tableColumns:[
@@ -61,7 +61,22 @@ var vue = new Vue({
     	]
     },
     created : function() {
+    	this.getAssets();
     },
     methods : {
+    	getAssets:function(){
+    		let _self = this;
+    		let param = moment(this.queryMonth).format('YYYY-MM')
+    		this.$http.get("/assets/"+param).then(function(response){
+    			_self.list[0].zcamount = response.data[0].zcamount +"元";
+    			_self.list[0].zctotalamount = response.data[0].zctotalamount +"元";
+    			_self.list[1].zcamount = response.data[1].zcamount +"元";
+    			_self.list[1].zctotalamount = response.data[1].zctotalamount +"元";
+    			_self.list[2].zcamount = response.data[2].zcamount +"元";
+    			_self.list[2].zctotalamount = response.data[2].zctotalamount +"元";
+    		},function(error){
+    			console.log(error);
+    		})
+    	}
     }
 });

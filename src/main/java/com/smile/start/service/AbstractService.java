@@ -4,7 +4,9 @@
  */
 package com.smile.start.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -19,10 +21,13 @@ import com.smile.start.model.base.BaseResult;
  */
 public abstract class AbstractService {
     /** formatter */
-    protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+    protected SimpleDateFormat formatter      = new SimpleDateFormat("yyyy");
+
+    /** formatter */
+    protected SimpleDateFormat monthFormatter = new SimpleDateFormat("yyyy-MM");
 
     /** logger */
-    public Logger              logger    = LoggerFactory.getLogger(getClass());
+    public Logger              logger         = LoggerFactory.getLogger(getClass());
 
     /**
      * formatTime
@@ -67,4 +72,39 @@ public abstract class AbstractService {
             return result;
         }
     }
+
+    /**
+     * 获取当年第一天
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    protected Date getYear() {
+        Date now = new Date();
+        now.setMonth(0);
+        now.setDate(1);
+        now.setHours(0);
+        now.setMinutes(0);
+        now.setSeconds(0);
+        return now;
+    }
+
+    /**
+     * 获取当月最后一天
+     * @param month
+     * @return
+     */
+    protected Date getMonthLastDay(String month) {
+        try {
+            Date date = monthFormatter.parse(month);
+            Calendar ca = Calendar.getInstance();
+            ca.setTime(date);
+            ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+            return ca.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
 }
