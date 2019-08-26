@@ -117,8 +117,8 @@ public interface FactoringDetailDao {
      * 短期保理费年初余额
      * @return
      */
-    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  d.duration = 1 and p.create_time &lt; #{year,jdbcType=DATE} ")
-    Double getShotLastFactoringFee(Date year);
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where d.duration = 1 and p.create_time < #{year} ")
+    Double getShotLastFactoringFee(String year);
     
     /**
      * 短期保理费期末余额
@@ -133,7 +133,7 @@ public interface FactoringDetailDao {
      * 长期保理费年初余额
      * @return
      */
-    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  d.duration = 1  and p.create_time &lt; #{year,jdbcType=DATE} ")
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where  d.duration > 1  and p.create_time < #{year,jdbcType=DATE} ")
     Double getLongLastFactoringFee(Date year);
     
     /**
@@ -142,6 +142,6 @@ public interface FactoringDetailDao {
      * @param end
      * @return
      */
-    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where <![CDATA[duration > 1]]>  and  p.create_time between #{begin,jdbcType=DATE} and #{end,jdbcType=DATE}")
+    @Select("select sum(d.total_factoring_fee) from factoring_detail d inner join factoring_project p on d.project_id = p.id where duration > 1  and p.create_time between #{begin} and #{end}")
     Double getLongNowFactoringFee(@Param("begin") Date begin,@Param("end") Date end);
 }

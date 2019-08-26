@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.google.common.collect.Lists;
+import com.smile.start.commons.DateUtil;
 import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
@@ -118,7 +119,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         assetsList.add(receivable);
         Assets shotFactoring = new Assets();
         shotFactoring.setZcamount(formatDouble(factoringDetailDao.getShotNowFactoringFee(getYear(), getMonthLastDay(month))));
-        shotFactoring.setZctotalamount(formatDouble(factoringDetailDao.getShotLastFactoringFee(getYear())));
+        shotFactoring.setZctotalamount(formatDouble(factoringDetailDao.getShotLastFactoringFee(DateUtil.format(getYear(), "yyyy-MM-dd"))));
         assetsList.add(shotFactoring);
         Assets longFactoring = new Assets();
         longFactoring.setZcamount(formatDouble(factoringDetailDao.getLongNowFactoringFee(getYear(), getMonthLastDay(month))));

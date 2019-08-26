@@ -7,6 +7,7 @@ common.openName = [ '7' ];
 var vue = new Vue({
     el : '#assets',
     data : {
+    	queryMonth:new Date(),
     	list:[
     		{
     			zctitle:"应收账款",
