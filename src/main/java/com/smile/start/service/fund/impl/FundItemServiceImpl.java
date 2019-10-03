@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.FundItemDao;
@@ -18,6 +19,7 @@ import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.fund.FundTargetItem;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.fund.FundItemService;
+import com.smile.start.service.fund.FundService;
 
 /**
  * 实现
@@ -29,6 +31,10 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     /** fundItemDao */
     @Resource
     private FundItemDao fundItemDao;
+
+    /** fundService */
+    @Resource
+    private FundService fundService;
 
     /**
      * @see com.smile.start.service.fund.FundItemService#save(com.smile.start.model.fund.FundTargetItem)
@@ -47,8 +53,17 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     @Transactional
     public BaseResult save(List<FundTargetItem> items) {
         BaseResult result = new BaseResult();
-        for (FundTargetItem item : items) {
-            result = this.save(item);
+        if (!CollectionUtils.isEmpty(items)) {
+            FundTargetItem item = items.get(0);
+            FundTarget target = new FundTarget();
+            target.setId(item.getTarget().getId());
+            target.setProjectStep(item.getItemType());
+            result = fundService.modifyTarget(target);
+        }
+        if (result.isSuccess()) {
+            for (FundTargetItem item : items) {
+                result = this.save(item);
+            }
         }
         return result;
     }

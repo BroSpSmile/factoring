@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+	<div layout:fragment="content">
+		<div id="initialTuning" v-cloak>
+			<row>
+				<i-col span="22" offset="1">
+					<br>
+					<card dis-hover title="上传初步尽调文件">
+						<i-form :label-width="100" >
+							<form-item label="项目名称:">
+								<span>{{project.projectName}}</span>
+							</form-item>
+							<form-item label="尽调文件:" >
+								<Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError" :on-remove="removeFile">
+							        <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
+							    </Upload>
+							</form-item>
+							<row type="flex">
+			                   <i-col span="8" offset="1">
+			                       	<i-button type="success"  @click="commit">提交初步尽调</i-button>
+			                   </i-col>
+			            	</row>
+						</i-form>
+					</card>
+				</i-col>
+			</row>
+			<input th:value="${id}" id="fundId" style="display:none" ></input>	
+		</div>
+		<script src="js/fund/initialTuning.js"></script>
+	</div>
+</html>

@@ -180,7 +180,12 @@ var vue = new Vue({
     	 					props:{},
     	 					on:{
     	 						'on-click':(value)=>{
-    	 							this.toMenu(param.row);
+    	 							var menus = value.split("-");
+    	 							if(menus[0]=='factoring'){
+    	 								this.toMenu(param.row);
+    	 							}else{
+    	 								this.toNewTab(menus[0],menus[1],param.row.id);
+    	 							}
     	 						}
     	 					}
     	 				},[
@@ -190,7 +195,7 @@ var vue = new Vue({
     	 					]),
     	 					h('DropdownMenu',{slot:'list'},[
     	 						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑'),
-    	 						param.row.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'confidentiality-签署保密协议'}},'签署保密协议'):h('span'),
+    	 						param.row.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'initContact-签署保密协议'}},'签署保密协议'):h('span'),
     	 						param.row.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
     	 						param.row.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'approval-项目立项'}},'项目立项'):h('span'),
     	 					    param.row.projectStep == 'APPROVAL'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
@@ -217,6 +222,25 @@ var vue = new Vue({
 			}
 			this.fileList = [];
 			this.modal1 = true;
+		},
+		
+		/**
+		 * 打开新标签
+		 */
+		toNewTab:function(menu,menuName,projectId){
+			if(projectId){
+				parent.window.menu.createNew({
+					name:menuName,
+					url:menu+"?id="+projectId,
+					id:menu+"?id="+projectId
+				});
+			}else{
+				parent.window.menu.createNew({
+					name:menuName,
+					url:menu,
+					id:menu
+				});
+			}
 		},
 		
 		fliterStep:function(step){

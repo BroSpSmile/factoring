@@ -50,6 +50,7 @@ public interface FundTargetDao {
     @Update("<script> update fund_project set id = #{id}" + "<if test = 'projectName!=null and \"\"!=projectName'>,project_name = #{projectName}</if>"
             + "<if test = 'industry!=null and \"\"!=industry'>,industry = #{industry}</if>"
             + "<if test = 'mainBusiness!=null and \"\"!=mainBusiness'>,main_business = #{mainBusiness}</if>"
+            + "<if test = 'projectStep!=null'>,project_step = #{projectStep}</if>"
             + "<if test = 'memberA!=null and memberA.id!=null'>,member_a = #{memberA.id}</if>"
             + "<if test = 'memberB!=null and memberB.id!=null'>,member_b = #{memberB.id}</if>"
             + "<if test = 'location!=null and \"\"!=location'>,location = #{location}</if>" + "<if test = 'investment!=null and \"\"!=investment'>,investment = #{investment}</if>"
