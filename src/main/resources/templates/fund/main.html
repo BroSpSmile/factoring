@@ -14,8 +14,8 @@
 						<form-item label="项目名称" prop="projectName">
 							 <i-input placeholder="输入项目名称" class="inputw" v-model="formInline.projectName"></i-input>
 						</form-item>
-						<form-item label="项目进度" prop="projectStep">
-							 <i-select class="inputw" v-model="formInline.projectStep" clearable>
+						<form-item label="项目进度" prop="detail.projectStep">
+							 <i-select class="inputw" v-model="formInline.detail.projectStep" clearable>
                         		<i-option v-for="item in fundStatus"  :value="item.value">{{item.text}}</i-option>
 							</i-select>
 						</form-item>
@@ -23,7 +23,7 @@
 							 <date-picker type="daterange" placeholder="请选择投资时间" class="inputw"  v-model="formInline.stateDate"></date-picker>
 						</form-item>
 						<form-item label="投资主体" prop="investmentPart">
-							 <i-input placeholder="输入投资主体" class="inputw" v-model="formInline.investmentPart"></i-input>
+							 <i-input placeholder="输入投资主体" class="inputw" v-model="formInline.detail.investmentPart"></i-input>
 						</form-item>
 						<row type="flex">
 		                    <i-col span="12" offset="6">
@@ -58,78 +58,78 @@
 									</form-item>
 								</i-col>
 							</row>
-							<form-item label="所属地" prop="location">
-								 <i-input placeholder="输入所属地" class="inputw" v-model="addForm.location"></i-input>
+							<form-item label="所属地" prop="detail.location">
+								 <i-input placeholder="输入所属地" class="inputw" v-model="addForm.detail.location"></i-input>
 							</form-item>
-							<form-item label="所属行业" prop="industry">
-								 <i-input placeholder="输入所属行业" class="inputw" v-model="addForm.industry"></i-input>
+							<form-item label="所属行业" prop="detail.industry">
+								 <i-input placeholder="输入所属行业" class="inputw" v-model="addForm.detail.industry"></i-input>
 							</form-item>
-							<form-item label="主营业务" prop="mainBusiness">
-								 <i-input placeholder="输入主营业务" class="inputw" v-model="addForm.mainBusiness"></i-input>
+							<form-item label="主营业务" prop="detail.mainBusiness">
+								 <i-input placeholder="输入主营业务" class="inputw" v-model="addForm.detail.mainBusiness"></i-input>
 							</form-item>
-									<form-item label="项目成员A角" prop="memberA.id">
-										 <i-select class="inputw" v-model="addForm.memberA.id" clearable>
+									<form-item label="项目成员A角" prop="detail.memberA.id">
+										 <i-select class="inputw" v-model="addForm.detail.memberA.id" clearable>
 			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
 										</i-select>
 									</form-item>
-									<form-item label="项目成员B角" prop="memberB.id">
-										 <i-select class="inputw" v-model="addForm.memberB.id" clearable>
+									<form-item label="项目成员B角" prop="detail.memberB.id">
+										 <i-select class="inputw" v-model="addForm.detail.memberB.id" clearable>
 			                        		<i-option v-for="item in users"  :value="parseInt(item.value)">{{item.text}}</i-option>
 										</i-select>
 									</form-item>
-									<form-item label="项目来源" prop="projectChannel">
-										 <i-input placeholder="输入项目来源" class="inputw" v-model="addForm.projectChannel"></i-input>
+									<form-item label="项目来源" prop="detail.projectChannel">
+										 <i-input placeholder="输入项目来源" class="inputw" v-model="addForm.detail.projectChannel"></i-input>
 									</form-item>
-							<form-item label="投资金额" prop="investment">
+							<form-item label="投资金额" prop="detail.investment">
 								<input-number placeholder="输入投资金额" :max="100000000000" :min="0" class="inputw" 
-											:formatter="formatter" :parser="parser"  v-model="addForm.investment"></input-number>&nbsp;元
+											:formatter="formatter" :parser="parser"  v-model="addForm.detail.investment"></input-number>&nbsp;元
 							</form-item>
-							<form-item label="投资主体" prop="investmentPart">
-								 <i-input placeholder="输入投资主体" class="inputw" v-model="addForm.investmentPart"></i-input>
+							<form-item label="投资主体" prop="detail.investmentPart">
+								 <i-input placeholder="输入投资主体" class="inputw" v-model="addForm.detail.investmentPart"></i-input>
 							</form-item>
-							<form-item label="投后持股比例" prop="shareHodingRate">
-								<input-number placeholder="输入投后持股比例" :max="100" :min="0" class="inputw" v-model="addForm.shareHodingRate"></input-number>&nbsp;%
+							<form-item label="投后持股比例" prop="detail.shareHodingRate">
+								<input-number placeholder="输入投后持股比例" :max="100" :min="0" class="inputw" v-model="addForm.detail.shareHodingRate"></input-number>&nbsp;%
 							</form-item>
-							<form-item label="投前估值" prop="preVal">
+							<form-item label="投前估值" prop="detail.preVal">
 								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
-											:formatter="formatter" :parser="parser"  v-model="addForm.preVal"></input-number>&nbsp;元
+											:formatter="formatter" :parser="parser"  v-model="addForm.detail.preVal"></input-number>&nbsp;元
 							</form-item>
-							<form-item label="投后估值" prop="postVal">
+							<form-item label="投后估值" prop="detail.postVal">
 								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
-											:formatter="formatter" :parser="parser"  v-model="addForm.postVal"></input-number>&nbsp;元
+											:formatter="formatter" :parser="parser"  v-model="addForm.detail.postVal"></input-number>&nbsp;元
 							</form-item>
-							<form-item label="出资时间" prop="investemntTime">
-								<date-picker type="date" placeholder="请选择投资时间" class="inputw"  v-model="addForm.investemntTime"></date-picker>
+							<form-item label="出资时间" prop="detail.investemntTime">
+								<date-picker type="date" placeholder="请选择投资时间" class="inputw"  v-model="addForm.detail.investemntTime"></date-picker>
 							</form-item>
 						</card>
 						<br>
 						<card dis-hover title="公司信息">
 							<row>
 								<i-col span="8">
-									<form-item label="公司简称" prop="companySortName">
-										 <i-input placeholder="输入公司简称" class="inputw" v-model="addForm.companySortName"></i-input>
+									<form-item label="公司简称" prop="detail.companySortName">
+										 <i-input placeholder="输入公司简称" class="inputw" v-model="addForm.detail.companySortName"></i-input>
 									</form-item>
 								</i-col>
 								<i-col span="12">
-									<form-item label="公司全称" prop="companyFullName">
-										 <i-input placeholder="输入公司全称" class="inputm" v-model="addForm.companyFullName"></i-input>
+									<form-item label="公司全称" prop="detail.companyFullName">
+										 <i-input placeholder="输入公司全称" class="inputm" v-model="addForm.detail.companyFullName"></i-input>
 									</form-item>
 								</i-col>
 							</row>
-							<form-item label="实际控制人" prop="controllerOwner">
-								 <i-input placeholder="输入实际控制人" class="inputw" v-model="addForm.controllerOwner"></i-input>
+							<form-item label="实际控制人" prop="detail.controllerOwner">
+								 <i-input placeholder="输入实际控制人" class="inputw" v-model="addForm.detail.controllerOwner"></i-input>
 							</form-item>
-							<form-item label="注册资本" prop="registeredCapital">
+							<form-item label="注册资本" prop="detail.registeredCapital">
 								<input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw" 
-											:formatter="formatter" :parser="parser"  v-model="addForm.registeredCapital"></input-number>&nbsp;元
+											:formatter="formatter" :parser="parser"  v-model="addForm.detail.registeredCapital"></input-number>&nbsp;元
 							</form-item>
-							<form-item label="董事长" prop="chairman">
-								 <i-input placeholder="输入董事长" class="inputw" v-model="addForm.chairman"></i-input>
+							<form-item label="董事长" prop="detail.chairman">
+								 <i-input placeholder="输入董事长" class="inputw" v-model="addForm.detail.chairman"></i-input>
 							</form-item>
 							<row>
 								<i-col>
-									<form-item label="地址" prop="address">
-										 <i-input placeholder="输入公司地址" class="inputm" v-model="addForm.address"></i-input>
+									<form-item label="地址" prop="detail.address">
+										 <i-input placeholder="输入公司地址" class="inputm" v-model="addForm.detail.address"></i-input>
 									</form-item>
 								</i-col>
 							</row>

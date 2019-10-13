@@ -21,7 +21,8 @@ import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.fund.FundTargetItem;
+import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.fund.FundItemService;
 
 /**
@@ -36,6 +37,7 @@ public class InitialContactController extends BaseController {
     /** fundItemService */
     @Resource
     private FundItemService fundItemService;
+    
 
     /**
      * 页面路由
@@ -57,8 +59,8 @@ public class InitialContactController extends BaseController {
      */
     @PostMapping
     @ResponseBody
-    public BaseResult save(@RequestBody List<FundTargetItem> items) {
+    public BaseResult save(@RequestBody List<ProjectItem> items) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        return fundItemService.save(items);
+        return  fundItemService.save(FundStatus.SIGN_CONFIDENTIALITY,items);
     }
 }

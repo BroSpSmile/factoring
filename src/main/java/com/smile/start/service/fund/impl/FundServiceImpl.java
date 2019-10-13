@@ -15,69 +15,89 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.dao.BaseProjectDao;
 import com.smile.start.dao.FundTargetDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
-import com.smile.start.model.fund.FundTargetItem;
-import com.smile.start.model.fund.FundTargetQuery;
+import com.smile.start.model.project.BaseProject;
+import com.smile.start.model.project.BaseProjectQuery;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
-import com.smile.start.service.fund.FundItemService;
 import com.smile.start.service.fund.FundService;
 import com.smile.start.service.project.IdGenService;
+import com.smile.start.service.project.ProjectItemSerivce;
 
 /**
  * 实现
+ *
  * @author smile.jing
  * @version $Id: FundServiceImpl.java, v 0.1 2019年8月10日 下午8:20:22 smile.jing
- *          Exp$
+ * Exp$
  */
 @Service
 public class FundServiceImpl extends AbstractService implements FundService {
 
+    /** projectDao */
+    @Resource
+    private BaseProjectDao     baseProjectDao;
+
     /** DAO */
     @Resource
-    private FundTargetDao   fundTargetDao;
+    private FundTargetDao      fundTargetDao;
 
     /** 附件服务 */
     @Resource
-    private FundItemService fundItemService;
+    private ProjectItemSerivce itemService;
 
     /** ID生成器 */
     @Resource
-    private IdGenService    idGenService;
+    private IdGenService       idGenService;
 
     /** 用户信息服务 */
     @Resource
-    private UserInfoService userInfo;
+    private UserInfoService    userInfo;
 
     /**
-     * @see com.smile.start.service.fund.FundService#createTarget(com.smile.start.model.fund.FundTarget)
+     * @see com.smile.start.service.fund.FundService#createTarget(BaseProject)
      */
     @Override
     @Transactional
-    public BaseResult createTarget(FundTarget target) {
-        target.setProjectId(idGenService.genId(ProjectKind.FUND));
-        long effect = fundTargetDao.insert(target);
-        LoggerUtils.info(logger, "新增直投标的:{}结果={}", target.getProjectId(), effect);
+    public BaseResult createTarget(BaseProject<FundTarget> project) {
+        project.setProjectId(idGenService.genId(ProjectKind.FUND));
+        long projectEffct = baseProjectDao.insert(project);
+        LoggerUtils.info(logger, "新增项目影响行:{}", projectEffct);
+        FundTarget target = project.getDetail();
+        target.setProjectId(project.getProjectId());
+        target.setProjectName(project.getProjectName());
+        long effect = fundTargetDao.insert(project.getDetail());
+        LoggerUtils.info(logger, "新增直投标的:{}结果={}", project.getProjectId(), effect);
         BaseResult result = toResult(effect);
-        if (result.isSuccess() && !CollectionUtils.isEmpty(target.getItems())) {
-            for (FundTargetItem item : target.getItems()) {
-                item.setTarget(target);
-                item.setItemType(target.getProjectStep());
-            }
-            result = fundItemService.save(target.getItems());
+        if (result.isSuccess() && !CollectionUtils.isEmpty(project.getItems())) {
+            project.getItems().forEach(item -> {
+                item.setProjectId(project.getId());
+                item.setItemType(ProjectItemType.PROJECT);
+            });
+            itemService.save(project.getItems());
         }
         return toResult(effect);
     }
 
     /**
-     * @see com.smile.start.service.fund.FundService#modifyTarget(com.smile.start.model.fund.FundTarget)
+     * @see com.smile.start.service.fund.FundService#modifyTarget(BaseProject)
      */
     @Override
-    public BaseResult modifyTarget(FundTarget target) {
+    public BaseResult modifyTarget(BaseProject<FundTarget> project) {
+        FundTarget target = project.getDetail();
+        if(null==target){
+            target = new FundTarget();
+        }
+        if (project.getId() > 0 && null == target.getId()) {
+            target.setId(fundTargetDao.getFundId(project.getId()));
+        }
         int effect = fundTargetDao.updateTarget(target);
         LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
         return toResult(effect);
@@ -87,19 +107,26 @@ public class FundServiceImpl extends AbstractService implements FundService {
      * @see com.smile.start.service.fund.FundService#queryTargets(com.smile.start.model.base.PageRequest)
      */
     @Override
-    public PageInfo<FundTarget> queryTargets(PageRequest<FundTargetQuery> query) {
+    public PageInfo<FundProject> queryTargets(PageRequest<BaseProjectQuery<FundTarget>> query) {
         PageHelper.startPage(query.getPageNum(), query.getPageSize(), "id desc");
-        List<FundTarget> targets = fundTargetDao.queryFundTarget(query.getCondition());
-        for (FundTarget target : targets) {
-            if (null != target.getMemberA() && null != target.getMemberA().getId()) {
-                target.setMemberA(userInfo.getUserById(target.getMemberA().getId()));
-            }
-            if (null != target.getMemberB() && null != target.getMemberB().getId()) {
-                target.setMemberB(userInfo.getUserById(target.getMemberB().getId()));
-            }
+        List<FundProject> projects = fundTargetDao.queryFundTarget(query.getCondition());
+        for (FundProject project : projects) {
+            FundTarget target = project.getDetail();
+            setUser(target);
         }
-        PageInfo<FundTarget> result = new PageInfo<>(targets);
+        PageInfo<FundProject> result = new PageInfo<>(projects);
         return result;
+    }
+
+    /**
+     * 根据项目ID获取项目
+     *
+     * @param projectId
+     * @return
+     */
+    @Override
+    public FundProject getProject(String projectId) {
+        return null;
     }
 
     /**
@@ -110,13 +137,22 @@ public class FundServiceImpl extends AbstractService implements FundService {
         FundTarget target = new FundTarget();
         target.setProjectId(projectId);
         FundTarget fundTarget = fundTargetDao.getByProjectId(target);
-        if (null != fundTarget.getMemberA() && null != fundTarget.getMemberA().getId()) {
-            fundTarget.setMemberA(userInfo.getUserById(fundTarget.getMemberA().getId()));
-        }
-        if (null != fundTarget.getMemberB() && null != fundTarget.getMemberB().getId()) {
-            fundTarget.setMemberB(userInfo.getUserById(fundTarget.getMemberB().getId()));
-        }
+        setUser(fundTarget);
         return fundTarget;
+    }
+
+    /**
+     * 设置用户
+     *
+     * @param target
+     */
+    private void setUser(FundTarget target) {
+        if (null != target.getMemberA() && null != target.getMemberA().getId()) {
+            target.setMemberA(userInfo.getUserById(target.getMemberA().getId()));
+        }
+        if (null != target.getMemberB() && null != target.getMemberB().getId()) {
+            target.setMemberB(userInfo.getUserById(target.getMemberB().getId()));
+        }
     }
 
 }

@@ -13,6 +13,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,18 +24,25 @@ import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.FundStatus;
 import com.smile.start.model.enums.MeetingKind;
 import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
+import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.Project;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.model.project.ProjectMeeting;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.engine.ProcessEngine;
+import com.smile.start.service.fund.FundItemService;
+import com.smile.start.service.fund.FundService;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.project.ProjectService;
 
@@ -69,6 +77,14 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     /** 流程引擎 */
     @Resource
     private ProcessEngine     processEngine;
+
+    /** fundService */
+    @Resource
+    private FundService       fundService;
+
+    /** fundItemService */
+    @Resource
+    private FundItemService   fundItemService;
 
     /** 
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
@@ -144,8 +160,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         long effect = meetingDao.insert(meeting);
         if (effect > 0 && MeetingKind.APPROVAL.equals(meeting.getKind())) {
             for (Project project : meeting.getProjects()) {
-                project.setProgress(Progress.INITIATE);
-                processEngine.changeStatus(project, StepStatus.PROCESSING);
+                updateProject(project);
                 ProjectMeeting pm = new ProjectMeeting();
                 pm.setMeetingId(meeting.getId());
                 pm.setProjectId(project.getId());
@@ -205,13 +220,25 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         } else {
             Project project = meeting.getProjects().get(0);
+            List<ProjectItem> items = project.getItems();
+            project = projectService.getProject(project.getId());
+            project.setItems(items);
             if (Progress.INITIATE_REJECT.equals(project.getProgress())) {
-                project.setStep(-2);
-                projectService.turnover(project);
+                if (ProjectKind.FACTORING.equals(project.getKind())) {
+                    project.setStep(-2);
+                    projectService.turnover(project);
+                } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                    doInvestment(project, FundStatus.STOP);
+                }
             } else {
-                project.setProgress(Progress.APPROVAL);
-                project.setStep(0);
-                processEngine.next(project, false);
+                if (ProjectKind.FACTORING.equals(project.getKind())) {
+                    project.setProgress(Progress.APPROVAL);
+                    project.setStep(0);
+                    processEngine.next(project, false);
+                } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                    doInvestment(project, FundStatus.DEEP_TUNING);
+                }
+
             }
         }
         return new BaseResult();
@@ -265,4 +292,48 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         }
     }
 
+    /**
+     * 处理项目信息
+     * 
+     * @param project
+     */
+    private void updateProject(Project project) {
+        project = projectService.getProject(project.getId());
+        switch (project.getKind()) {
+            case FACTORING:
+                doFactoring(project);
+                break;
+            case INVESTMENT:
+                doInvestment(project, FundStatus.APPROVAL);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 保理处理逻辑
+     * 
+     * @param project
+     */
+    private void doFactoring(Project project) {
+        project.setProgress(Progress.INITIATE);
+        processEngine.changeStatus(project, StepStatus.PROCESSING);
+    }
+
+    /**
+     * 直投处理逻辑
+     * @param project
+     */
+    private void doInvestment(Project project, FundStatus status) {
+        BaseProject<FundTarget> fund = new BaseProject<FundTarget>();
+        fund.setId(project.getId());
+        FundTarget target = new FundTarget();
+        target.setProjectStep(status);
+        fund.setDetail(target);
+        fundService.modifyTarget(fund);
+        if (!CollectionUtils.isEmpty(project.getItems())) {
+            fundItemService.save(status, project.getItems());
+        }
+    }
 }

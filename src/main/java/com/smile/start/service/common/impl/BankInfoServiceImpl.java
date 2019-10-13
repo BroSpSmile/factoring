@@ -38,6 +38,7 @@ public class BankInfoServiceImpl implements BankInfoService {
      * @param id
      * @return
      */
+    @Override
     public BankInfoDTO get(Long id) {
         return bankInfoMapper.do2dto(bankInfoDao.get(id));
     }

@@ -125,14 +125,12 @@ var vue = new Vue({
 						meeting.projects[0].items = new Array();
 						meeting.projects[0].items.push(item);
 						meeting.projects[0].progress = progress;
+					}
+					meeting.minutesKind = 'CUSTOM';
+					if(index==0){
+						meeting.minutes = this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
 					}else{
-						meeting.minutesKind = 'CUSTOM';
-						if(index==0){
-							meeting.minutes = this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
-						}else{
-							meeting.minutes += "&"+this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
-						}
-						
+						meeting.minutes += "&"+this.fileList[index].response.data.fileId+"|"+this.fileList[index].name ;
 					}
 				}
 			let self = this;

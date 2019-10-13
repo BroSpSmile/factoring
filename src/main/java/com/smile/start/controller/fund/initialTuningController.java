@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.fund.FundTargetItem;
+import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.fund.FundItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class initialTuningController extends BaseController {
     /** fundItemService */
     @Resource
     private FundItemService fundItemService;
-    
+
     /**
      * 页面路由
      * @return
@@ -50,10 +51,10 @@ public class initialTuningController extends BaseController {
      * @param items
      * @return
      */
-    @PostMapping
+    @PostMapping("/{status}")
     @ResponseBody
-    public BaseResult save(@RequestBody List<FundTargetItem> items) {
+    public BaseResult save(@RequestBody List<ProjectItem> items,@PathVariable FundStatus status) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        return fundItemService.save(items);
+        return fundItemService.save(status, items);
     }
 }

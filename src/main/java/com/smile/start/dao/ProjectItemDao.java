@@ -6,6 +6,7 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import com.smile.start.model.project.BaseProject;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,6 +18,7 @@ import com.smile.start.model.project.ProjectItem;
 
 /**
  * ProjectItemDao
+ *
  * @author smile.jing
  * @version $Id: ProjectItemDao.java, v 0.1 Jan 28, 2019 9:45:20 PM smile.jing Exp $
  */
@@ -24,6 +26,7 @@ import com.smile.start.model.project.ProjectItem;
 public interface ProjectItemDao {
     /**
      * 插入
+     *
      * @param iterm
      * @return
      */
@@ -31,7 +34,13 @@ public interface ProjectItemDao {
     long insert(ProjectItem iterm);
 
     /**
-     * 
+     * @param id
+     * @return
+     */
+    @Select("select * from project_item where id = #{id}")
+    ProjectItem get(Long id);
+
+    /**
      * @param item
      * @return
      */
@@ -40,6 +49,7 @@ public interface ProjectItemDao {
 
     /**
      * 获取
+     *
      * @param project
      * @return
      */
@@ -47,7 +57,15 @@ public interface ProjectItemDao {
     List<ProjectItem> getItems(Project project);
 
     /**
-     * 
+     * 获取
+     *
+     * @param project
+     * @return
+     */
+    @Select("select * from project_item where project_id = #{id}")
+    List<ProjectItem> getProjectItems(BaseProject<?> project);
+
+    /**
      * @param projectId
      * @param type
      * @return
@@ -57,6 +75,7 @@ public interface ProjectItemDao {
 
     /**
      * 删除指定类型附件
+     *
      * @param projectId
      * @param type
      * @return

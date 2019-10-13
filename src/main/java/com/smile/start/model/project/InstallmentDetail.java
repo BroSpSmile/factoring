@@ -22,7 +22,7 @@ public class InstallmentDetail implements Serializable {
     /**
      * 编号
      */
-    private Long                  id               = -1l;
+    private Long                  id               = -1L;
 
     private InstallmentDetailType type;
 

@@ -20,7 +20,7 @@ var vue = new Vue({
 		 */
 		getProject:function(id){
 			let _self = this;
-			this.$http.get("/fund/"+id).then(function(response){
+			this.$http.get("/project/"+id).then(function(response){
 				_self.project = response.data;
 			},function(error){
 				console.error(error);
@@ -38,7 +38,7 @@ var vue = new Vue({
 			let items = [];
 			for(let index in this.fileList){
 				let item={
-						target:{id:this.project.id},
+						projectId:this.project.id,
 						itemType:"INITIAL_TUNING",
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
@@ -47,7 +47,7 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
-			this.$http.post("/initContact",JSON.stringify(items)).then(function(response){
+			this.$http.post("/initialTuning/"+this.project.status,JSON.stringify(items)).then(function(response){
 				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({

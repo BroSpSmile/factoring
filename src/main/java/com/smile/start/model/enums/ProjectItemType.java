@@ -12,6 +12,9 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id: ProjectItemType.java, v 0.1 Jan 28, 2019 3:49:43 PM smile.jing Exp $
  */
 public enum ProjectItemType {
+                             /** 项目附件 */
+                             PROJECT("PROJECT", "项目附件"),
+                             
                              /**  */
                              TUNEUP("TUNEUP", "尽调文件"),
 
@@ -25,7 +28,13 @@ public enum ProjectItemType {
                              FILE("FILE", "归档文件"),
 
                              /** */
-                             DRAWUP("DRAWUP", "合同文件");
+                             DRAWUP("DRAWUP", "合同文件"),
+
+                             /** */
+                             SIGN_CONFIDENTIALITY("SIGN_CONFIDENTIALITY", "保密协议"),
+
+                             /** 初步尽调 */
+                             INITIAL_TUNING("INITIAL_TUNING", "初步尽调");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

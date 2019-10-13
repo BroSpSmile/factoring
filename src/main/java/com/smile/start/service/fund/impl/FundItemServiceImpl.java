@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.smile.start.service.fund.impl;
 
@@ -11,15 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.smile.start.commons.LoggerUtils;
-import com.smile.start.dao.FundItemDao;
+import com.smile.start.dao.FundTargetDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.fund.FundTarget;
-import com.smile.start.model.fund.FundTargetItem;
+import com.smile.start.model.project.BaseProject;
+import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.fund.FundItemService;
 import com.smile.start.service.fund.FundService;
+import com.smile.start.service.project.ProjectItemSerivce;
 
 /**
  * 实现
@@ -28,22 +30,25 @@ import com.smile.start.service.fund.FundService;
 @Service
 public class FundItemServiceImpl extends AbstractService implements FundItemService {
 
-    /** fundItemDao */
+    /** 项目附件服务 */
     @Resource
-    private FundItemDao fundItemDao;
+    private ProjectItemSerivce projectItemService;
 
     /** fundService */
     @Resource
-    private FundService fundService;
+    private FundService        fundService;
+
+    /** fundTargetDao */
+    @Resource
+    private FundTargetDao      fundTargetDao;
 
     /**
-     * @see com.smile.start.service.fund.FundItemService#save(com.smile.start.model.fund.FundTargetItem)
+     * 
+     * @see com.smile.start.service.fund.FundItemService#save(com.smile.start.model.project.ProjectItem)
      */
     @Override
-    public BaseResult save(FundTargetItem item) {
-        long effect = fundItemDao.insert(item);
-        LoggerUtils.info(logger, "新增附件effect={}", effect);
-        return toResult(effect);
+    public BaseResult save(ProjectItem item) {
+        return projectItemService.save(item);
     }
 
     /**
@@ -51,17 +56,19 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
      */
     @Override
     @Transactional
-    public BaseResult save(List<FundTargetItem> items) {
+    public BaseResult save(FundStatus status, List<ProjectItem> items) {
         BaseResult result = new BaseResult();
         if (!CollectionUtils.isEmpty(items)) {
-            FundTargetItem item = items.get(0);
+            ProjectItem item = items.get(0);
+            BaseProject<FundTarget> project = new BaseProject<FundTarget>();
             FundTarget target = new FundTarget();
-            target.setId(item.getTarget().getId());
-            target.setProjectStep(item.getItemType());
-            result = fundService.modifyTarget(target);
+            project.setId(item.getProjectId());
+            target.setProjectStep(status);
+            project.setDetail(target);
+            result = fundService.modifyTarget(project);
         }
         if (result.isSuccess()) {
-            for (FundTargetItem item : items) {
+            for (ProjectItem item : items) {
                 result = this.save(item);
             }
         }
@@ -69,50 +76,44 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     }
 
     /**
-     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.fund.FundTargetItem)
+     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.project.ProjectItem)
      */
     @Override
-    public BaseResult delete(FundTargetItem item) {
-        int effect = fundItemDao.delete(item);
-        return toResult(effect);
+    public BaseResult delete(ProjectItem item) {
+        return projectItemService.delete(item);
     }
 
     /**
-     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.fund.FundTarget,
-     *      com.smile.start.model.enums.FundStatus)
+     * 
+     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.project.BaseProject, com.smile.start.model.enums.ProjectItemType)
      */
     @Override
-    public BaseResult delete(FundTarget target, FundStatus type) {
-        int effect = fundItemDao.deleteByType(target.getId(), type);
-        return toResult(effect);
+    public BaseResult delete(BaseProject<FundTarget> project, ProjectItemType type) {
+        return projectItemService.delete(project, type);
     }
 
     /**
      * @see com.smile.start.service.fund.FundItemService#getById(java.lang.Long)
      */
     @Override
-    public FundTargetItem getById(Long id) {
-        return fundItemDao.get(id);
+    public ProjectItem getById(Long id) {
+        return projectItemService.getById(id);
     }
 
-    /**
-     * @see com.smile.start.service.fund.FundItemService#getAll(com.smile.start.model.fund.FundTarget)
+    /** 
+     * @see com.smile.start.service.fund.FundItemService#getAll(com.smile.start.model.project.BaseProject)
      */
     @Override
-    public List<FundTargetItem> getAll(FundTarget target) {
-        return fundItemDao.getByFund(target);
+    public List<ProjectItem> getAll(BaseProject<FundTarget> project) {
+        return projectItemService.getAll(project);
     }
 
-    /**
-     * @see com.smile.start.service.fund.FundItemService#getItemByType(com.smile.start.model.fund.FundTarget,
-     *      com.smile.start.model.enums.FundStatus)
+    /** 
+     * @see com.smile.start.service.fund.FundItemService#getItemByType(com.smile.start.model.project.BaseProject, com.smile.start.model.enums.ProjectItemType)
      */
     @Override
-    public List<FundTargetItem> getItemByType(FundTarget target, FundStatus type) {
-        FundTargetItem condition = new FundTargetItem();
-        condition.setTarget(target);
-        condition.setItemType(type);
-        return fundItemDao.getByType(condition);
+    public List<ProjectItem> getItemByType(BaseProject<FundTarget> project, ProjectItemType type) {
+        return projectItemService.getItemByType(project, type);
     }
 
 }

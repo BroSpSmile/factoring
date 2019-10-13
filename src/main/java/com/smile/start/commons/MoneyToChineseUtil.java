@@ -30,7 +30,7 @@ public class MoneyToChineseUtil {
         amount = amount.replace(",", "");
 
         // 验证金额正确性
-        if (amount.equals("0.00")) {
+        if ("0.00".equals(amount)) {
             throw new IllegalArgumentException("金额不能为零.");
         }
         Matcher matcher = AMOUNT_PATTERN.matcher(amount);
@@ -42,12 +42,12 @@ public class MoneyToChineseUtil {
         String fraction = matcher.group(2); // 小数部分
 
         String result = "";
-        if (!integer.equals("0")) {
+        if (!"0".equals(integer)) {
             result += integer2rmb(integer) + UNITS[0]; // 整数部分
         }
-        if (fraction.equals("00")) {
+        if ("00".equals(fraction)) {
             result += UNITS[3]; // 添加[整]
-        } else if (fraction.startsWith("0") && integer.equals("0")) {
+        } else if (fraction.startsWith("0") && "0".equals(integer)) {
             result += fraction2rmb(fraction).substring(1); // 去掉分前面的[零]
         } else {
             result += fraction2rmb(fraction); // 小数部分

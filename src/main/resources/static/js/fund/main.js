@@ -17,40 +17,44 @@ var vue = new Vue({
 		},
 		addForm:{
 			id:0,
-			investment:'',
-			preVal:'',
-			memberA:{},
-			memberB:{},
-			postVal:'',
-			registeredCapital:'',
-			shareHodingRate:''
+			detail:{
+				investment:'',
+				preVal:'',
+				memberA:{},
+				memberB:{},
+				postVal:'',
+				registeredCapital:'',
+				shareHodingRate:''
+			}
 		},
-		formInline:{},
+		formInline:{
+			detail:{}
+		},
 		tableColumns:[],
 		pageInfo:{},
 		validata:{
 			projectName: [
             	{ required: true,  message: '项目名称不能为空',trigger:'blur'}
             ],
-            'memberA.id': [
+            'detail.memberA.id': [
             	{ required: true,  type:'number', message: '项目成员A角不能为空',trigger: 'change'}
             ],
-            'memberB.id': [
+            'detail.memberB.id': [
             	{ required: true,  type:'number', message: '项目成员B角不能为空',trigger: 'change'}
             ],
-            companySortName: [
+			'detail.companySortName': [
             	{ required: true,  message: '公司简称不能为空',trigger:'blur'}
             ],
-            companyFullName: [
+			'detail.companyFullName': [
             	{ required: true,  message: '公司全称不能为空',trigger:'blur'}
             ],
-            controllerOwner: [
+			'detail.controllerOwner': [
             	{ required: true,  message: '实际控制人不能为空',trigger:'blur'}
             ],
-            registeredCapital: [
+			'detail.registeredCapital': [
             	{ required: true, type:'number', message: '注册资本不能为空',trigger:'blur'}
             ],
-            chairman: [
+			'detail.chairman': [
 	        	{ required: true,  message: '董事长不能为空',trigger:'blur'}
 	        ]
         }
@@ -87,30 +91,38 @@ var vue = new Vue({
 		        align: 'center'
 		    },{
 		        title: '项目进度',
-		        key: 'projectStep',
+		        key: 'detail.projectStep',
 		        align: 'center',
 		        minWidth:120,
 		        render:(h,param)=>{
-		        	return h('span',this.fliterStep(param.row.projectStep));
+		        	return h('span',this.fliterStep(param.row.detail.projectStep))
 		        }
 		    },{
 		        title: '所在地',
-		        key: 'location',
 		        tooltip:true,
 		        minWidth:100,
-		        align: 'center'
+		        align: 'center',
+                render:(h,param)=>{
+                    return h('span',param.row.detail.location)
+                }
 		    },{
 		        title: '所属行业',
-		        key: 'industry',
+		        key: 'detail.industry',
 		        tooltip:true,
 		        minWidth:100,
-		        align: 'center'
+		        align: 'center',
+                render:(h,param)=>{
+                    return h('span',param.row.detail.industry)
+                }
 		    },{
 		        title: '主营业务',
-		        key: 'mainBusiness',
+		        key: 'detail.mainBusiness',
 		        minWidth:100,
 		        tooltip:true,
-		        align: 'center'
+		        align: 'center',
+                render:(h,param)=>{
+                    return h('span',param.row.detail.mainBusiness)
+                }
 		    },{
 		        title: '项目成员',
 		        key: 'member',
@@ -119,55 +131,61 @@ var vue = new Vue({
 		        render:(h,param)=>{
 		        	let name = "";
 		        	console.log();
-		        	if(param.row.memberA!=null && param.row.memberA.username!=null){
-		        		name = param.row.memberA.username;
+		        	if(param.row.detail.memberA!=null && param.row.detail.memberA.username!=null){
+		        		name = param.row.detail.memberA.username;
 		        	}
-		        	if(param.row.memberB!=null &&param.row.memberB.username!=null){
-		        		name += ","+param.row.memberB.username;
+		        	if(param.row.detail.memberB!=null &&param.row.detail.memberB.username!=null){
+		        		name += ","+param.row.detail.memberB.username;
 		        	}
 		        	return h('span',name);
 		        }
 		    },{
 		        title: '投资金额',
-		        key: 'investment',
+		        key: 'detail.investment',
 		        minWidth:100,
 		        align: 'center',
 		        render:(h,param)=>{
-		        	return h('span',common.money.formatter(param.row.investment))
+		        	return h('span',common.money.formatter(param.row.detail.investment))
 		        }
 		    },{
 		        title: '投资主体',
-		        key: 'investmentPart',
+		        key: 'detail.investmentPart',
 		        minWidth:100,
-		        align: 'center'
+		        align: 'center',
+                render:(h,param)=>{
+                    return h('span',param.row.detail.investmentPart)
+                }
 		    },{
 		        title: '投后持股比例',
-		        key: 'shareHodingRate',
+		        key: 'detail.shareHodingRate',
 		        width:80,
-		        align: 'center'
+		        align: 'center',
+                render:(h,param)=>{
+                    return h('span',param.row.detail.shareHodingRate+"%")
+                }
 		    },{
 		        title: '投前估值',
-		        key: 'preVal',
+		        key: 'detail.preVal',
 		        width:100,
 		        align: 'center',
 		        render:(h,param)=>{
-		        	return h('span',common.money.formatter(param.row.preVal))
+		        	return h('span',common.money.formatter(param.row.detail.preVal))
 		        }
 		    },{
 		        title: '投后估值',
-		        key: 'postVal',
+		        key: 'detail.postVal',
 		        width:100,
 		        align: 'center',
 		        render:(h,param)=>{
-		        	return h('span',common.money.formatter(param.row.postVal))
+		        	return h('span',common.money.formatter(param.row.detail.postVal))
 		        }
 		    },{
 		        title: '出资时间',
-		        key: 'investemntTime',
+		        key: 'detail.investemntTime',
 		        align: 'center',
 		        width:100,
 		        render:(h,param)=>{
-		        	return h('span',param.row.investemntTime?moment(param.row.investemntTime).format('YYYY-MM-DD'):"")
+		        	return h('span',param.row.detail.investemntTime?moment(param.row.detail.investemntTime).format('YYYY-MM-DD'):"")
 		        }
 		    },{
 		        title: '项目明细',
@@ -195,35 +213,35 @@ var vue = new Vue({
     	 					]),
     	 					h('DropdownMenu',{slot:'list'},[
     	 						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑'),
-    	 						param.row.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'initContact-签署保密协议'}},'签署保密协议'):h('span'),
-    	 						param.row.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
-    	 						param.row.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'approval-项目立项'}},'项目立项'):h('span'),
-    	 					    param.row.projectStep == 'APPROVAL'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
- 					    		param.row.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'contractSign-合同签署'}},'合同签署'):h('span'),
-    	 						param.row.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
-    	 					    param.row.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
+    	 						param.row.detail.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'initContact-签署保密协议'}},'签署保密协议'):h('span'),
+    	 						param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
+    	 						param.row.detail.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'meeting-项目立项'}},'项目立项'):h('span'),
+    	 					  //  param.row.detail.projectStep == 'APPROVAL'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
+ 					    		param.row.detail.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'contractSign-合同签署'}},'合同签署'):h('span'),
+    	 						param.row.detail.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
+    	 					    param.row.detail.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
     	 					])
     	 				])
     	 			])
 		        }
 		    }]
 		},
-		
+
 		/**
 		 * 跳转菜单
 		 */
 		toMenu:function(project){
 			this.addForm = JSON.parse(JSON.stringify(project));
-			if(null == this.addForm.memberA){
-				this.addForm.memberA ={};
+			if(null == this.addForm.detail.memberA){
+				this.addForm.detail.memberA ={};
 			}
-			if(null == this.addForm.memberB){
-				this.addForm.memberB ={};
+			if(null == this.addForm.detail.memberB){
+				this.addForm.detail.memberB ={};
 			}
 			this.fileList = [];
 			this.modal1 = true;
 		},
-		
+
 		/**
 		 * 打开新标签
 		 */
@@ -242,7 +260,7 @@ var vue = new Vue({
 				});
 			}
 		},
-		
+
 		fliterStep:function(step){
 			for(let index in this.fundStatus){
 				if(this.fundStatus[index].value==step){
@@ -251,7 +269,7 @@ var vue = new Vue({
 			}
 			return "";
 		},
-		
+
 		/**
 		 * 初始化数据
 		 */
@@ -266,7 +284,7 @@ var vue = new Vue({
 			}, function(error) {
 			});
 		},
-		
+
 		/**
 		 * 搜索
 		 */
@@ -274,13 +292,13 @@ var vue = new Vue({
 			this.queryParam.pageNum = 1;
 			this.query();
 		},
-		
+
 		/** 分页 */
 		pageChange:function(page){
 			this.queryParam.pageNum = page;
 			this.query();
 		},
-		
+
 		/** 分页查询 */
 		query : function() {
 			let self = this;
@@ -297,22 +315,24 @@ var vue = new Vue({
 						self.$Message.error(error.data.message);
 					})
 		},
-		
-		
-		
+
+
+
 		/**
-		 * 
+		 *
 		 */
 		open:function(){
 			this.addForm = {
-					memberA:{},
-					memberB:{},
+					detail:{
+						memberA:{},
+						memberB:{}
+					},
 					items:[]
 			};
 			this.fileList = [];
 			this.modal1=true;
 		},
-		
+
 		/**
 		 * 重置
 		 */
@@ -320,7 +340,7 @@ var vue = new Vue({
 			this.formInline = {};
 			this.$refs['searchForm'].resetFields();
 		},
-		
+
 		save:function(){
 			let _self = this;
 			this.$refs['entityDataForm'].validate((valid) => {
@@ -332,15 +352,14 @@ var vue = new Vue({
 				}
 			});
 		},
-		
+
 		/**
-		 * 
+		 *
 		 */
 		commit:function(){
 			let self = this;
-			console.log(this.addForm);
+			this.addForm.items = [];
 			if(!this.addForm.projectId){
-				console.log(1);
 				for(let index in this.fileList){
 					let item={
 							itemName:this.fileList[index].name,
@@ -355,7 +374,7 @@ var vue = new Vue({
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								self.modal=false;
+								self.modal1=false;
 								self.search();
 							}
 						});
@@ -373,7 +392,7 @@ var vue = new Vue({
 						self.$Message.info({
 							content : "保存成功",
 							onClose : function() {
-								self.modal=false;
+								self.modal1=false;
 								self.search();
 							}
 						});
@@ -386,7 +405,7 @@ var vue = new Vue({
 				});
 			}
 		},
-		
+
 		/**
 		 * 取消保存
 		 */
@@ -403,14 +422,14 @@ var vue = new Vue({
 		uploadSuccess : function(response, file, fileList) {
 			this.fileList=fileList;
 		},
-		
+
 		/**
 		 * 文件上传失败
 		 */
 		uploadError:function(error, file, fileList){
 			this.fileList=fileList;
 		},
-		
+
 		removeFile:function(file, fileList){
 			this.fileList=fileList;
 			let fileId = file.response.data.fileId;
@@ -424,9 +443,9 @@ var vue = new Vue({
 			},function(error){
 				self.$Message.error(error.data.errorMessage);
 			})
-			
+
 		},
-		
+
 		/**
 		 * formatter
 		 */
@@ -435,7 +454,7 @@ var vue = new Vue({
 			var intSum = value.replace( /\B(?=(?:\d{3})+$)/g, ',' );
 			return '￥'+intSum;
 		},
-		
+
 		parser:function(value){
 			value = ""+value;
 			return value.replace(/￥s?|(,*)/g, '')

@@ -6,15 +6,9 @@ package com.smile.start.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.*;
+
 import com.smile.start.model.project.*;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectKey;
-import org.apache.ibatis.annotations.Update;
 
 /**
  * InstallmentDao
@@ -54,8 +48,7 @@ public interface InstallmentDao {
 
     /**
      * deleteByType
-     * @param detailId
-     * @param type
+     * @param installment
      * @return
      */
     @Delete("delete from project_installment where detail = #{detail.id} and type = #{type}")
@@ -172,14 +165,13 @@ public interface InstallmentDao {
      */
     @Results(id = "findByParamProjectMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id"),
                                                      @Result(column = "username", property = "user.username") })
-    @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id"
-            + " where 1=1 "
+    @Select("<script>" + "select t1.*,t2.username from factoring_project t1 left join auth_user_info t2  on t1.person = t2.id" + " where 1=1 "
             + "<if test = 'projectId!=null and projectId!=\"\"'> and t1.project_id = #{projectId}</if>" + "<if test = 'kind!=null and kind!=\"\"'> and t1.kind = #{kind}</if>"
             + "<if test = 'id!=-1'> and t1.id = #{id}</if>" + "<if test = 'projectName!=null and projectName!=\"\"'> and t1.project_name = #{projectName}</if>"
             + "<if test = 'user!=null'> and t1.person = #{user.id}</if>" + "<if test = 'progress!=null'> and t1.progress = #{progress}</if>"
-            +"<if test = 'projectIdList!=null'> and t1.id in  " + "<foreach collection='projectIdList' item='item' open='(' separator=',' close=')'>"
-            + "#{item} " + "</foreach></if>" + "<if test = 'userList!=null'> and t1.person in  " + "<foreach collection='userList' item='item' open='(' separator=',' close=')'>"
-            + "#{item} " + "</foreach></if>" + "</script>")
+            + "<if test = 'projectIdList!=null'> and t1.id in  " + "<foreach collection='projectIdList' item='item' open='(' separator=',' close=')'>" + "#{item} "
+            + "</foreach></if>" + "<if test = 'userList!=null'> and t1.person in  " + "<foreach collection='userList' item='item' open='(' separator=',' close=')'>" + "#{item} "
+            + "</foreach></if>" + "</script>")
     List<Project> findByParamProject(Project project);
-    
+
 }

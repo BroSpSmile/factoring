@@ -9,6 +9,10 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.fund.FundProject;
+import com.smile.start.model.project.BaseProject;
+import com.smile.start.model.project.BaseProjectQuery;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +30,11 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FundStatus;
 import com.smile.start.model.fund.FundTarget;
-import com.smile.start.model.fund.FundTargetQuery;
 import com.smile.start.service.fund.FundService;
 
 /**
  * 直投Controller
+ *
  * @author smile.jing
  * @version $Id: FundController.java, v 0.1 2019年8月10日 下午8:33:21 smile.jing Exp $
  */
@@ -38,12 +42,15 @@ import com.smile.start.service.fund.FundService;
 @RequestMapping("/fund")
 public class FundController extends BaseController {
 
-    /** 直投服务 */
+    /**
+     * 直投服务
+     */
     @Resource
     private FundService fundService;
 
     /**
      * index
+     *
      * @return
      */
     @GetMapping
@@ -53,46 +60,52 @@ public class FundController extends BaseController {
 
     /**
      * 新增投资标的
-     * @param target
+     *
+     * @param request
+     * @param project
      * @return
      */
     @PostMapping
     @ResponseBody
-    public BaseResult createTarget(HttpServletRequest request, @RequestBody FundTarget target) {
-        LoggerUtils.info(logger, "新增投资标的={}", target.toString());
-        target.setProjectStep(FundStatus.INITIAL_CONTACT);
-        target.setCreateTime(new Date());
+    public BaseResult createTarget(HttpServletRequest request, @RequestBody BaseProject<FundTarget> project) {
+        LoggerUtils.info(logger, "新增投资标的={}", project.toString());
+        project.setKind(ProjectKind.INVESTMENT);
+        project.getDetail().setProjectStep(FundStatus.INITIAL_CONTACT);
+        project.setCreateTime(new Date());
         User user = getUserByToken(request);
-        target.setOperator(user);
-        return fundService.createTarget(target);
+        project.setOperator(user);
+        return fundService.createTarget(project);
     }
 
     /**
      * 更新投资标的
-     * @param target
+     *
+     * @param project
      * @return
      */
     @PutMapping
     @ResponseBody
-    public BaseResult modifyTarget(@RequestBody FundTarget target) {
-        LoggerUtils.info(logger, "更新投资标的={}", target.toString());
-        return fundService.modifyTarget(target);
+    public BaseResult modifyTarget(@RequestBody BaseProject<FundTarget> project) {
+        LoggerUtils.info(logger, "更新投资标的={}", project.toString());
+        return fundService.modifyTarget(project);
     }
 
     /**
      * 分页查询
+     *
      * @param query
      * @return
      */
     @PostMapping("/query")
     @ResponseBody
-    public PageInfo<FundTarget> query(@RequestBody PageRequest<FundTargetQuery> query) {
-        PageInfo<FundTarget> tragets=  fundService.queryTargets(query);
-        return tragets;
+    public PageInfo<FundProject> query(@RequestBody PageRequest<BaseProjectQuery<FundTarget>> query) {
+        PageInfo<FundProject> projects = fundService.queryTargets(query);
+        return projects;
     }
 
     /**
      * 根据项目ID查询项目编号
+     *
      * @param projectId
      * @return
      */

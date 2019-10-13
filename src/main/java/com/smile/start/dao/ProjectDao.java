@@ -91,7 +91,7 @@ public interface ProjectDao {
      * @return
      */
     @Results(id = "findUnarchivedProjectsMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "person", property = "user.id") })
-    @Select("<script>" + "select * from factoring_project where progress !='FILECOMPLETE'" + "<if test = 'user!=null'>and person = #{user.id} </if> " + "</script>")
+    @Select("<script>" + "select * from factoring_project where progress is null or progress !='FILECOMPLETE'" + "<if test = 'user!=null'>and person = #{user.id} </if> " + "</script>")
     List<Project> findUnarchivedProjects(Project project);
 
     /**

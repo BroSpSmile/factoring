@@ -749,8 +749,9 @@ public class DateUtil {
      * @return
      */
     public static boolean isBeforeNow(Date date) {
-        if (date == null)
+        if (date == null) {
             return false;
+        }
         return date.compareTo(new Date()) < 0;
     }
 
