@@ -1,43 +1,47 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
-	<head>
-		<meta charset="UTF-8">
-		<title>相城金控</title>
-		<link rel="stylesheet" href="css/iview.css"></link>
-		<link rel="stylesheet" href="css/layout.css"></link>
-		<link rel="stylesheet" href="css/common.css"></link>
-		<script type="text/javascript" src="js/jquery.js"></script>
-		<script src="js/vue.min.js"></script>
-		<script src="js/iview.min.js"></script>
-		<script src="js/vue-resource.js"></script>
-		<script src="js/moment.min.js"></script>
-		<script type="text/javascript">
-			var common={
-				money:{
-					formatter:function(num){
-						var v = num + '', arr = v.split( '.' );
-						return num == 0 && '0.00' || ( typeof ( num ) === 'number' || typeof ( num ) === 'string' ) && !isNaN( num - parseFloat( num ) )
-						&& ( arr[ 0 ].replace( /(\d)(?=(?:\d{3})+$)/g, '$1,' ) + '.' + ( arr.length === 1 && '00'
-						|| arr.length === 2 && ( ( parseFloat( '0.' + arr[ 1 ] ).toFixed( 2 ) ).toString().split( '.' )[ 1 ] ) ) ) || num;
-					},
-					
-					parser:function(value){
-						value = ""+value;
-						return value.replace(/￥s?|(,*)/g, '')
-					}
-				}
-			};
-			function daysBetween(sDate1, sDate2) {
-			    //Date.parse() 解析一个日期时间字符串，并返回1970/1/1 午夜距离该日期时间的毫秒数
-			    var time1 = Date.parse(new Date(sDate1));
-			    var time2 = Date.parse(new Date(sDate2));
-			    var nDays = Math.abs(parseInt((time2 - time1) / 1000 / 3600 / 24));
-			    return nDays;
-			};
-		</script>
-	</head>
-	<body>
-		<div layout:fragment="content"  id="content"  class="content"></div>
-	</body>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>相城金控</title>
+    <link rel="stylesheet" href="css/iview.css"></link>
+    <link rel="stylesheet" href="css/layout.css"></link>
+    <link rel="stylesheet" href="css/common.css"></link>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/iview.min.js"></script>
+    <script src="js/vue-resource.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script type="text/javascript">
+        var common = {
+            money: {
+                formatter: function (num) {
+                    var v = num + '', arr = v.split('.');
+                    return num == 0 && '0.00' || (typeof (num) === 'number' || typeof (num) === 'string') && !isNaN(num - parseFloat(num))
+                        && (arr[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + '.' + (arr.length === 1 && '00'
+                            || arr.length === 2 && ((parseFloat('0.' + arr[1]).toFixed(2)).toString().split('.')[1]))) || num;
+                },
+
+                parser: function (value) {
+                    value = "" + value;
+                    return value.replace(/￥s?|(,*)/g, '')
+                }
+            }
+        };
+
+        function daysBetween(sDate1, sDate2) {
+            //Date.parse() 解析一个日期时间字符串，并返回1970/1/1 午夜距离该日期时间的毫秒数
+            var time1 = Date.parse(new Date(sDate1));
+            var time2 = Date.parse(new Date(sDate2));
+            var nDays = Math.abs(parseInt((time2 - time1) / 1000 / 3600 / 24));
+            return nDays;
+        };
+
+
+    </script>
+</head>
+<body>
+<div layout:fragment="content" id="content" class="content"></div>
+</body>
+
 </html>
