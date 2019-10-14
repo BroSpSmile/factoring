@@ -1,34 +1,36 @@
 /**
- * jsszvip.com Inc.
- * Copyright (c) 2012-2019 All Rights Reserved.
+ * com Inc.
+ * Copyright (c) 2004-2019 All Rights Reserved.
  */
 package com.smile.start.controller.fund;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.smile.start.commons.FastJsonUtils;
-import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.FundStatus;
-import com.smile.start.model.project.ProjectItem;
-import com.smile.start.service.fund.FundItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
-
-import java.util.List;
+import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.project.ProjectItem;
+import com.smile.start.service.fund.FundItemService;
 
 /**
- * 初步尽调
- * @author smile.jing
- * @version $Id: initialTuningController.java, v 0.1 2019年9月1日 下午9:55:40 smile.jing Exp $
+ * 深入尽调
+ * @author : Tiny.Jing
+ * @version V1.0
+ * @Description: deepTuningController
+ * @date Date : 2019年10月14日 21:29
  */
 @Controller
-@RequestMapping("initialTuning")
-public class initialTuningController extends BaseController {
+@RequestMapping("deepTuning")
+public class DeepTuningController extends BaseController {
 
     /** fundItemService */
     @Resource
@@ -36,6 +38,7 @@ public class initialTuningController extends BaseController {
 
     /**
      * 页面路由
+     *
      * @return
      */
     @GetMapping
@@ -43,7 +46,7 @@ public class initialTuningController extends BaseController {
         String id = request.getParameter("id");
         LoggerUtils.info(logger, "项目ID={}", id);
         model.addAttribute("id", id);
-        return "fund/initialTuning";
+        return "fund/deepTuning";
     }
 
     /**
@@ -51,10 +54,10 @@ public class initialTuningController extends BaseController {
      * @param items
      * @return
      */
-    @PostMapping("/{status}")
+    @PostMapping
     @ResponseBody
-    public BaseResult save(@RequestBody List<ProjectItem> items,@PathVariable FundStatus status) {
+    public BaseResult save(@RequestBody List<ProjectItem> items) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        return fundItemService.save(status, items);
+        return fundItemService.save(FundStatus.PARTMENT_AUDIT, items);
     }
 }

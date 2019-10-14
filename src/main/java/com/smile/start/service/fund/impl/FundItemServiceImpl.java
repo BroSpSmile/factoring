@@ -52,7 +52,7 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     }
 
     /**
-     * @see com.smile.start.service.fund.FundItemService#save(java.util.List)
+     * @see com.smile.start.service.fund.FundItemService#save(com.smile.start.model.enums.FundStatus,java.util.List)
      */
     @Override
     @Transactional

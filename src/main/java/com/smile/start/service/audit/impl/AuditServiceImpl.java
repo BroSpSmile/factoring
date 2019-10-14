@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.event.AuditEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +23,7 @@ import com.smile.start.dao.AuditRecordDao;
 import com.smile.start.dao.AuditRecordItemDao;
 import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.event.AuditEvent;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -32,12 +32,7 @@ import com.smile.start.model.enums.AuditResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FlowTypeEnum;
 import com.smile.start.model.enums.Step;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.AuditFlow;
-import com.smile.start.model.project.AuditParam;
-import com.smile.start.model.project.AuditRecord;
-import com.smile.start.model.project.AuditRecordItem;
-import com.smile.start.model.project.Project;
+import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.UserInfoService;
@@ -129,7 +124,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     /** 
-     * @see com.smile.start.service.audit.AuditService#pass(com.smile.start.model.project.AuditRecord, com.smile.start.dto.AuthRoleInfoDTO)
+     * @see com.smile.start.service.audit.AuditService#pass(com.smile.start.model.project.AuditRecord)
      */
     @Override
     @Transactional
@@ -158,7 +153,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     }
 
     /** 
-     * @see com.smile.start.service.audit.AuditService#reject(com.smile.start.model.project.AuditRecord, com.smile.start.dto.AuthRoleInfoDTO)
+     * @see com.smile.start.service.audit.AuditService#reject(com.smile.start.model.project.AuditRecord)
      */
     @Override
     @Transactional
@@ -260,7 +255,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
     /**
      * 获取下一审核步骤
      * @param audit
-     * @param type
+     * @param offset
      * @return
      */
     private AuditFlow getFlow(Audit audit, Integer offset) {

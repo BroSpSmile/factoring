@@ -12,6 +12,7 @@
     <script src="js/iview.min.js"></script>
     <script src="js/vue-resource.js"></script>
     <script src="js/moment.min.js"></script>
+    <script src="js/watermark.js"></script>
     <script type="text/javascript">
         var common = {
             money: {
@@ -42,6 +43,21 @@
 </head>
 <body>
 <div layout:fragment="content" id="content" class="content"></div>
+<script>
+    $.ajax({
+        url: "/login/user",
+        async: false,
+        success: function (data) {
+            watermark({
+                watermark_txt0: '相城金控',
+                watermark_txt1: data.username,
+                watermark_txt2: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
+            });
+        }
+    });
+
+
+</script>
 </body>
 
 </html>

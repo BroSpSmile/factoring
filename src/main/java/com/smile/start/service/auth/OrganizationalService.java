@@ -1,11 +1,11 @@
 package com.smile.start.service.auth;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dto.OrganizationalDTO;
 import com.smile.start.dto.OrganizationalSearchDTO;
 import com.smile.start.model.base.PageRequest;
-
-import java.util.List;
 
 /**
  * @author Joseph
@@ -36,7 +36,7 @@ public interface OrganizationalService {
 
     /**
      * 更新组织架构信息
-     * @param organizationalDTO
+     * @param organizationalDTO 对象
      */
     void update(OrganizationalDTO organizationalDTO);
 

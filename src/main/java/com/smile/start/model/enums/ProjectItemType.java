@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 public enum ProjectItemType {
                              /** 项目附件 */
                              PROJECT("PROJECT", "项目附件"),
-                             
+
                              /**  */
                              TUNEUP("TUNEUP", "尽调文件"),
 
@@ -34,7 +34,10 @@ public enum ProjectItemType {
                              SIGN_CONFIDENTIALITY("SIGN_CONFIDENTIALITY", "保密协议"),
 
                              /** 初步尽调 */
-                             INITIAL_TUNING("INITIAL_TUNING", "初步尽调");
+                             INITIAL_TUNING("INITIAL_TUNING", "初步尽调"),
+
+                             /** 深入尽调 */
+                             DEEP_TUNING("DEEP_TUNING", "深入尽调");
 
     ProjectItemType(String code, String desc) {
         this.code = code;
