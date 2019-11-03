@@ -14,7 +14,10 @@ public enum FlowTypeEnum {
 
                           LOAN(3, "放款审核流程"),
 
-                          FILE(4, "归档审核流程");
+                          FILE(4, "归档审核流程"),
+
+                          /** 直投部门内核 */
+                          INNERAUTH(5, "直投部门内核");
 
     private int    value;
     private String desc;

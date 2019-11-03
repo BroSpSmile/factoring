@@ -25,9 +25,7 @@ public enum FundStatus {
                         /** 深入尽调 */
                         DEEP_TUNING(5, "DEEP_TUNING", "深入尽调"),
                         /** 部门内核 */
-                        PARTMENT_AUDIT(6, "PARTMENT_AUDIT", "部门内核"),
-                        /** 风控审核 */
-                        RISK_AUDIT(7, "RISK_AUDIT", "风控审核"),
+                        PARTMENT_AUDIT(6, "PARTMENT_AUDIT", "风控审核"),
                         /** 三重一大 */
                         AUDIT_MEETING(8, "AUDIT_MEETING", "三重一大"),
                         /** 国资委审批 */

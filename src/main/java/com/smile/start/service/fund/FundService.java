@@ -7,8 +7,11 @@ package com.smile.start.service.fund;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.BaseProjectQuery;
 
@@ -23,7 +26,7 @@ public interface FundService {
     /**
      * 创建直投标的
      *
-     * @param project
+     * @param project 项目
      * @return
      */
     BaseResult createTarget(BaseProject<FundTarget> project);
@@ -31,23 +34,22 @@ public interface FundService {
     /**
      * 更新直投标的
      *
-     * @param project
+     * @param project 项目
      * @return
      */
     BaseResult modifyTarget(BaseProject<FundTarget> project);
 
-
     /**
      * 分页查询直投标的信息
      *
-     * @param query
+     * @param query 查找参数
      * @return
      */
     PageInfo<FundProject> queryTargets(PageRequest<BaseProjectQuery<FundTarget>> query);
 
     /**
      * 根据项目ID获取项目
-     * @param projectId
+     * @param projectId 项目ID
      * @return
      */
     FundProject getProject(String projectId);
@@ -55,8 +57,16 @@ public interface FundService {
     /**
      * 根据项目ID查询标的
      *
-     * @param projectId
+     * @param projectId 项目ID
      * @return
      */
     FundTarget getTarget(String projectId);
+
+    /**
+     * 创建审核信息
+     * @param proeject 项目
+     * @param type 审核类型
+     * @return 审核信息
+     */
+    SingleResult<Audit> createAudit(BaseProject<FundTarget> proeject, AuditType type);
 }

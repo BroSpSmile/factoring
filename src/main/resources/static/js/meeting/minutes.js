@@ -139,7 +139,7 @@ var vue = new Vue({
 				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({
-						content : "创建会议成功",
+						content : "创建会议纪要成功",
 						onClose : function() {
 							self.getMeeting();
 						}

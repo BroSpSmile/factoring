@@ -19,13 +19,17 @@ import com.smile.start.dao.BaseProjectDao;
 import com.smile.start.dao.FundTargetDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.BaseProjectQuery;
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.audit.AuditCreateService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.fund.FundService;
 import com.smile.start.service.project.IdGenService;
@@ -61,6 +65,10 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Resource
     private UserInfoService    userInfo;
 
+    /** 审核创建服务 */
+    @Resource
+    private AuditCreateService auditCreateService;
+
     /**
      * @see com.smile.start.service.fund.FundService#createTarget(BaseProject)
      */
@@ -92,7 +100,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Override
     public BaseResult modifyTarget(BaseProject<FundTarget> project) {
         FundTarget target = project.getDetail();
-        if(null==target){
+        if (null == target) {
             target = new FundTarget();
         }
         if (project.getId() > 0 && null == target.getId()) {
@@ -139,6 +147,20 @@ public class FundServiceImpl extends AbstractService implements FundService {
         FundTarget fundTarget = fundTargetDao.getByProjectId(target);
         setUser(fundTarget);
         return fundTarget;
+    }
+
+    /**
+     * 创建审核信息
+     *
+     * @param proeject 项目
+     * @param type     审核类型
+     * @return 审核信息
+     */
+    @Override
+    @Transactional
+    public SingleResult<Audit> createAudit(BaseProject<FundTarget> proeject, AuditType type) {
+        this.modifyTarget(proeject);
+        return auditCreateService.apply(proeject, type);
     }
 
     /**

@@ -12,7 +12,11 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.smile.start.commons.ErrorMessageEnum;
+import com.smile.start.exception.ServiceException;
+import com.smile.start.exception.error.ServiceErrorFactory;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
 
 /**
  * 
@@ -40,37 +44,61 @@ public abstract class AbstractService {
     }
 
     /**
-     * 
-     * @param effect
-     * @return
+     * 转换标准结果
+     * @param effect 影响行
+     * @return BaseResult
      */
     protected BaseResult toResult(long effect) {
-        if (effect > 0) {
+        return toResult(effect > 0);
+    }
+
+    /**
+     * 转换标准结果
+     * @param effect 影响行
+     * @return BaseResult
+     */
+    protected BaseResult toResult(int effect) {
+        return toResult(effect > 0);
+    }
+
+    /**
+     * 转换标准结果
+     * @param success 结果
+     * @return BaseResult
+     */
+    protected BaseResult toResult(boolean success) {
+        if (success) {
             return new BaseResult();
         } else {
-            BaseResult result = new BaseResult();
-            result.setSuccess(false);
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增失败,请重试!");
-            return result;
+            return new SingleResult(defaultErrorResult());
         }
     }
 
     /**
-     * 
-     * @param effect
-     * @return
+     * 转换标准结果
+     * @param success 结果
+     * @param result data
+     * @return SingleResult
      */
-    protected BaseResult toResult(int effect) {
-        if (effect > 0) {
-            return new BaseResult();
+    protected <T> SingleResult<T> toResult(boolean success, T result) {
+        if (success) {
+            return new SingleResult<T>(result);
         } else {
-            BaseResult result = new BaseResult();
-            result.setSuccess(false);
-            result.setErrorCode("VP00011001");
-            result.setErrorMessage("新增失败,请重试!");
-            return result;
+            return new SingleResult(defaultErrorResult());
         }
+    }
+
+    /**
+     * 默认错误对象
+     * @return BaseResult
+     */
+    private BaseResult defaultErrorResult() {
+        BaseResult result = new BaseResult();
+        ServiceException exception = new ServiceException(ServiceErrorFactory.getInstance().createError(ErrorMessageEnum.DEFUALT));
+        result.setSuccess(false);
+        result.setErrorCode(exception.getCode());
+        result.setErrorMessage(exception.getMessage());
+        return result;
     }
 
     /**

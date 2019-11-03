@@ -201,7 +201,9 @@ var vue = new Vue({
     	 							var menus = value.split("-");
     	 							if(menus[0]=='factoring'){
     	 								this.toMenu(param.row);
-    	 							}else{
+    	 							}else if(menus[0] == 'innerAudit'){
+    	 								this.commitAudit(param.row);
+									}else{
     	 								this.toNewTab(menus[0],menus[1],param.row.id);
     	 							}
     	 						}
@@ -217,7 +219,7 @@ var vue = new Vue({
     	 						param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
     	 						param.row.detail.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'meeting-项目立项'}},'项目立项'):h('span'),
     	 					    param.row.detail.projectStep == 'DEEP_TUNING'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
-								param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('DropdownItem',{props:{name:'innerAudit-部门内核'}},'部门内核'):h('span'),
+								param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('DropdownItem',{props:{name:'innerAudit-风控审核'}},'风控审核'):h('span'),
  					    		param.row.detail.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'contractSign-合同签署'}},'合同签署'):h('span'),
     	 						param.row.detail.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
     	 					    param.row.detail.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
@@ -260,6 +262,34 @@ var vue = new Vue({
 					id:menu
 				});
 			}
+		},
+
+
+		/**
+		 * 提交审核
+		 * @param project
+		 */
+		commitAudit:function(project){
+			let _self = this;
+			this.$Modal.confirm({
+				title: "是否提交风控审核",
+				onOk:function (event) {
+					this.$http.post("/innerAudit",project).then(function(response){
+						let result  = response.data;
+						if(result.success){
+							_self.$Message.info("提交审核成功");
+						}else{
+							_self.$Message.error(result.errorMessage);
+						}
+					},function(error){
+						console.error(error);
+					})
+
+				},
+				onCancel:function (event) {
+
+				}
+			});
 		},
 
 		fliterStep:function(step){

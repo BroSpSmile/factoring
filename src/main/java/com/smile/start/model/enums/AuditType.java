@@ -13,18 +13,31 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum AuditType {
                        /**  */
-                       TUNEUP("TUNEUP", "尽调审核"),
+                       TUNEUP(1, "TUNEUP", "尽调审核"),
 
                        /**  */
-                       DRAWUP("DRAWUP", "合同审核"),
+                       DRAWUP(2, "DRAWUP", "合同审核"),
 
                        /**  */
-                       LOAN("LOAN", "放款审核"),
+                       LOAN(3, "LOAN", "放款审核"),
 
                        /**  */
-                       FILE("FILE", "归档审核");
+                       FILE(4, "FILE", "归档审核"),
 
-    AuditType(String code, String desc) {
+                       /** 直投部门内核 */
+                       INNERAUTH(5, "INNERAUTH", "直投部门内核");
+
+    /** 类型值 */
+    private int    value;
+
+    /** 状态码 */
+    private String code;
+
+    /** 状态描述 */
+    private String desc;
+
+    AuditType(int value, String code, String desc) {
+        this.value = value;
         this.code = code;
         this.desc = desc;
     }
@@ -45,15 +58,18 @@ public enum AuditType {
         return null;
     }
 
-    /** 状态码 */
-    private String code;
-
-    /** 状态描述 */
-    private String desc;
+    /**
+     * Getter method for property <tt>value</tt>.
+     *
+     * @return property value of value
+     */
+    public int getValue() {
+        return value;
+    }
 
     /**
      * Getter method for property <tt>code</tt>.
-     * 
+     *
      * @return property value of code
      */
     public String getCode() {
@@ -62,7 +78,7 @@ public enum AuditType {
 
     /**
      * Getter method for property <tt>desc</tt>.
-     * 
+     *
      * @return property value of desc
      */
     public String getDesc() {

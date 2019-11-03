@@ -203,6 +203,8 @@ var vue = new Vue({
                 return "放款审核流程";
             }else if(value === 4) {
                 return "归档审核流程";
+            }else if(value === 5) {
+                return "直投审核流程";
             }
             return "";
         },

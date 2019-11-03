@@ -52,16 +52,18 @@ public class Audit implements Serializable {
     /** 审核历史 */
     private List<AuditRecord> records;
 
-    /** 
-     * @see java.lang.Object#toString()
+    /** 下一审核步骤 */
+    private AuditFlow         nextAudit;
+
+    /**
+     * @see Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (auditType != null ? "auditType\":\"" + auditType + "\", \"" : "")
-               + (createTime != null ? "createTime\":\"" + createTime + "\", \"" : "") + (applicant != null ? "applicant\":\"" + applicant + "\", \"" : "")
-               + (project != null ? "project\":\"" + project + "\", \"" : "") + (step != null ? "step\":\"" + step + "\", \"" : "")
-               + (role != null ? "role\":\"" + role + "\", \"" : "") + (auditor != null ? "auditor\":\"" + auditor + "\", \"" : "")
-               + (records != null ? "records\":\"" + records : "") + "\"}  ";
+        return "{\"Audit\":{" + "\"id\":" + id + ",\"auditType\":" + auditType + ",\"createTime\":\"" + createTime + '\"' + ",\"applicant\":" + applicant + ",\"project\":"
+               + project + ",\"step\":" + step + ",\"role\":" + role + ",\"auditor\":" + auditor + ",\"flows\":" + flows + ",\"records\":" + records + ",\"nextAudit\":" + nextAudit
+               + "}}";
+
     }
 
     /**
@@ -244,4 +246,21 @@ public class Audit implements Serializable {
         this.flows = flows;
     }
 
+    /**
+     * Getter method for property <tt>nextAudit</tt>.
+     *
+     * @return property value of nextAudit
+     */
+    public AuditFlow getNextAudit() {
+        return nextAudit;
+    }
+
+    /**
+     * Setter method for property <tt>nextAudit</tt>.
+     *
+     * @param nextAudit value to be assigned to property  nextAudit
+     */
+    public void setNextAudit(AuditFlow nextAudit) {
+        this.nextAudit = nextAudit;
+    }
 }

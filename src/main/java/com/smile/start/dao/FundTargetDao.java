@@ -65,7 +65,7 @@ public interface FundTargetDao {
      */
     @Delete("delete from fund_project where id = #{id}")
     int delete(Long id);
-    
+
     /**
      * 根据项目ID获取直投列表ID
      * 
@@ -81,7 +81,7 @@ public interface FundTargetDao {
      * @param target
      * @return
      */
-    @Select("select f.* from fund_project f inner join factoring_project p  on p.project_id = f.project_id where p.id = #{projectId} limit 1")
+    @Select("select f.* from fund_project f inner join factoring_project p  on p.project_id = f.project_id where p.project_id = #{projectId} limit 1")
     FundTarget getByProjectId(FundTarget target);
 
     /**

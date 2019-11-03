@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,14 +23,10 @@ import com.smile.start.commons.DateUtil;
 import com.smile.start.dao.MeetingDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectMeetingDao;
+import com.smile.start.event.MeetingEvent;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.FundStatus;
-import com.smile.start.model.enums.MeetingKind;
-import com.smile.start.model.enums.MeetingStatus;
-import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.*;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
@@ -56,35 +53,39 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
 
     /** 会议dao */
     @Resource
-    private MeetingDao        meetingDao;
+    private MeetingDao         meetingDao;
 
     /** 关联DAO */
     @Resource
-    private ProjectMeetingDao projectMeetingDao;
+    private ProjectMeetingDao  projectMeetingDao;
 
     /**  */
     @Resource
-    private ProjectDao        projectDao;
+    private ProjectDao         projectDao;
 
     /**  */
     @Resource
-    private ProjectService    projectService;
+    private ProjectService     projectService;
 
     /** 用户服务 */
     @Resource
-    private UserInfoService   userInfoService;
+    private UserInfoService    userInfoService;
 
     /** 流程引擎 */
     @Resource
-    private ProcessEngine     processEngine;
+    private ProcessEngine      processEngine;
 
     /** fundService */
     @Resource
-    private FundService       fundService;
+    private FundService        fundService;
 
     /** fundItemService */
     @Resource
-    private FundItemService   fundItemService;
+    private FundItemService    fundItemService;
+
+    /** 上下文context */
+    @Resource
+    private ApplicationContext applicationContext;
 
     /** 
      * @see com.smile.start.service.meeting.MeetingService#search(com.smile.start.model.base.PageRequest)
@@ -151,7 +152,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     }
 
     /** 
-     * @see com.smile.start.service.meeting.MeetingService#createMeeting(com.smile.start.model.meeting.Meeting)
+     * @see com.smile.start.service.meeting.MeetingService#(com.smile.start.model.meeting.Meeting)
      */
     @Override
     @Transactional
@@ -216,6 +217,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                     if (peffect < 0) {
                         throw new RuntimeException("插入会议纪要失败");
                     }
+                    project = projectDao.get(project.getId());
+                    if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                        applicationContext.publishEvent(new MeetingEvent(this, project));
+                    }
                 }
             }
         } else {
@@ -245,7 +250,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     }
 
     /** 
-     * @see com.smile.start.service.meeting.MeetingService#relationMeeting(com.smile.start.model.project.ProjectMeeting)
+     * @see
      */
     @Override
     public BaseResult relationMeeting(List<ProjectMeeting> pms) {
