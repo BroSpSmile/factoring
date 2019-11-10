@@ -425,7 +425,6 @@ vue.tableColumns=[{
         key: 'progress',
         align: 'center',
         width:100,
-        fixed:'right',
         render:(h,param)=>{
         	return h('a',{
         		props:{},
@@ -440,7 +439,6 @@ vue.tableColumns=[{
     	title: '操作',
     	align: 'center',
     	width:80,
-    	fixed:'right',
         render:(h,param)=>{
         	return h('div', [
 				h('Dropdown',{

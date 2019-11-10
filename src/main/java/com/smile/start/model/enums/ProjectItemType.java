@@ -34,10 +34,13 @@ public enum ProjectItemType {
                              SIGN_CONFIDENTIALITY("SIGN_CONFIDENTIALITY", "保密协议"),
 
                              /** 初步尽调 */
-                             INITIAL_TUNING("INITIAL_TUNING", "初步尽调"),
+                             INITIAL_TUNING("INITIAL_TUNING", "初步尽调文件"),
 
-                             /** 深入尽调 */
-                             DEEP_TUNING("DEEP_TUNING", "深入尽调");
+                             /** 深入尽调文件 */
+                             DEEP_TUNING("DEEP_TUNING", "深入尽调文件"),
+
+                             /** 合同文件 */
+                             CONTRACT_SIGN("CONTRACT_SIGN", "合同文件");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

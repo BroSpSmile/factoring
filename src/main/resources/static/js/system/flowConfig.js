@@ -204,7 +204,11 @@ var vue = new Vue({
             }else if(value === 4) {
                 return "归档审核流程";
             }else if(value === 5) {
-                return "直投审核流程";
+                return "直投风控审核流程";
+            }else if(value === 6) {
+                return "直投合同审核流程";
+            }else if(value === 7) {
+                return "直投放款审核流程";
             }
             return "";
         },

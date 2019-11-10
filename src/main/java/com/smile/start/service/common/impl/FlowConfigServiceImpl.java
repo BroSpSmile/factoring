@@ -193,55 +193,59 @@ public class FlowConfigServiceImpl implements FlowConfigService {
             return statusList;
         }
 
-        final List<AuthRoleInfoDTO> roleList = roleInfoService.findAll();
         switch (flowTypeEnum) {
             case TUNEUP:
                 for (TuneUpFlowEnum tuneUpFlowEnum : TuneUpFlowEnum.values()) {
-                    FlowStatusDTO flowStatus = new FlowStatusDTO();
-                    flowStatus.setRoleList(roleList);
-                    flowStatus.setFlowStatus(tuneUpFlowEnum.getValue());
-                    flowStatus.setFlowStatusDesc(tuneUpFlowEnum.getDesc());
-                    statusList.add(flowStatus);
+                    setSatus(statusList, tuneUpFlowEnum.getValue(), tuneUpFlowEnum.getDesc());
                 }
                 return statusList;
             case DRAWUP:
                 for (ContractStatusEnum contractStatusEnum : ContractStatusEnum.values()) {
-                    FlowStatusDTO flowStatus = new FlowStatusDTO();
-                    flowStatus.setRoleList(roleList);
-                    flowStatus.setFlowStatus(contractStatusEnum.getValue());
-                    flowStatus.setFlowStatusDesc(contractStatusEnum.getDesc());
-                    statusList.add(flowStatus);
+                    setSatus(statusList, contractStatusEnum.getValue(), contractStatusEnum.getDesc());
                 }
                 return statusList;
             case FILE:
                 for (FileFlowEnum fileFlowEnum : FileFlowEnum.values()) {
-                    FlowStatusDTO flowStatus = new FlowStatusDTO();
-                    flowStatus.setRoleList(roleList);
-                    flowStatus.setFlowStatus(fileFlowEnum.getValue());
-                    flowStatus.setFlowStatusDesc(fileFlowEnum.getDesc());
-                    statusList.add(flowStatus);
+                    setSatus(statusList, fileFlowEnum.getValue(), fileFlowEnum.getDesc());
                 }
                 return statusList;
             case LOAN:
                 for (LoanFlowEnum fileFlowEnum : LoanFlowEnum.values()) {
-                    FlowStatusDTO flowStatus = new FlowStatusDTO();
-                    flowStatus.setRoleList(roleList);
-                    flowStatus.setFlowStatus(fileFlowEnum.getValue());
-                    flowStatus.setFlowStatusDesc(fileFlowEnum.getDesc());
-                    statusList.add(flowStatus);
+                    setSatus(statusList, fileFlowEnum.getValue(), fileFlowEnum.getDesc());
                 }
             case INNERAUTH:
                 for (InnerAuthFlowEnum fileFlowEnum : InnerAuthFlowEnum.values()) {
-                    FlowStatusDTO flowStatus = new FlowStatusDTO();
-                    flowStatus.setRoleList(roleList);
-                    flowStatus.setFlowStatus(fileFlowEnum.getValue());
-                    flowStatus.setFlowStatusDesc(fileFlowEnum.getDesc());
-                    statusList.add(flowStatus);
+                    setSatus(statusList, fileFlowEnum.getValue(), fileFlowEnum.getDesc());
+                }
+                return statusList;
+            case CONTRACT_SIGN:
+                for (FundContractStatusEnum flow : FundContractStatusEnum.values()) {
+                    setSatus(statusList, flow.getValue(), flow.getDesc());
+                }
+                return statusList;
+            case PAYMENT:
+                for (FundLoanFlowEnum flow : FundLoanFlowEnum.values()) {
+                    setSatus(statusList, flow.getValue(), flow.getDesc());
                 }
                 return statusList;
             default:
                 return statusList;
         }
+    }
+
+    /**
+     * 设置审核流程状态
+     * @param statusList
+     * @param status
+     * @param desc
+     */
+    private void setSatus(List<FlowStatusDTO> statusList, Integer status, String desc) {
+        final List<AuthRoleInfoDTO> roleList = roleInfoService.findAll();
+        FlowStatusDTO flowStatus = new FlowStatusDTO();
+        flowStatus.setRoleList(roleList);
+        flowStatus.setFlowStatus(status);
+        flowStatus.setFlowStatusDesc(desc);
+        statusList.add(flowStatus);
     }
 
 }

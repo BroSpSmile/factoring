@@ -220,7 +220,9 @@ var vue = new Vue({
     	 						param.row.detail.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'meeting-项目立项'}},'项目立项'):h('span'),
     	 					    param.row.detail.projectStep == 'DEEP_TUNING'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
 								param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('DropdownItem',{props:{name:'innerAudit-风控审核'}},'风控审核'):h('span'),
- 					    		param.row.detail.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'contractSign-合同签署'}},'合同签署'):h('span'),
+								param.row.detail.projectStep == 'SASAC_APPROVAL'?h('DropdownItem',{props:{name:'sasacAudit-国资委审批'}},'国资委审批'):h('span'),
+								param.row.detail.projectStep == 'GOV_APPROVAL'?h('DropdownItem',{props:{name:'sasacAudit-区政府审批'}},'区政府审批'):h('span'),
+ 					    		param.row.detail.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'fundContract-合同签署'}},'合同签署'):h('span'),
     	 						param.row.detail.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
     	 					    param.row.detail.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
     	 					])

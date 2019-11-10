@@ -25,7 +25,13 @@ public enum AuditType {
                        FILE(4, "FILE", "归档审核"),
 
                        /** 直投部门内核 */
-                       INNERAUTH(5, "INNERAUTH", "直投部门内核");
+                       INNERAUTH(5, "INNERAUTH", "直投部门内核"),
+
+                       /** 直投合同审核 */
+                       CONTRACT_SIGN(6, "CONTRACT_SIGN", "直投合同审核流程"),
+
+                       /** 直投放款审核流程 */
+                       PAYMENT(7, "PAYMENT", "直投放款审核流程");
 
     /** 类型值 */
     private int    value;

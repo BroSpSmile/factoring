@@ -11,7 +11,9 @@ package com.smile.start.commons;
  * @date Date : 2019年11月03日 17:57
  */
 public enum ErrorMessageEnum {
-                              DEFUALT("VP00011001", "系统异常");
+                              DEFUALT("VP00011001", "系统异常"),
+
+                              SMS_ERROR("VP00011002", "短信发送异常"),;
 
     /** */
     private String code;

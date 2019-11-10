@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<div layout:fragment="content">
+    <div id="innerAudit" v-cloak>
+        <row>
+            <i-col span="22" offset="1">
+                <br>
+                <card dis-hover title="部门内核">
+                    <i-form :label-width="100">
+                        <form-item label="项目名称:">
+                            <span>{{project.projectName}}</span>
+                        </form-item>
+                        <form-item label="尽调文件:">
+                            <span v-for="item in items">
+                                <i-button type="dashed" size="small" @click="downloadItem(item)">
+                                    {{item.itemName}}
+                                </i-button> &nbsp;
+                            </span>
+                        </form-item>
+                        <row type="flex">
+                            <i-col span="8" offset="1">
+                                <i-button type="success" @click="commit">内核通过</i-button>
+                                <i-button type="error" @click="commit">内核驳回</i-button>
+                            </i-col>
+                        </row>
+                    </i-form>
+                </card>
+            </i-col>
+        </row>
+        <input th:value="${id}" id="fundId" style="display:none"></input>
+    </div>
+    <script src="js/fund/innerAudit.js"></script>
+</div>
+</html>
