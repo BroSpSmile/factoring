@@ -7,9 +7,12 @@ package com.smile.start.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import com.aliyun.oss.OSSClient;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Integration配置
@@ -48,6 +51,7 @@ public class IntegrationConfig {
     @Bean
     public RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         return restTemplate;
     }
 }

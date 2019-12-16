@@ -42,7 +42,7 @@ public class TimeQuartz extends AbstractService {
     /**
      * 每小时执行调度任务
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void executeTokenTask() {
         accessTokenService.synchronousToken();
         LoggerUtils.info(logger, "执行token调度任务");

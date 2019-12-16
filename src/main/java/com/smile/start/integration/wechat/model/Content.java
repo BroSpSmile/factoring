@@ -18,6 +18,14 @@ public class Content {
     /** value */
     private String value;
 
+    public Content() {
+    }
+
+    public Content(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     /**
      * Getter method for property <tt>key</tt>.
      *

@@ -2,7 +2,7 @@
  * com Inc.
  * Copyright (c) 2004-2019 All Rights Reserved.
  */
-package com.smile.start.event.listener;
+package com.smile.start.event.listener.meeting;
 
 import javax.annotation.Resource;
 

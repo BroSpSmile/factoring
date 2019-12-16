@@ -38,6 +38,14 @@ public class Notice {
     private List<Content> items    = Lists.newArrayList();
 
     /**
+     * 添加消息内容
+     * @param content
+     */
+    public void addItem(Content content) {
+        this.items.add(content);
+    }
+
+    /**
      * Getter method for property <tt>appid</tt>.
      *
      * @return property value of appid
@@ -144,4 +152,5 @@ public class Notice {
     public void setEmphasis(boolean emphasis) {
         this.emphasis = emphasis;
     }
+
 }

@@ -24,6 +24,7 @@ import com.smile.start.dao.MeetingDao;
 import com.smile.start.dao.ProjectDao;
 import com.smile.start.dao.ProjectMeetingDao;
 import com.smile.start.event.MeetingEvent;
+import com.smile.start.event.MeetingRemindEvent;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.*;
@@ -293,7 +294,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
             }
         }
         if (DateUtil.isBeforeNow(DateUtil.addMinutes(meeting.getBeginTime(), -1 * meeting.getRemind()))) {
-            //TODO 会议通知
+            applicationContext.publishEvent(new MeetingRemindEvent(this, meeting));
         }
     }
 

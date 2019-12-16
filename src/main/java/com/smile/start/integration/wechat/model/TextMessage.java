@@ -12,8 +12,29 @@ package com.smile.start.integration.wechat.model;
  */
 public class TextMessage extends WechatMessage {
 
+    /** 企业应用的id */
+    private long agentid;
+
     /** 文本 */
     private Text text;
+
+    /**
+     * Getter method for property <tt>agentid</tt>.
+     *
+     * @return property value of agentid
+     */
+    public long getAgentid() {
+        return agentid;
+    }
+
+    /**
+     * Setter method for property <tt>agentid</tt>.
+     *
+     * @param agentid value to be assigned to property  agentid
+     */
+    public void setAgentid(long agentid) {
+        this.agentid = agentid;
+    }
 
     /**
      * Getter method for property <tt>text</tt>.

@@ -19,4 +19,7 @@ public final class Constants {
     /** 微信消息 */
     public final static String WECHAT_MESSAGE_URL     = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={1}";
 
+    /** 小程序APPID */
+    public final static String MINI_PROGRAME_APP_ID   = "wx84d783d3cf910c2d";
+
 }
