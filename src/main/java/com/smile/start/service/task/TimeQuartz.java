@@ -13,6 +13,7 @@ import com.smile.start.commons.LoggerUtils;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.meeting.MeetingService;
+import com.smile.start.service.wechat.AccessTokenService;
 
 /**
  * 调度服务
@@ -23,7 +24,11 @@ import com.smile.start.service.meeting.MeetingService;
 public class TimeQuartz extends AbstractService {
     /** 会议服务 */
     @Resource
-    private MeetingService meetingService;
+    private MeetingService     meetingService;
+
+    /** token服务 */
+    @Resource
+    private AccessTokenService accessTokenService;
 
     /**
      * 每分钟执行调度任务
@@ -32,5 +37,14 @@ public class TimeQuartz extends AbstractService {
     public void executeMeetingTask() {
         BaseResult result = meetingService.schedule();
         LoggerUtils.info(logger, "执行调度任务result={}", result.isSuccess());
+    }
+
+    /**
+     * 每小时执行调度任务
+     */
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void executeTokenTask() {
+        accessTokenService.synchronousToken();
+        LoggerUtils.info(logger, "执行token调度任务");
     }
 }

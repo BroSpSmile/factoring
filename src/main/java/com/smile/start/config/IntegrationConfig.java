@@ -7,6 +7,7 @@ package com.smile.start.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import com.aliyun.oss.OSSClient;
 
@@ -38,5 +39,15 @@ public class IntegrationConfig {
     public OSSClient getOSSClient() {
         OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
         return client;
+    }
+
+    /**
+     * RestTemplateClient
+     * @return
+     */
+    @Bean
+    public RestTemplate getRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
     }
 }

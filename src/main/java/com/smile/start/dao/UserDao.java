@@ -1,13 +1,14 @@
 package com.smile.start.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.*;
+
 import com.smile.start.dto.LoginRequestDTO;
 import com.smile.start.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.auth.UserOrganizational;
 import com.smile.start.model.auth.UserRole;
-import org.apache.ibatis.annotations.*;
-
-import java.util.List;
 
 /**
  * @author Joseph
@@ -23,7 +24,7 @@ public interface UserDao {
      * @param user
      * @return
      */
-    @Insert("insert into auth_user_info (serial_no,username,mobile,openid,email,status,delete_flag,passwd,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{username},#{mobile},#{openid},#{email},#{status},#{deleteFlag},#{passwd},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
+    @Insert("insert into auth_user_info (serial_no,username,mobile,wechat_no,openid,email,status,delete_flag,passwd,create_user,modify_user,gmt_create,gmt_modify) values (#{serialNo},#{username},#{mobile},#{wechatNo},#{openid},#{email},#{status},#{deleteFlag},#{passwd},#{createUser},#{modifyUser},#{gmtCreate},#{gmtModify})")
     long insert(User user);
 
     /**
@@ -47,7 +48,7 @@ public interface UserDao {
      * @param user
      * @return
      */
-    @Update("update auth_user_info set mobile = #{mobile},username=#{username},email=#{email},status=#{status},"
+    @Update("update auth_user_info set mobile = #{mobile},username=#{username},email=#{email},status=#{status},wechat_no=#{wechatNo},"
             + "delete_flag=#{deleteFlag},modify_user=#{modifyUser},gmt_modify=#{gmtModify},openid = #{openid}" + " where id=#{id}")
     int update(User user);
 

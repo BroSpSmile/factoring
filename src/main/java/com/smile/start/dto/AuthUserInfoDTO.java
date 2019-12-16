@@ -10,43 +10,45 @@ import java.util.List;
  * @since 1.8
  */
 public class AuthUserInfoDTO implements Serializable {
-    private static final long serialVersionUID = -3732140085953244122L;
+    private static final long           serialVersionUID = -3732140085953244122L;
 
-    private Long id;
+    private Long                        id;
 
-    private String serialNo;
+    private String                      serialNo;
 
-    private String username;
+    private String                      username;
 
-    private String mobile;
+    private String                      mobile;
 
-    private String openid;
+    private String                      wechatNo;
 
-    private String email;
+    private String                      openid;
 
-    private Integer status;
+    private String                      email;
 
-    private Integer deleteFlag;
+    private Integer                     status;
 
-    private String passwd;
+    private Integer                     deleteFlag;
 
-    private String createUser;
+    private String                      passwd;
 
-    private String modifyUser;
+    private String                      createUser;
 
-    private Date gmtCreate;
+    private String                      modifyUser;
 
-    private Date gmtModify;
+    private Date                        gmtCreate;
 
-    private List<AuthRoleInfoDTO> roleList;
+    private Date                        gmtModify;
+
+    private List<AuthRoleInfoDTO>       roleList;
 
     private List<AuthPermissionInfoDTO> permissionList;
 
-    private List<String> checkedRoleList;
+    private List<String>                checkedRoleList;
 
-    private List<String> checkedOrganizationalList;
+    private List<String>                checkedOrganizationalList;
 
-    private String firstOrganizationName;
+    private String                      firstOrganizationName;
 
     public String getFirstOrganizationName() {
         return firstOrganizationName;
@@ -192,26 +194,29 @@ public class AuthUserInfoDTO implements Serializable {
         this.checkedOrganizationalList = checkedOrganizationalList;
     }
 
+    /**
+     * Getter method for property <tt>wechatNo</tt>.
+     *
+     * @return property value of wechatNo
+     */
+    public String getWechatNo() {
+        return wechatNo;
+    }
+
+    /**
+     * Setter method for property <tt>wechatNo</tt>.
+     *
+     * @param wechatNo value to be assigned to property  wechatNo
+     */
+    public void setWechatNo(String wechatNo) {
+        this.wechatNo = wechatNo;
+    }
+
     @Override
     public String toString() {
-        return "AuthUserInfoDTO{" +
-                "id=" + id +
-                ", serialNo='" + serialNo + '\'' +
-                ", username='" + username + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", openid='" + openid + '\'' +
-                ", email='" + email + '\'' +
-                ", status=" + status +
-                ", deleteFlag=" + deleteFlag +
-                ", passwd='" + passwd + '\'' +
-                ", createUser='" + createUser + '\'' +
-                ", modifyUser='" + modifyUser + '\'' +
-                ", gmtCreate=" + gmtCreate +
-                ", gmtModify=" + gmtModify +
-                ", roleList=" + roleList +
-                ", permissionList=" + permissionList +
-                ", checkedRoleList=" + checkedRoleList +
-                ", checkedOrganizationalList=" + checkedOrganizationalList +
-                '}';
+        return "AuthUserInfoDTO{" + "id=" + id + ", serialNo='" + serialNo + '\'' + ", username='" + username + '\'' + ", mobile='" + mobile + '\'' + ", openid='" + openid + '\''
+               + ", email='" + email + '\'' + ", status=" + status + ", deleteFlag=" + deleteFlag + ", passwd='" + passwd + '\'' + ", createUser='" + createUser + '\''
+               + ", modifyUser='" + modifyUser + '\'' + ", gmtCreate=" + gmtCreate + ", gmtModify=" + gmtModify + ", roleList=" + roleList + ", permissionList=" + permissionList
+               + ", checkedRoleList=" + checkedRoleList + ", checkedOrganizationalList=" + checkedOrganizationalList + '}';
     }
 }

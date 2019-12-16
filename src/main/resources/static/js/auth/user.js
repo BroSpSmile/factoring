@@ -18,6 +18,7 @@ var vue = new Vue({
         addForm : {
             username : "",
             mobile : "",
+            wechatNo: "",
             email : "",
             passwd : "",
             checkedRoleList : [],
@@ -33,6 +34,9 @@ var vue = new Vue({
             ],
             mobile: [
                 { required: true, message: '手机号不能为空', trigger: 'blur' }
+            ],
+            wechatNo: [
+                { required: true, message: '企业微信号不能为空', trigger: 'blur' }
             ],
             passwd: [
                 { required: true, message: '密码不能为空', trigger: 'blur' }
