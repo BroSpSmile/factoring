@@ -4,11 +4,14 @@
  */
 package com.smile.start.service.fund;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Audit;
@@ -76,4 +79,10 @@ public interface FundService {
      * @return 审核信息
      */
     SingleResult<Audit> createAudit(BaseProject<FundTarget> proeject, AuditType type);
+
+    /**
+     * 获取直投信息
+     * @return 直投信息
+     */
+    List<FundInfos> getFundInfos();
 }

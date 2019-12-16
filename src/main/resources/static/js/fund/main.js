@@ -15,6 +15,7 @@ var vue = new Vue({
 			pageNum : 1,
 			pageSize : 10
 		},
+		formTitle:"项目编辑",
 		addForm:{
 			id:0,
 			detail:{
@@ -195,7 +196,7 @@ var vue = new Vue({
 		        width:150,
 		        render:(h,param)=>{
 		        	return h('div', [
-						param.row.detail.projectStep != 'POST_INVESTMENT'?h('Button', {
+						param.row.detail.projectStep != 'POST_INVESTMENT'&&param.row.detail.projectStep != 'OUT'?h('Button', {
                             props: {
                                 size: "small",
                                 type: "warning",
@@ -207,7 +208,7 @@ var vue = new Vue({
                             },
                             on: {
                                 click: () => {
-                                    this.toMenu(param.row);
+                                    this.toMenu(param.row,"项目编辑");
                                 }
                             }
                         }, '编辑'):h('span'),
@@ -224,7 +225,7 @@ var vue = new Vue({
                             this.toNewTab("deepTuning","深入尽调",param.row.id);
                         }}},'深入尽调'):h('span'),
                         param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
-                            this.toNewTab("innerAudit","风控审核",param.row.id);
+                        	this.commitAudit(param.row);
                         }}},'风控审核'):h('span'),
                         param.row.detail.projectStep == 'SASAC_APPROVAL'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
                             this.toNewTab("sasacAudit","国资委审批",param.row.id);
@@ -242,8 +243,11 @@ var vue = new Vue({
                             this.toNewTab("filingApply","项目归档",param.row.id);
                         }}},'项目归档'):h('span'),
                         param.row.detail.projectStep == 'POST_INVESTMENT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
-                        	this.toMenu(param.row);
+                        	this.toMenu(param.row,"投后管理");
                         }}},'投后管理'):h('span'),
+						param.row.detail.projectStep == 'OUT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+							this.toMenu(param.row,"");
+						}}},'查看'):h('span'),
     	 			])
 		        }
 		    }]
@@ -252,7 +256,8 @@ var vue = new Vue({
 		/**
 		 * 跳转菜单
 		 */
-		toMenu:function(project){
+		toMenu:function(project,title){
+			this.formTitle= title;
 			this.addForm = JSON.parse(JSON.stringify(project));
 			if(null == this.addForm.detail.memberA){
 				this.addForm.detail.memberA ={};
@@ -296,6 +301,7 @@ var vue = new Vue({
 				});
 			}
 		},
+
 
 
 		/**
@@ -418,19 +424,52 @@ var vue = new Vue({
 		},
 
 		/**
+		 * 项目退出
+		 */
+		projectOut:function(){
+			let _self = this;
+			this.$Modal.confirm({
+				title: "是否完结项目退出",
+				onOk:function (event) {
+                    _self.addForm.detail.projectStep = "OUT";
+					this.$http.put("/fund",_self.addForm).then(function(response){
+						let result  = response.data;
+						if(result.success){
+							_self.$Message.info({
+                                content:"项目退出成功",
+                                onClose : function() {
+                                    _self.modal1=false;
+                                    _self.search();
+                                }
+                            });
+						}else{
+							_self.$Message.error(result.errorMessage);
+						}
+					},function(error){
+						console.error(error);
+					})
+
+				},
+				onCancel:function (event) {
+
+				}
+			});
+		},
+
+		/**
 		 *
 		 */
 		commit:function(){
 			let self = this;
 			this.addForm.items = [];
-			if(!this.addForm.projectId){
-				for(let index in this.fileList){
-					let item={
-							itemName:this.fileList[index].name,
-							itemValue:this.fileList[index].response.data.fileId
-					}
-					this.addForm.items.push(item);
+			for(let index in this.fileList){
+				let item={
+					itemName:this.fileList[index].name,
+					itemValue:this.fileList[index].response.data.fileId
 				}
+				this.addForm.items.push(item);
+			}
+			if(!this.addForm.projectId){
 				console.log(this.addForm);
 				this.$http.post("/fund", this.addForm).then(function(response) {
 					this.$Spin.hide();

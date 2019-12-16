@@ -4,16 +4,16 @@
  */
 package com.smile.start.event.listener;
 
-import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.service.contract.ContractInfoService;
+import javax.annotation.Resource;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.event.AuditEvent;
+import com.smile.start.model.contract.ContractInfo;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.project.Audit;
-
-import javax.annotation.Resource;
+import com.smile.start.service.contract.ContractInfoService;
 
 /**
  * 
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @version $Id: ContractAuditLinstener.java, v 0.1 Mar 12, 2019 10:01:03 PM smile.jing Exp $
  */
 @Service
-public class ContractAuditLinstener implements AuditListener {
+public class ContractAuditListener implements AuditListener {
 
     @Resource
     private ContractInfoService contractInfoService;
@@ -34,7 +34,7 @@ public class ContractAuditLinstener implements AuditListener {
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
         if (AuditType.DRAWUP == audit.getAuditType()) {
-            if(audit.getStep() == 0) {
+            if (audit.getStep() == 0) {
                 ContractInfo contractInfo = contractInfoService.getBaseInfo(audit.getProject().getId());
                 contractInfo.setStatus(0);
                 contractInfoService.updateBaseInfo(contractInfo);

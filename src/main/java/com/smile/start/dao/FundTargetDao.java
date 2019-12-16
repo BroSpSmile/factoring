@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.*;
 
+import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.BaseProjectQuery;
@@ -124,4 +125,12 @@ public interface FundTargetDao {
             + "<if test = 'endDate!=null'>and to_days(investemnt_time) &lt;= #{endDate}</if>"
             + "<if test = 'detail!=null and detail.investmentPart!=null and \"\"!=detail.investmentPart'>and f.investment_part = #{detail.investmentPart}</if>" + "</script>")
     List<FundProject> queryFundTarget(BaseProjectQuery<FundTarget> query);
+
+    /**
+     *
+     * @return
+     */
+    @Select("SELECT" + "    DATE_FORMAT( p.create_time, '%Y-%m' ) months," + "    count( 1 ) total ," + "    sum( d.investment ) investment " + "FROM factoring_project p"
+            + "    INNER JOIN fund_project d ON p.project_id = d.project_id  WHERE d.project_step !='STOP' GROUP BY months")
+    List<FundInfos> queryFundInfos();
 }

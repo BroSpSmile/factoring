@@ -31,7 +31,10 @@ public enum AuditType {
                        CONTRACT_SIGN(6, "CONTRACT_SIGN", "直投合同审核流程"),
 
                        /** 直投放款审核流程 */
-                       PAYMENT(7, "PAYMENT", "直投放款审核流程");
+                       PAYMENT(7, "PAYMENT", "直投放款审核流程"),
+
+                       /** 直投归档审核流程 */
+                       FUND_FILE(8, "FUND_FILE", "直投归档审核流程");
 
     /** 类型值 */
     private int    value;

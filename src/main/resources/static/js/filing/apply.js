@@ -10,6 +10,7 @@ var vue = new Vue({
         formInline: {
             type: []
         },
+        project:{},
         contract:{
         	signList:[],
         	project:{
@@ -25,6 +26,7 @@ var vue = new Vue({
     created: function () {
         this.contract.project.id = document.getElementById("projectId").value;
         this.initDate();
+        this.getProject(this.contract.project.id);
     },
     filters:{
         /**
@@ -94,6 +96,19 @@ var vue = new Vue({
             	 })
             }
         },
+
+        /**
+         * 获取项目信息
+         */
+        getProject:function(id){
+            let _self = this;
+            this.$http.get("/project/"+id).then(function(response){
+                _self.project = response.data;
+            },function(error){
+                console.error(error);
+            })
+        },
+
         /**
          * 清单项验证
          * commitFla标志位判断是保存操作还是提交操作，如果是保存操作只针对新增行进行验证，如果是提交操作，则验证所有行
@@ -133,6 +148,7 @@ var vue = new Vue({
             this.isEdit = false;
             let self = this;
             let contract = JSON.parse(JSON.stringify(this.contract));
+            contract.project.kind = this.project.kind;
             console.log(contract)
             // contract.signList = [];
             // for(let index in this.contract.signList){
@@ -183,7 +199,7 @@ var vue = new Vue({
             if(!this.validate(true)) {
                 return;
             }
-
+            contract.project.kind = this.project.kind;
             this.$Spin.show();
             this.$http.post("/filingApply/commit", contract).then(function (response) {
             	this.$Spin.hide();

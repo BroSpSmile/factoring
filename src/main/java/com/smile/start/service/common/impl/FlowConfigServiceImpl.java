@@ -228,6 +228,11 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                     setSatus(statusList, flow.getValue(), flow.getDesc());
                 }
                 return statusList;
+            case FUND_FILE:
+                for (FundFileFlowEnum flow : FundFileFlowEnum.values()) {
+                    setSatus(statusList, flow.getValue(), flow.getDesc());
+                }
+                return statusList;
             default:
                 return statusList;
         }

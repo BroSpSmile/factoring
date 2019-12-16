@@ -28,10 +28,7 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditResult;
-import com.smile.start.model.enums.AuditType;
-import com.smile.start.model.enums.FlowTypeEnum;
-import com.smile.start.model.enums.Step;
+import com.smile.start.model.enums.*;
 import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;
@@ -117,6 +114,9 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         audit.setCreateTime(new Date());
         audit.setStep(0);
         audit.setAuditType(AuditType.getByCode(Step.getStep(project.getStep()).name()));
+        if (ProjectKind.INVESTMENT.equals(project.getKind()) && AuditType.FILE.equals(audit.getAuditType())) {
+            audit.setAuditType(AuditType.FUND_FILE);
+        }
         AuditFlow flow = getFlow(audit, 1);
         audit.setStep(flow.getStep());
         audit.setRole(flow.getRole());

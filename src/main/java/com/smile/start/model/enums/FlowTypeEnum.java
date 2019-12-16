@@ -8,16 +8,16 @@ package com.smile.start.model.enums;
  */
 public enum FlowTypeEnum {
                           /**  */
-                          DRAWUP(1, "合同审核流程 "),
+                          DRAWUP(1, "保理合同审核流程 "),
 
                           /**  */
-                          TUNEUP(2, "尽调审核流程"),
+                          TUNEUP(2, "保理尽调审核流程"),
 
                           /**  */
-                          LOAN(3, "放款审核流程"),
+                          LOAN(3, "保理放款审核流程"),
 
                           /**  */
-                          FILE(4, "归档审核流程"),
+                          FILE(4, "保理归档审核流程"),
 
                           /** 直投部门内核 */
                           INNERAUTH(5, "直投部门内核流程"),
@@ -26,7 +26,10 @@ public enum FlowTypeEnum {
                           CONTRACT_SIGN(6, "直投合同审核流程"),
 
                           /** 直投放款审核流程 */
-                          PAYMENT(7, "直投放款审核流程");
+                          PAYMENT(7, "直投放款审核流程"),
+
+                          /** 直投归档审核流程 */
+                          FUND_FILE(8, "直投归档审核流程");
 
     private int    value;
     private String desc;

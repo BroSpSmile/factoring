@@ -4,6 +4,11 @@
  */
 package com.smile.start.event.listener;
 
+import javax.annotation.Resource;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
 import com.smile.start.event.AuditEvent;
 import com.smile.start.mapper.ProjectMapper;
 import com.smile.start.model.enums.AuditType;
@@ -12,10 +17,6 @@ import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.service.fund.FundService;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @author : Tiny.Jing
@@ -24,7 +25,7 @@ import javax.annotation.Resource;
  * @date Date : 2019年11月10日 20:07
  */
 @Component
-public class FundPaymenAuditLinstener implements AuditListener {
+public class FundPaymenAuditListener implements AuditListener {
     /** fundService */
     @Resource
     private FundService fundService;

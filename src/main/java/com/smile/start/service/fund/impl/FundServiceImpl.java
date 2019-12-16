@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.project.Installment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -25,11 +24,10 @@ import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.BaseProject;
-import com.smile.start.model.project.BaseProjectQuery;
+import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditCreateService;
 import com.smile.start.service.auth.UserInfoService;
@@ -114,6 +112,13 @@ public class FundServiceImpl extends AbstractService implements FundService {
         }
         int effect = fundTargetDao.updateTarget(target);
         LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
+        if (effect > 0 && !CollectionUtils.isEmpty(project.getItems())) {
+            project.getItems().forEach(item -> {
+                item.setProjectId(project.getId());
+                item.setItemType(ProjectItemType.PROJECT);
+            });
+            itemService.save(project.getItems());
+        }
         return toResult(effect);
     }
 
@@ -165,6 +170,10 @@ public class FundServiceImpl extends AbstractService implements FundService {
         target.setProjectId(projectId);
         FundTarget fundTarget = fundTargetDao.getByProjectId(target);
         List<Installment> installments = installmentDao.queryByDetail(fundTarget.getId(), ProjectKind.INVESTMENT);
+        for (Installment installment : installments) {
+            InstallmentItem item = installmentDao.getInstallmentItem(installment);
+            installment.setItem(item);
+        }
         fundTarget.setLoanInstallments(installments);
         setUser(fundTarget);
         return fundTarget;
@@ -182,6 +191,16 @@ public class FundServiceImpl extends AbstractService implements FundService {
     public SingleResult<Audit> createAudit(BaseProject<FundTarget> proeject, AuditType type) {
         this.modifyTarget(proeject);
         return auditCreateService.apply(proeject, type);
+    }
+
+    /**
+     * 获取直投信息
+     *
+     * @return 直投信息
+     */
+    @Override
+    public List<FundInfos> getFundInfos() {
+        return fundTargetDao.queryFundInfos();
     }
 
     /**

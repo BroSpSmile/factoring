@@ -7,10 +7,15 @@ var vue = new Vue({
 			investment:0.0,
 			profit:0.0
 		},
+		fundTotal:{
+			total:0,
+			investment:0.0,
+		},
 		factorings : []
 	},
 	created : function() {
 		this.getFactorings();
+		this.getFunds();
 	},
 	methods : {
 		getFactorings : function() {
@@ -25,6 +30,19 @@ var vue = new Vue({
 
 			});
 		},
+
+		getFunds: function() {
+			this.$http.get("fund/infos").then(function(response) {
+				this.funds = response.data;
+				for(var index in this.funds){
+					this.fundTotal.total += this.funds[index].total;
+					this.fundTotal.investment += this.funds[index].investment;
+				}
+			}, function(error) {
+
+			});
+		},
+
 		openFactoring:function(){
 			parent.window.menu.createNew({
 				name:"保理业务",

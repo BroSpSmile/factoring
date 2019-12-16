@@ -7,11 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
@@ -54,7 +50,6 @@ public class FilingApplyController extends BaseController {
         LoggerUtils.info(logger, "归档申请项目ID={}", id);
         model.addAttribute("id", id);
         model.addAttribute("type", request.getParameter("type"));
-
         return "filing/apply";
     }
 

@@ -26,7 +26,7 @@ import com.smile.start.service.fund.FundService;
  * @date Date : 2019年11月10日 16:42
  */
 @Component
-public class FundContractAuditLinstener implements AuditListener {
+public class FundContractAuditListener implements AuditListener {
     /** fundService */
     @Resource
     private FundService fundService;

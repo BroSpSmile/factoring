@@ -5,22 +5,13 @@
 package com.smile.start.controller.fund;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.model.fund.FundProject;
-import com.smile.start.model.project.BaseProject;
-import com.smile.start.model.project.BaseProjectQuery;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
@@ -29,7 +20,12 @@ import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.fund.FundInfos;
+import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
+import com.smile.start.model.project.BaseProject;
+import com.smile.start.model.project.BaseProjectQuery;
 import com.smile.start.service.fund.FundService;
 
 /**
@@ -113,5 +109,15 @@ public class FundController extends BaseController {
     @ResponseBody
     public FundTarget get(@PathVariable String projectId) {
         return fundService.getTarget(projectId);
+    }
+
+    /**
+     * 直投信息
+     * @return
+     */
+    @GetMapping("/infos")
+    @ResponseBody
+    public List<FundInfos> getAllFundInfos() {
+        return fundService.getFundInfos();
     }
 }
