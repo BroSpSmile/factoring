@@ -79,7 +79,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Override
     @Transactional
     public BaseResult createTarget(BaseProject<FundTarget> project) {
-        project.setProjectId(idGenService.genId(ProjectKind.FUND));
+        project.setProjectId(idGenService.genId(ProjectKind.INVESTMENT));
         long projectEffct = baseProjectDao.insert(project);
         LoggerUtils.info(logger, "新增项目影响行:{}", projectEffct);
         FundTarget target = project.getDetail();

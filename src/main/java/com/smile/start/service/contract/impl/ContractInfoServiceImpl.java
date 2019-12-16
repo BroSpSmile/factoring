@@ -1195,7 +1195,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
         document.write(out);
         out.close();
-        upload(transferFile, fileName, projectId, ProjectItemType.FILE);
+        upload(transferFile, fileName, projectId, ProjectKind.FACTORING.equals(project.getKind()) ? ProjectItemType.FILE : ProjectItemType.FUND_FILE);
         //        transferFile.delete();
     }
 

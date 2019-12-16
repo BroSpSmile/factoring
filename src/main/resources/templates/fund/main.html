@@ -164,12 +164,15 @@
                                         </i-button> &nbsp;
                                     </span>
                                 </form-item>
+                            </i-col>
+                            <i-col span="20">
                                 <form-item label="附件上传:">
                                     <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
                                             :on-remove="removeFile">
                                         <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
                                     </Upload>
                                 </form-item>
+
                             </i-col>
                         </row>
                     </card>

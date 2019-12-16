@@ -28,6 +28,9 @@ public enum ProjectItemType {
                              FILE("FILE", "归档文件"),
 
                              /** */
+                             FUND_FILE("FUND_FILE", "直投归档文件"),
+
+                             /** */
                              DRAWUP("DRAWUP", "合同文件"),
 
                              /** */
