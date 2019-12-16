@@ -79,6 +79,13 @@ public interface ProjectService {
     List<Project> queryUnarchivedProjects(Project project);
 
     /**
+     * 查询项目附件
+     * @param projectId
+     * @return
+     */
+    List<ProjectItem> queryItems(Long projectId);
+
+    /**
      * 根据项目ID查询项目附件
      * @param projectId
      * @return
@@ -92,5 +99,9 @@ public interface ProjectService {
      */
     BaseResult deleteItem(ProjectItem item);
 
+    /**
+     * 
+     * @param project
+     */
     void setDetail(Project project);
 }

@@ -50,6 +50,9 @@ public class ProjectMapper {
         base.setId(project.getId());
         base.setProjectId(project.getProjectId());
         base.setKind(project.getKind());
+        if (null != project.getUser()) {
+            base.setOperator(project.getUser());
+        }
         return base;
     }
 }

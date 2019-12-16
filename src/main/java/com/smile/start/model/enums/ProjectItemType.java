@@ -40,7 +40,10 @@ public enum ProjectItemType {
                              DEEP_TUNING("DEEP_TUNING", "深入尽调文件"),
 
                              /** 合同文件 */
-                             CONTRACT_SIGN("CONTRACT_SIGN", "合同文件");
+                             CONTRACT_SIGN("CONTRACT_SIGN", "合同文件"),
+
+                             /** 付款通知书 */
+                             PAYMENT("PAYMENT", "付款通知书");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

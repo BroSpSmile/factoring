@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.project.Installment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.BaseProjectDao;
 import com.smile.start.dao.FundTargetDao;
+import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
@@ -52,6 +54,10 @@ public class FundServiceImpl extends AbstractService implements FundService {
     /** DAO */
     @Resource
     private FundTargetDao      fundTargetDao;
+
+    /**  */
+    @Resource
+    private InstallmentDao     installmentDao;
 
     /** 附件服务 */
     @Resource
@@ -112,6 +118,19 @@ public class FundServiceImpl extends AbstractService implements FundService {
     }
 
     /**
+     * 更新直投标的
+     *
+     * @param target
+     * @return
+     */
+    @Override
+    public BaseResult modifyTarget(FundTarget target) {
+        int effect = fundTargetDao.updateTarget(target);
+        LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
+        return toResult(effect);
+    }
+
+    /**
      * @see com.smile.start.service.fund.FundService#queryTargets(com.smile.start.model.base.PageRequest)
      */
     @Override
@@ -145,6 +164,8 @@ public class FundServiceImpl extends AbstractService implements FundService {
         FundTarget target = new FundTarget();
         target.setProjectId(projectId);
         FundTarget fundTarget = fundTargetDao.getByProjectId(target);
+        List<Installment> installments = installmentDao.queryByDetail(fundTarget.getId(), ProjectKind.INVESTMENT);
+        fundTarget.setLoanInstallments(installments);
         setUser(fundTarget);
         return fundTarget;
     }

@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.project.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +20,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.InstallmentType;
 import com.smile.start.model.enums.Progress;
 import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
@@ -115,7 +115,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         List<Assets> assetsList = Lists.newArrayListWithCapacity(3);
         Assets receivable = new Assets();
         receivable.setZcamount(formatDouble(factoringDetailDao.getNowReceivable(getYear(), getMonthLastDay(month))));
-     //  receivable.setZctotalamount(formatDouble(factoringDetailDao.getLastReceivable(getYear())));
+        //  receivable.setZctotalamount(formatDouble(factoringDetailDao.getLastReceivable(getYear())));
         assetsList.add(receivable);
         Assets shotFactoring = new Assets();
         shotFactoring.setZcamount(formatDouble(factoringDetailDao.getShotNowFactoringFee(getYear(), getMonthLastDay(month))));
@@ -136,12 +136,12 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
     }
 
     /** 
-     * @see com.smile.start.service.project.FactoringService#setInstallments(com.smile.start.model.project.Project)
+     * @see com.smile.start.service.project.FactoringService#
      */
     @Override
     public void setInstallments(FactoringDetail detail) {
         if (null != detail) {
-            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+            List<Installment> installments = installmentDao.queryByDetail(detail.getId(), ProjectKind.FACTORING);
             for (Installment installment : installments) {
                 if (InstallmentType.FACTORING.equals(installment.getType())) {
                     detail.addFactoringInstallment(installment);
@@ -162,7 +162,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
     @Override
     public void setInstallmentsDetail(FactoringDetail detail) {
         if (null != detail) {
-            List<Installment> installments = installmentDao.queryByDetail(detail.getId());
+            List<Installment> installments = installmentDao.queryByDetail(detail.getId(), ProjectKind.FACTORING);
             for (Installment installment : installments) {
                 InstallmentItem installmentItem = installmentDao.getInstallmentItem(installment);
                 installment.setItem(installmentItem);
@@ -183,7 +183,6 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         }
     }
 
-    @Transactional
     private BaseResult updateInstallments(FactoringDetail detail, List<Installment> installments) {
         if (!CollectionUtils.isEmpty(installments)) {
             Installment query = new Installment();

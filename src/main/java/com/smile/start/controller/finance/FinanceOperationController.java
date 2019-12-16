@@ -4,19 +4,19 @@
  */
 package com.smile.start.controller.finance;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.InstallmentType;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.finance.FinanceService;
-import com.smile.start.service.project.ProjectService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ：xioutman
@@ -28,12 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/financeOperation")
 public class FinanceOperationController extends BaseController {
-
-    /**
-     * 项目服务
-     */
-    @Resource
-    private ProjectService projectService;
 
     /**
      * 财务服务

@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.InstallmentType;
+import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.Project;
 
@@ -25,7 +26,20 @@ public interface FinanceService {
      */
     Long saveLoanInstallment(Installment installment);
 
+    /**
+     * 保存
+     * @param project
+     * @param installmentType
+     * @return
+     */
     BaseResult saveInstallments(Project project, InstallmentType installmentType);
+
+    /**
+     * 保存直投放款信息
+     * @param target
+     * @return
+     */
+    BaseResult saveFundInstallments(FundTarget target);
 
     PageInfo<Project> queryPageProject(PageRequest<Project> page);
 

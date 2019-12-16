@@ -5,10 +5,14 @@ package com.smile.start.service.fund;
 
 import java.util.List;
 
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FundStatus;
 import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.fund.FundTarget;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.ProjectItem;
 
@@ -31,6 +35,15 @@ public interface FundItemService {
      * @return
      */
     BaseResult save(FundStatus status, List<ProjectItem> items);
+
+    /**
+     * 保存并提交审核
+     * @param status
+     * @param items
+     * @param type
+     * @return
+     */
+    SingleResult<Audit> saveAndAudit(FundStatus status, List<ProjectItem> items, AuditType type, User user);
 
     /**
      * 刪除附件

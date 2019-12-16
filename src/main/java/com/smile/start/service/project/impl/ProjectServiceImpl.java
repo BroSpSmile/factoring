@@ -200,11 +200,24 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.project.ProjectService#queryUnarchivedProjects()
+     * @see com.smile.start.service.project.ProjectService#queryUnarchivedProjects
      */
     @Override
     public List<Project> queryUnarchivedProjects(Project project) {
         return projectDao.findUnarchivedProjects(project);
+    }
+
+    /**
+     * 查询项目附件
+     *
+     * @param projectId 项目ID
+     * @return
+     */
+    @Override
+    public List<ProjectItem> queryItems(Long projectId) {
+        Project project = new Project();
+        project.setId(projectId);
+        return projectItemDao.getItems(project);
     }
 
     /** 
@@ -227,7 +240,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.project.ProjectService#findAll()
+     * @see com.smile.start.service.project.ProjectService
      */
     public List<Project> findAll() {
         PageHelper.offsetPage(0, 4, "id desc");

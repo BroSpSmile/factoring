@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<div layout:fragment="content">
+    <div id="payment" v-cloak>
+        <row>
+            <i-col span="22" offset="1">
+                <br>
+                <card dis-hover title="上传付款凭证">
+                    <i-form :label-width="100">
+                        <form-item label="项目名称:">
+                            <span>{{project.projectName}}</span>
+                        </form-item>
+                        <form-item label="付款通知书:" v-if="items.length!=0">
+                            <row v-for="item in items">
+                                <i-col span="12">
+                                    <span>
+                                        <i-button type="dashed" icon="ios-cloud-download-outline" size="small"
+                                                  @click="downloadItem(item)">
+                                            {{item.itemName}}
+                                        </i-button> &nbsp;
+                                    </span>
+                                </i-col>
+                            </row>
+                        </form-item>
+                        <form-item label="上传付款通知书:">
+                            <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
+                                    :on-remove="removeFile">
+                                <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
+                            </Upload>
+                        </form-item>
+                        <row type="flex">
+                            <i-col span="8" offset="1">
+                                <i-button type="success" @click="commit">提交打款</i-button>
+                            </i-col>
+                        </row>
+                    </i-form>
+                </card>
+            </i-col>
+        </row>
+        <input th:value="${id}" id="fundId" style="display:none"></input>
+    </div>
+    <script src="js/fund/payment.js"></script>
+</div>
+</html>

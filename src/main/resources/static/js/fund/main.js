@@ -30,6 +30,7 @@ var vue = new Vue({
 		formInline:{
 			detail:{}
 		},
+        items:[],
 		tableColumns:[],
 		pageInfo:{},
 		validata:{
@@ -188,45 +189,61 @@ var vue = new Vue({
 		        	return h('span',param.row.detail.investemntTime?moment(param.row.detail.investemntTime).format('YYYY-MM-DD'):"")
 		        }
 		    },{
-		        title: '项目明细',
-				//fixed:'right',
-		        width:100,
+		        title: '操作',
+				fixed:'right',
+				align: 'center',
+		        width:150,
 		        render:(h,param)=>{
 		        	return h('div', [
-    	 				h('Dropdown',{
-    	 					props:{
-							},
-    	 					on:{
-    	 						'on-click':(value)=>{
-    	 							var menus = value.split("-");
-    	 							if(menus[0]=='factoring'){
-    	 								this.toMenu(param.row);
-    	 							}else if(menus[0] == 'innerAudit'){
-    	 								this.commitAudit(param.row);
-									}else{
-    	 								this.toNewTab(menus[0],menus[1],param.row.id);
-    	 							}
-    	 						}
-    	 					}
-    	 				},[
-    	 					h('Button',{props:{size:'small',type:'warning',ghost:true}},[
-    	 						'操作',
-    	 						h('Icon',{props:{type:'ios-arrow-down'}})
-    	 					]),
-    	 					h('DropdownMenu',{slot:'list'},[
-    	 						h('DropdownItem',{props:{name:'factoring-编辑'}},'编辑'),
-    	 						param.row.detail.projectStep == 'INITIAL_CONTACT'?h('DropdownItem',{props:{name:'initContact-签署保密协议'}},'签署保密协议'):h('span'),
-    	 						param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'?h('DropdownItem',{props:{name:'initialTuning-初步尽调'}},'初步尽调'):h('span'),
-    	 						param.row.detail.projectStep == 'INITIAL_TUNING'?h('DropdownItem',{props:{name:'meeting-项目立项'}},'项目立项'):h('span'),
-    	 					    param.row.detail.projectStep == 'DEEP_TUNING'?h('DropdownItem',{props:{name:'deepTuning-深入尽调'}},'深入尽调'):h('span'),
-								param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('DropdownItem',{props:{name:'innerAudit-风控审核'}},'风控审核'):h('span'),
-								param.row.detail.projectStep == 'SASAC_APPROVAL'?h('DropdownItem',{props:{name:'sasacAudit-国资委审批'}},'国资委审批'):h('span'),
-								param.row.detail.projectStep == 'GOV_APPROVAL'?h('DropdownItem',{props:{name:'sasacAudit-区政府审批'}},'区政府审批'):h('span'),
- 					    		param.row.detail.projectStep == 'CONTRACT_SIGN'?h('DropdownItem',{props:{name:'fundContract-合同签署'}},'合同签署'):h('span'),
-    	 						param.row.detail.projectStep == 'INFO_CHANGE'?h('DropdownItem',{props:{name:'infoChange-验资/信息变更'}},'验资/信息变更'):h('span'),
-    	 					    param.row.detail.projectStep == 'POST_INVESTMENT'?h('DropdownItem',{props:{name:'postInvestment-投后管理'}},'投后管理'):h('span'),
-    	 					])
-    	 				])
+						param.row.detail.projectStep != 'POST_INVESTMENT'?h('Button', {
+                            props: {
+                                size: "small",
+                                type: "warning",
+                                ghost: true
+
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.toMenu(param.row);
+                                }
+                            }
+                        }, '编辑'):h('span'),
+                        param.row.detail.projectStep == 'INITIAL_CONTACT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("initContact",'签署保密协议',param.row.id);
+                        }}},'签署保密协议'):h('span'),
+                        param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("initialTuning","初步尽调",param.row.id);
+                        }}},'初步尽调'):h('span'),
+                        param.row.detail.projectStep == 'INITIAL_TUNING'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("meeting","项目立项",param.row.id);
+                        }}},"项目立项"):h('span'),
+                        param.row.detail.projectStep == 'DEEP_TUNING'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("deepTuning","深入尽调",param.row.id);
+                        }}},'深入尽调'):h('span'),
+                        param.row.detail.projectStep == 'PARTMENT_AUDIT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("innerAudit","风控审核",param.row.id);
+                        }}},'风控审核'):h('span'),
+                        param.row.detail.projectStep == 'SASAC_APPROVAL'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("sasacAudit","国资委审批",param.row.id);
+                        }}},'国资委审批'):h('span'),
+                        param.row.detail.projectStep == 'GOV_APPROVAL'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("sasacAudit","区政府审批",param.row.id);
+                        }}},'区政府审批'):h('span'),
+                        param.row.detail.projectStep == 'CONTRACT_SIGN'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("fundContract","合同上传",param.row.id);
+                        }}},'合同上传'):h('span'),
+                        param.row.detail.projectStep == 'PAYMENT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("payment","上传付款凭证",param.row.id);
+                        }}},'上传付款凭证'):h('span'),
+                        param.row.detail.projectStep == 'FILE'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                            this.toNewTab("filingApply","项目归档",param.row.id);
+                        }}},'项目归档'):h('span'),
+                        param.row.detail.projectStep == 'POST_INVESTMENT'?h('Button',{props:{size:'small',type:"info",ghost:true},on:{click:()=>{
+                        	this.toMenu(param.row);
+                        }}},'投后管理'):h('span'),
     	 			])
 		        }
 		    }]
@@ -244,8 +261,22 @@ var vue = new Vue({
 				this.addForm.detail.memberB ={};
 			}
 			this.fileList = [];
+			this.getItems(project.id);
 			this.modal1 = true;
 		},
+
+        /**
+         * 获取项目附件
+         * @param id
+         */
+        getItems:function(id){
+            let _self = this;
+            this.$http.post("/project/items/"+id).then(function(response){
+                _self.items = response.data;
+            },function(error){
+                console.error(error);
+            })
+        },
 
 		/**
 		 * 打开新标签

@@ -34,16 +34,18 @@ public enum FundStatus {
                         GOV_APPROVAL(10, "GOV_APPROVAL", "区政府审批"),
                         /** 合同签署 */
                         CONTRACT_SIGN(11, "CONTRACT_SIGN", "合同签署"),
-                        /** 投资付款 */
-                        PAYMENT(12, "PAYMENT", "投资付款"),
+                        /** 付款通知 */
+                        PAYMENT(12, "PAYMENT", "付款通知"),
+                        /** 支付打款 */
+                        FUND_LOAN(13, "FUND_LOAN", "支付打款"),
                         /** 验资/信息变更 */
-                        INFO_CHANGE(13, "INFO_CHANGE", "验资/信息变更"),
+                        INFO_CHANGE(14, "INFO_CHANGE", "验资/信息变更"),
                         /** 项目归档 */
-                        FILE(14, "FILE", "项目归档"),
+                        FILE(15, "FILE", "项目归档"),
                         /** 投后管理 */
-                        POST_INVESTMENT(15, "POST_INVESTMENT", "投后管理"),
+                        POST_INVESTMENT(16, "POST_INVESTMENT", "投后管理"),
                         /** 项目退出 */
-                        OUT(16, "OUT", "项目退出"),;
+                        OUT(17, "OUT", "项目退出"),;
 
     FundStatus(int index, String code, String desc) {
         this.index = index;

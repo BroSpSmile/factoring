@@ -6,9 +6,12 @@ package com.smile.start.model.fund;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.project.Installment;
 
 /**
  * 直投投资标的
@@ -86,6 +89,9 @@ public class FundTarget implements Serializable {
 
     /** 项目来源 */
     private String            projectChannel;
+
+    /** 放款分期信息 */
+    private List<Installment> loanInstallments = Lists.newArrayList();
 
     /**
      * 
@@ -488,4 +494,21 @@ public class FundTarget implements Serializable {
         this.projectChannel = projectChannel;
     }
 
+    /**
+     * Getter method for property <tt>loanInstallments</tt>.
+     *
+     * @return property value of loanInstallments
+     */
+    public List<Installment> getLoanInstallments() {
+        return loanInstallments;
+    }
+
+    /**
+     * Setter method for property <tt>loanInstallments</tt>.
+     *
+     * @param loanInstallments value to be assigned to property  loanInstallments
+     */
+    public void setLoanInstallments(List<Installment> loanInstallments) {
+        this.loanInstallments = loanInstallments;
+    }
 }

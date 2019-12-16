@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.smile.start.model.enums.InstallmentType;
+import com.smile.start.model.enums.ProjectKind;
 
 /**
  * 分期信息
@@ -18,63 +19,52 @@ import com.smile.start.model.enums.InstallmentType;
 public class Installment implements Serializable {
 
     /** UID */
-    private static final long serialVersionUID = 2671634818269610449L;
+    private static final long       serialVersionUID = 2671634818269610449L;
 
     /** 编号 */
-    private Long              id =-1L;
+    private Long                    id               = -1L;
 
     /** 所属项目 */
-    private FactoringDetail   detail;
+    private FactoringDetail         detail;
+
+    /** 所属项目类型 */
+    private ProjectKind             kind;
 
     /** 分期类型 */
-    private InstallmentType   type;
+    private InstallmentType         type;
 
     /** 分期金额 */
-    private double            amount;
+    private double                  amount;
 
     /** 分期时间 */
-    private Date              installmentDate;
+    private Date                    installmentDate;
 
     /** 是否已支付 */
-    private boolean           paied;
+    private boolean                 paied;
 
     /** 是否已开票 */
-    private boolean            invoiced;
+    private boolean                 invoiced;
 
-    /**
-     * 分期收款或开票信息明细
-     */
+    /** 分期收款或开票信息明细*/
     private List<InstallmentDetail> detailList;
 
-    /**
-     * 分期凭证附件
-     */
-    private InstallmentItem item;
-
-    public InstallmentItem getItem() {
-        return item;
-    }
-
-    public void setItem(InstallmentItem item) {
-        this.item = item;
-    }
+    /** 分期凭证附件 */
+    private InstallmentItem         item;
 
     /** 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "")
-            + (detail != null ? "detail\":\"" + detail + "\", \"" : "")
-            + (type != null ? "type\":\"" + type + "\", \"" : "") + "amount\":\"" + amount + "\", \""
-            + (installmentDate != null ? "installmentDate\":\"" + installmentDate + "\", \"" : "")
-            + "paied\":\"" + paied + "\", \""
-            + "invoiced\":\"" + invoiced + "\", \"" + "\"}  ";
+        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (detail != null ? "detail\":\"" + detail + "\", \"" : "")
+               + (type != null ? "type\":\"" + type + "\", \"" : "") + "amount\":\"" + amount + "\", \""
+               + (installmentDate != null ? "installmentDate\":\"" + installmentDate + "\", \"" : "") + "paied\":\"" + paied + "\", \"" + "invoiced\":\"" + invoiced + "\", \""
+               + "\"}  ";
     }
 
     /**
      * Getter method for property <tt>id</tt>.
-     * 
+     *
      * @return property value of id
      */
     public Long getId() {
@@ -83,8 +73,8 @@ public class Installment implements Serializable {
 
     /**
      * Setter method for property <tt>id</tt>.
-     * 
-     * @param id value to be assigned to property id
+     *
+     * @param id value to be assigned to property  id
      */
     public void setId(Long id) {
         this.id = id;
@@ -92,7 +82,7 @@ public class Installment implements Serializable {
 
     /**
      * Getter method for property <tt>detail</tt>.
-     * 
+     *
      * @return property value of detail
      */
     public FactoringDetail getDetail() {
@@ -101,16 +91,34 @@ public class Installment implements Serializable {
 
     /**
      * Setter method for property <tt>detail</tt>.
-     * 
-     * @param detail value to be assigned to property detail
+     *
+     * @param detail value to be assigned to property  detail
      */
     public void setDetail(FactoringDetail detail) {
         this.detail = detail;
     }
 
     /**
+     * Getter method for property <tt>kind</tt>.
+     *
+     * @return property value of kind
+     */
+    public ProjectKind getKind() {
+        return kind;
+    }
+
+    /**
+     * Setter method for property <tt>kind</tt>.
+     *
+     * @param kind value to be assigned to property  kind
+     */
+    public void setKind(ProjectKind kind) {
+        this.kind = kind;
+    }
+
+    /**
      * Getter method for property <tt>type</tt>.
-     * 
+     *
      * @return property value of type
      */
     public InstallmentType getType() {
@@ -119,8 +127,8 @@ public class Installment implements Serializable {
 
     /**
      * Setter method for property <tt>type</tt>.
-     * 
-     * @param type value to be assigned to property type
+     *
+     * @param type value to be assigned to property  type
      */
     public void setType(InstallmentType type) {
         this.type = type;
@@ -128,7 +136,7 @@ public class Installment implements Serializable {
 
     /**
      * Getter method for property <tt>amount</tt>.
-     * 
+     *
      * @return property value of amount
      */
     public double getAmount() {
@@ -137,8 +145,8 @@ public class Installment implements Serializable {
 
     /**
      * Setter method for property <tt>amount</tt>.
-     * 
-     * @param amount value to be assigned to property amount
+     *
+     * @param amount value to be assigned to property  amount
      */
     public void setAmount(double amount) {
         this.amount = amount;
@@ -146,7 +154,7 @@ public class Installment implements Serializable {
 
     /**
      * Getter method for property <tt>installmentDate</tt>.
-     * 
+     *
      * @return property value of installmentDate
      */
     public Date getInstallmentDate() {
@@ -155,45 +163,72 @@ public class Installment implements Serializable {
 
     /**
      * Setter method for property <tt>installmentDate</tt>.
-     * 
-     * @param installmentDate value to be assigned to property installmentDate
+     *
+     * @param installmentDate value to be assigned to property  installmentDate
      */
     public void setInstallmentDate(Date installmentDate) {
         this.installmentDate = installmentDate;
     }
 
     /**
-     * Getter method for property <tt>paied</tt>.
-     * 
-     * @return property value of paied
+     * Getter method for property <tt>detailList</tt>.
+     *
+     * @return property value of detailList
      */
-    public boolean isPaied() {
-        return paied;
+    public List<InstallmentDetail> getDetailList() {
+        return detailList;
+    }
+
+    /**
+     * Setter method for property <tt>detailList</tt>.
+     *
+     * @param detailList value to be assigned to property  detailList
+     */
+    public void setDetailList(List<InstallmentDetail> detailList) {
+        this.detailList = detailList;
+    }
+
+    /**
+     * Getter method for property <tt>item</tt>.
+     *
+     * @return property value of item
+     */
+    public InstallmentItem getItem() {
+        return item;
+    }
+
+    /**
+     * Setter method for property <tt>item</tt>.
+     *
+     * @param item value to be assigned to property  item
+     */
+    public void setItem(InstallmentItem item) {
+        this.item = item;
     }
 
     /**
      * Setter method for property <tt>paied</tt>.
-     * 
-     * @param paied value to be assigned to property paied
+     *
+     * @param paied value to be assigned to property  paied
      */
     public void setPaied(boolean paied) {
         this.paied = paied;
     }
 
-    public boolean isInvoiced() {
-        return invoiced;
-    }
-
+    /**
+     * Setter method for property <tt>invoiced</tt>.
+     *
+     * @param invoiced value to be assigned to property  invoiced
+     */
     public void setInvoiced(boolean invoiced) {
         this.invoiced = invoiced;
     }
 
-    public List<InstallmentDetail> getDetailList() {
-        return detailList;
+    public boolean isPaied() {
+        return paied;
     }
 
-    public void setDetailList(List<InstallmentDetail> detailList) {
-        this.detailList = detailList;
+    public boolean isInvoiced() {
+        return invoiced;
     }
-
 }

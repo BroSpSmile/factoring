@@ -4,16 +4,23 @@
  */
 package com.smile.start.service.finance.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.InstallmentDetailType;
-import com.smile.start.model.enums.InstallmentType;
-import com.smile.start.model.enums.Step;
-import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.*;
+import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Installment;
 import com.smile.start.model.project.InstallmentDetail;
@@ -21,15 +28,9 @@ import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.finance.FinanceService;
+import com.smile.start.service.fund.FundService;
 import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 实现
@@ -50,6 +51,10 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
 
     @Resource
     private ProjectService     projectService;
+
+    /** 直投服务 */
+    @Resource
+    private FundService        fundService;
 
     /**
      * 项目DAO
@@ -120,41 +125,83 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         for (Installment installment : installments) {
             installment.setType(installmentType);
             installment.setDetail(project.getDetail());
-            long effect = 0;
-            long itemEffect = 0;
-            if (null != installment.getId() && installment.getId() <= -1L) {
-                //ADD
-                effect = installmentDao.insert(installment);
-                if (null != installment.getItem()) {
-                    installment.getItem().setInstallmentId(installment.getId());
-                    itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
-                }
-            } else {
-                //UPDATE
-                effect = installmentDao.update(installment);
-                itemEffect = installmentDao.deleteInstallmentItem(installment);
-
-                if (null != installment.getItem()) {
-                    installment.getItem().setInstallmentId(installment.getId());
-                    if (itemEffect > 0) {
-                        itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
-                    }
-                }
-            }
-            if (installmentType == InstallmentType.FACTORING) {
+            installment.setKind(project.getKind());
+            result = this.save(installment);
+            if (result.isSuccess() && installmentType == InstallmentType.FACTORING) {
                 List<InstallmentDetail> detailList = installment.getDetailList();
                 if (!CollectionUtils.isEmpty(detailList) && detailList.size() > 0) {
                     result = saveInstallmentDetails(detailList, installment.getId());
                 }
             }
-
-            if (effect < 0 || itemEffect < 0 || !result.isSuccess()) {
+            if (!result.isSuccess()) {
                 throw new RuntimeException("保存" + installmentType.getDesc() + "信息失败!");
             }
         }
 
         if (result.isSuccess()) {
             financeOperate(project);
+        }
+        return result;
+    }
+
+    /**
+     * 保存直投放款信息
+     *
+     * @param target
+     * @return
+     */
+    @Override
+    public BaseResult saveFundInstallments(FundTarget target) {
+        BaseResult result = new BaseResult();
+        Double paid = target.getLoanInstallments().stream().mapToDouble(Installment::getAmount).sum();
+        //放款金额大于投资金额转换状态
+        if (paid >= target.getInvestment()) {
+            target.setProjectStep(FundStatus.FILE);
+            result = fundService.modifyTarget(target);
+        }
+        if (result.isSuccess()) {
+            for (Installment installment : target.getLoanInstallments()) {
+                installment.setType(InstallmentType.LOAN);
+                FactoringDetail detail = new FactoringDetail();
+                detail.setId(target.getId());
+                installment.setDetail(detail);
+                installment.setKind(ProjectKind.INVESTMENT);
+                result = save(installment);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 保存
+     * @param installment
+     * @return
+     */
+    private BaseResult save(Installment installment) {
+        long effect = 0L;
+        long itemEffect = 0;
+        if (null != installment.getId() && installment.getId() <= -1L) {
+            //ADD
+            effect = installmentDao.insert(installment);
+            if (null != installment.getItem()) {
+                installment.getItem().setInstallmentId(installment.getId());
+                itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+            }
+        } else {
+            //UPDATE
+            effect = installmentDao.update(installment);
+            itemEffect = installmentDao.deleteInstallmentItem(installment);
+
+            if (null != installment.getItem()) {
+                installment.getItem().setInstallmentId(installment.getId());
+                if (itemEffect > 0) {
+                    itemEffect = installmentDao.insertInstallmentItem(installment.getItem());
+                }
+            }
+        }
+        BaseResult result = new BaseResult();
+        if (effect < 0 || itemEffect < 0) {
+            result.setSuccess(false);
         }
         return result;
     }

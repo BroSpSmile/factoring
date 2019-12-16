@@ -11,17 +11,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.smile.start.dao.FundTargetDao;
+import com.smile.start.mapper.ProjectMapper;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
+import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.enums.AuditType;
 import com.smile.start.model.enums.FundStatus;
 import com.smile.start.model.enums.ProjectItemType;
 import com.smile.start.model.fund.FundTarget;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
+import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.fund.FundItemService;
 import com.smile.start.service.fund.FundService;
 import com.smile.start.service.project.ProjectItemSerivce;
+import com.smile.start.service.project.ProjectService;
 
 /**
  * 实现
@@ -38,9 +44,9 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     @Resource
     private FundService        fundService;
 
-    /** fundTargetDao */
+    /** 项目服务 */
     @Resource
-    private FundTargetDao      fundTargetDao;
+    private ProjectService     projectService;
 
     /**
      * 
@@ -70,6 +76,38 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
         if (result.isSuccess()) {
             for (ProjectItem item : items) {
                 result = this.save(item);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 保存并提交审核
+     *
+     * @param status
+     * @param items
+     * @param type
+     * @return
+     */
+    @Override
+    @Transactional
+    public SingleResult<Audit> saveAndAudit(FundStatus status, List<ProjectItem> items, AuditType type, User user) {
+        SingleResult<Audit> result = new SingleResult();
+        if (!CollectionUtils.isEmpty(items)) {
+            ProjectItem item = items.get(0);
+            Project project = projectService.getProject(item.getProjectId());
+            project.setUser(user);
+            BaseProject<FundTarget> fundProject = ProjectMapper.mapper(project, FundTarget.class);
+            FundTarget target = new FundTarget();
+            project.setId(item.getProjectId());
+            target.setProjectStep(status);
+            fundProject.setDetail(target);
+            result = fundService.createAudit(ProjectMapper.mapper(project, FundTarget.class), type);
+
+        }
+        if (result.isSuccess()) {
+            for (ProjectItem item : items) {
+                this.save(item);
             }
         }
         return result;

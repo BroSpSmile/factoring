@@ -14,9 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.enums.*;
-import com.smile.start.model.project.*;
-import com.smile.start.service.project.FactoringService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.slf4j.Logger;
@@ -31,59 +29,26 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.smile.start.commons.DateUtil;
-import com.smile.start.commons.DocUtil;
-import com.smile.start.commons.LoginHandler;
-import com.smile.start.commons.MoneyToChineseUtil;
-import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.AuditDao;
-import com.smile.start.dao.AuditRecordDao;
-import com.smile.start.dao.ContractAuditRecordDao;
-import com.smile.start.dao.ContractExtendInfoDao;
-import com.smile.start.dao.ContractFasaDao;
-import com.smile.start.dao.ContractInfoDao;
-import com.smile.start.dao.ContractReceivableAgreementDao;
-import com.smile.start.dao.ContractReceivableConfirmationDao;
-import com.smile.start.dao.ContractShareholderMeetingDao;
-import com.smile.start.dao.ContractSignListDao;
-import com.smile.start.dao.FlowConfigDao;
-import com.smile.start.dao.ProjectItemDao;
-import com.smile.start.dao.UserDao;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.ContractAttachDTO;
-import com.smile.start.dto.ContractAuditDTO;
-import com.smile.start.dto.ContractAuditRecordDTO;
-import com.smile.start.dto.ContractAuditSearchDTO;
-import com.smile.start.dto.ContractBaseInfoDTO;
-import com.smile.start.dto.ContractExtendInfoDTO;
-import com.smile.start.dto.ContractFasaDTO;
-import com.smile.start.dto.ContractInfoDTO;
-import com.smile.start.dto.ContractInfoSearchDTO;
-import com.smile.start.dto.ContractReceivableAgreementDTO;
-import com.smile.start.dto.ContractReceivableConfirmationDTO;
-import com.smile.start.dto.ContractShareholderMeetingDTO;
-import com.smile.start.dto.ContractSignDTO;
-import com.smile.start.dto.ContractSignListDTO;
+import com.smile.start.commons.*;
+import com.smile.start.dao.*;
+import com.smile.start.dto.*;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.ContractInfoMapper;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.common.FlowStatus;
-import com.smile.start.model.contract.ContractExtendInfo;
-import com.smile.start.model.contract.ContractFasa;
-import com.smile.start.model.contract.ContractInfo;
-import com.smile.start.model.contract.ContractReceivableAgreement;
-import com.smile.start.model.contract.ContractReceivableConfirmation;
-import com.smile.start.model.contract.ContractShareholderMeeting;
-import com.smile.start.model.contract.ContractSignList;
+import com.smile.start.model.contract.*;
+import com.smile.start.model.enums.*;
 import com.smile.start.model.login.LoginUser;
+import com.smile.start.model.project.*;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.common.FileService;
 import com.smile.start.service.contract.ContractInfoService;
 import com.smile.start.service.engine.ProcessEngine;
+import com.smile.start.service.project.FactoringService;
 import com.smile.start.service.project.ProjectService;
 
 /**
@@ -1299,8 +1264,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @return
      */
     private String buildSubtitle(Project project, FactoringDetail factoringDetail) {
-        DecimalFormat df = new DecimalFormat("#");
-        return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), df.format(factoringDetail.getAssignee()));
+        if (project.getKind().equals(ProjectKind.FACTORING)) {
+            DecimalFormat df = new DecimalFormat("#");
+            return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), df.format(factoringDetail.getAssignee()));
+        } else {
+            return StringUtils.EMPTY;
+        }
     }
 
     /**

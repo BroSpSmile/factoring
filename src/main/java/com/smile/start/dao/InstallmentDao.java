@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.*;
 
+import com.smile.start.model.enums.ProjectKind;
 import com.smile.start.model.project.*;
 
 /**
@@ -22,8 +23,8 @@ public interface InstallmentDao {
      * @param installment
      * @return
      */
-    @Insert("insert into project_installment (detail,type,amount,installment_date,paied,invoiced)"
-            + "values(#{detail.id},#{type},#{amount},#{installmentDate},#{paied},#{invoiced})")
+    @Insert("insert into project_installment (detail,type,project_type,amount,installment_date,paied,invoiced)"
+            + "values(#{detail.id},#{type},#{kind},#{amount},#{installmentDate},#{paied},#{invoiced})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Installment installment);
 
@@ -60,8 +61,8 @@ public interface InstallmentDao {
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "detail", property = "detail.id") })
-    @Select("select * from project_installment where detail = #{detailId}")
-    List<Installment> queryByDetail(Long detailId);
+    @Select("select * from project_installment where detail = #{detailId} and project_type = #{kind}")
+    List<Installment> queryByDetail(Long detailId, ProjectKind kind);
 
     //add by xioutman  分期详情、附件操作
     /**

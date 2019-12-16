@@ -5,7 +5,7 @@ common.pageName = "project";
 common.openName = [ '1' ];
 
 var vue = new Vue({
-	el : '#innerAudit',
+	el : '#payment',
 	data : {
 		project:{},
 		fileList:[],
@@ -35,7 +35,7 @@ var vue = new Vue({
 		 */
 		getItems:function(id){
 			let _self = this;
-			this.$http.post("/project/items/"+id+"/DEEP_TUNING").then(function(response){
+			this.$http.post("/project/items/"+id+"/PAYMENT").then(function(response){
 				_self.items = response.data;
 			},function(error){
 				console.error(error);
@@ -54,7 +54,7 @@ var vue = new Vue({
 			for(let index in this.fileList){
 				let item={
 						projectId:this.project.id,
-						itemType:"DEEP_TUNING",
+						itemType:"PAYMENT",
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
 				}
@@ -62,11 +62,11 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
-			this.$http.post("/initContact",JSON.stringify(items)).then(function(response){
+			this.$http.post("/payment/PAYMENT",JSON.stringify(items)).then(function(response){
 				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({
-						content : "上传保密协议成功"
+						content : "上传付款通知书成功"
 					});
 				} else {
 					self.$Message.error(response.data.errorMessage);

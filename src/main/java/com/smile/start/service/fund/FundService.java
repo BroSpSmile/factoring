@@ -40,6 +40,13 @@ public interface FundService {
     BaseResult modifyTarget(BaseProject<FundTarget> project);
 
     /**
+     * 更新直投标的
+     * @param target
+     * @return
+     */
+    BaseResult modifyTarget(FundTarget target);
+
+    /**
      * 分页查询直投标的信息
      *
      * @param query 查找参数
