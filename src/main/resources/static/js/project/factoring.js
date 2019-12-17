@@ -16,7 +16,8 @@ var vue = new Vue({
 			factoringInstallments:[{
 				amount:0,
 				installmentDate:new Date(),
-				type:"FACTORING"
+				type:"FACTORING",
+				kind:"FACTORING"
 			}],
 			assignee:0,
 			receivable:0,
@@ -83,7 +84,8 @@ var vue = new Vue({
 			this.detail.factoringInstallments.push({
 				amount:0,
 				installmentDate:new Date(),
-				type:"FACTORING"
+				type:"FACTORING",
+				kind:"FACTORING"
 			});
 			this.computeFee();
 		},
