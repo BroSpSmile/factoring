@@ -3,8 +3,8 @@ package com.smile.start.service.auth;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.OrganizationalDTO;
-import com.smile.start.dto.OrganizationalSearchDTO;
+import com.smile.start.model.dto.OrganizationalDTO;
+import com.smile.start.model.dto.OrganizationalSearchDTO;
 import com.smile.start.model.base.PageRequest;
 
 /**

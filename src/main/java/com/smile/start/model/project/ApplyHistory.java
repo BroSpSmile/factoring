@@ -1,9 +1,9 @@
 package com.smile.start.model.project;
 
-import com.smile.start.model.enums.AuditType;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import com.smile.start.model.enums.audit.AuditType;
 
 /**
  * @author Joseph
@@ -16,22 +16,22 @@ public class ApplyHistory implements Serializable {
     /**
      * 项目ID
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 申请类型
      */
-    private AuditType auditType;
+    private AuditType         auditType;
 
     /**
      * 申请时间
      */
-    private Date createTime;
+    private Date              createTime;
 
     /**
      * 所属项目
      */
-    private Project project;
+    private Project           project;
 
     public Long getId() {
         return id;

@@ -15,9 +15,9 @@ import com.smile.start.mapper.ProjectMapper;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditType;
-import com.smile.start.model.enums.FundStatus;
-import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.audit.AuditType;
+import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
@@ -58,7 +58,7 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     }
 
     /**
-     * @see com.smile.start.service.fund.FundItemService#save(com.smile.start.model.enums.FundStatus,java.util.List)
+     * @see com.smile.start.service.fund.FundItemService#save(FundStatus,java.util.List)
      */
     @Override
     @Transactional
@@ -123,7 +123,7 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
 
     /**
      * 
-     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.project.BaseProject, com.smile.start.model.enums.ProjectItemType)
+     * @see com.smile.start.service.fund.FundItemService#delete(com.smile.start.model.project.BaseProject, ProjectItemType)
      */
     @Override
     public BaseResult delete(BaseProject<FundTarget> project, ProjectItemType type) {
@@ -147,7 +147,7 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
     }
 
     /** 
-     * @see com.smile.start.service.fund.FundItemService#getItemByType(com.smile.start.model.project.BaseProject, com.smile.start.model.enums.ProjectItemType)
+     * @see com.smile.start.service.fund.FundItemService#getItemByType(com.smile.start.model.project.BaseProject, ProjectItemType)
      */
     @Override
     public List<ProjectItem> getItemByType(BaseProject<FundTarget> project, ProjectItemType type) {

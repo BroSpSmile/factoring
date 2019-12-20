@@ -1,6 +1,6 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
 import com.smile.start.model.auth.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;

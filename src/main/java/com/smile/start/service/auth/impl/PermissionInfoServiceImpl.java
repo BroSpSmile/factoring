@@ -1,29 +1,30 @@
 package com.smile.start.service.auth.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.PermissionDao;
-import com.smile.start.dao.RoleDao;
-import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.dto.PermissionSearchDTO;
+import com.smile.start.dao.user.PermissionDao;
+import com.smile.start.dao.user.RoleDao;
 import com.smile.start.mapper.PermissionInfoMapper;
 import com.smile.start.model.auth.Permission;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
+import com.smile.start.model.dto.AuthPermissionInfoDTO;
+import com.smile.start.model.dto.PermissionSearchDTO;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.PermissionInfoService;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph

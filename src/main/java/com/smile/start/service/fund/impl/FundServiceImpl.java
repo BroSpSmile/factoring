@@ -16,14 +16,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.BaseProjectDao;
-import com.smile.start.dao.FundTargetDao;
 import com.smile.start.dao.InstallmentDao;
+import com.smile.start.dao.fund.FundTargetDao;
+import com.smile.start.integration.tianyan.CompanyClient;
+import com.smile.start.integration.tianyan.model.CompanyInfo;
+import com.smile.start.integration.tianyan.model.TianyanResult;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditType;
-import com.smile.start.model.enums.ProjectItemType;
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.audit.AuditType;
+import com.smile.start.model.enums.project.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
@@ -72,6 +75,10 @@ public class FundServiceImpl extends AbstractService implements FundService {
     /** 审核创建服务 */
     @Resource
     private AuditCreateService auditCreateService;
+
+    /** 天眼查客户端 */
+    @Resource
+    private CompanyClient      companyClient;
 
     /**
      * @see com.smile.start.service.fund.FundService#createTarget(BaseProject)
@@ -201,6 +208,21 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Override
     public List<FundInfos> getFundInfos() {
         return fundTargetDao.queryFundInfos();
+    }
+
+    /**
+     * 天眼查查询企业信息
+     *
+     * @param target
+     * @return
+     */
+    @Override
+    public CompanyInfo query(FundTarget target) {
+        TianyanResult<CompanyInfo> result = companyClient.query(null, target.getCompanyFullName());
+        if (result.getErrorCode() == 0) {
+            return result.getResult();
+        }
+        return null;
     }
 
     /**

@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
+import com.smile.start.model.enums.wechat.AgentEnum;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.dao.wechat.AccessTokenDao;
@@ -18,6 +19,7 @@ import com.smile.start.integration.wechat.model.AccessTokenResponse;
 import com.smile.start.model.wechat.AccessToken;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.wechat.AccessTokenService;
+import sun.management.resources.agent;
 
 /**
  * 实现
@@ -55,12 +57,12 @@ public class AccessTokenServiceImpl extends AbstractService implements AccessTok
     /**
      * 获取token
      *
-     * @param token
+     * @param agent
      * @return
      */
     @Override
-    public AccessToken getToken(AccessToken token) {
-        return accessTokenDao.getToken(token.getAgentId());
+    public AccessToken getToken(AgentEnum agent) {
+        return accessTokenDao.getToken(agent.getValue());
     }
 
     /**

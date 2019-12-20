@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.ProjectKind;
 
 /**
  * 抽象项目

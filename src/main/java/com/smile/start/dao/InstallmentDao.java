@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.*;
 
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.project.*;
 
 /**

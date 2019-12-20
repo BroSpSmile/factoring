@@ -1,8 +1,8 @@
 package com.smile.start.service.common;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.BankInfoDTO;
-import com.smile.start.dto.BankInfoSearchDTO;
+import com.smile.start.model.dto.BankInfoDTO;
+import com.smile.start.model.dto.BankInfoSearchDTO;
 import com.smile.start.model.base.PageRequest;
 
 import java.util.List;

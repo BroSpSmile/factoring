@@ -4,8 +4,8 @@
  */
 package com.smile.start.service.login;
 
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
+import com.smile.start.model.dto.AuthUserInfoDTO;
+import com.smile.start.model.dto.LoginRequestDTO;
 
 import javax.servlet.http.HttpServletResponse;
 

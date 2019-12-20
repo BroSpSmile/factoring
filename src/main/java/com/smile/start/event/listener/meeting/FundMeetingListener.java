@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.smile.start.event.MeetingEvent;
 import com.smile.start.mapper.ProjectMapper;
-import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.service.fund.FundService;

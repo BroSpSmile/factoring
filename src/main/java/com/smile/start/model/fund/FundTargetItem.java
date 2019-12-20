@@ -6,7 +6,7 @@ package com.smile.start.model.fund;
 
 import java.io.Serializable;
 
-import com.smile.start.model.enums.FundStatus;
+import com.smile.start.model.enums.fund.FundStatus;
 
 /**
  * 直投标的附件

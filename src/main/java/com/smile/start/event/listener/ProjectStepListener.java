@@ -12,8 +12,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.event.AuditEvent;
-import com.smile.start.model.enums.AuditType;
+import com.smile.start.event.listener.audit.AuditListener;
 import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.engine.ProcessEngine;
@@ -31,7 +32,7 @@ public class ProjectStepListener implements AuditListener {
     private ProcessEngine processEngine;
 
     /** 
-     * @see com.smile.start.event.listener.AuditListener#listener(com.smile.start.event.AuditEvent)
+     * @see AuditListener#listener(com.smile.start.event.AuditEvent)
      */
     @Override
     @EventListener

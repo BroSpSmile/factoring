@@ -1,28 +1,30 @@
 package com.smile.start.service.auth.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.RoleDao;
-import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.RoleSearchDTO;
+import com.smile.start.dao.user.RoleDao;
 import com.smile.start.mapper.RoleInfoMapper;
-import com.smile.start.model.auth.*;
+import com.smile.start.model.auth.PermissionSetting;
 import com.smile.start.model.auth.Role;
+import com.smile.start.model.auth.RolePermission;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.RoleSearchDTO;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.RoleInfoService;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph
@@ -112,7 +114,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     @Override
     public void update(AuthRoleInfoDTO authRoleInfoDTO) {
         final Role oldRole = roleDao.findByRoleCode(authRoleInfoDTO.getRoleCode());
-        if(oldRole != null) {
+        if (oldRole != null) {
             Asserts.notTrue(authRoleInfoDTO.getId().equals(oldRole.getId()), "指定角色编号已经存在");
         }
         final Role role = roleInfoMapper.dto2do(authRoleInfoDTO);

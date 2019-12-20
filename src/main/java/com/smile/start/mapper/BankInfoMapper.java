@@ -1,6 +1,6 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.BankInfoDTO;
+import com.smile.start.model.dto.BankInfoDTO;
 import com.smile.start.model.common.BankInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;

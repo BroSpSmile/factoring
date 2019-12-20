@@ -1,7 +1,7 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowStatusDTO;
+import com.smile.start.model.dto.FlowConfigDTO;
+import com.smile.start.model.dto.FlowStatusDTO;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import org.mapstruct.Mapper;

@@ -1,16 +1,36 @@
 package com.smile.start.service.filing.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.dao.*;
-import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowStatusDTO;
+import com.smile.start.dao.FilingDao;
+import com.smile.start.dao.audit.AuditDao;
+import com.smile.start.dao.audit.AuditRecordDao;
+import com.smile.start.dao.project.ProjectDao;
+import com.smile.start.dao.project.ProjectStepDao;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.*;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.FlowConfigDTO;
+import com.smile.start.model.dto.FlowStatusDTO;
+import com.smile.start.model.enums.FilingSubProgress;
+import com.smile.start.model.enums.Step;
+import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.audit.AuditResult;
+import com.smile.start.model.enums.audit.AuditType;
+import com.smile.start.model.enums.audit.FlowTypeEnum;
+import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
 import com.smile.start.model.project.Audit;
@@ -23,14 +43,6 @@ import com.smile.start.service.common.FileService;
 import com.smile.start.service.common.FlowConfigService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.filing.FilingService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author ：xioutman
@@ -43,63 +55,63 @@ import java.util.List;
 @Service
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
-    private static final FlowTypeEnum FLOW_TYPE = FlowTypeEnum.valueOf(Progress.FILE.name());
+    private static final FlowTypeEnum FLOW_TYPE  = FlowTypeEnum.valueOf(Progress.FILE.name());
 
-    private static final AuditType AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
+    private static final AuditType    AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
 
     /**
      * 归档DAO
      */
     @Resource
-    private FilingDao filingDao;
+    private FilingDao                 filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao projectDao;
+    private ProjectDao                projectDao;
 
     /**
      * auditDao
      */
     @Resource
-    private AuditDao auditDao;
+    private AuditDao                  auditDao;
 
     /**
      * auditRecordDao
      */
     @Resource
-    private AuditRecordDao auditRecordDao;
+    private AuditRecordDao            auditRecordDao;
 
     /**
      * stepDao
      */
     @Resource
-    private ProjectStepDao stepDao;
+    private ProjectStepDao            stepDao;
 
     /**
      * 文件服务
      */
     @Resource
-    private FileService fileService;
+    private FileService               fileService;
 
     /**
      * 用户服务
      */
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoService           userInfoService;
 
     /**
      * flowConfigService
      */
     @Resource
-    private FlowConfigService flowConfigService;
+    private FlowConfigService         flowConfigService;
 
     /**
      *
      */
     @Resource
-    private ProcessEngine processEngine;
+    private ProcessEngine             processEngine;
 
     /**
      * 该方法仅save 和 commit调用，流程审核走公共方法

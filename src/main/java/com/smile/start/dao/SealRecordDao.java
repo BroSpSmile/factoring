@@ -1,6 +1,6 @@
 package com.smile.start.dao;
 
-import com.smile.start.dto.SealSearchDTO;
+import com.smile.start.model.dto.SealSearchDTO;
 import com.smile.start.model.seal.ProjectSeal;
 import com.smile.start.model.seal.SealRecord;
 import org.apache.ibatis.annotations.Insert;

@@ -7,10 +7,6 @@ package com.smile.start.event.listener.meeting;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +15,11 @@ import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.event.MeetingRemindEvent;
-import com.smile.start.integration.wechat.WechatClient;
+import com.smile.start.event.listener.AbstractListener;
 import com.smile.start.integration.wechat.model.*;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.wechat.AccessToken;
-import com.smile.start.service.auth.UserInfoService;
-import com.smile.start.service.wechat.AccessTokenService;
 
 /**
  * @author : Tiny.Jing
@@ -34,22 +28,7 @@ import com.smile.start.service.wechat.AccessTokenService;
  * @date Date : 2019年12月16日 22:06
  */
 @Service
-public class MeetingRemindListener {
-
-    /** logger */
-    private Logger             logger = LoggerFactory.getLogger(getClass());
-
-    /** 用户服务 */
-    @Resource
-    private UserInfoService    userInfoService;
-
-    /** token */
-    @Resource
-    private AccessTokenService accessTokenService;
-
-    /** 微信client */
-    @Resource
-    private WechatClient       wechatClient;
+public class MeetingRemindListener extends AbstractListener {
 
     /**
      * 监听器
@@ -74,15 +53,9 @@ public class MeetingRemindListener {
     public void sendText(MeetingExt meeting, User user, List<AccessToken> tokens) {
         for (AccessToken token : tokens) {
             if (token.getAgentId() == 1000003L) {
-                TextMessage message = new TextMessage();
-                message.setMsgtype(MessageType.text);
-                message.setTouser(user.getWechatNo());
-                message.setAgentid(token.getAgentId());
-                Text text = new Text();
                 StringBuilder builder = new StringBuilder();
                 builder.append("您参与的").append(meeting.getTheme()).append("将于").append(meeting.getRemind()).append("分钟后在").append(meeting.getPlace()).append("举行,请注意准时出席");
-                text.setContent(builder.toString());
-                message.setText(text);
+                TextMessage message = getTexMessage(builder, token, user);
                 WechatResponse response = wechatClient.sendMessage(token, message);
                 LoggerUtils.info(logger, "企业微信推送结果:{}", FastJsonUtils.toJSONString(response));
             }
@@ -98,14 +71,12 @@ public class MeetingRemindListener {
     public void sendNotice(MeetingExt meeting, User user, List<AccessToken> tokens) {
         for (AccessToken token : tokens) {
             if (token.getAgentId() == 1000002L) {
-                MiniMessage message = new MiniMessage();
-                message.setMsgtype(MessageType.miniprogram_notice);
-                message.setTouser(user.getWechatNo());
+                MiniMessage message = getMiniMessage(token, user);
                 Notice notice = new Notice();
                 notice.setAppid(Constants.MINI_PROGRAME_APP_ID);
                 notice.setTitle("会议开始提醒");
                 notice.setDescription(DateUtil.getChineseDateString(new Date()));
-                notice.setEmphasis(true);
+                notice.setEmphasis(false);
                 notice.addItem(new Content("会议提醒", "您参与的会议即将于" + meeting.getRemind() + "分钟后举行"));
                 notice.addItem(new Content("会议室", meeting.getPlace()));
                 notice.addItem(new Content("会议主题", meeting.getTheme()));

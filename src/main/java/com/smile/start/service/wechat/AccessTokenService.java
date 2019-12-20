@@ -4,6 +4,7 @@
  */
 package com.smile.start.service.wechat;
 
+import com.smile.start.model.enums.wechat.AgentEnum;
 import com.smile.start.model.wechat.AccessToken;
 
 import java.util.List;
@@ -23,10 +24,10 @@ public interface AccessTokenService {
 
     /**
      * 获取token
-     * @param token
+     * @param agent
      * @return
      */
-    AccessToken getToken(AccessToken token);
+    AccessToken getToken(AgentEnum agent);
 
     /**
      * 获取全部token

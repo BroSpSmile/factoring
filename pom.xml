@@ -190,6 +190,7 @@
                     <compilerVersion>${java.version}</compilerVersion>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <showWarnings>true</showWarnings>
+                    <fork>true</fork>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>

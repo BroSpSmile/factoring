@@ -1,5 +1,17 @@
 package com.smile.start.service.auth.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -7,16 +19,17 @@ import com.google.common.collect.Lists;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.TokenDao;
-import com.smile.start.dao.UserDao;
-import com.smile.start.dto.*;
+import com.smile.start.dao.user.TokenDao;
+import com.smile.start.dao.user.UserDao;
 import com.smile.start.exception.ValidateException;
+import com.smile.start.mapper.RoleInfoMapper;
 import com.smile.start.mapper.UserInfoMapper;
 import com.smile.start.model.auth.Token;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.auth.UserOrganizational;
 import com.smile.start.model.auth.UserRole;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.dto.*;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.enums.StatusEnum;
 import com.smile.start.model.login.LoginUser;
@@ -28,17 +41,6 @@ import com.smile.start.service.auth.PermissionInfoService;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.auth.UserInfoService;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
-
 /**
  * @author Joseph
  * @version v1.0 2019/1/6 14:37, UserInfoServiceImpl.java
@@ -46,7 +48,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-    private Logger logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
+    private Logger                logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     @Resource
     private UserDao               userDao;
@@ -65,6 +67,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Resource
     private UserInfoMapper        userInfoMapper;
+
+    /** roleInfoMapper */
+    @Resource
+    private RoleInfoMapper        roleInfoMapper;
 
     /**
      * 根据主键查询用户信息
@@ -365,17 +371,28 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
-        if(!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword())) {
+        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword())) {
             throw new ValidateException("新密码跟确认密码不一致，请重新输入");
         }
         LoginUser loginUser = LoginHandler.getLoginUser();
         String oldPassword = DigestUtils.md5Hex(updatePasswordDTO.getOldPassword());
         User user = userDao.findBySerialNo(loginUser.getSerialNo());
-        if(!oldPassword.equals(user.getPasswd())) {
+        if (!oldPassword.equals(user.getPasswd())) {
             throw new ValidateException("原密码不正确，请重新输入");
         }
         user.setPasswd(DigestUtils.md5Hex(updatePasswordDTO.getNewPassword()));
         userDao.updatePassword(user);
+    }
+
+    /**
+     * 根据角色获取角色用户
+     *
+     * @param role
+     * @return
+     */
+    @Override
+    public List<User> getUserByRoles(AuthRoleInfoDTO role) {
+        return userDao.findRuleUsers(roleInfoMapper.dto2do(role));
     }
 
 }

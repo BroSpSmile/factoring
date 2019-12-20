@@ -1,9 +1,9 @@
 package com.smile.start.model.project;
 
-import com.smile.start.model.enums.AuditType;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import com.smile.start.model.enums.audit.AuditType;
 
 /**
  * 审核历史查询参数
@@ -18,27 +18,27 @@ public class ApplyHistoryParam implements Serializable {
     /**
      * 项目编号
      */
-    private String projectId;
+    private String            projectId;
 
     /**
      * 申请类型
      */
-    private AuditType auditType;
+    private AuditType         auditType;
 
     /**
      * 开始时间
      */
-    private Date beginTime;
+    private Date              beginTime;
 
     /**
      * 结束时间
      */
-    private Date endTime;
+    private Date              endTime;
 
     /**
      * 申请人
      */
-    private String applyUser;
+    private String            applyUser;
 
     public String getProjectId() {
         return projectId;

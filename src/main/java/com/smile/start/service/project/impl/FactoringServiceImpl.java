@@ -14,12 +14,12 @@ import org.springframework.util.CollectionUtils;
 
 import com.google.common.collect.Lists;
 import com.smile.start.commons.DateUtil;
-import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
+import com.smile.start.dao.factoring.FactoringDetailDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.InstallmentType;
-import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.Progress;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.FactoringService;

@@ -7,9 +7,9 @@ package com.smile.start.model.project;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.smile.start.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.AuditResult;
+import com.smile.start.model.enums.audit.AuditResult;
 
 /**
  * 审核流程
@@ -20,8 +20,8 @@ public class AuditFlow implements Serializable {
 
     /** UID */
     private static final long serialVersionUID = 2472045809225914087L;
-    
-    private Long id;
+
+    private Long              id;
 
     /** 审核步骤描述 */
     private String            desc;
@@ -50,7 +50,6 @@ public class AuditFlow implements Serializable {
                + (user != null ? "user\":\"" + user : "") + "\"}  ";
     }
 
-    
     /**
      * Getter method for property <tt>id</tt>.
      * 
@@ -60,7 +59,6 @@ public class AuditFlow implements Serializable {
         return id;
     }
 
-
     /**
      * Setter method for property <tt>id</tt>.
      * 
@@ -69,7 +67,6 @@ public class AuditFlow implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     /**
      * Getter method for property <tt>step</tt>.

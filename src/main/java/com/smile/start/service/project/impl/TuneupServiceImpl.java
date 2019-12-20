@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.Progress;
+import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.project.Project;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.audit.AuditService;

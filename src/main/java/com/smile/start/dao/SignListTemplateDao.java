@@ -1,6 +1,6 @@
 package com.smile.start.dao;
 
-import com.smile.start.dto.SignListTemplateSearchDTO;
+import com.smile.start.model.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.common.SignListTemplate;
 import org.apache.ibatis.annotations.*;
 

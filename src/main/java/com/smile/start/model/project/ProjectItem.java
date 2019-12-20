@@ -6,7 +6,8 @@ package com.smile.start.model.project;
 
 import java.io.Serializable;
 
-import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectItemKind;
+import com.smile.start.model.enums.project.ProjectItemType;
 
 /**
  * 项目附件
@@ -23,6 +24,9 @@ public class ProjectItem implements Serializable {
 
     /** 项目编号 */
     private Long              projectId;
+
+    /** 附件分类 默认DOC */
+    private ProjectItemKind   itemKind         = ProjectItemKind.DOC;
 
     /** 附件类型 */
     private ProjectItemType   itemType;
@@ -138,10 +142,38 @@ public class ProjectItem implements Serializable {
         this.itemValue = itemValue;
     }
 
+    /**
+     * Getter method for property <tt>itemKind</tt>.
+     *
+     * @return property value of itemKind
+     */
+    public ProjectItemKind getItemKind() {
+        return itemKind;
+    }
+
+    /**
+     * Setter method for property <tt>itemKind</tt>.
+     *
+     * @param itemKind value to be assigned to property  itemKind
+     */
+    public void setItemKind(ProjectItemKind itemKind) {
+        this.itemKind = itemKind;
+    }
+
+    /**
+     * Getter method for property <tt>attachType</tt>.
+     *
+     * @return property value of attachType
+     */
     public Integer getAttachType() {
         return attachType;
     }
 
+    /**
+     * Setter method for property <tt>attachType</tt>.
+     *
+     * @param attachType value to be assigned to property  attachType
+     */
     public void setAttachType(Integer attachType) {
         this.attachType = attachType;
     }

@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.dao.ProjectDao;
-import com.smile.start.model.project.Project;
-import com.smile.start.service.meeting.MeetingService;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.smile.start.dao.project.ProjectDao;
+import com.smile.start.model.project.Project;
+import com.smile.start.service.meeting.MeetingService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

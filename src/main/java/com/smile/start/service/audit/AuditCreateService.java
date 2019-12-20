@@ -7,7 +7,7 @@ package com.smile.start.service.audit;
 import java.util.Optional;
 
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 

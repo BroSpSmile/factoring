@@ -4,7 +4,7 @@
  */
 package com.smile.start.service.project;
 
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.ProjectKind;
 
 /**
  * id生成服务
@@ -15,12 +15,12 @@ import com.smile.start.model.enums.ProjectKind;
  */
 public interface IdGenService {
 
-	/**
-	 * 生成ID
-	 * 
-	 * @param kind
-	 * @return
-	 */
-	String genId(ProjectKind kind);
+    /**
+     * 生成ID
+     * 
+     * @param kind
+     * @return
+     */
+    String genId(ProjectKind kind);
 
 }

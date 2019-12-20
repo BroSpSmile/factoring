@@ -64,16 +64,7 @@
                                 </form-item>
                             </i-col>
                         </row>
-                        <form-item label="所属地" prop="detail.location">
-                            <i-input placeholder="输入所属地" class="inputw" v-model="addForm.detail.location"></i-input>
-                        </form-item>
-                        <form-item label="所属行业" prop="detail.industry">
-                            <i-input placeholder="输入所属行业" class="inputw" v-model="addForm.detail.industry"></i-input>
-                        </form-item>
-                        <form-item label="主营业务" prop="detail.mainBusiness">
-                            <i-input placeholder="输入主营业务" class="inputw"
-                                     v-model="addForm.detail.mainBusiness"></i-input>
-                        </form-item>
+
                         <form-item label="项目成员A角" prop="detail.memberA.id">
                             <i-select class="inputw" v-model="addForm.detail.memberA.id" clearable>
                                 <i-option v-for="item in users" :value="parseInt(item.value)">{{item.text}}</i-option>
@@ -131,6 +122,9 @@
                                              v-model="addForm.detail.companyFullName"></i-input>
                                 </form-item>
                             </i-col>
+                            <i-col span="1">
+                                <i-button @click="queryCompany" type="info">天眼查</i-button>
+                            </i-col>
                         </row>
                         <form-item label="实际控制人" prop="detail.controllerOwner">
                             <i-input placeholder="输入实际控制人" class="inputw"
@@ -143,6 +137,16 @@
                         </form-item>
                         <form-item label="董事长" prop="detail.chairman">
                             <i-input placeholder="输入董事长" class="inputw" v-model="addForm.detail.chairman"></i-input>
+                        </form-item>
+                        <form-item label="所属地" prop="detail.location">
+                            <i-input placeholder="输入所属地" class="inputw" v-model="addForm.detail.location"></i-input>
+                        </form-item>
+                        <form-item label="所属行业" prop="detail.industry">
+                            <i-input placeholder="输入所属行业" class="inputw" v-model="addForm.detail.industry"></i-input>
+                        </form-item>
+                        <form-item label="主营业务" prop="detail.mainBusiness">
+                            <i-input placeholder="输入主营业务" class="inputw"
+                                     v-model="addForm.detail.mainBusiness"></i-input>
                         </form-item>
                         <row>
                             <i-col>

@@ -1,26 +1,27 @@
 package com.smile.start.service.auth.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.Asserts;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.OrganizationalDao;
-import com.smile.start.dto.OrganizationalDTO;
-import com.smile.start.dto.OrganizationalSearchDTO;
+import com.smile.start.dao.user.OrganizationalDao;
 import com.smile.start.mapper.OrganizationalMapper;
 import com.smile.start.model.auth.Organizational;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.dto.OrganizationalDTO;
+import com.smile.start.model.dto.OrganizationalSearchDTO;
 import com.smile.start.model.enums.DeleteFlagEnum;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.OrganizationalService;
-
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import javax.annotation.Resource;
 
 /**
  * @author Joseph

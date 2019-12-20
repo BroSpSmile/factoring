@@ -4,9 +4,9 @@
  */
 package com.smile.start.model.filing;
 
-import com.smile.start.model.enums.ProjectItemType;
-
 import java.io.Serializable;
+
+import com.smile.start.model.enums.project.ProjectItemType;
 
 /**
  * 项目附件
@@ -20,27 +20,27 @@ public class FilingFileItem implements Serializable {
     /**
      * 编号
      */
-    private Long id;
+    private Long              id;
 
     /**
      * 项目编号 db 主键
      */
-    private long projectId;
+    private long              projectId;
 
     /**
      * 附件类型
      */
-    private ProjectItemType itemType;
+    private ProjectItemType   itemType;
 
     /**
      * 附件名称
      */
-    private String itemName;
+    private String            itemName;
 
     /**
      * 附件文件id
      */
-    private String itemValue;
+    private String            itemValue;
 
     /**
      * @see Object#toString()
@@ -48,7 +48,7 @@ public class FilingFileItem implements Serializable {
     @Override
     public String toString() {
         return "{\"id\":\"" + id + "\", \"projectId\":\"" + projectId + "\", \"itemType\":\"" + itemType + "\", \"itemName\":\"" + itemName + "\", \"itemValue\":\"" + itemValue
-                + "\"}  ";
+               + "\"}  ";
     }
 
     /**

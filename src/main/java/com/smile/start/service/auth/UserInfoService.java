@@ -1,9 +1,12 @@
 package com.smile.start.service.auth;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.UpdatePasswordDTO;
-import com.smile.start.dto.UserSearchDTO;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.AuthUserInfoDTO;
+import com.smile.start.model.dto.UpdatePasswordDTO;
+import com.smile.start.model.dto.UserSearchDTO;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.login.LoginUser;
@@ -94,4 +97,11 @@ public interface UserInfoService {
      * @param updatePasswordDTO
      */
     void updatePassword(UpdatePasswordDTO updatePasswordDTO);
+
+    /**
+     * 根据角色获取角色用户
+     * @param role
+     * @return
+     */
+    List<User> getUserByRoles(AuthRoleInfoDTO role);
 }

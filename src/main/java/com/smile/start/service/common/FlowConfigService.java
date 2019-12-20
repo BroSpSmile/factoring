@@ -3,11 +3,11 @@ package com.smile.start.service.common;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowConfigSearchDTO;
-import com.smile.start.dto.FlowStatusDTO;
+import com.smile.start.model.dto.FlowConfigDTO;
+import com.smile.start.model.dto.FlowConfigSearchDTO;
+import com.smile.start.model.dto.FlowStatusDTO;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.FlowTypeEnum;
+import com.smile.start.model.enums.audit.FlowTypeEnum;
 
 /**
  * @author Joseph

@@ -1,13 +1,15 @@
 package com.smile.start.service.entrustauth.impl;
 
-import com.smile.start.dao.EntrustAuthDao;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.smile.start.dao.factoring.EntrustAuthDao;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.project.EntrustAuth;
 import com.smile.start.service.entrustauth.EntrustAuthService;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author ：xioutman

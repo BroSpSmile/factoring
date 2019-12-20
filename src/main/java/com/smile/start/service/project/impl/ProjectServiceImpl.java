@@ -15,14 +15,14 @@ import org.springframework.util.CollectionUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.dao.ProjectDao;
-import com.smile.start.dao.ProjectItemDao;
-import com.smile.start.dao.ProjectStepDao;
+import com.smile.start.dao.project.ProjectDao;
+import com.smile.start.dao.project.ProjectItemDao;
+import com.smile.start.dao.project.ProjectStepDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectItemType;
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.Progress;
+import com.smile.start.model.enums.project.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
@@ -221,7 +221,7 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     }
 
     /** 
-     * @see com.smile.start.service.project.ProjectService#queryItems(java.lang.Long, com.smile.start.model.enums.ProjectItemType)
+     * @see com.smile.start.service.project.ProjectService#queryItems(java.lang.Long, ProjectItemType)
      */
     @Override
     public List<ProjectItem> queryItems(Long projectId, ProjectItemType type) {

@@ -1,6 +1,6 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.AuthPermissionInfoDTO;
+import com.smile.start.model.dto.AuthPermissionInfoDTO;
 import com.smile.start.model.auth.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;

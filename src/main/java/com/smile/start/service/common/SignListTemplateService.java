@@ -1,8 +1,8 @@
 package com.smile.start.service.common;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.SignListTemplateDTO;
-import com.smile.start.dto.SignListTemplateSearchDTO;
+import com.smile.start.model.dto.SignListTemplateDTO;
+import com.smile.start.model.dto.SignListTemplateSearchDTO;
 import com.smile.start.model.base.PageRequest;
 
 import java.util.List;

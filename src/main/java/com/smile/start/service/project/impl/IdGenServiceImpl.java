@@ -15,7 +15,7 @@ import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.GenIdDao;
 import com.smile.start.model.common.GenId;
-import com.smile.start.model.enums.ProjectKind;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.project.IdGenService;
 
@@ -33,7 +33,7 @@ public class IdGenServiceImpl extends AbstractService implements IdGenService {
     private GenIdDao genIdDao;
 
     /**
-     * @see com.smile.start.service.project.IdGenService#genId(com.smile.start.model.enums.ProjectKind)
+     * @see com.smile.start.service.project.IdGenService#genId(ProjectKind)
      */
     @Override
     @Transactional

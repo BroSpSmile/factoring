@@ -1,6 +1,6 @@
 package com.smile.start.dao;
 
-import com.smile.start.dto.FlowConfigSearchDTO;
+import com.smile.start.model.dto.FlowConfigSearchDTO;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;

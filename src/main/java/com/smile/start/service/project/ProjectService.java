@@ -9,7 +9,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
 

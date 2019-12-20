@@ -1,6 +1,6 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.OrganizationalDTO;
+import com.smile.start.model.dto.OrganizationalDTO;
 import com.smile.start.model.auth.Organizational;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;

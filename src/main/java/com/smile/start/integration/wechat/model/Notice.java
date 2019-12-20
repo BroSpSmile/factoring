@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import com.smile.start.commons.Constants;
 
 /**
  * @author : Tiny.Jing
@@ -18,7 +19,7 @@ import com.google.common.collect.Lists;
 public class Notice {
 
     /** 小程序appid */
-    private String        appid;
+    private String        appid    = Constants.MINI_PROGRAME_APP_ID;
 
     /** 小程序页面 */
     private String        page;

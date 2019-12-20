@@ -1,12 +1,13 @@
 package com.smile.start.mapper;
 
-import com.smile.start.dto.*;
-import com.smile.start.model.contract.*;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;
 
-import java.util.List;
+import com.smile.start.model.contract.*;
+import com.smile.start.model.dto.*;
 
 /**
  * @author Joseph

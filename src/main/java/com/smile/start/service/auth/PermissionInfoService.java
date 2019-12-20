@@ -1,8 +1,8 @@
 package com.smile.start.service.auth;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.AuthPermissionInfoDTO;
-import com.smile.start.dto.PermissionSearchDTO;
+import com.smile.start.model.dto.AuthPermissionInfoDTO;
+import com.smile.start.model.dto.PermissionSearchDTO;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.Tree;
 

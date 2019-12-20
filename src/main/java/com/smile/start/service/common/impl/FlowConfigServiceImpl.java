@@ -16,17 +16,17 @@ import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.FlowConfigDao;
-import com.smile.start.dto.AuthRoleInfoDTO;
-import com.smile.start.dto.FlowConfigDTO;
-import com.smile.start.dto.FlowConfigSearchDTO;
-import com.smile.start.dto.FlowStatusDTO;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.FlowConfigDTO;
+import com.smile.start.model.dto.FlowConfigSearchDTO;
+import com.smile.start.model.dto.FlowStatusDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.FlowConfigMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
-import com.smile.start.model.enums.*;
+import com.smile.start.model.enums.audit.*;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.RoleInfoService;
 import com.smile.start.service.common.FlowConfigService;
@@ -74,7 +74,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     }
 
     /** 
-     * @see com.smile.start.service.common.FlowConfigService#getByType(com.smile.start.model.enums.FlowTypeEnum)
+     * @see com.smile.start.service.common.FlowConfigService#getByType(FlowTypeEnum)
      */
     @Override
     public FlowConfigDTO getByType(FlowTypeEnum type) {

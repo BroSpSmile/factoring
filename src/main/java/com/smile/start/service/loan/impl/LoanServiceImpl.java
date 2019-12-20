@@ -12,12 +12,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.LoanDao;
-import com.smile.start.dao.ProjectItemDao;
+import com.smile.start.dao.project.ProjectItemDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.enums.LoanType;
-import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.loan.Loan;
 import com.smile.start.model.loan.LoanGroup;
 import com.smile.start.model.project.Project;

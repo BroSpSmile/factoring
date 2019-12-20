@@ -1,7 +1,7 @@
 package com.smile.start.service.seal;
 
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dto.SealSearchDTO;
+import com.smile.start.model.dto.SealSearchDTO;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.seal.ProjectSeal;
 

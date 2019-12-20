@@ -7,10 +7,11 @@ package com.smile.start.service.fund;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.integration.tianyan.model.CompanyInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
-import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
@@ -85,4 +86,11 @@ public interface FundService {
      * @return 直投信息
      */
     List<FundInfos> getFundInfos();
+
+    /**
+     * 天眼查查询企业信息
+     * @param target
+     * @return
+     */
+    CompanyInfo query(FundTarget target);
 }

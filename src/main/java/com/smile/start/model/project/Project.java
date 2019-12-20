@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.Progress;
-import com.smile.start.model.enums.ProjectKind;
-import com.smile.start.model.enums.ProjectModel;
+import com.smile.start.model.enums.project.Progress;
+import com.smile.start.model.enums.project.ProjectKind;
+import com.smile.start.model.enums.project.ProjectModel;
 
 /**
  * 项目

@@ -15,11 +15,16 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.smile.start.dao.FactoringDetailDao;
 import com.smile.start.dao.InstallmentDao;
+import com.smile.start.dao.factoring.FactoringDetailDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.*;
+import com.smile.start.model.enums.InstallmentDetailType;
+import com.smile.start.model.enums.InstallmentType;
+import com.smile.start.model.enums.Step;
+import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.FactoringDetail;
 import com.smile.start.model.project.Installment;

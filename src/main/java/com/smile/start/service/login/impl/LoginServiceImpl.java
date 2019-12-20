@@ -4,31 +4,31 @@
  */
 package com.smile.start.service.login.impl;
 
-import com.smile.start.commons.Asserts;
-import com.smile.start.commons.Constants;
-import com.smile.start.commons.DateUtil;
-import com.smile.start.commons.SerialNoGenerator;
-import com.smile.start.dao.TokenDao;
-import com.smile.start.dao.UserDao;
-import com.smile.start.dto.AuthUserInfoDTO;
-import com.smile.start.dto.LoginRequestDTO;
-import com.smile.start.model.auth.Token;
-import com.smile.start.model.auth.User;
+import java.util.Date;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.smile.start.commons.Asserts;
+import com.smile.start.commons.Constants;
+import com.smile.start.commons.DateUtil;
+import com.smile.start.commons.SerialNoGenerator;
+import com.smile.start.dao.user.TokenDao;
+import com.smile.start.dao.user.UserDao;
+import com.smile.start.model.auth.Token;
+import com.smile.start.model.auth.User;
+import com.smile.start.model.dto.AuthUserInfoDTO;
+import com.smile.start.model.dto.LoginRequestDTO;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.auth.UserInfoService;
 import com.smile.start.service.login.LoginService;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * 实现

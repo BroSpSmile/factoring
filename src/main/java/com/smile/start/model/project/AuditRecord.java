@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.AuditResult;
+import com.smile.start.model.enums.audit.AuditResult;
 
 /**
  * 审核历史

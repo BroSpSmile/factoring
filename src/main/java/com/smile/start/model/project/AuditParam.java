@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.smile.start.model.auth.User;
-import com.smile.start.model.enums.AuditType;
+import com.smile.start.model.enums.audit.AuditType;
 
 /**
  * 审核查询条件

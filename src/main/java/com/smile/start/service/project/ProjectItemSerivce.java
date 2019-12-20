@@ -4,12 +4,12 @@
  */
 package com.smile.start.service.project;
 
+import java.util.List;
+
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.ProjectItemType;
+import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.ProjectItem;
-
-import java.util.List;
 
 /**
  * 项目附件服务

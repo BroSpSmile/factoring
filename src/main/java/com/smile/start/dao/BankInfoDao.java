@@ -1,6 +1,6 @@
 package com.smile.start.dao;
 
-import com.smile.start.dto.BankInfoSearchDTO;
+import com.smile.start.model.dto.BankInfoSearchDTO;
 import com.smile.start.model.common.BankInfo;
 import org.apache.ibatis.annotations.*;
 

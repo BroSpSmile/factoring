@@ -6,6 +6,8 @@ package com.smile.start.model.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.smile.start.model.enums.project.Progress;
+
 /**
  * 项目状态枚举,归档流程使用
  *
@@ -13,17 +15,17 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id: Progress.java, v 0.1 Jan 8, 2019 9:10:26 PM smile.jing Exp $
  */
 public enum FilingProgress {
-    /**
-     * 已放款状态可提出归档申请，即待归档状态
-     */
-    LOANED("LOANED", "待归档", 11),
+                            /**
+                             * 已放款状态可提出归档申请，即待归档状态
+                             */
+                            LOANED("LOANED", "待归档", 11),
 
-    /**
-     *
-     */
-    FILE("FILE", "归档申请", 12),
+                            /**
+                             *
+                             */
+                            FILE("FILE", "归档申请", 12),
 
-    FILED("FILED", "归档完成", 13);
+                            FILED("FILED", "归档完成", 13);
 
     FilingProgress(String code, String desc, int index) {
         this.code = code;
@@ -100,7 +102,7 @@ public enum FilingProgress {
     /**
      * 流程索引
      */
-    private int index;
+    private int    index;
 
     /**
      * Getter method for property <tt>code</tt>.
