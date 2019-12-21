@@ -6,13 +6,7 @@ package com.smile.start.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectKey;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingExt;
@@ -75,11 +69,20 @@ public interface MeetingDao {
 
     /**
      * 
-     * @param time
+     * @param search
      * @return
      */
     @Results(id = "findNotEndMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
                                              @Result(column = "participant", property = "participantNoList") })
     @Select("<script>select * from meeting where status in ('PLAN','MEETING') " + "<if test = 'beginTime!=null'> and begin_time &lt; #{beginTime}</if></script>")
     List<MeetingExt> findNotEnd(MeetingSearch search);
+
+    /**
+     *
+     * @return
+     */
+    @Results(id = "findNotBegindMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "originator", property = "originator.id"),
+                                                @Result(column = "participant", property = "participantNoList") })
+    @Select("select * from meeting where status in ('PLAN') ")
+    List<MeetingExt> findNotBegin();
 }

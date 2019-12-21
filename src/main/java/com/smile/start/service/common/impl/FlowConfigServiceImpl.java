@@ -16,16 +16,16 @@ import com.google.common.collect.Lists;
 import com.smile.start.commons.LoginHandler;
 import com.smile.start.commons.SerialNoGenerator;
 import com.smile.start.dao.FlowConfigDao;
-import com.smile.start.model.dto.AuthRoleInfoDTO;
-import com.smile.start.model.dto.FlowConfigDTO;
-import com.smile.start.model.dto.FlowConfigSearchDTO;
-import com.smile.start.model.dto.FlowStatusDTO;
 import com.smile.start.exception.ValidateException;
 import com.smile.start.mapper.FlowConfigMapper;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.common.FlowConfig;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.common.FlowStatusRole;
+import com.smile.start.model.dto.AuthRoleInfoDTO;
+import com.smile.start.model.dto.FlowConfigDTO;
+import com.smile.start.model.dto.FlowConfigSearchDTO;
+import com.smile.start.model.dto.FlowStatusDTO;
 import com.smile.start.model.enums.audit.*;
 import com.smile.start.model.login.LoginUser;
 import com.smile.start.service.auth.RoleInfoService;
@@ -74,10 +74,10 @@ public class FlowConfigServiceImpl implements FlowConfigService {
     }
 
     /** 
-     * @see com.smile.start.service.common.FlowConfigService#getByType(FlowTypeEnum)
+     * @see com.smile.start.service.common.FlowConfigService#getByType(AuditType)
      */
     @Override
-    public FlowConfigDTO getByType(FlowTypeEnum type) {
+    public FlowConfigDTO getByType(AuditType type) {
         FlowConfig flowConfig = flowConfigDao.getByType(type.getValue());
         return this.get(flowConfig.getId());
     }
@@ -187,7 +187,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
      */
     @Override
     public List<FlowStatusDTO> getStatusList(int flowType) {
-        FlowTypeEnum flowTypeEnum = FlowTypeEnum.fromValue(flowType);
+        AuditType flowTypeEnum = AuditType.fromValue(flowType);
         List<FlowStatusDTO> statusList = Lists.newArrayList();
         if (flowTypeEnum == null) {
             return statusList;
@@ -213,7 +213,7 @@ public class FlowConfigServiceImpl implements FlowConfigService {
                 for (LoanFlowEnum fileFlowEnum : LoanFlowEnum.values()) {
                     setSatus(statusList, fileFlowEnum.getValue(), fileFlowEnum.getDesc());
                 }
-            case INNERAUTH:
+            case DEEP_TUNING:
                 for (InnerAuthFlowEnum fileFlowEnum : InnerAuthFlowEnum.values()) {
                     setSatus(statusList, fileFlowEnum.getValue(), fileFlowEnum.getDesc());
                 }

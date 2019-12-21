@@ -135,7 +135,7 @@ var vue = new Vue({
 		add:function(){
 			this.webItems.push({
 				itemKind:"WEB",
-				itemType:"SIGN_CONFIDENTIALITY",
+				itemType:"INITIAL_TUNING",
 				itemName:"",
 				itemValue:""
 			});

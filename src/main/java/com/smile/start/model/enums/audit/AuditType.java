@@ -13,19 +13,19 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum AuditType {
                        /**  */
-                       TUNEUP(1, "TUNEUP", "尽调审核"),
+                       TUNEUP(1, "TUNEUP", "保理尽调审核"),
 
                        /**  */
-                       DRAWUP(2, "DRAWUP", "合同审核"),
+                       DRAWUP(2, "DRAWUP", "保理合同审核"),
 
                        /**  */
-                       LOAN(3, "LOAN", "放款审核"),
+                       LOAN(3, "LOAN", "保理放款审核"),
 
                        /**  */
-                       FILE(4, "FILE", "归档审核"),
+                       FILE(4, "FILE", "保理归档审核"),
 
-                       /** 直投部门内核 */
-                       INNERAUTH(5, "INNERAUTH", "直投部门内核"),
+                       /** 直投尽调审核 */
+                       DEEP_TUNING(5, "DEEP_TUNING", "直投尽调审核"),
 
                        /** 直投合同审核 */
                        CONTRACT_SIGN(6, "CONTRACT_SIGN", "直投合同审核流程"),
@@ -49,6 +49,21 @@ public enum AuditType {
         this.value = value;
         this.code = code;
         this.desc = desc;
+    }
+
+    /**
+     * 根据value获取枚举
+     * @param value
+     * @return
+     */
+    public static AuditType fromValue(int value) {
+        AuditType[] types = AuditType.values();
+        for (AuditType type : types) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
     }
 
     /**

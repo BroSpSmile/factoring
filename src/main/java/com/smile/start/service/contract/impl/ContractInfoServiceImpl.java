@@ -48,7 +48,6 @@ import com.smile.start.model.enums.*;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.audit.ContractStatusEnum;
-import com.smile.start.model.enums.audit.FlowTypeEnum;
 import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectKind;
@@ -943,7 +942,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             record.setStatus(currentStatus.getNextStatus().getDesc() + "通过");
             record.setResult(AuditResult.PASS);
             //获取审核流程
-            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.DRAWUP.getValue(), contractInfo.getStatus());
+            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(AuditType.DRAWUP.getValue(), contractInfo.getStatus());
             audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
             auditDao.updateRole(audit);
         } else {
@@ -965,7 +964,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             record.setStatus("驳回至" + ContractStatusEnum.fromValue(rejectStatus).getDesc());
             record.setResult(AuditResult.REJECTED);
             //获取审核流程
-            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(FlowTypeEnum.DRAWUP.getValue(), contractInfo.getStatus());
+            final FlowStatus flowStatus = flowConfigDao.findByFlowTypeAndStatus(AuditType.DRAWUP.getValue(), contractInfo.getStatus());
             audit.setRole(roleInfoService.getBySerialNo(flowStatus.getRoleSerialNo()));
             auditDao.updateRole(audit);
         }

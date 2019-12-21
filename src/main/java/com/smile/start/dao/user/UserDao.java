@@ -140,7 +140,7 @@ public interface UserDao {
      * @param role
      * @return
      */
-    @Select("select * from auth_user_info u where exists (select 1 from auth_user_role_info ur where u.serial_no = ur.user_serial_no and ur.role_serial_no = #{role.serialNo}) ")
+    @Select("select * from auth_user_info u where exists (select 1 from auth_user_role_info ur where u.serial_no = ur.user_serial_no and ur.role_serial_no = #{serialNo}) ")
     List<User> findRuleUsers(Role role);
 
 }

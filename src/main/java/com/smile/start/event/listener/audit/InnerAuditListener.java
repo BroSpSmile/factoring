@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.smile.start.event.AuditEvent;
@@ -43,10 +44,11 @@ public class InnerAuditListener implements AuditListener {
      * @param event
      */
     @Override
+    @Async
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
-        if (AuditType.INNERAUTH == audit.getAuditType()) {
+        if (AuditType.DEEP_TUNING == audit.getAuditType()) {
             if (audit.getStep() == -1) {
                 BaseProject<FundTarget> project = ProjectMapper.mapper(audit.getProject(), FundTarget.class);
                 FundTarget target = new FundTarget();

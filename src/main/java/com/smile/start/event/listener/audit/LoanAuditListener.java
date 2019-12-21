@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.dao.audit.AuditRecordDao;
@@ -54,6 +55,7 @@ public class LoanAuditListener implements AuditListener {
      * @see AuditListener#listener(com.smile.start.event.AuditEvent)
      */
     @Override
+    @Async
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();

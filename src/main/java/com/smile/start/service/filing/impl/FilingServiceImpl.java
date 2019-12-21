@@ -29,7 +29,6 @@ import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
-import com.smile.start.model.enums.audit.FlowTypeEnum;
 import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.filing.FilingApplyInfo;
 import com.smile.start.model.filing.FilingFileItem;
@@ -55,63 +54,63 @@ import com.smile.start.service.filing.FilingService;
 @Service
 public class FilingServiceImpl extends AbstractService implements FilingService {
 
-    private static final FlowTypeEnum FLOW_TYPE  = FlowTypeEnum.valueOf(Progress.FILE.name());
+    private static final AuditType FLOW_TYPE  = AuditType.valueOf(Progress.FILE.name());
 
-    private static final AuditType    AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
+    private static final AuditType AUDIT_TYPE = AuditType.valueOf(Progress.FILE.name());
 
     /**
      * 归档DAO
      */
     @Resource
-    private FilingDao                 filingDao;
+    private FilingDao              filingDao;
 
     /**
      * 项目DAO
      */
     @Resource
-    private ProjectDao                projectDao;
+    private ProjectDao             projectDao;
 
     /**
      * auditDao
      */
     @Resource
-    private AuditDao                  auditDao;
+    private AuditDao               auditDao;
 
     /**
      * auditRecordDao
      */
     @Resource
-    private AuditRecordDao            auditRecordDao;
+    private AuditRecordDao         auditRecordDao;
 
     /**
      * stepDao
      */
     @Resource
-    private ProjectStepDao            stepDao;
+    private ProjectStepDao         stepDao;
 
     /**
      * 文件服务
      */
     @Resource
-    private FileService               fileService;
+    private FileService            fileService;
 
     /**
      * 用户服务
      */
     @Resource
-    private UserInfoService           userInfoService;
+    private UserInfoService        userInfoService;
 
     /**
      * flowConfigService
      */
     @Resource
-    private FlowConfigService         flowConfigService;
+    private FlowConfigService      flowConfigService;
 
     /**
      *
      */
     @Resource
-    private ProcessEngine             processEngine;
+    private ProcessEngine          processEngine;
 
     /**
      * 该方法仅save 和 commit调用，流程审核走公共方法

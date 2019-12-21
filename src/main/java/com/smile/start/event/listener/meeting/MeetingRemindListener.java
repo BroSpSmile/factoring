@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.commons.Constants;
@@ -34,6 +35,7 @@ public class MeetingRemindListener extends AbstractListener {
      * 监听器
      * @param event
      */
+    @Async
     @EventListener
     public void listener(MeetingRemindEvent event) {
         MeetingExt meeting = event.getMeeting();

@@ -168,12 +168,12 @@
                                         <Tag color="warning">{{kitem.key|toTypeName}}</Tag>
                                         <span v-for="item in kitem.value">
                                             <i-button v-if="item.itemKind == 'DOC' " type="info" ghost size="small"
-                                                      icon="ios-download-outline"
+                                                      icon="ios-attach"
                                                       @click="downloadItem(item)">
                                                 {{item.itemName}}
                                             </i-button> &nbsp;
-                                            <i-button v-if="item.itemKind == 'WEB' " type="primary" ghost size="small"
-                                                      icon="ios-at-outline"
+                                            <i-button v-if="item.itemKind == 'WEB' " type="success" ghost size="small"
+                                                      icon="ios-cloud-done-outline"
                                                       @click="openItem(item)">
                                                 {{item.itemName}}
                                             </i-button> &nbsp;

@@ -9,9 +9,9 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.smile.start.commons.Constants;
 import com.smile.start.commons.DateUtil;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
@@ -46,6 +46,7 @@ public class AuditResultListener extends AbstractListener implements AuditListen
      * @param event
      */
     @Override
+    @Async
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
@@ -65,8 +66,8 @@ public class AuditResultListener extends AbstractListener implements AuditListen
         AccessToken token = accessTokenService.getToken(AgentEnum.APP);
         StringBuilder builder = new StringBuilder();
         AuditRecord record = audit.getRecords().get(audit.getRecords().size() - 1);
-        builder.append("项目:").append(project.getProjectId()).append(project.getProjectName()).append(" ").append(audit.getAuditType().getDesc()).append(" 结果:")
-            .append(record.getType()).append(record.getResult().getDesc()).append("\n 审核人").append(record.getAuditor().getUsername());
+        builder.append("审核结果通知\n项目:").append(project.getProjectId()).append(project.getProjectName()).append("\n").append(audit.getAuditType().getDesc()).append("\n结果:")
+            .append(record.getType()).append(record.getResult().getDesc()).append("\n审核人:").append(record.getAuditor().getUsername());
         TextMessage message = getTexMessage(builder, token, user);
         WechatResponse response = wechatClient.sendMessage(token, message);
         LoggerUtils.info(logger, "企业微信推送结果:{}", FastJsonUtils.toJSONString(response));

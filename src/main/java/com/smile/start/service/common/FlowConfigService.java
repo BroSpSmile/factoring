@@ -3,11 +3,11 @@ package com.smile.start.service.common;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.dto.FlowConfigDTO;
 import com.smile.start.model.dto.FlowConfigSearchDTO;
 import com.smile.start.model.dto.FlowStatusDTO;
-import com.smile.start.model.base.PageRequest;
-import com.smile.start.model.enums.audit.FlowTypeEnum;
+import com.smile.start.model.enums.audit.AuditType;
 
 /**
  * @author Joseph
@@ -29,7 +29,7 @@ public interface FlowConfigService {
      * @param type
      * @return
      */
-    FlowConfigDTO getByType(FlowTypeEnum type);
+    FlowConfigDTO getByType(AuditType type);
 
     /**
      * 查询所有流程配置信息

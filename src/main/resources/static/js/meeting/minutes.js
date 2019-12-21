@@ -111,7 +111,7 @@ var vue = new Vue({
 				}
 				let projects = [];
 				for(let index in meeting.projects){
-					projects.push({id:meeting.projects[index]});
+					projects.push({id:meeting.projects[index],items:[]});
 				}
 				meeting.projects = projects;
 				for(let index in this.fileList){
@@ -122,9 +122,10 @@ var vue = new Vue({
 								itemName:this.fileList[index].name,
 								itemValue:this.fileList[index].response.data.fileId
 						}
-						meeting.projects[0].items = new Array();
-						meeting.projects[0].items.push(item);
-						meeting.projects[0].progress = progress;
+						for(let pIndex in meeting.projects){
+							meeting.projects[pIndex].items.push(item);
+							meeting.projects[pIndex].progress = progress;
+						}
 					}
 					meeting.minutesKind = 'CUSTOM';
 					if(index==0){
@@ -135,6 +136,8 @@ var vue = new Vue({
 				}
 			let self = this;
 			this.$Spin.show();
+			// console.log(meeting);
+			// return ;
 			this.$http.post("/minutes",meeting).then(function(response){
 				this.$Spin.hide();
 				if (response.data.success) {

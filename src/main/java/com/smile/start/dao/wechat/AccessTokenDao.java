@@ -41,6 +41,6 @@ public interface AccessTokenDao {
      * @param agentId
      * @return
      */
-    @Select("select * from access_token where agentId = #{agentId} limit 1")
+    @Select("select * from access_token where agent_id = #{agentId} limit 1")
     AccessToken getToken(long agentId);
 }

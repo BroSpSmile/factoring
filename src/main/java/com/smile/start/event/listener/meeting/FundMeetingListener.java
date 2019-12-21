@@ -7,6 +7,7 @@ package com.smile.start.event.listener.meeting;
 import javax.annotation.Resource;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.smile.start.event.MeetingEvent;
@@ -35,6 +36,7 @@ public class FundMeetingListener implements MeetingListener {
      * @param event 事件
      */
     @Override
+    @Async
     @EventListener
     public void listener(MeetingEvent event) {
         BaseProject<FundTarget> project = ProjectMapper.mapper(event.getProject(), FundTarget.class);

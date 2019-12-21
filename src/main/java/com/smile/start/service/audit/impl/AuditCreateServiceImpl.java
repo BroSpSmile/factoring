@@ -10,6 +10,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import com.google.common.collect.Lists;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +20,7 @@ import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dao.audit.AuditDao;
 import com.smile.start.dao.audit.AuditRecordDao;
 import com.smile.start.dao.audit.AuditRecordItemDao;
+import com.smile.start.event.AuditEvent;
 import com.smile.start.mapper.ProjectMapper;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
@@ -58,6 +61,10 @@ public class AuditCreateServiceImpl extends AbstractService implements AuditCrea
     @Resource
     private AuditService       auditService;
 
+    /** */
+    @Resource
+    private ApplicationContext applicationContext;
+
     /**
      * 创建审核流程
      *
@@ -77,6 +84,7 @@ public class AuditCreateServiceImpl extends AbstractService implements AuditCrea
             long effect = auditDao.insert(audit);
             if (effect > 0) {
                 this.addRecorde(audit);
+                applicationContext.publishEvent(new AuditEvent(this, audit));
             }
             return toResult(effect > 0, audit);
         }
@@ -155,6 +163,7 @@ public class AuditCreateServiceImpl extends AbstractService implements AuditCrea
                 }
             }
         }
+        audit.setRecords(Lists.newArrayList(record));
         return toResult(effect > 0);
     }
 

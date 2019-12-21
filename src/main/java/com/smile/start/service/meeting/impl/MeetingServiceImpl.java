@@ -280,10 +280,19 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     @Override
     public BaseResult schedule() {
         MeetingSearch search = new MeetingSearch();
-        search.setBeginTime(new Date());
+        Date now = new Date();
+        search.setBeginTime(now);
+        List<MeetingExt> notices = meetingDao.findNotBegin();
+        notices.stream().forEach(meeting -> notice(meeting, now));
         List<MeetingExt> meetings = meetingDao.findNotEnd(search);
         meetings.stream().forEach(meeting -> update(meeting));
         return new BaseResult();
+    }
+
+    private void notice(MeetingExt meeting, Date now) {
+        if (StringUtils.equalsIgnoreCase(DateUtil.getLongDateString(now), DateUtil.getLongDateString(DateUtil.addMinutes(meeting.getBeginTime(), -1 * meeting.getRemind())))) {
+            applicationContext.publishEvent(new MeetingRemindEvent(this, meeting));
+        }
     }
 
     /**
@@ -299,9 +308,6 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                 meeting.setStatus(MeetingStatus.END);
                 meetingDao.update(meeting);
             }
-        }
-        if (DateUtil.isBeforeNow(DateUtil.addMinutes(meeting.getBeginTime(), -1 * meeting.getRemind()))) {
-            applicationContext.publishEvent(new MeetingRemindEvent(this, meeting));
         }
     }
 

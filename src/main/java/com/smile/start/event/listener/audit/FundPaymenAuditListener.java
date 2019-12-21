@@ -7,6 +7,7 @@ package com.smile.start.event.listener.audit;
 import javax.annotation.Resource;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.smile.start.event.AuditEvent;
@@ -36,6 +37,7 @@ public class FundPaymenAuditListener implements AuditListener {
      * @param event
      */
     @Override
+    @Async
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();

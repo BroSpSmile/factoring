@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.audit.AuditType;
@@ -23,6 +22,7 @@ import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.service.fund.FundService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 内核页面
@@ -50,7 +50,7 @@ public class InnerAudit extends BaseController {
         project.setOperator(user);
         project.getDetail().setProjectStep(FundStatus.PARTMENT_AUDIT);
         LoggerUtils.info(logger, "项目ID={}", project.toString());
-        return fundService.createAudit(project, AuditType.INNERAUTH);
+        return fundService.createAudit(project, AuditType.DEEP_TUNING);
 
     }
 }

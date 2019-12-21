@@ -37,7 +37,7 @@ var vue = new Vue({
 		 * 提交保密协议
 		 */
 		commit:function(){
-			if(this.fileList === undefined || this.fileList.length == 0){
+			if((this.fileList === undefined || this.fileList.length == 0)&&!this.webItems[0].itemValue){
 				this.$Message.error("请上传尽调文件");
 				return false;
 			}

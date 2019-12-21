@@ -114,10 +114,10 @@ var vue = new Vue({
 			this.cwItem = [];
 			this.fwItem = [];
 			for(var index in records){
-				if(records[index].type=='财务风控审核' && this.cwItem.length<1){
+				if(records[index].type=='财务风控审核' && this.cwItem && this.cwItem.length<1){
 					this.cwItem = records[index].items;
 				}
-				if(records[index].type=='法务风控审核' && this.fwItem.length<1){
+				if(records[index].type=='法务风控审核' && this.fwItem && this.fwItem.length<1){
 					this.fwItem = records[index].items;
 				}
 			}
@@ -324,7 +324,14 @@ var vue = new Vue({
 		 */
 		downloadItem:function(item){
 			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
-		}
+		},
+
+		/**
+		 * 打开文件
+		 */
+		openItem:function(item){
+			window.open(item.itemValue);
+		},
 	}
 });
 

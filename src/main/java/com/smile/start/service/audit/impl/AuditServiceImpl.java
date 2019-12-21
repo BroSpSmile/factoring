@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +32,6 @@ import com.smile.start.model.dto.AuthRoleInfoDTO;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
-import com.smile.start.model.enums.audit.FlowTypeEnum;
 import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.project.*;
 import com.smile.start.service.AbstractService;
@@ -142,6 +142,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         if (null != nextStep) {
             audit.setStep(nextStep.getStep());
             audit.setRole(nextStep.getRole());
+            audit.setNextAudit(nextStep);
         } else {
             audit.setStep(-1);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -151,6 +152,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         auditDao.updateRole(audit);
         BaseResult result = addAuditRecord(record);
         if (result.isSuccess()) {
+            audit.setRecords(Lists.newArrayList(record));
             applicationContext.publishEvent(new AuditEvent(this, audit));
         }
         return result;
@@ -171,6 +173,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             record.setStatus("驳回至" + nextFlow.getDesc());
             audit.setStep(nextFlow.getStep());
             audit.setRole(nextFlow.getRole());
+            audit.setNextAudit(nextFlow);
         } else {
             audit.setStep(-2);
             AuthRoleInfoDTO role = new AuthRoleInfoDTO();
@@ -180,6 +183,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         auditDao.updateRole(audit);
         BaseResult result = addAuditRecord(record);
         if (result.isSuccess()) {
+            audit.setRecords(Lists.newArrayList(record));
             //发布审核事件
             applicationContext.publishEvent(new AuditEvent(this, audit));
         }
@@ -263,7 +267,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
      * @return
      */
     private AuditFlow getFlow(Audit audit, Integer offset) {
-        List<AuditFlow> flows = flowConfigDao.findFlows(toType(audit.getAuditType()).getValue());
+        List<AuditFlow> flows = flowConfigDao.findFlows(audit.getAuditType().getValue());
         for (AuditFlow flow : flows) {
             if (flow.getStep() == (audit.getStep() + offset)) {
                 return flow;
@@ -272,17 +276,8 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         return null;
     }
 
-    /**
-     * 类型转换
-     * @param auditType
-     * @return
-     */
-    private FlowTypeEnum toType(AuditType auditType) {
-        return FlowTypeEnum.valueOf(auditType.name());
-    }
-
     private List<AuditFlow> getFlows(Audit audit) {
-        List<AuditFlow> flows = flowConfigDao.findFlows(toType(audit.getAuditType()).getValue());
+        List<AuditFlow> flows = flowConfigDao.findFlows(audit.getAuditType().getValue());
         for (AuditFlow flow : flows) {
             //查询审核记录
             AuditRecord record = auditRecordDao.getLast(audit.getId(), flow.getDesc());

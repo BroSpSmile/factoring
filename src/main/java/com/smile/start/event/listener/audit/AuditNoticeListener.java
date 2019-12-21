@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.smile.start.commons.DateUtil;
@@ -44,12 +46,16 @@ public class AuditNoticeListener extends AbstractListener implements AuditListen
      * @param event
      */
     @Override
+    @Async
+    @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
-        List<User> users = userInfoService.getUserByRoles(audit.getRole());
-        Project project = projectService.getProject(audit.getProject().getId());
-        this.sendText(users, project, audit);
-        this.sendNotice(users, project, audit);
+        if (null != audit.getNextAudit()) {
+            List<User> users = userInfoService.getUserByRoles(audit.getNextAudit().getRole());
+            Project project = projectService.getProject(audit.getProject().getId());
+            this.sendText(users, project, audit);
+            this.sendNotice(users, project, audit);
+        }
     }
 
     /**
@@ -61,7 +67,7 @@ public class AuditNoticeListener extends AbstractListener implements AuditListen
     private void sendText(List<User> users, Project project, Audit audit) {
         AccessToken token = accessTokenService.getToken(AgentEnum.APP);
         StringBuilder builder = new StringBuilder();
-        builder.append("审核到达通知 \n 您有一项新的审核工单 \n").append("审核项目:").append(project.getProjectId() + project.getProjectName()).append(" \n").append("审核类型:")
+        builder.append("审核到达通知 \n您有一项新的审核工单 \n").append("审核项目:").append(project.getProjectId() + project.getProjectName()).append("\n").append("审核类型:")
             .append(audit.getAuditType().getDesc());
         TextMessage message = getTexMessage(builder, token, users);
         WechatResponse response = wechatClient.sendMessage(token, message);
