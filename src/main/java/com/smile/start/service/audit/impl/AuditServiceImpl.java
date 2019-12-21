@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.smile.start.dao.FlowConfigDao;
 import com.smile.start.dao.audit.AuditDao;
 import com.smile.start.dao.audit.AuditRecordDao;
@@ -95,7 +95,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
             this.addApplyRecord(audit);
             if (effect > 0) {
                 result.setData(audit);
-                return result;
+                applicationContext.publishEvent(new AuditEvent(this, audit));
             } else {
                 result.setSuccess(false);
                 result.setErrorCode("VP00011001");
@@ -124,6 +124,7 @@ public class AuditServiceImpl extends AbstractService implements AuditService {
         AuditFlow flow = getFlow(audit, 1);
         audit.setStep(flow.getStep());
         audit.setRole(flow.getRole());
+        audit.setNextAudit(flow);
         return audit;
     }
 

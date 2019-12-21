@@ -50,10 +50,12 @@ public class AuditResultListener extends AbstractListener implements AuditListen
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
-        Project project = projectService.getProject(audit.getProject().getId());
-        User user = userInfoService.getUserById(project.getUser().getId());
-        this.sendText(user, project, audit);
-        this.sendNotice(user, project, audit);
+        if (audit.getStep() != 1) {
+            Project project = projectService.getProject(audit.getProject().getId());
+            User user = userInfoService.getUserById(project.getUser().getId());
+            this.sendText(user, project, audit);
+            this.sendNotice(user, project, audit);
+        }
     }
 
     /**

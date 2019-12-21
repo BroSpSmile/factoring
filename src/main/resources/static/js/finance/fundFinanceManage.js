@@ -92,13 +92,10 @@ var vue = new Vue({
                 }
 		    },{
 		        title: '主营业务',
-		        key: 'detail.mainBusiness',
+		        key: 'mainBusiness',
 		        minWidth:100,
 		        tooltip:true,
-		        align: 'center',
-                render:(h,param)=>{
-                    return h('span',param.row.detail.mainBusiness)
-                }
+		        align: 'center'
 		    },{
 		        title: '项目成员',
 		        key: 'member',
@@ -241,6 +238,9 @@ var vue = new Vue({
 			this.$http.post("/fund/query", self.queryParam).then(
 					function(response) {
 						let data = response.data;
+						for(let index in data.list){
+							data.list[index].mainBusiness = data.list[index].detail.mainBusiness;
+						}
 						this.pageInfo = data;
 					}, function(error) {
 						self.$Message.error(error.data.message);

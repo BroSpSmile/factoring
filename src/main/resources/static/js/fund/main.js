@@ -217,9 +217,6 @@ var vue = new Vue({
                                 ghost: true
 
                             },
-                            style: {
-                                marginRight: '5px'
-                            },
                             on: {
                                 click: () => {
                                     this.toMenu(param.row, "项目编辑");
@@ -612,7 +609,6 @@ var vue = new Vue({
                 this.addForm.items.push(this.webItems[index]);
             }
             if (!this.addForm.projectId) {
-                console.log(this.addForm);
                 this.$http.post("/fund", this.addForm).then(function (response) {
                     this.$Spin.hide();
                     if (response.data.success) {

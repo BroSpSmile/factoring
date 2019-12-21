@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.smile.start.service.project.ProjectItemSerivce;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -61,6 +62,10 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
     /** 会议dao */
     @Resource
     private MeetingDao         meetingDao;
+
+    /** 项目附件 */
+    @Resource
+    private ProjectItemSerivce projectItemSerivce;
 
     /** 关联DAO */
     @Resource
@@ -214,44 +219,40 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         if (!MeetingKind.APPROVAL.equals(meeting.getKind())) {
             if (effect > 0) {
                 for (Project project : meeting.getProjects()) {
-                    ProjectMeeting pm = new ProjectMeeting();
-                    pm.setMeetingId(meeting.getId());
-                    pm.setProjectId(project.getId());
-                    List<ProjectMeeting> result = projectMeetingDao.find(pm);
-                    if (result.size() > 0) {
-                        projectMeetingDao.delete(pm);
-                    }
-                    long peffect = projectMeetingDao.insert(pm);
-                    if (peffect < 0) {
-                        throw new RuntimeException("插入会议纪要失败");
-                    }
+                    List<ProjectItem> items = project.getItems();
+                    savePm(meeting, project);
                     project = projectDao.get(project.getId());
+                    project.setItems(items);
                     if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                        doInvestment(project, FundStatus.AUDIT_MEETING);
                         applicationContext.publishEvent(new MeetingEvent(this, project));
+                    } else {
+                        projectItemSerivce.save(items);
                     }
                 }
             }
         } else {
-            Project project = meeting.getProjects().get(0);
-            List<ProjectItem> items = project.getItems();
-            project = projectService.getProject(project.getId());
-            project.setItems(items);
-            if (Progress.INITIATE_REJECT.equals(project.getProgress())) {
-                if (ProjectKind.FACTORING.equals(project.getKind())) {
-                    project.setStep(-2);
-                    projectService.turnover(project);
-                } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
-                    doInvestment(project, FundStatus.STOP);
-                }
-            } else {
-                if (ProjectKind.FACTORING.equals(project.getKind())) {
-                    project.setProgress(Progress.APPROVAL);
-                    project.setStep(0);
-                    processEngine.next(project, false);
-                } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
-                    doInvestment(project, FundStatus.DEEP_TUNING);
-                }
+            for (Project project : meeting.getProjects()) {
+                List<ProjectItem> items = project.getItems();
+                project = projectService.getProject(project.getId());
+                project.setItems(items);
+                if (Progress.INITIATE_REJECT.equals(project.getProgress())) {
+                    if (ProjectKind.FACTORING.equals(project.getKind())) {
+                        project.setStep(-2);
+                        projectService.turnover(project);
+                    } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                        doInvestment(project, FundStatus.STOP);
+                    }
+                } else {
+                    if (ProjectKind.FACTORING.equals(project.getKind())) {
+                        project.setProgress(Progress.APPROVAL);
+                        project.setStep(0);
+                        processEngine.next(project, false);
+                    } else if (ProjectKind.INVESTMENT.equals(project.getKind())) {
+                        doInvestment(project, FundStatus.DEEP_TUNING);
+                    }
 
+                }
             }
         }
         return new BaseResult();
@@ -309,6 +310,27 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
                 meetingDao.update(meeting);
             }
         }
+    }
+
+    /**
+     * 保存项目关系
+     * @param meeting
+     * @param project
+     * @return
+     */
+    private BaseResult savePm(Meeting meeting, Project project) {
+        ProjectMeeting pm = new ProjectMeeting();
+        pm.setMeetingId(meeting.getId());
+        pm.setProjectId(project.getId());
+        List<ProjectMeeting> result = projectMeetingDao.find(pm);
+        if (result.size() > 0) {
+            projectMeetingDao.delete(pm);
+        }
+        long effect = projectMeetingDao.insert(pm);
+        if (effect < 0) {
+            throw new RuntimeException("插入会议纪要失败");
+        }
+        return toResult(effect);
     }
 
     /**

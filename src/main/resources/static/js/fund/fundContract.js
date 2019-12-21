@@ -9,7 +9,13 @@ var vue = new Vue({
 	data : {
 		project:{},
 		fileList:[],
-		items:[]
+		items:[],
+		webItems:[{
+			itemKind:"WEB",
+			itemType:"CONTRACT_SIGN",
+			itemName:"",
+			itemValue:""
+		}]
 	},
 	created : function() {
 		let id = document.getElementById("fundId").value;
@@ -46,7 +52,7 @@ var vue = new Vue({
 		 * 提交合同
 		 */
 		commit:function(){
-			if(this.fileList === undefined || this.fileList.length == 0){
+			if((this.fileList === undefined || this.fileList.length == 0)&&!this.webItems[0].itemValue){
 				this.$Message.error("请上传尽调文件");
 				return false;
 			}
@@ -59,6 +65,10 @@ var vue = new Vue({
 						itemValue:this.fileList[index].response.data.fileId
 				}
 				items.push(item);
+			}
+			for(let index in this.webItems){
+				this.webItems[index].projectId = this.project.id;
+				items.push(this.webItems[index]);
 			}
 			this.$Spin.show();
 			let self = this;
@@ -92,6 +102,7 @@ var vue = new Vue({
 					this.$Spin.show();
 					let self = this;
 					project.detail ={};
+					project.items = [];
 					this.$http.put("/fundContract",project).then(function(response){
 						this.$Spin.hide();
 						if (response.data.success) {
@@ -176,6 +187,23 @@ var vue = new Vue({
 		 */
 		downloadItem:function(item){
 			window.open("/file?fileId="+item.itemValue+"&fileName="+encodeURI(item.itemName));
+		},
+
+		/** 添加 */
+		add:function(){
+			this.webItems.push({
+				itemKind:"WEB",
+				itemType:"CONTRACT_SIGN",
+				itemName:"",
+				itemValue:""
+			});
+		},
+
+		/**
+		 * 移除
+		 */
+		remove:function(index){
+			this.webItems.splice(index,1);
 		}
 	}
 });

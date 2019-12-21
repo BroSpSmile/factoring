@@ -24,7 +24,7 @@ public enum FundStatus {
                         APPROVAL(4, "APPROVAL", "项目立项"),
                         /** 深入尽调 */
                         DEEP_TUNING(5, "DEEP_TUNING", "深入尽调"),
-                        /** 部门内核 */
+                        /** 风控审核 */
                         PARTMENT_AUDIT(6, "PARTMENT_AUDIT", "风控审核"),
                         /** 三重一大 */
                         AUDIT_MEETING(8, "AUDIT_MEETING", "三重一大"),
@@ -34,18 +34,24 @@ public enum FundStatus {
                         GOV_APPROVAL(10, "GOV_APPROVAL", "区政府审批"),
                         /** 合同签署 */
                         CONTRACT_SIGN(11, "CONTRACT_SIGN", "合同签署"),
+                        /** 合同审核 */
+                        CONTRACT_AUDIT(13, "CONTRACT_AUDIT", "合同审核"),
                         /** 付款通知 */
-                        PAYMENT(12, "PAYMENT", "付款通知"),
+                        PAYMENT(14, "PAYMENT", "付款通知"),
+                        /** 付款审核 */
+                        PAYMENT_AUDIT(15, "PAYMENT_AUDIT", "付款审核"),
                         /** 支付打款 */
-                        FUND_LOAN(13, "FUND_LOAN", "支付打款"),
+                        FUND_LOAN(16, "FUND_LOAN", "支付打款"),
                         /** 验资/信息变更 */
-                        INFO_CHANGE(14, "INFO_CHANGE", "验资/信息变更"),
+                        INFO_CHANGE(17, "INFO_CHANGE", "验资/信息变更"),
                         /** 项目归档 */
-                        FILE(15, "FILE", "项目归档"),
+                        FILE(18, "FILE", "项目归档"),
+                        /** 项目归档 */
+                        FILE_AUDIT(19, "FILE_AUDIT", "归档审核"),
                         /** 投后管理 */
-                        POST_INVESTMENT(16, "POST_INVESTMENT", "投后管理"),
+                        POST_INVESTMENT(20, "POST_INVESTMENT", "投后管理"),
                         /** 项目退出 */
-                        OUT(17, "OUT", "项目退出"),;
+                        OUT(21, "OUT", "项目退出"),;
 
     FundStatus(int index, String code, String desc) {
         this.index = index;

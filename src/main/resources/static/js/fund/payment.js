@@ -62,7 +62,7 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
-			this.$http.post("/payment/PAYMENT",JSON.stringify(items)).then(function(response){
+			this.$http.post("/payment/PAYMENT_AUDIT",JSON.stringify(items)).then(function(response){
 				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({

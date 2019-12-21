@@ -115,17 +115,15 @@ var vue = new Vue({
 				}
 				meeting.projects = projects;
 				for(let index in this.fileList){
-					if(meeting.kind=='APPROVAL'){
-						let item={
-								projectId:meeting.projects[0].id,
-								itemType:"INITIATE",
-								itemName:this.fileList[index].name,
-								itemValue:this.fileList[index].response.data.fileId
-						}
-						for(let pIndex in meeting.projects){
-							meeting.projects[pIndex].items.push(item);
-							meeting.projects[pIndex].progress = progress;
-						}
+					let item={
+							projectId:meeting.projects[0].id,
+							itemType:meeting.kind=='APPROVAL'?"INITIATE":"DIRECTORS",
+							itemName:this.fileList[index].name,
+							itemValue:this.fileList[index].response.data.fileId
+					}
+					for(let pIndex in meeting.projects){
+						meeting.projects[pIndex].items.push(item);
+						meeting.projects[pIndex].progress = progress;
 					}
 					meeting.minutesKind = 'CUSTOM';
 					if(index==0){

@@ -25,6 +25,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.audit.AuditType;
+import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.fund.FundInfos;
@@ -120,10 +121,14 @@ public class FundServiceImpl extends AbstractService implements FundService {
         int effect = fundTargetDao.updateTarget(target);
         LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
         if (effect > 0 && !CollectionUtils.isEmpty(project.getItems())) {
-            project.getItems().forEach(item -> {
+            for (ProjectItem item : project.getItems()) {
                 item.setProjectId(project.getId());
                 item.setItemType(ProjectItemType.PROJECT);
-            });
+                if (FundStatus.POST_INVESTMENT.equals(target.getProjectStep())) {
+                    item.setItemType(ProjectItemType.POST_INVESTMENT);
+                }
+            }
+
             itemService.save(project.getItems());
         }
         return toResult(effect);

@@ -79,7 +79,7 @@ public class FundContractController extends BaseController {
     public BaseResult pass(HttpServletRequest request, @RequestBody BaseProject<FundTarget> project) {
         User user = getUserByToken(request);
         project.setOperator(user);
-        project.getDetail().setProjectStep(FundStatus.CONTRACT_SIGN);
+        project.getDetail().setProjectStep(FundStatus.CONTRACT_AUDIT);
         LoggerUtils.info(logger, "项目ID={}", project.toString());
         return fundService.createAudit(project, AuditType.CONTRACT_SIGN);
     }

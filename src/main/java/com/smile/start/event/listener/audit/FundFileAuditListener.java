@@ -49,6 +49,12 @@ public class FundFileAuditListener implements AuditListener {
                 target.setProjectStep(FundStatus.POST_INVESTMENT);
                 project.setDetail(target);
                 fundService.modifyTarget(project);
+            } else if (audit.getStep() == 1) {
+                BaseProject<FundTarget> project = ProjectMapper.mapper(audit.getProject(), FundTarget.class);
+                FundTarget target = new FundTarget();
+                target.setProjectStep(FundStatus.FILE_AUDIT);
+                project.setDetail(target);
+                fundService.modifyTarget(project);
             }
         }
     }

@@ -25,6 +25,9 @@ public enum ProjectItemType {
                              INITIATE("INITIATE", "立项纪要"),
 
                              /** */
+                             DIRECTORS("DIRECTORS", "三重一大附件"),
+
+                             /** */
                              FILE("FILE", "保理归档文件"),
 
                              /** */
@@ -46,7 +49,10 @@ public enum ProjectItemType {
                              CONTRACT_SIGN("CONTRACT_SIGN", "合同文件"),
 
                              /** 付款通知书 */
-                             PAYMENT("PAYMENT", "付款通知书");
+                             PAYMENT("PAYMENT", "付款文件"),
+
+                             /** 投后文件 */
+                             POST_INVESTMENT("POST_INVESTMENT", "投后文件");
 
     ProjectItemType(String code, String desc) {
         this.code = code;

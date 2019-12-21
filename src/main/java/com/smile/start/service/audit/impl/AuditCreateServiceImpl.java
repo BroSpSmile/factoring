@@ -163,7 +163,6 @@ public class AuditCreateServiceImpl extends AbstractService implements AuditCrea
                 }
             }
         }
-        audit.setRecords(Lists.newArrayList(record));
         return toResult(effect > 0);
     }
 
