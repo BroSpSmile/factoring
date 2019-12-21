@@ -4,6 +4,7 @@
  */
 package com.smile.start.service.meeting.impl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -167,6 +168,7 @@ public class MeetingServiceImpl extends AbstractService implements MeetingServic
         long effect = meetingDao.insert(meeting);
         if (effect > 0 && MeetingKind.APPROVAL.equals(meeting.getKind())) {
             for (Project project : meeting.getProjects()) {
+                project.setItems(Collections.emptyList());
                 updateProject(project);
                 ProjectMeeting pm = new ProjectMeeting();
                 pm.setMeetingId(meeting.getId());

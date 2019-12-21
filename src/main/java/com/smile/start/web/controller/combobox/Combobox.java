@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.enums.project.ProjectItemType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -191,6 +192,18 @@ public class Combobox extends BaseController {
     @RequestMapping("/fundStatus")
     public List<Item> getFundStatus() {
         FundStatus[] enums = FundStatus.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 获取附件种类
+     * @return 
+     */
+    @RequestMapping("/itemTypes")
+    public List<Item> getItemType() {
+        ProjectItemType[] enums = ProjectItemType.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;

@@ -123,7 +123,9 @@
                                 </form-item>
                             </i-col>
                             <i-col span="1">
-                                <i-button @click="queryCompany" type="info">天眼查</i-button>
+                                <i-button :disabled="!addForm.detail.companyFullName" @click="queryCompany" type="info">
+                                    天眼查
+                                </i-button>
                             </i-col>
                         </row>
                         <form-item label="实际控制人" prop="detail.controllerOwner">
@@ -161,14 +163,26 @@
                     <card dis-hover title="项目附件">
                         <row>
                             <i-col span="20">
-                                <form-item label="项目附件:">
-                                    <span v-for="item in items">
-                                        <i-button type="dashed" size="small" @click="downloadItem(item)">
-                                            {{item.itemName}}
-                                        </i-button> &nbsp;
-                                    </span>
+                                <form-item v-if="items.length>0 " label="项目附件:">
+                                    <row v-for="kitem in items">
+                                        <Tag color="warning">{{kitem.key|toTypeName}}</Tag>
+                                        <span v-for="item in kitem.value">
+                                            <i-button v-if="item.itemKind == 'DOC' " type="info" ghost size="small"
+                                                      icon="ios-download-outline"
+                                                      @click="downloadItem(item)">
+                                                {{item.itemName}}
+                                            </i-button> &nbsp;
+                                            <i-button v-if="item.itemKind == 'WEB' " type="primary" ghost size="small"
+                                                      icon="ios-at-outline"
+                                                      @click="openItem(item)">
+                                                {{item.itemName}}
+                                            </i-button> &nbsp;
+                                        </span>
+                                    </row>
                                 </form-item>
                             </i-col>
+                        </row>
+                        <row>
                             <i-col span="20">
                                 <form-item label="附件上传:">
                                     <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
@@ -176,7 +190,28 @@
                                         <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
                                     </Upload>
                                 </form-item>
-
+                            </i-col>
+                        </row>
+                        <row v-for="(item,index)  in webItems">
+                            <i-col span="8">
+                                <form-item label="网页附件附件名称:">
+                                    <i-input placeholder="附件名称" class="inputw"
+                                             v-model="item.itemName"></i-input>
+                                </form-item>
+                            </i-col>
+                            <i-col span="8">
+                                <form-item label="网页附件附件地址:">
+                                    <i-input placeholder="附件网页地址" class="inputw" v-model="item.itemValue">
+                                    </i-input>
+                                </form-item>
+                            </i-col>
+                            <i-col span="4">
+                                <i-button type="success" shape="circle" size="small" ghost icon="md-add" v-if="index==0"
+                                          @click="add">添加
+                                </i-button>
+                                <i-button type="error" shape="circle" size="small" ghost icon="md-close" v-if="index!=0"
+                                          @click="remove(index)">删除
+                                </i-button>
                             </i-col>
                         </row>
                     </card>

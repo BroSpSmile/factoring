@@ -12,16 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.pagehelper.PageInfo;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -29,6 +23,7 @@ import com.smile.start.model.enums.MeetingStatus;
 import com.smile.start.model.meeting.MeetingExt;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.service.meeting.MeetingService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 
@@ -59,7 +54,8 @@ public class MeetingController extends BaseController {
 
     /**
     * 分页查询
-    * @param query
+    * @param request
+     * @param search
     * @return
     */
     @PostMapping(value = "/query")

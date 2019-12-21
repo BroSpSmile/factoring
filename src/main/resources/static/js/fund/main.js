@@ -10,6 +10,7 @@ var vue = new Vue({
         fundStatus: [],
         modal1: false,
         users: [],
+        itemTypes:[],
         queryParam: {
             condition: {},
             pageNum: 1,
@@ -32,6 +33,12 @@ var vue = new Vue({
             detail: {}
         },
         items: [],
+        webItems:[{
+            itemKind:"WEB",
+            itemType:"PROJECT",
+            itemName:"",
+            itemValue:""
+        }],
         tableColumns: [],
         pageInfo: {},
         validata: {
@@ -60,6 +67,7 @@ var vue = new Vue({
     },
     created: function () {
         this.initTable();
+        this.initItemTypes();
         this.initDate();
         this.search();
     },
@@ -69,6 +77,18 @@ var vue = new Vue({
                 return "";
             }
             return moment(value).format('YYYY-MM-DD HH:mm');
+        },
+
+        /**
+         * 翻译
+         */
+        toTypeName:function(value){
+            for(let index in vue.itemTypes){
+                if(vue.itemTypes[index].value == value){
+                    return vue.itemTypes[index].text;
+                }
+            }
+            return "";
         }
     },
     methods: {
@@ -115,13 +135,10 @@ var vue = new Vue({
                 }
             }, {
                 title: '主营业务',
-                key: 'detail.mainBusiness',
-                minWidth: 100,
+                key: 'mainBusiness',
+                minWidth: 120,
                 tooltip: true,
-                align: 'center',
-                render: (h, param) => {
-                    return h('span', param.row.detail.mainBusiness)
-                }
+                align: 'center'
             }, {
                 title: '项目成员',
                 key: 'member',
@@ -299,6 +316,18 @@ var vue = new Vue({
         },
 
         /**
+         * 初始化附件类型
+         */
+        initItemTypes:function(){
+            let _self = this;
+            this.$http.get("/combo/itemTypes").then(function(response){
+                _self.itemTypes = response.data;
+            },function(error){
+                console.error(error);
+            });
+        },
+
+        /**
          * 跳转菜单
          */
         toMenu: function (project, title) {
@@ -312,6 +341,12 @@ var vue = new Vue({
             }
             this.fileList = [];
             this.getItems(project.id);
+            this.webItems = [{
+                itemKind:"WEB",
+                itemType:"PROJECT",
+                itemName:"",
+                itemValue:""
+            }];
             this.modal1 = true;
         },
 
@@ -321,8 +356,24 @@ var vue = new Vue({
          */
         getItems: function (id) {
             let _self = this;
+            this.items = [];
             this.$http.post("/project/items/" + id).then(function (response) {
-                _self.items = response.data;
+                let items = response.data;
+                for(let index in items){
+                    let has = false;
+                    for(let j in _self.items){
+                        if(_self.items[j].key == items[index].itemType){
+                            _self.items[j].value.push(items[index]);
+                            has = true;
+                            break;
+                        }
+                    }
+                    if(!has){
+                        let item = {key:items[index].itemType,value:[]};
+                        item.value.push(items[index]);
+                        _self.items.push(item);
+                    }
+                }
             }, function (error) {
                 console.error(error);
             })
@@ -424,6 +475,9 @@ var vue = new Vue({
             this.$http.post("/fund/query", self.queryParam).then(
                 function (response) {
                     let data = response.data;
+                    for(let index in data.list){
+                        data.list[index].mainBusiness = data.list[index].detail.mainBusiness;
+                    }
                     this.pageInfo = data;
                 }, function (error) {
                     self.$Message.error(error.data.message);
@@ -447,6 +501,13 @@ var vue = new Vue({
                 },
                 items: []
             };
+            this.items = [];
+            this.webItems = [{
+                itemKind:"WEB",
+                itemType:"PROJECT",
+                itemName:"",
+                itemValue:""
+            }];
             this.fileList = [];
             this.modal1 = true;
         },
@@ -547,6 +608,9 @@ var vue = new Vue({
                 }
                 this.addForm.items.push(item);
             }
+            for(let index in this.webItems){
+                this.addForm.items.push(this.webItems[index]);
+            }
             if (!this.addForm.projectId) {
                 console.log(this.addForm);
                 this.$http.post("/fund", this.addForm).then(function (response) {
@@ -639,7 +703,38 @@ var vue = new Vue({
         parser: function (value) {
             value = "" + value;
             return value.replace(/￥s?|(,*)/g, '')
-        }
+        },
+
+        /** 添加 */
+        add:function(){
+            this.webItems.push({
+                itemKind:"WEB",
+                itemType:"PROJECT",
+                itemName:"",
+                itemValue:""
+            });
+        },
+
+        /**
+         * 下载文件
+         */
+        downloadItem:function(item){
+            window.open("/file?fileId="+item.itemValue+"&fileName="+encodeURI(item.itemName));
+        },
+
+        /**
+         * 打开文件
+         */
+        openItem:function(item){
+            window.open(item.itemValue);
+        },
+
+        /**
+         * 移除
+         */
+        remove:function(index){
+            this.webItems.splice(index,1);
+        },
     }
 });
 
