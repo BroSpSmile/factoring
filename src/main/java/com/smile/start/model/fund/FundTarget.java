@@ -11,6 +11,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.fund.OutTypes;
 import com.smile.start.model.project.Installment;
 
 /**
@@ -104,6 +105,9 @@ public class FundTarget implements Serializable {
 
     /** 联系电话 */
     private String            phoneNumber;
+
+    /** 退出类型 */
+    private OutTypes          outType;
 
     /** 放款分期信息 */
     private List<Installment> loanInstallments = Lists.newArrayList();
@@ -605,6 +609,24 @@ public class FundTarget implements Serializable {
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Getter method for property <tt>outType</tt>.
+     *
+     * @return property value of outType
+     */
+    public OutTypes getOutType() {
+        return outType;
+    }
+
+    /**
+     * Setter method for property <tt>outType</tt>.
+     *
+     * @param outType value to be assigned to property  outType
+     */
+    public void setOutType(OutTypes outType) {
+        this.outType = outType;
     }
 
     /**

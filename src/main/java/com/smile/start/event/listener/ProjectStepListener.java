@@ -38,18 +38,21 @@ public class ProjectStepListener implements AuditListener {
     @EventListener
     public void listener(AuditEvent event) {
         Audit audit = event.getAudit();
-        Project project = audit.getProject();
-        if (null != project) {
-            project.setItems(Collections.emptyList());
-            project.setStep(getStep(audit.getAuditType()));
-            if (audit.getStep() == -1) {//审核完结流转下一节点
-                processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
-                processEngine.next(project, false);
-            } else if (audit.getStep() == 0 || audit.getStep() == -2) {//审核驳回流转
-                processEngine.prev(project);
-            }
+        if (audit.getStep() != 1) {
+            Project project = audit.getProject();
+            if (null != project) {
+                project.setItems(Collections.emptyList());
+                project.setStep(getStep(audit.getAuditType()));
+                if (audit.getStep() == -1) {//审核完结流转下一节点
+                    processEngine.changeStatus(project, StepStatus.COMPLETED, audit);
+                    processEngine.next(project, false);
+                } else if (audit.getStep() == 0 || audit.getStep() == -2) {//审核驳回流转
+                    processEngine.prev(project);
+                }
 
+            }
         }
+
     }
 
     private Integer getStep(AuditType type) {

@@ -54,7 +54,7 @@ public interface FundTargetDao {
             + "<if test = 'controllerOwner!=null and \"\"!=controllerOwner'>,controller_owner = #{companySortName}</if>"
             + "<if test = 'companySortName!=null and \"\"!=companySortName'>,company_sort_name = #{controllerOwner}</if>"
             + "<if test = 'registeredCapital!=null'>,registered_capital = #{registeredCapital}</if>" + "<if test = 'chairman!=null and \"\"!=chairman'>,chairman = #{chairman}</if>"
-            + "<if test = 'address!=null and \"\"!=address'>,address = #{address}</if>"
+            + "<if test = 'address!=null and \"\"!=address'>,address = #{address}</if>" + "<if test = 'outType!=null'>,out_type = #{outType}</if>"
             + "<if test = 'projectChannel!=null and \"\"!=projectChannel'>,project_channel = #{projectChannel}</if>" + "where id = #{id}" + "</script>")
     int updateTarget(FundTarget target);
 

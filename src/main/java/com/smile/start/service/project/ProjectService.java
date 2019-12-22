@@ -9,6 +9,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.ProjectItem;
@@ -71,6 +72,13 @@ public interface ProjectService {
      * @return
      */
     PageInfo<Project> queryPage(PageRequest<Project> page);
+
+    /**
+     * 根据项目状态获取项目
+     * @param step
+     * @return
+     */
+    List<Project> queryByStatus(Step step);
 
     /**
      * 查询所有未归档项目

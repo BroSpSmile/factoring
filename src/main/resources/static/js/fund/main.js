@@ -9,6 +9,7 @@ var vue = new Vue({
     data: {
         fundStatus: [],
         modal1: false,
+        modal2:false,
         users: [],
         itemTypes:[],
         queryParam: {
@@ -563,33 +564,26 @@ var vue = new Vue({
          * 项目退出
          */
         projectOut: function () {
-            let _self = this;
-            this.$Modal.confirm({
-                title: "是否完结项目退出",
-                onOk: function (event) {
-                    _self.addForm.detail.projectStep = "OUT";
-                    this.$http.put("/fund", _self.addForm).then(function (response) {
-                        let result = response.data;
-                        if (result.success) {
-                            _self.$Message.info({
-                                content: "项目退出成功",
-                                onClose: function () {
-                                    _self.modal1 = false;
-                                    _self.search();
-                                }
-                            });
-                        } else {
-                            _self.$Message.error(result.errorMessage);
+            let _self =this;
+            this.addForm.detail.projectStep = "OUT";
+
+            this.$http.put("/fund", _self.addForm).then(function (response) {
+                let result = response.data;
+                if (result.success) {
+                    _self.$Message.info({
+                        content: "项目退出成功",
+                        onClose: function () {
+                            _self.modal2 = false;
+                            _self.modal1 = false;
+                            _self.search();
                         }
-                    }, function (error) {
-                        console.error(error);
-                    })
-
-                },
-                onCancel: function (event) {
-
+                    });
+                } else {
+                    _self.$Message.error(result.errorMessage);
                 }
-            });
+            }, function (error) {
+                console.error(error);
+            })
         },
 
         /**

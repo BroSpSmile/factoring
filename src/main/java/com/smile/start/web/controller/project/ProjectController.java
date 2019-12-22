@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.smile.start.model.enums.Step;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +69,12 @@ public class ProjectController extends BaseController {
     public Project get(@PathVariable Long id) {
         LoggerUtils.info(logger, "根据ID获取项目信息,id={}", id);
         return projectService.getProject(id);
+    }
+
+    @GetMapping("/step/{value}")
+    @ResponseBody
+    public List<Project> getProjectByStep(@PathVariable Step value) {
+        return projectService.queryByStatus(value);
     }
 
     /**

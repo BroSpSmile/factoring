@@ -20,6 +20,7 @@ import com.smile.start.dao.project.ProjectItemDao;
 import com.smile.start.dao.project.ProjectStepDao;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectKind;
@@ -197,6 +198,20 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
         List<Project> projects = projectDao.queryFactoringProject(page.getCondition());
         PageInfo<Project> result = new PageInfo<>(projects);
         return result;
+    }
+
+    /**
+     * 根据项目状态获取项目
+     *
+     * @param step
+     * @return
+     */
+    @Override
+    public List<Project> queryByStatus(Step step) {
+        Project project = new Project();
+        project.setStep(step.getIndex());
+        List<Project> projects = projectDao.queryFactoringProject(project);
+        return projects;
     }
 
     /** 

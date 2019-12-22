@@ -8,7 +8,7 @@ var vue = new Vue({
 	el : '#apply',
 	data : {
 		loan:{
-			type:"ONLINE",
+			type:"OFFLINE",
 			chineseAmount:"",
 			subscriptionAmount:0.00,
 			payments:0.00,
@@ -40,7 +40,7 @@ var vue = new Vue({
 		 */
 		initData:function(){
 			let _self = this;
-			this.$http.get("/past/project").then(function(response){
+			this.$http.get("/project/step/LOAN").then(function(response){
 				_self.projects = response.data;
 				if(document.getElementById("projectId").value){
 					_self.loan.project.id  = parseInt(document.getElementById("projectId").value);
