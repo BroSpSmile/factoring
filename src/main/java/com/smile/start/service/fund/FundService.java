@@ -88,6 +88,12 @@ public interface FundService {
     List<FundInfos> getFundInfos();
 
     /**
+     * 项目检查
+     * @return
+     */
+    void checkCompaniesInfo();
+
+    /**
      * 天眼查查询企业信息
      * @param target
      * @return

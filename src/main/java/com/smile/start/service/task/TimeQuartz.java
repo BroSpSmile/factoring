@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.service.AbstractService;
+import com.smile.start.service.fund.FundService;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.wechat.AccessTokenService;
 
@@ -30,6 +31,10 @@ public class TimeQuartz extends AbstractService {
     @Resource
     private AccessTokenService accessTokenService;
 
+    /** 直投服务 */
+    @Resource
+    private FundService        fundService;
+
     /**
      * 每分钟执行调度任务
      */
@@ -46,5 +51,14 @@ public class TimeQuartz extends AbstractService {
     public void executeTokenTask() {
         accessTokenService.synchronousToken();
         LoggerUtils.info(logger, "执行token调度任务");
+    }
+
+    /**
+     * 每天早上10点执行
+     */
+    @Scheduled(cron = "0 0 10 * * ?")
+    public void companyCheckTask() {
+        fundService.checkCompaniesInfo();
+        LoggerUtils.info(logger, "执行直投公司检查调度任务");
     }
 }

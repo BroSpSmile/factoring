@@ -97,6 +97,15 @@ public interface FundTargetDao {
     FundTarget get(Long id);
 
     /**
+     * 获取所有未完结项目
+     * @return
+     */
+    @Results(id = "getNotEndFundMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "member_a", property = "memberA.id"),
+                                                @Result(column = "member_b", property = "memberB.id") })
+    @Select("select * from fund_project where project_step not in ('OUT','STOP') ")
+    List<FundTarget> getNotEndFund();
+
+    /**
      * @param query
      * @return
      */
@@ -133,4 +142,5 @@ public interface FundTargetDao {
     @Select("SELECT" + "    DATE_FORMAT( p.create_time, '%Y-%m' ) months," + "    count( 1 ) total ," + "    sum( d.investment ) investment " + "FROM factoring_project p"
             + "    INNER JOIN fund_project d ON p.project_id = d.project_id  WHERE d.project_step !='STOP' GROUP BY months")
     List<FundInfos> queryFundInfos();
+
 }

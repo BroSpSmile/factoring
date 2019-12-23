@@ -4,22 +4,29 @@
  */
 package com.smile.start.service.fund.impl;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.BaseProjectDao;
 import com.smile.start.dao.InstallmentDao;
 import com.smile.start.dao.fund.FundTargetDao;
+import com.smile.start.event.CompanyEvent;
 import com.smile.start.integration.tianyan.CompanyClient;
 import com.smile.start.integration.tianyan.model.CompanyInfo;
+import com.smile.start.integration.tianyan.model.StaffInfo;
 import com.smile.start.integration.tianyan.model.TianyanResult;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
@@ -73,6 +80,8 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Resource
     private UserInfoService    userInfo;
 
+    private DecimalFormat      df = new DecimalFormat("#.00");
+
     /** 审核创建服务 */
     @Resource
     private AuditCreateService auditCreateService;
@@ -80,6 +89,10 @@ public class FundServiceImpl extends AbstractService implements FundService {
     /** 天眼查客户端 */
     @Resource
     private CompanyClient      companyClient;
+
+    /** */
+    @Resource
+    private ApplicationContext applicationContext;
 
     /**
      * @see com.smile.start.service.fund.FundService#createTarget(BaseProject)
@@ -213,6 +226,49 @@ public class FundServiceImpl extends AbstractService implements FundService {
     @Override
     public List<FundInfos> getFundInfos() {
         return fundTargetDao.queryFundInfos();
+    }
+
+    /**
+     * 检查公司信息
+     *
+     * @return
+     */
+    @Override
+    public void checkCompaniesInfo() {
+        List<FundTarget> targets = fundTargetDao.getNotEndFund();
+        for (FundTarget target : targets) {
+            CompanyInfo info = this.query(target);
+            if (null != info) {
+                Map<String, String> def = Maps.newHashMap();
+                if (!StringUtils.equalsIgnoreCase(info.getName(), target.getCompanyFullName())) {
+                    def.put("companyFullName", "公司全称");
+                }
+                if (!StringUtils.equalsIgnoreCase(info.getLegalPersonName(), target.getControllerOwner())) {
+                    def.put("controllerOwner", "实际控制人");
+                }
+                ;
+                if (!StringUtils.equalsIgnoreCase(info.getRegCapital(), df.format(target.getRegisteredCapital()))) {
+                    def.put("registeredCapital", "注册资本");
+                }
+                if (!StringUtils.equalsIgnoreCase(info.getIndustry(), target.getIndustry())) {
+                    def.put("industry", "所属行业");
+                }
+                if (!StringUtils.equalsIgnoreCase(info.getBusinessScope(), target.getMainBusiness())) {
+                    def.put("mainBusiness", "主营业务");
+                }
+                for (StaffInfo staffInfo : info.getStaffList()) {
+                    if (StringUtils.equalsIgnoreCase(staffInfo.getStaffTypeName(), "董事长")) {
+                        if (!StringUtils.equalsIgnoreCase(staffInfo.getName(), target.getChairman())) {
+                            def.put("chairman", "董事长");
+                        }
+                    }
+                }
+                if (!def.isEmpty()) {
+                    //存在字段变化通知负责人
+                    applicationContext.publishEvent(new CompanyEvent(this, target, def));
+                }
+            }
+        }
     }
 
     /**
