@@ -3,14 +3,8 @@
  */
 package com.smile.start.web.controller;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import javax.annotation.Resource;
@@ -18,11 +12,18 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import com.smile.start.commons.Constants;
+import com.smile.start.commons.LoggerUtils;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.ListResult;
@@ -119,6 +120,24 @@ public class BaseController {
     }
 
     /**
+     * URLDecoder
+     * @param encode
+     * @return
+     */
+    protected String decode(String encode) {
+        String decode = StringUtils.EMPTY;
+        if (StringUtils.isBlank(encode)) {
+            return StringUtils.EMPTY;
+        }
+        try {
+            decode = URLDecoder.decode(encode, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LoggerUtils.error(logger, "参数解码失败,code ={}", e, encode);
+        }
+        return decode;
+    }
+
+    /**
      * @param fileName
      * @param file
      * @param response
@@ -128,6 +147,27 @@ public class BaseController {
     public void download(String fileName, File file, HttpServletResponse response) throws UnsupportedEncodingException, FileNotFoundException {
         InputStream is = new FileInputStream(file);
         download(fileName, is, response);
+    }
+
+    /**
+     * 导出报表
+     *
+     * @param book
+     * @return
+     * @throws IOException
+     */
+    protected ResponseEntity<byte[]> export(String attachmentName, Workbook book) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        book.write(os);
+        os.close();
+        InputStream input = new ByteArrayInputStream(os.toByteArray(), 0, os.toByteArray().length);
+        byte[] response = IOUtils.toByteArray(input);
+        input.close();
+        //定义媒体流头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(attachmentName, "UTF-8") + ".xls");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return new ResponseEntity<byte[]>(response, headers, HttpStatus.CREATED);
     }
 
     /**

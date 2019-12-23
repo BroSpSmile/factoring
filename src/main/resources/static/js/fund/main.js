@@ -462,6 +462,20 @@ var vue = new Vue({
             this.query();
         },
 
+        /**
+         * 下载
+         */
+        download: function () {
+            this.queryParam.pageNum = 1;
+            let self = this;
+            self.queryParam.condition = self.formInline;
+            if (self.queryParam.condition.stateDate) {
+                self.queryParam.condition.endDate = self.queryParam.condition.stateDate[1];
+                self.queryParam.condition.stateDate = self.queryParam.condition.stateDate[0];
+            }
+            window.open("/fund/download?query="+encodeURI(JSON.stringify(this.queryParam)));
+        },
+
         /** 分页查询 */
         query: function () {
             let self = this;

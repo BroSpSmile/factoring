@@ -4,30 +4,38 @@
  */
 package com.smile.start.web.controller.fund;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import com.alibaba.fastjson.TypeReference;
 import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.ExportReportExcel;
+import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.integration.tianyan.model.CompanyInfo;
+import com.smile.start.mapper.FundMapper;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.enums.project.ProjectKind;
+import com.smile.start.model.fund.FundExcelInfo;
 import com.smile.start.model.fund.FundInfos;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.BaseProject;
 import com.smile.start.model.project.BaseProjectQuery;
 import com.smile.start.service.fund.FundService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 直投Controller
@@ -38,6 +46,7 @@ import com.smile.start.service.fund.FundService;
 @Controller
 @RequestMapping("/fund")
 public class FundController extends BaseController {
+    private String[]    header = { "项目编号", "项目名称", "项目成员", "项目进度", "公司简称", "公司全称", "实际控制人", "注册资本", "董事长", "投资金额", "投资主体", "持股占比", "投前估值", "投后估值", "投资时间", "项目来源", "创建时间" };
 
     /**
      * 直投服务
@@ -101,6 +110,22 @@ public class FundController extends BaseController {
     }
 
     /**
+     * 报表下载
+     * @param query
+     */
+    @GetMapping("download")
+    @ResponseBody
+    public ResponseEntity<byte[]> download(@RequestParam String query) throws IOException {
+        query = decode(query);
+        PageRequest<BaseProjectQuery<FundTarget>> target = FastJsonUtils.fromJSONString(query, new TypeReference<PageRequest<BaseProjectQuery<FundTarget>>>() {
+        });
+        PageInfo<FundProject> projects = fundService.queryTargets(target);
+        List<FundExcelInfo> infos = FundMapper.mapper(projects.getList());
+        HSSFWorkbook book = ExportReportExcel.creatExcel("直投项目报表", header, infos, "yyyy-MM-dd");
+        return export("直投项目报表", book);
+    }
+
+    /**
      * 根据项目ID查询项目编号
      *
      * @param projectId
@@ -134,4 +159,5 @@ public class FundController extends BaseController {
         target.setCompanyFullName(name);
         return fundService.query(target);
     }
+
 }

@@ -8,18 +8,17 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.smile.start.commons.FastJsonUtils;
-import com.smile.start.commons.LoggerUtils;
-import com.smile.start.model.enums.wechat.AgentEnum;
 import org.springframework.stereotype.Service;
 
+import com.smile.start.commons.FastJsonUtils;
+import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.wechat.AccessTokenDao;
 import com.smile.start.integration.wechat.WechatClient;
 import com.smile.start.integration.wechat.model.AccessTokenResponse;
+import com.smile.start.model.enums.wechat.AgentEnum;
 import com.smile.start.model.wechat.AccessToken;
 import com.smile.start.service.AbstractService;
 import com.smile.start.service.wechat.AccessTokenService;
-import sun.management.resources.agent;
 
 /**
  * 实现

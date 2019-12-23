@@ -156,6 +156,16 @@ var vue = new Vue({
 			this.queryParam.pageNum = page;
 			this.query();
 		},
+
+		/**
+		 * 下载
+		 */
+		download: function () {
+			this.queryParam.pageNum = 1;
+			let self = this;
+			self.queryParam.condition = self.formInline;
+			window.open("/project/download?query="+encodeURI(JSON.stringify(this.queryParam)));
+		},
 		
 		/**
 		 * 重置

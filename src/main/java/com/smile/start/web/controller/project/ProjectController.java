@@ -3,30 +3,33 @@
  */
 package com.smile.start.web.controller.project;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.smile.start.model.enums.Step;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import com.alibaba.fastjson.TypeReference;
 import com.github.pagehelper.PageInfo;
+import com.smile.start.commons.ExportReportExcel;
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
+import com.smile.start.mapper.FactoringMapper;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
+import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.project.ProjectItemType;
-import com.smile.start.model.project.Audit;
-import com.smile.start.model.project.Project;
-import com.smile.start.model.project.ProjectItem;
-import com.smile.start.model.project.StepRecord;
+import com.smile.start.model.project.*;
 import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.project.ProjectService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 项目
@@ -36,6 +39,8 @@ import com.smile.start.service.project.ProjectService;
 @Controller
 @RequestMapping("/project")
 public class ProjectController extends BaseController {
+
+    private String[]       header = { "项目ID", "项目名称", "签署日期", "让与人", "债务人", "基础合同", "追索权", "应收账款受让款", "应收账款", "已投放金额", "转让年限", "合同回款日", "保理费合计", "收益率", "备注" };
 
     /** 项目服务 */
     @Resource
@@ -150,6 +155,24 @@ public class ProjectController extends BaseController {
         LoggerUtils.info(logger, "查询请求参数={}", FastJsonUtils.toJSONString(query));
         PageInfo<Project> result = projectService.queryPage(query);
         return result;
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @return
+     */
+    @GetMapping("/download")
+    @ResponseBody
+    public ResponseEntity<byte[]> download(@RequestParam String query) throws IOException {
+        query = decode(query);
+        LoggerUtils.info(logger, "查询请求参数={}", query);
+        PageRequest<Project> page = FastJsonUtils.fromJSONString(query, new TypeReference<PageRequest<Project>>() {
+        });
+        PageInfo<Project> result = projectService.queryPage(page);
+        List<FactoringExcelInfo> infos = FactoringMapper.mapper(result.getList());
+        HSSFWorkbook book = ExportReportExcel.creatExcel("保理项目报表", header, infos, "yyyy-MM-dd");
+        return export("保理项目报表", book);
     }
 
     /**

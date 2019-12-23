@@ -28,6 +28,8 @@ var vue = new Vue({
 			paied:"false"
 		},
 		showLater:false,
+		items: [],
+		itemTypes:[],
 		validata:{
 			'project.projectName': [
             	{ required: true,  message: '项目名称不能为空',trigger:'blur'}
@@ -54,14 +56,52 @@ var vue = new Vue({
 	},
 	created : function() {
 		this.getProject();
+		this.initItemTypes();
+	},
+	filters: {
+		timeFilter: function (value) {
+			if (!value) {
+				return "";
+			}
+			return moment(value).format('YYYY-MM-DD HH:mm');
+		},
+
+		/**
+		 * 翻译
+		 */
+		toTypeName:function(value){
+			for(let index in vue.itemTypes){
+				if(vue.itemTypes[index].value == value){
+					return vue.itemTypes[index].text;
+				}
+			}
+			return "";
+		}
 	},
 	methods : {
 		getProject:function(){
 			let _self = this;
 			let id = document.getElementById("projectId").value;
+			this.items = [];
 			if(id){
 				this.$http.get("/factoring/"+id).then(function(response){
 					_self.detail = response.data;
+					let items = _self.detail.project.items;
+					for(let index in items){
+						let has = false;
+						for(let j in _self.items){
+							if(_self.items[j].key == items[index].itemType){
+								_self.items[j].value.push(items[index]);
+								has = true;
+								break;
+							}
+						}
+						if(!has){
+							let item = {key:items[index].itemType,value:[]};
+							item.value.push(items[index]);
+							_self.items.push(item);
+						}
+					}
 					for(let i in _self.detail.factoringInstallments){
 						if(_self.detail.factoringInstallments[i].amount==0&&i==_self.detail.factoringInstallments.length-1){
 							_self.detail.factoringInstallments[i].later =true;
@@ -70,10 +110,23 @@ var vue = new Vue({
 							_self.detail.factoringInstallments[i].later =false;
 						}
 					}
+					console.log(_self.items);
 				},function(error){
 					console.error(error);
 				})
 			}
+		},
+
+		/**
+		 * 初始化附件类型
+		 */
+		initItemTypes:function(){
+			let _self = this;
+			this.$http.get("/combo/itemTypes").then(function(response){
+				_self.itemTypes = response.data;
+			},function(error){
+				console.error(error);
+			});
 		},
 		
 		/** 添加保理费分期 */
@@ -209,6 +262,20 @@ var vue = new Vue({
 		close:function(){
 		//	console.log($(window.parent.document).contents().find("iframe:first").html));
 			//$('[data-id="/project"]', parent.document).parent().attr('src', $('[data-id="/project"]').attr('src'));
-		}
+		},
+
+		/**
+		 * 下载文件
+		 */
+		downloadItem:function(item){
+			window.open("/file?fileId="+item.itemValue+"&fileName="+encodeURI(item.itemName));
+		},
+
+		/**
+		 * 打开文件
+		 */
+		openItem:function(item){
+			window.open(item.itemValue);
+		},
 	}
 });
