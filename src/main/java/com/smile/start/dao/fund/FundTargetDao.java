@@ -82,6 +82,8 @@ public interface FundTargetDao {
      * @param target
      * @return
      */
+    @Results(id = "getByProjectIdMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "member_a", property = "memberA.id"),
+                                                 @Result(column = "member_b", property = "memberB.id") })
     @Select("select f.* from fund_project f inner join factoring_project p  on p.project_id = f.project_id where p.project_id = #{projectId} limit 1")
     FundTarget getByProjectId(FundTarget target);
 
