@@ -29,10 +29,10 @@ public interface FundTargetDao {
      */
     @Insert("insert into fund_project (project_id,project_name,project_step,industry,location,main_business,member_a,member_b,investment,"
             + "investment_part,share_hoding_rate,pre_val,post_val,investemnt_time,company_sort_name,company_full_name,"
-            + "controller_owner,registered_capital,chairman,address,project_channel,create_time) "
-            + "values (#{projectId},#{projectName},#{projectStep},#{industry},#{location},#{mainBusiness},#{memberA.id},#{memberB.id},#{investment},"
+            + "controller_owner,registered_capital,register_time,address,project_channel,create_time) "
+            + "values (#{projectId},#{projectName},#{projectStep},#{industry},#{location},#{mainBusiness},#{memberA.id},#{memberBStr},#{investment},"
             + "#{investmentPart},#{shareHodingRate},#{preVal},#{postVal},#{investemntTime},#{companySortName},#{companyFullName},"
-            + "#{controllerOwner},#{registeredCapital},#{chairman},#{address},#{projectChannel},current_timestamp)")
+            + "#{controllerOwner},#{registeredCapital},#{registerTime},#{address},#{projectChannel},current_timestamp)")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(FundTarget target);
 
@@ -44,7 +44,7 @@ public interface FundTargetDao {
      */
     @Update("<script> update fund_project set id = #{id}" + "<if test = 'industry!=null and \"\"!=industry'>,industry = #{industry}</if>"
             + "<if test = 'mainBusiness!=null and \"\"!=mainBusiness'>,main_business = #{mainBusiness}</if>" + "<if test = 'projectStep!=null'>,project_step = #{projectStep}</if>"
-            + "<if test = 'memberA!=null and memberA.id!=null'>,member_a = #{memberA.id}</if>" + "<if test = 'memberB!=null and memberB.id!=null'>,member_b = #{memberB.id}</if>"
+            + "<if test = 'memberA!=null and memberA.id!=null'>,member_a = #{memberA.id}</if>" + "<if test = 'memberBStr!=null and memberBStr!=\"\"'>,member_b = #{memberBStr}</if>"
             + "<if test = 'location!=null and \"\"!=location'>,location = #{location}</if>" + "<if test = 'investment!=null and \"\"!=investment'>,investment = #{investment}</if>"
             + "<if test = 'investmentPart!=null and \"\"!=investmentPart'>,investment_part = #{investmentPart}</if>"
             + "<if test = 'shareHodingRate!=null and \"\"!=shareHodingRate'>,share_hoding_rate = #{shareHodingRate}</if>" + "<if test = 'preVal!=null'>,pre_val = #{preVal}</if>"
@@ -53,7 +53,8 @@ public interface FundTargetDao {
             + "<if test = 'companyFullName!=null and \"\"!=companyFullName'>,company_full_name = #{companyFullName}</if>"
             + "<if test = 'controllerOwner!=null and \"\"!=controllerOwner'>,controller_owner = #{companySortName}</if>"
             + "<if test = 'companySortName!=null and \"\"!=companySortName'>,company_sort_name = #{controllerOwner}</if>"
-            + "<if test = 'registeredCapital!=null'>,registered_capital = #{registeredCapital}</if>" + "<if test = 'chairman!=null and \"\"!=chairman'>,chairman = #{chairman}</if>"
+            + "<if test = 'registeredCapital!=null'>,registered_capital = #{registeredCapital}</if>"
+            + "<if test = 'registerTime!=null and \"\"!=registerTime'>,register_time = #{registerTime}</if>"
             + "<if test = 'address!=null and \"\"!=address'>,address = #{address}</if>" + "<if test = 'outType!=null'>,out_type = #{outType}</if>"
             + "<if test = 'projectChannel!=null and \"\"!=projectChannel'>,project_channel = #{projectChannel}</if>" + "where id = #{id}" + "</script>")
     int updateTarget(FundTarget target);
@@ -83,7 +84,7 @@ public interface FundTargetDao {
      * @return
      */
     @Results(id = "getByProjectIdMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "member_a", property = "memberA.id"),
-                                                 @Result(column = "member_b", property = "memberB.id") })
+                                                 @Result(column = "member_b", property = "memberBStr") })
     @Select("select f.* from fund_project f inner join factoring_project p  on p.project_id = f.project_id where p.project_id = #{projectId} limit 1")
     FundTarget getByProjectId(FundTarget target);
 
@@ -94,7 +95,7 @@ public interface FundTargetDao {
      * @return
      */
     @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "operator", property = "operator.id"),
-                                      @Result(column = "member_a", property = "memberA.id"), @Result(column = "member_b", property = "memberB.id") })
+                                      @Result(column = "member_a", property = "memberA.id"), @Result(column = "member_b", property = "memberBStr") })
     @Select("select * from fund_project where id = #{id} limit 1")
     FundTarget get(Long id);
 
@@ -103,7 +104,7 @@ public interface FundTargetDao {
      * @return
      */
     @Results(id = "getNotEndFundMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "member_a", property = "memberA.id"),
-                                                @Result(column = "member_b", property = "memberB.id") })
+                                                @Result(column = "member_b", property = "memberBStr") })
     @Select("select * from fund_project where project_step not in ('OUT','STOP') ")
     List<FundTarget> getNotEndFund();
 
@@ -113,19 +114,19 @@ public interface FundTargetDao {
      */
     @Results(id = "queryMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "operator", property = "operator.id"),
                                         @Result(column = "fid", property = "detail.id"), @Result(column = "fpid", property = "detail.projectId"),
-                                        @Result(column = "address", property = "detail.address"), @Result(column = "chairman", property = "detail.chairman"),
+                                        @Result(column = "address", property = "detail.address"), @Result(column = "register_time", property = "detail.registerTime"),
                                         @Result(column = "project_step", property = "detail.projectStep"),
                                         @Result(column = "company_full_name", property = "detail.companyFullName"),
                                         @Result(column = "company_sort_name", property = "detail.companySortName"),
                                         @Result(column = "controller_owner", property = "detail.controllerOwner"), @Result(column = "industry", property = "detail.industry"),
                                         @Result(column = "investemnt_time", property = "detail.investemntTime"), @Result(column = "location", property = "detail.location"),
                                         @Result(column = "main_business", property = "detail.mainBusiness"), @Result(column = "member_a", property = "detail.memberA.id"),
-                                        @Result(column = "member_b", property = "detail.memberB.id"), @Result(column = "post_val", property = "detail.postVal"),
+                                        @Result(column = "member_b", property = "detail.memberBStr"), @Result(column = "post_val", property = "detail.postVal"),
                                         @Result(column = "pre_val", property = "detail.preVal"), @Result(column = "project_channel", property = "detail.projectChannel"),
                                         @Result(column = "investment", property = "detail.investment"), @Result(column = "investment_part", property = "detail.investmentPart"),
                                         @Result(column = "registered_capital", property = "detail.registeredCapital"),
                                         @Result(column = "share_hoding_rate", property = "detail.shareHodingRate") })
-    @Select("<script>" + "select p.*,f.id fid,f.project_id fpid,f.address,f.chairman,f.company_full_name,f.company_sort_name,"
+    @Select("<script>" + "select p.*,f.id fid,f.project_id fpid,f.address,f.register_time,f.company_full_name,f.company_sort_name,"
             + "f.controller_owner,f.industry,f.investemnt_time,f.location,f.main_business,f.member_a,f.member_b,f.post_val,"
             + "f.pre_val,f.project_channel,f.project_step,f.registered_capital,f.share_hoding_rate,f.investment,f.investment_part "
             + "from factoring_project p inner join fund_project f on p.project_id = f.project_id " + "where 1 = 1"

@@ -52,7 +52,10 @@ public interface FactoringDetailDao {
             + "<if test = 'receivable!=null'>,receivable = #{receivable}</if>" + "<if test = 'dropAmount!=null'>,drop_amount = #{dropAmount}</if>"
             + "<if test = 'duration!=0'>,duration = #{duration}</if>" + "<if test = 'remittanceDay!=null'>,remittance_day = #{remittanceDay}</if>"
             + "<if test = 'totalFactoringFee!=null'>,total_factoring_fee = #{totalFactoringFee}</if>" + "<if test = 'returnRate!=null'>,return_rate = #{returnRate}</if>"
-            + "<if test = 'remark!=null and remark!=\"\"'>,remark = #{remark}</if>" + "where id = #{id}" + "</script>")
+            + "<if test = 'realRemittanceDay!=null'>,real_remittance_day = #{realRemittanceDay}</if>" + "<if test = 'loanDay!=null'>,loan_day = #{loanDay}</if>"
+            + "<if test = 'receivableManager!=null'>,receivable_manager = #{receivableManager}</if>" + "<if test = 'realManager!=null'>,real_manager = #{realManager}</if>"
+            + "<if test = 'yearRate!=null'>,year_rate = #{yearRate}</if>" + "<if test = 'remark!=null and remark!=\"\"'>,remark = #{remark}</if>" + "where id = #{id}"
+            + "</script>")
     int update(FactoringDetail detail);
 
     /**

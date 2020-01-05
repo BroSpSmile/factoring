@@ -13,31 +13,36 @@
                             <row>
                                 <i-col span="8">
                                     <form-item label="项目编号" prop="project.projectId">
-                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectId"></i-input>
+                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectId"
+                                                 readonly></i-input>
                                     </form-item>
                                 </i-col>
                                 <i-col span="14">
                                     <form-item label="项目名称" prop="project.projectName">
-                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectName"></i-input>
+                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectName"
+                                                 readonly></i-input>
                                     </form-item>
                                 </i-col>
                             </row>
                             <row>
                                 <i-col span="11">
                                     <form-item label="债权人全称" prop="creditor">
-                                        <i-input placeholder="输入债权人全称" v-model="detail.creditor"></i-input>
+                                        <i-input placeholder="输入债权人全称" v-model="detail.creditor"
+                                                 readonly></i-input>
                                     </form-item>
                                 </i-col>
                                 <i-col span="11">
                                     <form-item label="债务人全称" prop="debtor">
-                                        <i-input placeholder="输入债务人全称" v-model="detail.debtor"></i-input>
+                                        <i-input placeholder="输入债务人全称" v-model="detail.debtor"
+                                                 readonly></i-input>
                                     </form-item>
                                 </i-col>
                             </row>
                             <row>
                                 <i-col span="22">
                                     <form-item label="基础合同" prop="baseContract">
-                                        <i-input placeholder="输入基础合同" v-model="detail.baseContract"></i-input>
+                                        <i-input placeholder="输入基础合同" v-model="detail.baseContract"
+                                                 readonly></i-input>
                                     </form-item>
                                 </i-col>
                             </row>
@@ -45,14 +50,14 @@
                                 <i-col span="8">
                                     <form-item label="追索权" prop="model">
                                         <radio-group v-model="detail.project.model">
-                                            <radio label="RECOURSE_RIGHT">有追索权模式</radio>
-                                            <radio label="DIS_RECOURSE_RIGHT">无追索权模式</radio>
+                                            <radio label="RECOURSE_RIGHT" disabled>有追索权模式</radio>
+                                            <radio label="DIS_RECOURSE_RIGHT" disabled>无追索权模式</radio>
                                         </radio-group>
                                     </form-item>
                                 </i-col>
                                 <i-col span="8">
-                                    <form-item label="申请日期" prop="signDate">
-                                        <date-picker type="date" placeholder="请选择申请日期"
+                                    <form-item label="申请日期" prop="createTime">
+                                        <date-picker type="date" placeholder="请选择申请日期" readonly
                                                      v-model="detail.project.createTime"></date-picker>
                                     </form-item>
                                 </i-col>
@@ -61,19 +66,24 @@
                                 <!--<date-picker type="date" placeholder="请选择合同回款日"-->
                                 <!--v-model="detail.remittanceDay"></date-picker>-->
                                 <!--</form-item>-->
-                                <!--</i-col>-->
+                                <!--</i-col>--> 
                             </row>
                             <row>
                                 <i-col span="8">
                                     <form-item label="应收账款受让款金额" prop="assignee">
-                                        <input-number placeholder="输入应收账款受让款金额" min="0" :max="100000000000" :step="0.01"
+                                        <input-number placeholder="输入应收账款受让款金额" min="0" :max="100000000000"
+                                                      :step="0.01"
+                                                      readonly
                                                       :formatter="formatter" :parser="parser" @on-blur="comRate"
-                                                      class="select-width-140" v-model="detail.assignee"></input-number>&nbsp;(元)
+                                                      class="select-width-140"
+                                                      v-model="detail.assignee"></input-number>&nbsp;(元)
                                     </form-item>
                                 </i-col>
                                 <i-col span="8">
                                     <form-item label="应收账款金额" prop="receivable">
-                                        <input-number placeholder="输入应收账款金额" min="0" :max="100000000000" :step="0.01"
+                                        <input-number placeholder="输入应收账款金额" min="0" :max="100000000000"
+                                                      :step="0.01"
+                                                      readonly
                                                       :formatter="formatter" :parser="parser"
                                                       class="select-width-140"
                                                       v-model="detail.receivable"></input-number>&nbsp;(元)
@@ -81,7 +91,9 @@
                                 </i-col>
                                 <i-col span="8">
                                     <form-item label="本次投放金额" prop="dropAmount">
-                                        <input-number placeholder="请输入本次投放金额" min="0" :max="100000000000" :step="0.01"
+                                        <input-number placeholder="请输入本次投放金额" min="0" :max="100000000000"
+                                                      :step="0.01"
+                                                      readonly
                                                       :formatter="formatter" :parser="parser"
                                                       class="select-width-140" @on-blur="comRate"
                                                       v-model="detail.dropAmount"></input-number>&nbsp;(元)
@@ -89,30 +101,66 @@
                                     </form-item>
                                 </i-col>
                             </row>
+                            <!--
+                            <row>
+                                <i-col span="12">
+                                    <form-item label="回款金额(万元)" prop="backAmount">
+                                         <input-number placeholder="输入回款金额"  v-model="detail.backAmount"></input-number>
+                                    </form-item>
+                                </i-col>
+                                <i-col span="12">
+                                    <form-item label="是否回款" prop="moneyBack">
+                                        <radio-group v-model="detail.moneyBack">
+                                             <radio label="true">是</radio>
+                                             <radio label="false">否</radio>
+                                         </radio-group>
+                                    </form-item>
+                                </i-col>
+                            </row> -->
                             <row>
                                 <i-col span="8">
                                     <form-item label="转让期限(月)" prop="duration">
                                         <input-number placeholder="输入转让期限" min="1" max="100" precision="0"
+                                                      readonly
                                                       v-model="detail.duration"></input-number>
                                     </form-item>
                                 </i-col>
                                 <i-col span="8">
                                     <form-item label="融资比例" prop="returnRate">
-                                        <input-number placeholder="输入融资比例"
+                                        <input-number placeholder="输入融资比例" readonly
                                                       v-model="detail.returnRate"></input-number>
                                         %
                                     </form-item>
                                 </i-col>
                             </row>
+                            <!--
                             <row>
-                                <i-col span="22">
-                                    <form-item label="备注" prop="">
-                                        <i-input placeholder="输入备注" v-model="detail.remark"></i-input>
+                                <i-col span="12">
+                                    <form-item label="已开发票" prop="invoicing">
+                                        <radio-group v-model="detail.invoicing">
+                                             <radio label="true">是</radio>
+                                             <radio label="false">否</radio>
+                                         </radio-group>
+                                    </form-item>
+                                </i-col>
+                                <i-col span="12">
+                                    <form-item label="是否已支付" prop="paied">
+                                        <radio-group v-model="detail.paied">
+                                             <radio label="true">是</radio>
+                                             <radio label="false">否</radio>
+                                         </radio-group>
                                     </form-item>
                                 </i-col>
                             </row>
-                            <span v-if="detail.project.step== '4'">
-                                <row>
+                             -->
+                            <row>
+                                <i-col span="22">
+                                    <form-item label="备注" prop="">
+                                        <i-input placeholder="输入备注" v-model="detail.remark" readonly></i-input>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <row>
                                 <i-col span="8">
                                     <form-item label="本次投放金额" prop="dropAmount">
                                         <input-number placeholder="请输入本次投放金额" min="0" :max="100000000000" :step="0.01"
@@ -157,73 +205,31 @@
                                     </form-item>
                                 </i-col>
                             </row>
-                                <row>
+                            <row v-for="(installment,index) in detail.returnInstallments" :key="index">
                                 <i-col span="8">
-                                    <form-item label="合同回款日" prop="remittanceDay">
-                                        <date-picker type="date" placeholder="合同回款日"
-                                                     v-model="detail.remittanceDay" readOnly></date-picker>
+                                    <form-item label="每期回款日" prop="">
+                                        <date-picker type="date" placeholder="每期回款日"
+                                                     @on-change="computeFee(installment,index)"
+                                                     v-model="installment.installmentDate"></date-picker>
                                     </form-item>
                                 </i-col>
                                 <i-col span="8">
-                                    <form-item label="实际本金回款日" prop="realRemittanceDay">
-                                        <date-picker type="date" placeholder="合同回款日"
-                                                     v-model="detail.realRemittanceDay"></date-picker>
+                                    <form-item label="每期回款金额" prop="">
+                                        <input-number min="0" :max="100000000000"
+                                                      :formatter="formatter" :parser="parser"
+                                                      class="select-width-140" v-model="installment.amount"
+                                                      @on-blur="computeFee"></input-number>&nbsp;(元)
                                     </form-item>
+                                </i-col>
+                                <i-col span="4">&nbsp;&nbsp;
+                                    <i-button type="success" shape="circle" size="small" ghost icon="md-add"
+                                              v-if="index==0" @click="add">添加
+                                    </i-button>
+                                    <i-button type="error" shape="circle" size="small" ghost icon="md-close"
+                                              v-if="index!=0" @click="remove(index)">删除
+                                    </i-button>
                                 </i-col>
                             </row>
-                                <card v-for="(installment,index) in detail.returnInstallments" :key="index" title="回款明细"
-                                      dis-hover>
-                                <i-form>
-                                    <row>
-                                        <i-col span="6">
-                                            <form-item label="合同回款日" prop="">
-                                                <date-picker type="date" placeholder="每期回款日"
-                                                             v-model="installment.installmentDate"></date-picker>
-                                            </form-item>
-                                        </i-col>
-                                        <i-col span="6">
-                                            <form-item label="每期利息" prop="">
-                                                <input-number min="0" :max="100000000000"
-                                                              :formatter="formatter" :parser="parser"
-                                                              class="select-width-120" v-model="installment.amount"
-                                                ></input-number>&nbsp;(元)
-                                            </form-item>
-                                        </i-col>
-                                        <i-col span="6">
-                                            <form-item label="实际回款日期" prop="">
-                                                <date-picker type="date" placeholder="每期回款日"
-                                                             v-model="installment.realInstallmentDate"></date-picker>
-                                            </form-item>
-                                        </i-col>
-                                        <i-col span="6">
-                                            <form-item label="实际回款金额" prop="">
-                                                <input-number min="0" :max="100000000000"
-                                                              :formatter="formatter" :parser="parser"
-                                                              class="select-width-120"
-                                                              v-model="installment.realAmount"
-                                                ></input-number>&nbsp;(元)
-                                            </form-item>
-                                        </i-col>
-                                    </row>
-                                    <row>
-                                        <i-col span="8">&nbsp;&nbsp;
-                                            <form-item label="收据附件:">
-                                                <span v-for="item in installment.items">
-                                                    <Tag size="small"
-                                                         @click.native="downloadItem(item)" type="border" closable
-                                                         color="primary"
-                                                         @on-close="deleteFile(item)">
-                                                        {{item.itemName}}
-                                                    </Tag> &nbsp;
-                                                </span>
-                                            </form-item>
-                                        </i-col>
-                                    </row>
-                                </i-form>
-                            </card>
-                                 <br>
-
-                            </span>
                         </i-form>
                     </p>
                 </card>
@@ -231,7 +237,7 @@
                 <card dis-hover>
                     <p slot="title">项目附件</p>
                     <p>
-                        <i-form :label-width="140" v-if="!detail.project.id || detail.project.step== '0' ">
+                        <i-form :label-width="140">
                             <row>
                                 <i-col span="20">
                                     <form-item label="附件上传:">
@@ -270,19 +276,10 @@
                     <i-form :label-width="140">
                         <row>
                             <i-col offset="4">
-                                <i-button type="success" v-if="!detail.project.id || detail.project.step== '0' "
-                                          @click="submit">保存
-                                </i-button>
-                                <i-button type="primary" v-if="detail.project.step== '0' && detail.project.projectId"
-                                          @click="apply">提交申请
-                                </i-button>
-                                <i-button type="warning" v-if="detail.project.step== '1' && showGetBack "
-                                          @click="getBack">业务取回
-                                </i-button>
-                                <i-button type="error" v-if="detail.project.step== '1' " @click="returnBack">取消申请
-                                </i-button>
-                                <i-button type="warning" v-if="detail.project.step== '4' " @click="returnBack">取消归档
-                                </i-button>
+                                <i-button type="success" @click="submit">保存</i-button>
+                                <i-button type="primary" @click="apply(3)">提交贷后管理</i-button>
+                                <i-button type="warning" @click="apply(4)">业务作废归档</i-button>
+                                <i-button type="error" @click="returnBack">业务退回</i-button>
                                 <i-button @click="back">返回</i-button>
                             </i-col>
                         </row>
@@ -293,6 +290,6 @@
         </row>
         <input th:value="${id}" id="projectId" style="display:none"></input>
     </div>
-    <script src="js/project/factoring.js"></script>
+    <script src="js/factoring/loan.js"></script>
 </div>
 </html>

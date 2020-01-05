@@ -19,7 +19,7 @@ public enum ProjectItemType {
                              TUNEUP("TUNEUP", "尽调文件"),
 
                              /**  */
-                             LOAN("LOAN", "放款文件"),
+                             LOAN("LOAN", "放款附件"),
 
                              /** */
                              INITIATE("INITIATE", "立项纪要"),
@@ -52,7 +52,10 @@ public enum ProjectItemType {
                              PAYMENT("PAYMENT", "付款文件"),
 
                              /** 投后文件 */
-                             POST_INVESTMENT("POST_INVESTMENT", "投后文件");
+                             POST_INVESTMENT("POST_INVESTMENT", "投后文件"),
+
+                             /** */
+                             COLLECTION("COLLECTION", "收款附件"),;
 
     ProjectItemType(String code, String desc) {
         this.code = code;

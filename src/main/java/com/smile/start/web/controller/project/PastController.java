@@ -11,20 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.MeetingKind;
-import com.smile.start.model.enums.Step;
 import com.smile.start.model.meeting.Meeting;
 import com.smile.start.model.meeting.MeetingSearch;
 import com.smile.start.model.project.Past;
@@ -33,6 +26,7 @@ import com.smile.start.service.engine.ProcessEngine;
 import com.smile.start.service.meeting.MeetingService;
 import com.smile.start.service.project.PastService;
 import com.smile.start.service.project.ProjectService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 三重一大
@@ -93,7 +87,7 @@ public class PastController extends BaseController {
     public BaseResult skip(@PathVariable Long id) {
         Project project = new Project();
         project.setId(id);
-        project.setStep(Step.MEETING.getIndex());
+        // project.setStep(Step.MEETING.getIndex());
         return processEngine.skip(project);
     }
 

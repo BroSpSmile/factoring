@@ -1,21 +1,25 @@
 /**
- * jsszvip.com Inc.
- * Copyright (c) 2012-2019 All Rights Reserved.
+ * com Inc.
+ * Copyright (c) 2004-2019 All Rights Reserved.
  */
-package com.smile.start.model.project;
+package com.smile.start.model.factoring;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.smile.start.model.enums.factoring.FactoringStatus;
+import com.smile.start.model.project.Installment;
+import com.smile.start.model.project.Project;
 
 /**
- * 项目明细
- * @author smile.jing
- * @version $Id: FactoringDetail.java, v 0.1 Feb 24, 2019 7:20:04 PM smile.jing Exp $
+ * @author : Tiny.Jing
+ * @version V1.0
+ * @Description: FactoringTarget
+ * @date Date : 2019年12月30日 16:10
  */
-public class FactoringDetail implements Serializable {
+public class FactoringTarget {
+
     /**  */
     private static final long serialVersionUID      = -3549416431549274388L;
 
@@ -24,6 +28,9 @@ public class FactoringDetail implements Serializable {
 
     /** 所属项目 */
     private Project           project;
+
+    /** 项目状态 */
+    private FactoringStatus   status;
 
     /** 让与人 */
     private String            creditor;
@@ -52,14 +59,8 @@ public class FactoringDetail implements Serializable {
     /** 转让年限 */
     private int               duration;
 
-    /** 放款日 */
-    private Date              loanDay;
-
     /** 合同回款日 */
     private Date              remittanceDay;
-
-    /** 实际回款日 */
-    private Date              realRemittanceDay;
 
     /** 回款分期信息 */
     private List<Installment> returnInstallments    = Lists.newArrayList();
@@ -68,16 +69,7 @@ public class FactoringDetail implements Serializable {
     private double            totalFactoringFee;
 
     /** 保理费分期信息 */
-    private List<Installment> factoringInstallments = Lists.newArrayList();
-
-    /** 应收账款管理费 */
-    private double            receivableManager;
-
-    /** 实收账款管理费 */
-    private double            realManager;
-
-    /** 年化利率 */
-    private double            yearRate;
+    private List<Installment> factoringInstallments = Lists.newArrayList();;
 
     /** 收益率 */
     private double            returnRate;
@@ -85,74 +77,19 @@ public class FactoringDetail implements Serializable {
     /** 备注 */
     private String            remark;
 
-    /**
-     * TODO 放款审核通过时间，财务管理查询页面使用，放款审核监听修改
-     */
-    private Date              loanAuditPassTime;
-
-    /** 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "{\"" + (id != null ? "id\":\"" + id + "\", \"" : "") + (project != null ? "project\":\"" + project + "\", \"" : "")
-               + (creditor != null ? "creditor\":\"" + creditor + "\", \"" : "") + (debtor != null ? "debtor\":\"" + debtor + "\", \"" : "")
-               + (signDate != null ? "signDate\":\"" + signDate + "\", \"" : "") + (baseContract != null ? "baseContract\":\"" + baseContract + "\", \"" : "") + "assignee\":\""
-               + assignee + "\", \"receivable\":\"" + receivable + "\", \"dropAmount\":\"" + dropAmount + "\", \""
-               + (loanInstallments != null ? "loanInstallments\":\"" + loanInstallments + "\", \"" : "") + "duration\":\"" + duration + "\", \""
-               + (remittanceDay != null ? "remittanceDay\":\"" + remittanceDay + "\", \"" : "")
-               + (returnInstallments != null ? "returnInstallments\":\"" + returnInstallments + "\", \"" : "") + "totalFactoringFee\":\"" + totalFactoringFee + "\", \""
-               + (factoringInstallments != null ? "factoringInstallments\":\"" + factoringInstallments + "\", \"" : "") + "returnRate\":\"" + returnRate + "\", \""
-               + (remark != null ? "remark\":\"" + remark : "") + "\"}  ";
-    }
+        return "{\"FactoringTarget\":{" + "\"id\":" + id + ",\"project\":" + project + ",\"creditor\":\"" + creditor + '\"' + ",\"debtor\":\"" + debtor + '\"' + ",\"signDate\":\""
+               + signDate + '\"' + ",\"baseContract\":\"" + baseContract + '\"' + ",\"assignee\":" + assignee + ",\"receivable\":" + receivable + ",\"dropAmount\":" + dropAmount
+               + ",\"loanInstallments\":" + loanInstallments + ",\"duration\":" + duration + ",\"remittanceDay\":\"" + remittanceDay + '\"' + ",\"returnInstallments\":"
+               + returnInstallments + ",\"totalFactoringFee\":" + totalFactoringFee + ",\"factoringInstallments\":" + factoringInstallments + ",\"returnRate\":" + returnRate
+               + ",\"remark\":\"" + remark + '\"' + "}}";
 
-    public Date getLoanAuditPassTime() {
-        return loanAuditPassTime;
-    }
-
-    public void setLoanAuditPassTime(Date loanAuditPassTime) {
-        this.loanAuditPassTime = loanAuditPassTime;
-    }
-
-    /**
-     * 添加放款分期信息
-     * @param installment
-     * @return
-     */
-    public boolean addLoanInstallment(Installment installment) {
-        if (this.loanInstallments == null) {
-            this.loanInstallments = Lists.newArrayList();
-        }
-        return this.loanInstallments.add(installment);
-    }
-
-    /**
-     * 添加回款分期信息
-     * @param installment
-     * @return
-     */
-    public boolean addReturnInstallment(Installment installment) {
-        if (this.returnInstallments == null) {
-            this.returnInstallments = Lists.newArrayList();
-        }
-        return this.returnInstallments.add(installment);
-    }
-
-    /**
-     * 添加保理费分期信息
-     * @param installment
-     * @return
-     */
-    public boolean addFactoringInstallment(Installment installment) {
-        if (this.factoringInstallments == null) {
-            this.factoringInstallments = Lists.newArrayList();
-        }
-        return this.factoringInstallments.add(installment);
     }
 
     /**
      * Getter method for property <tt>id</tt>.
-     * 
+     *
      * @return property value of id
      */
     public Long getId() {
@@ -161,8 +98,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>id</tt>.
-     * 
-     * @param id value to be assigned to property id
+     *
+     * @param id value to be assigned to property  id
      */
     public void setId(Long id) {
         this.id = id;
@@ -170,7 +107,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>project</tt>.
-     * 
+     *
      * @return property value of project
      */
     public Project getProject() {
@@ -179,8 +116,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>project</tt>.
-     * 
-     * @param project value to be assigned to property project
+     *
+     * @param project value to be assigned to property  project
      */
     public void setProject(Project project) {
         this.project = project;
@@ -188,7 +125,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>creditor</tt>.
-     * 
+     *
      * @return property value of creditor
      */
     public String getCreditor() {
@@ -197,8 +134,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>creditor</tt>.
-     * 
-     * @param creditor value to be assigned to property creditor
+     *
+     * @param creditor value to be assigned to property  creditor
      */
     public void setCreditor(String creditor) {
         this.creditor = creditor;
@@ -206,7 +143,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>debtor</tt>.
-     * 
+     *
      * @return property value of debtor
      */
     public String getDebtor() {
@@ -215,8 +152,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>debtor</tt>.
-     * 
-     * @param debtor value to be assigned to property debtor
+     *
+     * @param debtor value to be assigned to property  debtor
      */
     public void setDebtor(String debtor) {
         this.debtor = debtor;
@@ -224,7 +161,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>signDate</tt>.
-     * 
+     *
      * @return property value of signDate
      */
     public Date getSignDate() {
@@ -233,8 +170,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>signDate</tt>.
-     * 
-     * @param signDate value to be assigned to property signDate
+     *
+     * @param signDate value to be assigned to property  signDate
      */
     public void setSignDate(Date signDate) {
         this.signDate = signDate;
@@ -242,7 +179,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>baseContract</tt>.
-     * 
+     *
      * @return property value of baseContract
      */
     public String getBaseContract() {
@@ -251,8 +188,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>baseContract</tt>.
-     * 
-     * @param baseContract value to be assigned to property baseContract
+     *
+     * @param baseContract value to be assigned to property  baseContract
      */
     public void setBaseContract(String baseContract) {
         this.baseContract = baseContract;
@@ -260,7 +197,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>assignee</tt>.
-     * 
+     *
      * @return property value of assignee
      */
     public double getAssignee() {
@@ -269,8 +206,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>assignee</tt>.
-     * 
-     * @param assignee value to be assigned to property assignee
+     *
+     * @param assignee value to be assigned to property  assignee
      */
     public void setAssignee(double assignee) {
         this.assignee = assignee;
@@ -278,7 +215,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>receivable</tt>.
-     * 
+     *
      * @return property value of receivable
      */
     public double getReceivable() {
@@ -287,8 +224,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>receivable</tt>.
-     * 
-     * @param receivable value to be assigned to property receivable
+     *
+     * @param receivable value to be assigned to property  receivable
      */
     public void setReceivable(double receivable) {
         this.receivable = receivable;
@@ -296,7 +233,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>dropAmount</tt>.
-     * 
+     *
      * @return property value of dropAmount
      */
     public double getDropAmount() {
@@ -305,8 +242,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>dropAmount</tt>.
-     * 
-     * @param dropAmount value to be assigned to property dropAmount
+     *
+     * @param dropAmount value to be assigned to property  dropAmount
      */
     public void setDropAmount(double dropAmount) {
         this.dropAmount = dropAmount;
@@ -314,7 +251,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>loanInstallments</tt>.
-     * 
+     *
      * @return property value of loanInstallments
      */
     public List<Installment> getLoanInstallments() {
@@ -323,8 +260,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>loanInstallments</tt>.
-     * 
-     * @param loanInstallments value to be assigned to property loanInstallments
+     *
+     * @param loanInstallments value to be assigned to property  loanInstallments
      */
     public void setLoanInstallments(List<Installment> loanInstallments) {
         this.loanInstallments = loanInstallments;
@@ -332,7 +269,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>duration</tt>.
-     * 
+     *
      * @return property value of duration
      */
     public int getDuration() {
@@ -341,8 +278,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>duration</tt>.
-     * 
-     * @param duration value to be assigned to property duration
+     *
+     * @param duration value to be assigned to property  duration
      */
     public void setDuration(int duration) {
         this.duration = duration;
@@ -350,7 +287,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>remittanceDay</tt>.
-     * 
+     *
      * @return property value of remittanceDay
      */
     public Date getRemittanceDay() {
@@ -359,8 +296,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>remittanceDay</tt>.
-     * 
-     * @param remittanceDay value to be assigned to property remittanceDay
+     *
+     * @param remittanceDay value to be assigned to property  remittanceDay
      */
     public void setRemittanceDay(Date remittanceDay) {
         this.remittanceDay = remittanceDay;
@@ -368,7 +305,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>returnInstallments</tt>.
-     * 
+     *
      * @return property value of returnInstallments
      */
     public List<Installment> getReturnInstallments() {
@@ -377,8 +314,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>returnInstallments</tt>.
-     * 
-     * @param returnInstallments value to be assigned to property returnInstallments
+     *
+     * @param returnInstallments value to be assigned to property  returnInstallments
      */
     public void setReturnInstallments(List<Installment> returnInstallments) {
         this.returnInstallments = returnInstallments;
@@ -386,7 +323,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>totalFactoringFee</tt>.
-     * 
+     *
      * @return property value of totalFactoringFee
      */
     public double getTotalFactoringFee() {
@@ -395,8 +332,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>totalFactoringFee</tt>.
-     * 
-     * @param totalFactoringFee value to be assigned to property totalFactoringFee
+     *
+     * @param totalFactoringFee value to be assigned to property  totalFactoringFee
      */
     public void setTotalFactoringFee(double totalFactoringFee) {
         this.totalFactoringFee = totalFactoringFee;
@@ -404,7 +341,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>factoringInstallments</tt>.
-     * 
+     *
      * @return property value of factoringInstallments
      */
     public List<Installment> getFactoringInstallments() {
@@ -413,8 +350,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>factoringInstallments</tt>.
-     * 
-     * @param factoringInstallments value to be assigned to property factoringInstallments
+     *
+     * @param factoringInstallments value to be assigned to property  factoringInstallments
      */
     public void setFactoringInstallments(List<Installment> factoringInstallments) {
         this.factoringInstallments = factoringInstallments;
@@ -422,7 +359,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>returnRate</tt>.
-     * 
+     *
      * @return property value of returnRate
      */
     public double getReturnRate() {
@@ -431,8 +368,8 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>returnRate</tt>.
-     * 
-     * @param returnRate value to be assigned to property returnRate
+     *
+     * @param returnRate value to be assigned to property  returnRate
      */
     public void setReturnRate(double returnRate) {
         this.returnRate = returnRate;
@@ -440,7 +377,7 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Getter method for property <tt>remark</tt>.
-     * 
+     *
      * @return property value of remark
      */
     public String getRemark() {
@@ -449,100 +386,28 @@ public class FactoringDetail implements Serializable {
 
     /**
      * Setter method for property <tt>remark</tt>.
-     * 
-     * @param remark value to be assigned to property remark
+     *
+     * @param remark value to be assigned to property  remark
      */
     public void setRemark(String remark) {
         this.remark = remark;
     }
 
     /**
-     * Getter method for property <tt>loanDay</tt>.
+     * Getter method for property <tt>status</tt>.
      *
-     * @return property value of loanDay
+     * @return property value of status
      */
-    public Date getLoanDay() {
-        return loanDay;
+    public FactoringStatus getStatus() {
+        return status;
     }
 
     /**
-     * Setter method for property <tt>loanDay</tt>.
+     * Setter method for property <tt>status</tt>.
      *
-     * @param loanDay value to be assigned to property  loanDay
+     * @param status value to be assigned to property  status
      */
-    public void setLoanDay(Date loanDay) {
-        this.loanDay = loanDay;
-    }
-
-    /**
-     * Getter method for property <tt>receivableManager</tt>.
-     *
-     * @return property value of receivableManager
-     */
-    public double getReceivableManager() {
-        return receivableManager;
-    }
-
-    /**
-     * Setter method for property <tt>receivableManager</tt>.
-     *
-     * @param receivableManager value to be assigned to property  receivableManager
-     */
-    public void setReceivableManager(double receivableManager) {
-        this.receivableManager = receivableManager;
-    }
-
-    /**
-     * Getter method for property <tt>yearRate</tt>.
-     *
-     * @return property value of yearRate
-     */
-    public double getYearRate() {
-        return yearRate;
-    }
-
-    /**
-     * Setter method for property <tt>yearRate</tt>.
-     *
-     * @param yearRate value to be assigned to property  yearRate
-     */
-    public void setYearRate(double yearRate) {
-        this.yearRate = yearRate;
-    }
-
-    /**
-     * Getter method for property <tt>realManager</tt>.
-     *
-     * @return property value of realManager
-     */
-    public double getRealManager() {
-        return realManager;
-    }
-
-    /**
-     * Setter method for property <tt>realManager</tt>.
-     *
-     * @param realManager value to be assigned to property  realManager
-     */
-    public void setRealManager(double realManager) {
-        this.realManager = realManager;
-    }
-
-    /**
-     * Getter method for property <tt>realRemittanceDay</tt>.
-     *
-     * @return property value of realRemittanceDay
-     */
-    public Date getRealRemittanceDay() {
-        return realRemittanceDay;
-    }
-
-    /**
-     * Setter method for property <tt>realRemittanceDay</tt>.
-     *
-     * @param realRemittanceDay value to be assigned to property  realRemittanceDay
-     */
-    public void setRealRemittanceDay(Date realRemittanceDay) {
-        this.realRemittanceDay = realRemittanceDay;
+    public void setStatus(FactoringStatus status) {
+        this.status = status;
     }
 }

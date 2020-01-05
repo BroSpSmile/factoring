@@ -44,7 +44,10 @@ import com.smile.start.model.common.FileInfo;
 import com.smile.start.model.common.FlowStatus;
 import com.smile.start.model.contract.*;
 import com.smile.start.model.dto.*;
-import com.smile.start.model.enums.*;
+import com.smile.start.model.enums.ContractTemplateEnum;
+import com.smile.start.model.enums.DeleteFlagEnum;
+import com.smile.start.model.enums.SealStatusEnum;
+import com.smile.start.model.enums.SignListCategoryEnum;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.audit.ContractStatusEnum;
@@ -870,7 +873,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         //        record.setAuditTime(new Date());
         //        auditRecordDao.insert(record);
 
-        project.setStep(Step.DRAWUP.getIndex());
+        // project.setStep(Step.DRAWUP.getIndex());
         processEngine.next(project, true);
     }
 
@@ -931,7 +934,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 project.setProgress(Progress.DRAWUP);
                 projectService.turnover(project);
 
-                project.setStep(Step.DRAWUP_AUDIT.getIndex());
+                // project.setStep(Step.DRAWUP_AUDIT.getIndex());
                 processEngine.next(project, false);
             } else {
                 //状态流转到下一级
@@ -1026,7 +1029,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
             Project project = projectService.getProject(contractInfo.getProjectId());
             project.setItems(null);
-            project.setStep(Step.SIGN.getIndex());
+            // project.setStep(Step.SIGN.getIndex());
             processEngine.next(project, false);
         }
     }

@@ -8,7 +8,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import com.google.common.collect.Lists;
+import com.smile.start.model.auth.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,4 +139,30 @@ public abstract class AbstractService {
 
     }
 
+    /**
+     * 用户转换
+     * @param userStr
+     * @return
+     */
+    protected List<User> toUser(String userStr) {
+        String[] ids = userStr.split(",");
+        List<User> users = Lists.newArrayListWithCapacity(ids.length);
+        for (String id : ids) {
+            User user = new User();
+            user.setId(Long.valueOf(id));
+            users.add(user);
+        }
+        return users;
+    }
+
+    protected String toStr(List<User> users) {
+        String userStr = StringUtils.EMPTY;
+        for (User user : users) {
+            userStr += "," + user.getId();
+        }
+        if (StringUtils.isNotBlank(userStr)) {
+            userStr = userStr.replaceFirst(",", "");
+        }
+        return userStr;
+    }
 }

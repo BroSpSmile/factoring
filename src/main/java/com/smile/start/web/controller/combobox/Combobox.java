@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.enums.project.ProjectItemType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +23,7 @@ import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.enums.project.Progress;
+import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectModel;
 import com.smile.start.service.common.BankInfoService;
 import com.smile.start.web.controller.BaseController;
@@ -194,6 +195,26 @@ public class Combobox extends BaseController {
         FundStatus[] enums = FundStatus.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 根据投资金额获取项目流程
+     * @return
+     */
+    @RequestMapping("/fundStatus/{investment}")
+    public List<EnumItem> getFundStatus(@PathVariable Double investment) {
+        FundStatus[] enums = FundStatus.values();
+        List<EnumItem> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).filter(e -> e.getIndex() > 0).filter(e -> {
+            if (investment < 50000000.00d && e.getIndex() == 10) {
+                return false;
+            }
+            if (investment < 15000000.00d && e.getIndex() == 9) {
+                return false;
+            }
+            return true;
+        }).forEach(e -> items.add(new EnumItem(e.getIndex(), e.getCode(), e.getDesc())));
         return items;
     }
 

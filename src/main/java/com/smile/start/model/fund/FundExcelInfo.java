@@ -39,8 +39,8 @@ public class FundExcelInfo {
     /** 注册资本 */
     private String registeredCapital;
 
-    /** 董事长 */
-    private String chairman;
+    /** 注册时间 */
+    private String registerTime;
 
     /** 投资金额 */
     private String investment;
@@ -211,21 +211,21 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>chairman</tt>.
+     * Getter method for property <tt>registerTime</tt>.
      *
-     * @return property value of chairman
+     * @return property value of registerTime
      */
-    public String getChairman() {
-        return chairman;
+    public String getRegisterTime() {
+        return registerTime;
     }
 
     /**
-     * Setter method for property <tt>chairman</tt>.
+     * Setter method for property <tt>registerTime</tt>.
      *
-     * @param chairman value to be assigned to property  chairman
+     * @param registerTime value to be assigned to property  registerTime
      */
-    public void setChairman(String chairman) {
-        this.chairman = chairman;
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
     }
 
     /**

@@ -41,7 +41,10 @@ public class FundTarget implements Serializable {
     private User              memberA;
 
     /** B角 */
-    private User              memberB;
+    private List<User>        memberBs;
+
+    /** B角Str */
+    private String            memberBStr;
 
     /** 投资金额 */
     private Double            investment;
@@ -76,8 +79,8 @@ public class FundTarget implements Serializable {
     /** 注册资本 */
     private Double            registeredCapital;
 
-    /** 董事长 */
-    private String            chairman;
+    /** 注册时间 */
+    private String            registerTime;
 
     /** 公司地址 */
     private String            address;
@@ -115,13 +118,13 @@ public class FundTarget implements Serializable {
     @Override
     public String toString() {
         return "{\"FundTarget\":{" + "\"id\":" + id + ",\"projectId\":\"" + projectId + '\"' + ",\"projectName\":\"" + projectName + '\"' + ",\"projectStep\":" + projectStep
-               + ",\"memberA\":" + memberA + ",\"memberB\":" + memberB + ",\"investment\":" + investment + ",\"investmentPart\":\"" + investmentPart + '\"'
+               + ",\"memberA\":" + memberA + ",\"memberBs\":" + memberBs + ",\"investment\":" + investment + ",\"investmentPart\":\"" + investmentPart + '\"'
                + ",\"shareHodingRate\":\"" + shareHodingRate + '\"' + ",\"preVal\":" + preVal + ",\"postVal\":" + postVal + ",\"investemntTime\":\"" + investemntTime + '\"'
                + ",\"projectChannel\":\"" + projectChannel + '\"' + ",\"companySortName\":\"" + companySortName + '\"' + ",\"companyFullName\":\"" + companyFullName + '\"'
-               + ",\"controllerOwner\":\"" + controllerOwner + '\"' + ",\"registeredCapital\":" + registeredCapital + ",\"chairman\":\"" + chairman + '\"' + ",\"address\":\""
-               + address + '\"' + ",\"industry\":\"" + industry + '\"' + ",\"location\":\"" + location + '\"' + ",\"mainBusiness\":\"" + mainBusiness + '\"' + ",\"orgNumber\":\""
-               + orgNumber + '\"' + ",\"creditCode\":\"" + creditCode + '\"' + ",\"updatetime\":\"" + updatetime + '\"' + ",\"taxNumber\":\"" + taxNumber + '\"'
-               + ",\"phoneNumber\":\"" + phoneNumber + '\"' + ",\"loanInstallments\":" + loanInstallments + "}}";
+               + ",\"controllerOwner\":\"" + controllerOwner + '\"' + ",\"registeredCapital\":" + registeredCapital + ",\"registerTime\":\"" + registerTime + '\"'
+               + ",\"address\":\"" + address + '\"' + ",\"industry\":\"" + industry + '\"' + ",\"location\":\"" + location + '\"' + ",\"mainBusiness\":\"" + mainBusiness + '\"'
+               + ",\"orgNumber\":\"" + orgNumber + '\"' + ",\"creditCode\":\"" + creditCode + '\"' + ",\"updatetime\":\"" + updatetime + '\"' + ",\"taxNumber\":\"" + taxNumber
+               + '\"' + ",\"phoneNumber\":\"" + phoneNumber + '\"' + ",\"outType\":" + outType + ",\"loanInstallments\":" + loanInstallments + "}}";
 
     }
 
@@ -216,21 +219,21 @@ public class FundTarget implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>memberB</tt>.
+     * Getter method for property <tt>memberBs</tt>.
      *
-     * @return property value of memberB
+     * @return property value of memberBs
      */
-    public User getMemberB() {
-        return memberB;
+    public List<User> getMemberBs() {
+        return memberBs;
     }
 
     /**
-     * Setter method for property <tt>memberB</tt>.
+     * Setter method for property <tt>memberBs</tt>.
      *
-     * @param memberB value to be assigned to property  memberB
+     * @param memberBs value to be assigned to property  memberBs
      */
-    public void setMemberB(User memberB) {
-        this.memberB = memberB;
+    public void setMemberBs(List<User> memberBs) {
+        this.memberBs = memberBs;
     }
 
     /**
@@ -432,21 +435,21 @@ public class FundTarget implements Serializable {
     }
 
     /**
-     * Getter method for property <tt>chairman</tt>.
+     * Getter method for property <tt>registerTime</tt>.
      *
-     * @return property value of chairman
+     * @return property value of registerTime
      */
-    public String getChairman() {
-        return chairman;
+    public String getRegisterTime() {
+        return registerTime;
     }
 
     /**
-     * Setter method for property <tt>chairman</tt>.
+     * Setter method for property <tt>registerTime</tt>.
      *
-     * @param chairman value to be assigned to property  chairman
+     * @param registerTime value to be assigned to property  registerTime
      */
-    public void setChairman(String chairman) {
-        this.chairman = chairman;
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
     }
 
     /**
@@ -645,5 +648,23 @@ public class FundTarget implements Serializable {
      */
     public void setLoanInstallments(List<Installment> loanInstallments) {
         this.loanInstallments = loanInstallments;
+    }
+
+    /**
+     * Getter method for property <tt>memberBStr</tt>.
+     *
+     * @return property value of memberBStr
+     */
+    public String getMemberBStr() {
+        return memberBStr;
+    }
+
+    /**
+     * Setter method for property <tt>memberBStr</tt>.
+     *
+     * @param memberBStr value to be assigned to property  memberBStr
+     */
+    public void setMemberBStr(String memberBStr) {
+        this.memberBStr = memberBStr;
     }
 }

@@ -1,32 +1,38 @@
 @charset "UTF-8";
 
-.inputs{
-	width: 160px;
+.inputs {
+    width: 160px;
 }
 
-.inputw{
-	width: 250px;
+.inputw {
+    width: 250px;
 }
 
-.inputm{
-	width: 400px;
+.inputm {
+    width: 400px;
 }
 
 .select-width-180 {
-	width: 180px;
+    width: 180px;
 }
 
-.select-width-140{
-	width: 140px;
-}
-.card-head{
-	color:#fff;
-	font-size: 18px;
-}
-.card-body{
-	color:#fff;
+.select-width-140 {
+    width: 140px;
 }
 
-.red{
-	color:#ed4014;
+.select-width-120 {
+    width: 120px;
+}
+
+.card-head {
+    color: #fff;
+    font-size: 18px;
+}
+
+.card-body {
+    color: #fff;
+}
+
+.red {
+    color: #ed4014;
 }

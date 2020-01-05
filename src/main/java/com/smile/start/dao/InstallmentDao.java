@@ -23,8 +23,8 @@ public interface InstallmentDao {
      * @param installment
      * @return
      */
-    @Insert("insert into project_installment (detail,type,project_type,amount,installment_date,paied,invoiced)"
-            + "values(#{detail.id},#{type},#{kind},#{amount},#{installmentDate},#{paied},#{invoiced})")
+    @Insert("insert into project_installment (detail,type,project_type,amount,real_amount,installment_date,real_installment_date,paied,invoiced)"
+            + "values(#{detail.id},#{type},#{kind},#{amount},#{realAmount},#{installmentDate},#{realInstallmentDate},#{paied},#{invoiced})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Installment installment);
 
@@ -60,7 +60,8 @@ public interface InstallmentDao {
      * @param detailId
      * @return
      */
-    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "detail", property = "detail.id") })
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "detail", property = "detail.id"),
+                                      @Result(column = "project_type", property = "kind") })
     @Select("select * from project_installment where detail = #{detailId} and project_type = #{kind}")
     List<Installment> queryByDetail(Long detailId, ProjectKind kind);
 
@@ -134,6 +135,14 @@ public interface InstallmentDao {
      */
     @Select("select * from installment_item where installment_id = #{id}")
     InstallmentItem getInstallmentItem(Installment installment);
+
+    /**
+     * 获取
+     * @param installment
+     * @return
+     */
+    @Select("select * from installment_item where installment_id = #{id}")
+    List<InstallmentItem> getInstallmentItems(Installment installment);
 
     /**
      * 获取

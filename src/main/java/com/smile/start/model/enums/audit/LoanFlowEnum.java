@@ -9,7 +9,7 @@ public enum LoanFlowEnum {
                           APPLY(0, "提出申请") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_AUDIT;
+                                  return CHARGE_AUDIT;
                               }
 
                               @Override
@@ -17,10 +17,10 @@ public enum LoanFlowEnum {
                                   return null;
                               }
                           },
-                          DEPARTMENT_AUDIT(1, "部门负责人审核") {
+                          CHARGE_AUDIT(1, "相宁永赢负责人审定") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
-                                  return CHARGE_AUDIT;
+                                  return DEPARTMENT_AUDIT;
                               }
 
                               @Override
@@ -28,62 +28,7 @@ public enum LoanFlowEnum {
                                   return APPLY;
                               }
                           },
-                          CHARGE_AUDIT(2, "债权负责人审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_AUDIT;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return DEPARTMENT_AUDIT;
-                              }
-                          },
-                          FINANCIAL_AUDIT(3, "财务风控审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return FORENSIC_AUDIT;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return CHARGE_AUDIT;
-                              }
-                          },
-                          FORENSIC_AUDIT(4, "法务风控审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return FINANCIAL_MAIN_AUDIT;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return FINANCIAL_AUDIT;
-                              }
-                          },
-                          FINANCIAL_MAIN_AUDIT(5, "财务负责人审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return VP_AUDIT;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return FORENSIC_AUDIT;
-                              }
-                          },
-                          VP_AUDIT(6, "集团副总审核") {
-                              @Override
-                              public LoanFlowEnum getNextStatus() {
-                                  return CEO_AUDIT;
-                              }
-
-                              @Override
-                              public LoanFlowEnum getDefaultRejectStatus() {
-                                  return FINANCIAL_MAIN_AUDIT;
-                              }
-                          },
-                          CEO_AUDIT(7, "集团正总审核") {
+                          DEPARTMENT_AUDIT(2, "保理公司负责人审核") {
                               @Override
                               public LoanFlowEnum getNextStatus() {
                                   return null;
@@ -91,7 +36,7 @@ public enum LoanFlowEnum {
 
                               @Override
                               public LoanFlowEnum getDefaultRejectStatus() {
-                                  return VP_AUDIT;
+                                  return CHARGE_AUDIT;
                               }
                           };
 

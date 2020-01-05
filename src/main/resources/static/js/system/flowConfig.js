@@ -196,9 +196,9 @@ var vue = new Vue({
          */
         getFlowTypeDesc : function(value){
             if(value === 2) {
-                return "保理合同审核流程";
+                return "保理审核流程";
             } else if(value === 1) {
-                return "保理尽调审核流程";
+                return "保理审核流程";
             }else if(value === 3) {
                 return "保理放款审核流程";
             }else if(value === 4) {

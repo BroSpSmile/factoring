@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
+import com.smile.start.model.auth.User;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -34,7 +35,7 @@ public class FundMapper {
         info.setProjectId(fundProject.getProjectId());
         info.setProjectName(fundProject.getProjectName());
         info.setCreateTime(fundProject.getCreateTime());
-        info.setChairman(fundProject.getDetail().getChairman());
+        info.setRegisterTime(fundProject.getDetail().getRegisterTime());
         info.setCompanyFullName(fundProject.getDetail().getCompanyFullName());
         info.setCompanySortName(fundProject.getDetail().getCompanySortName());
         info.setControllerOwner(fundProject.getDetail().getControllerOwner());
@@ -50,12 +51,16 @@ public class FundMapper {
         if (null != fundProject.getDetail().getMemberA() && StringUtils.isNotBlank(fundProject.getDetail().getMemberA().getUsername())) {
             info.setMembers(fundProject.getDetail().getMemberA().getUsername());
         }
-        if (null != fundProject.getDetail().getMemberB() && StringUtils.isNotBlank(fundProject.getDetail().getMemberB().getUsername())) {
-            if (StringUtils.isNotBlank(info.getMembers())) {
-                info.setMembers(info.getMembers() + fundProject.getDetail().getMemberB().getUsername());
-            } else {
-                info.setMembers(fundProject.getDetail().getMemberB().getUsername());
+
+        if (null != fundProject.getDetail().getMemberBs() && !fundProject.getDetail().getMemberBs().isEmpty()) {
+            for (User user : fundProject.getDetail().getMemberBs()) {
+                if (StringUtils.isNotBlank(info.getMembers())) {
+                    info.setMembers(info.getMembers() + user.getUsername());
+                } else {
+                    info.setMembers(user.getUsername());
+                }
             }
+
         }
         return info;
     }

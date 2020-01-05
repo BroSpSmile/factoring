@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.BaseProjectDao;
@@ -26,8 +27,8 @@ import com.smile.start.dao.fund.FundTargetDao;
 import com.smile.start.event.CompanyEvent;
 import com.smile.start.integration.tianyan.CompanyClient;
 import com.smile.start.integration.tianyan.model.CompanyInfo;
-import com.smile.start.integration.tianyan.model.StaffInfo;
 import com.smile.start.integration.tianyan.model.TianyanResult;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
@@ -106,6 +107,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
         FundTarget target = project.getDetail();
         target.setProjectId(project.getProjectId());
         target.setProjectName(project.getProjectName());
+        target.setMemberBStr(toStr(target.getMemberBs()));
         long effect = fundTargetDao.insert(project.getDetail());
         LoggerUtils.info(logger, "新增直投标的:{}结果={}", project.getProjectId(), effect);
         BaseResult result = toResult(effect);
@@ -131,6 +133,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
         if (project.getId() > 0 && null == target.getId()) {
             target.setId(fundTargetDao.getFundId(project.getId()));
         }
+        target.setMemberBStr(toStr(target.getMemberBs()));
         int effect = fundTargetDao.updateTarget(target);
         LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
         if (effect > 0 && !CollectionUtils.isEmpty(project.getItems())) {
@@ -169,6 +172,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
         List<FundProject> projects = fundTargetDao.queryFundTarget(query.getCondition());
         for (FundProject project : projects) {
             FundTarget target = project.getDetail();
+            target.setMemberBs(toUser(target.getMemberBStr()));
             setUser(target);
         }
         PageInfo<FundProject> result = new PageInfo<>(projects);
@@ -194,6 +198,7 @@ public class FundServiceImpl extends AbstractService implements FundService {
         FundTarget target = new FundTarget();
         target.setProjectId(projectId);
         FundTarget fundTarget = fundTargetDao.getByProjectId(target);
+        fundTarget.setMemberBs(toUser(fundTarget.getMemberBStr()));
         List<Installment> installments = installmentDao.queryByDetail(fundTarget.getId(), ProjectKind.INVESTMENT);
         for (Installment installment : installments) {
             InstallmentItem item = installmentDao.getInstallmentItem(installment);
@@ -253,15 +258,8 @@ public class FundServiceImpl extends AbstractService implements FundService {
                 if (!StringUtils.equalsIgnoreCase(info.getIndustry(), target.getIndustry())) {
                     def.put("industry", "所属行业");
                 }
-                if (!StringUtils.equalsIgnoreCase(info.getBusinessScope(), target.getMainBusiness())) {
-                    def.put("mainBusiness", "主营业务");
-                }
-                for (StaffInfo staffInfo : info.getStaffList()) {
-                    if (StringUtils.equalsIgnoreCase(staffInfo.getStaffTypeName(), "董事长")) {
-                        if (!StringUtils.equalsIgnoreCase(staffInfo.getName(), target.getChairman())) {
-                            def.put("chairman", "董事长");
-                        }
-                    }
+                if (!StringUtils.equalsIgnoreCase(info.getEstiblishTime(), target.getRegisterTime())) {
+                    def.put("registerTime", "注册时间");
                 }
                 if (!def.isEmpty()) {
                     //存在字段变化通知负责人
@@ -295,9 +293,14 @@ public class FundServiceImpl extends AbstractService implements FundService {
         if (null != target.getMemberA() && null != target.getMemberA().getId()) {
             target.setMemberA(userInfo.getUserById(target.getMemberA().getId()));
         }
-        if (null != target.getMemberB() && null != target.getMemberB().getId()) {
-            target.setMemberB(userInfo.getUserById(target.getMemberB().getId()));
+        if (null != target.getMemberBs() && !target.getMemberBs().isEmpty()) {
+            List<User> users = Lists.newArrayListWithCapacity(target.getMemberBs().size());
+            for (int i = 0; i < target.getMemberBs().size(); i++) {
+                users.add(userInfo.getUserById(target.getMemberBs().get(i).getId()));
+            }
+            target.setMemberBs(users);
         }
+
     }
 
 }

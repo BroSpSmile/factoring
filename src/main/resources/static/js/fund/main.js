@@ -50,10 +50,13 @@ var vue = new Vue({
                 {required: true, type: 'number', message: '项目成员A角不能为空', trigger: 'change'}
             ],
             'detail.memberB.id': [
-                {required: true, type: 'number', message: '项目成员B角不能为空', trigger: 'change'}
+                {required: true, type: 'array', min: 1, message: '项目成员B角不能为空', trigger: 'change'}
             ],
             'detail.companySortName': [
                 {required: true, message: '公司简称不能为空', trigger: 'blur'}
+            ],
+            'detail.mainBusiness': [
+                {required: true, message: '主营业务不能为空', trigger: 'blur'}
             ],
             'detail.companyFullName': [
                 {required: true, message: '公司全称不能为空', trigger: 'blur'}
@@ -61,8 +64,8 @@ var vue = new Vue({
             'detail.controllerOwner': [
                 {required: true, message: '实际控制人不能为空', trigger: 'blur'}
             ],
-            'detail.chairman': [
-                {required: true, message: '董事长不能为空', trigger: 'blur'}
+            'detail.registerTime': [
+                {required: true, message: '注册时间不能为空', trigger: 'blur'}
             ]
         }
     },
@@ -147,12 +150,14 @@ var vue = new Vue({
                 align: 'center',
                 render: (h, param) => {
                     let name = "";
-                    console.log();
                     if (param.row.detail.memberA != null && param.row.detail.memberA.username != null) {
                         name = param.row.detail.memberA.username;
                     }
-                    if (param.row.detail.memberB != null && param.row.detail.memberB.username != null) {
-                        name += "," + param.row.detail.memberB.username;
+                    if (param.row.detail.memberBs != null) {
+                        let users = param.row.detail.memberBs;
+                        for(let i in users){
+                            name += "," +users[i].username;
+                        }
                     }
                     return h('span', name);
                 }
@@ -224,6 +229,32 @@ var vue = new Vue({
                                 }
                             }
                         }, '编辑') : h('span'),
+                        param.row.detail.projectStep == 'INITIAL_CONTACT' || param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'|| param.row.detail.projectStep == 'APPROVAL'|| param.row.detail.projectStep == 'INITIAL_TUNING'|| param.row.detail.projectStep == 'DEEP_TUNING' ? h('Button', {
+                            props: {
+                                size: "small",
+                                type: "primary",
+                                ghost: true
+
+                            },
+                            on: {
+                                click: () => {
+                                    //this.toMenu(param.row, "项目编辑");
+                                }
+                            }
+                        }, '暂停') : h('span'),
+                        param.row.detail.projectStep == 'SUSPEND' ? h('Button', {
+                            props: {
+                                size: "small",
+                                type: "success",
+                                ghost: true
+
+                            },
+                            on: {
+                                click: () => {
+                                    //this.toMenu(param.row, "项目编辑");
+                                }
+                            }
+                        }, '重启') : h('span'),
                         param.row.detail.projectStep == 'INITIAL_CONTACT' ? h('Button', {
                             props: {size: 'small', type: "info", ghost: true}, on: {
                                 click: () => {
@@ -334,8 +365,8 @@ var vue = new Vue({
             if (null == this.addForm.detail.memberA) {
                 this.addForm.detail.memberA = {};
             }
-            if (null == this.addForm.detail.memberB) {
-                this.addForm.detail.memberB = {};
+            if (null == this.addForm.detail.memberBArr) {
+                this.addForm.detail.memberBArr = [];
             }
             this.fileList = [];
             this.getItems(project.id);
@@ -345,6 +376,7 @@ var vue = new Vue({
                 itemName:"",
                 itemValue:""
             }];
+            console.log(this.addForm);
             this.modal1 = true;
         },
 
@@ -487,7 +519,12 @@ var vue = new Vue({
             this.$http.post("/fund/query", self.queryParam).then(
                 function (response) {
                     let data = response.data;
-                    for(let index in data.list){
+                    for (let index in data.list) {
+                        data.list[index].detail.memberBArr = [];
+                        let users = data.list[index].detail.memberBStr.split(",");
+                        for (let i in users) {
+                            data.list[index].detail.memberBArr.push(parseInt(users[i]));
+                        }
                         data.list[index].mainBusiness = data.list[index].detail.mainBusiness;
                     }
                     this.pageInfo = data;
@@ -537,17 +574,12 @@ var vue = new Vue({
                     _self.addForm.detail.registeredCapital = company.regCapital;
                     _self.addForm.detail.address = company.regLocation;
                     _self.addForm.detail.industry = company.industry;
-                    _self.addForm.detail.mainBusiness = company.businessScope;
                     _self.addForm.detail.orgNumber = company.orgNumber;
                     _self.addForm.detail.creditCode = company.creditCode;
                     _self.addForm.detail.updatetime = company.updatetime;
                     _self.addForm.detail.taxNumber = company.taxNumber;
                     _self.addForm.detail.phoneNumber = company.phoneNumber;
-                    for(let i in company.staffList){
-                        if(company.staffList[i].staffTypeName == "董事长"){
-                            _self.addForm.detail.chairman = company.staffList[i].name;
-                        }
-                    }
+                    _self.addForm.detail.registerTime = company.estiblishTime;
                 }
             }, function (error) {
                 console.error(error);
@@ -616,6 +648,11 @@ var vue = new Vue({
             for(let index in this.webItems){
                 this.addForm.items.push(this.webItems[index]);
             }
+            this.addForm.detail.memberBs = [];
+            for(let index in this.addForm.detail.memberBArr){
+                this.addForm.detail.memberBs.push({id:this.addForm.detail.memberBArr[index]});
+            }
+
             if (!this.addForm.projectId) {
                 this.$http.post("/fund", this.addForm).then(function (response) {
                     this.$Spin.hide();

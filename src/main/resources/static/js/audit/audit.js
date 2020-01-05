@@ -128,7 +128,6 @@ var vue = new Vue({
 		 */
 		openPass:function(){
 			this.fileList = [];
-			this.record.remark = "";
 			this.audit.step = this.nowStep;
 			this.passBt = false;
 			this.modal1 = true;
@@ -139,7 +138,6 @@ var vue = new Vue({
 		 */
 		openReject:function(){
 			this.fileList = [];
-			this.record.remark = "";
 			this.audit.step = this.nowStep;
 			this.rejectBt = false;
 			this.modal2 = true;
@@ -151,11 +149,7 @@ var vue = new Vue({
 			let _self = this;
 			this.passBt = true;
 			this.record.audit = this.audit;
-			if(this.audit.auditType=='TUNEUP'&& (this.audit.step==4||this.audit.step==3)){
-				if(this.fileList === undefined || this.fileList.length == 0){
-					this.$Message.error("请上传尽调文件");
-					return false;
-				}
+			if(this.fileList){
 				for(let index in this.fileList){
 					let item={
 							itemName:this.fileList[index].name,

@@ -57,7 +57,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     }
 
     /** 
-     * @see com.smile.start.service.engine.ProcessEngine#next(com.smile.start.model.project.Project)
+     * @see com.smile.start.service.engine.ProcessEngine#(com.smile.start.model.project.Project)
      */
     @Override
     @Transactional
@@ -119,15 +119,15 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
         record.setStep(Step.getStep(project.getStep()));
         record.setCreateTime(new Date());
         BaseResult result = addOrUpate(record);
-        if (Step.TUNEUP.equals(Step.getStep(project.getStep()))) {
-            project.setStep(project.getStep() + 1);
-            StepRecord recordAudit = new StepRecord();
-            recordAudit.setProject(project);
-            recordAudit.setStatus(StepStatus.LATER);
-            recordAudit.setStep(Step.getStep(project.getStep()));
-            recordAudit.setCreateTime(new Date());
-            result = addOrUpate(recordAudit);
-        }
+        //        if (Step.TUNEUP.equals(Step.getStep(project.getStep()))) {
+        //            project.setStep(project.getStep() + 1);
+        //            StepRecord recordAudit = new StepRecord();
+        //            recordAudit.setProject(project);
+        //            recordAudit.setStatus(StepStatus.LATER);
+        //            recordAudit.setStep(Step.getStep(project.getStep()));
+        //            recordAudit.setCreateTime(new Date());
+        //            result = addOrUpate(recordAudit);
+        //        }
         if (result.isSuccess()) {
             BaseResult updataResult = projectService.turnover(project);
             if (updataResult.isSuccess()) {
@@ -157,11 +157,11 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     public BaseResult addOrUpate(StepRecord record) {
         StepRecord exist = stepDao.getStep(record.getProject().getId(), record.getStep());
         if (null != exist) {
-            if (!Step.MEETING.equals(record.getStep())) {
-                record.setId(exist.getId());
-                record.setModifyTime(new Date());
-                stepDao.update(record);
-            }
+            //            if (!Step.MEETING.equals(record.getStep())) {
+            //                record.setId(exist.getId());
+            //                record.setModifyTime(new Date());
+            //                stepDao.update(record);
+            //            }
         } else {
             stepDao.insert(record);
         }

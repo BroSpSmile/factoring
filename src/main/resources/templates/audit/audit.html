@@ -57,7 +57,7 @@
                                     </form-item>
                                 </i-col>
                             </row>
-                            <form-item label="附件查看">
+                            <form-item label="附件查看" v-if="audit.auditType !='TUNEUP' ">
                                 <div v-for="item in audit.project.items" v-if="item.itemType == audit.auditType">
                                     <Tag type="border" color="primary" style="width: 80px;" v-if="item.attachType == 1">
                                         标准模板
@@ -75,6 +75,26 @@
                                     </span>
                                 </div>
                             </form-item>
+                            <row v-if="showAuditButton && audit.step > 0">
+                                <i-col span="10">
+                                    <form-item label="审核意见" prop="remark">
+                                        <i-input type="textarea" :rows="4" placeholder="请备注审核意见" class="inputm"
+                                                 v-model="record.remark"></i-input>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <row v-if="showAuditButton && audit.step > 0">
+                                <i-col span="20">
+                                    <form-item label="审核附件">
+                                        <Upload action="/file/upload" :on-success="uploadSuccess"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile">
+                                            <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
+                                        </Upload>
+                                    </form-item>
+                                </i-col>
+
+                            </row>
                             <row type="flex" v-if="showAuditButton && audit.step > 0">
                                 <i-col span="12" offset="2">
                                     <i-button type="success" icon="ios-checkmark" @click="openPass">通过</i-button>
@@ -97,16 +117,7 @@
         <modal v-model="modal1" title="审核通过" mask-closable="false">
             <div id="modalForm">
                 <i-form :label-width="120">
-                    <form-item :label="auditTitle" v-if="audit.auditType =='TUNEUP' && (audit.step==3||audit.step==4)">
-                        <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"
-                                :on-remove="removeFile">
-                            <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
-                        </Upload>
-                    </form-item>
-                    <form-item label="备注" prop="remark">
-                        <i-input type="textarea" :rows="4" placeholder="请备注" class="inputw"
-                                 v-model="record.remark"></i-input>
-                    </form-item>
+
                 </i-form>
             </div>
             <div slot="footer">
@@ -117,7 +128,7 @@
 
         <!-- 新增项目 -->
         <modal v-model="modal2" title="审核驳回" mask-closable="false">
-            <div id="modalForm">
+            <div id="modalForms">
                 <i-form :label-width="120">
                     <form-item label="驳回至" prop="step">
                         <i-select class="inputw" v-model="record.audit.step" clearable>
@@ -125,10 +136,6 @@
                                 {{flow.desc}}
                             </i-option>
                         </i-select>
-                    </form-item>
-                    <form-item label="驳回原因" prop="remark">
-                        <i-input type="textarea" :rows="4" placeholder="请输入驳回原因" class="inputw"
-                                 v-model="record.remark"></i-input>
                     </form-item>
                 </i-form>
             </div>

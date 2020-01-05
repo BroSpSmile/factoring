@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.TypeReference;
@@ -60,7 +61,10 @@ public class ProjectController extends BaseController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        String step = request.getParameter("step");
+        LoggerUtils.info(logger, "项目ID={}", step);
+        model.addAttribute("step", step);
         return "project/project";
     }
 

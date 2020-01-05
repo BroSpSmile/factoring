@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout">
+<div layout:fragment="content">
+    <div id="factoring" v-cloak>
+        <row>
+            <i-col span="24">
+                <card dis-hover>
+                    <p slot="title">{{detail.id?'项目明细':'新建项目'}}</p>
+                    <p>
+                        <i-form :label-width="140" ref="entityDataForm" :rules="validata" :model="detail">
+                            <row>
+                                <i-col span="8">
+                                    <form-item label="项目编号" prop="project.projectId">
+                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectId"
+                                                 readonly></i-input>
+                                    </form-item>
+                                </i-col>
+                                <i-col span="14">
+                                    <form-item label="项目名称" prop="project.projectName">
+                                        <i-input placeholder="输入项目名称" v-model="detail.project.projectName"
+                                                 readonly></i-input>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <row>
+                                <i-col span="8">
+                                    <form-item label="应收账款管理费" prop="dropAmount">
+                                        <input-number min="0" :max="100000000000" :step="0.01" readOnly
+                                                      :formatter="formatter" :parser="parser"
+                                                      class="select-width-140" @on-blur="comRate"
+                                                      v-model="detail.receivableManager"></input-number>&nbsp;(元)
+                                    </form-item>
+                                </i-col>
+                            </row>
+                            <card v-for="(installment,index) in detail.returnInstallments" :key="index" title="回款明细"
+                                  dis-hover>
+                                <i-form>
+                                    <row>
+                                        <i-col span="6">
+                                            <form-item label="合同回款日" prop="">
+                                                <date-picker type="date" placeholder="每期回款日"
+                                                             v-model="installment.installmentDate"></date-picker>
+                                            </form-item>
+                                        </i-col>
+                                        <i-col span="6">
+                                            <form-item label="每期利息" prop="">
+                                                <input-number min="0" :max="100000000000"
+                                                              :formatter="formatter" :parser="parser"
+                                                              class="select-width-120" v-model="installment.amount"
+                                                ></input-number>&nbsp;(元)
+                                            </form-item>
+                                        </i-col>
+                                        <i-col span="6">
+                                            <form-item label="实际回款日期" prop="">
+                                                <date-picker type="date" placeholder="每期回款日"
+                                                             v-model="installment.realInstallmentDate"></date-picker>
+                                            </form-item>
+                                        </i-col>
+                                        <i-col span="6">
+                                            <form-item label="实际回款金额" prop="">
+                                                <input-number min="0" :max="100000000000"
+                                                              :formatter="formatter" :parser="parser"
+                                                              class="select-width-120"
+                                                              v-model="installment.realAmount"
+                                                ></input-number>&nbsp;(元)
+                                            </form-item>
+                                        </i-col>
+                                    </row>
+                                    <row>
+                                        <i-col span="8">&nbsp;&nbsp;
+                                            <form-item label="上传收据:">
+                                                <Upload action="/file/uploadInstallment"
+                                                        :data="{'index': index}"
+                                                        :on-success="uploadInstallmentSuccess"
+                                                        :on-error="uploadError"
+                                                        :on-remove="removeInstallmentFile">
+                                                    <i-button size="small" icon="ios-cloud-upload-outline">上传文件
+                                                    </i-button>
+                                                </Upload>
+                                            </form-item>
+                                        </i-col>
+                                    </row>
+                                </i-form>
+                            </card>
+                            <br>
+                            <row>
+                                <i-col span="8">
+                                    <form-item label="合同回款日" prop="remittanceDay">
+                                        <date-picker type="date" placeholder="合同回款日"
+                                                     v-model="detail.remittanceDay" readOnly></date-picker>
+                                    </form-item>
+                                </i-col>
+                                <i-col span="8">
+                                    <form-item label="实际本金回款日" prop="realRemittanceDay">
+                                        <date-picker type="date" placeholder="合同回款日"
+                                                     v-model="detail.realRemittanceDay"></date-picker>
+                                    </form-item>
+                                </i-col>
+                                <i-col span="8">
+                                    <form-item label="上传收据:">
+                                        <Upload action="/file/upload" :on-success="uploadSKSuccess"
+                                                :on-error="uploadError"
+                                                :on-remove="removeSKFile">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
+                                        </Upload>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                        </i-form>
+                    </p>
+                </card>
+                <br>
+                <card dis-hover>
+                    <p slot="title">项目附件</p>
+                    <p>
+                        <i-form :label-width="140">
+                            <row>
+                                <i-col span="20">
+                                    <form-item label="附件上传:">
+                                        <Upload action="/file/upload" :on-success="uploadSuccess"
+                                                :on-error="uploadError"
+                                                :on-remove="removeFile">
+                                            <i-button size="small" icon="ios-cloud-upload-outline">上传文件</i-button>
+                                        </Upload>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                        </i-form>
+                        <i-form :label-width="140" v-if="items.length>0">
+                            <row>
+                                <i-col span="20">
+                                    <form-item label="项目附件:">
+                                        <row v-for="kitem in items">
+                                            <Tag color="warning">{{kitem.key|toTypeName}}</Tag>
+                                            <span v-for="item in kitem.value">
+                                            <Tag v-if="item.itemKind == 'DOC' " size="small"
+                                                 @click.native="downloadItem(item)" type="border" closable
+                                                 color="primary"
+                                                 @on-close="deleteFile(item)">
+                                                {{item.itemName}}
+                                            </Tag> &nbsp;
+                                        </span>
+                                        </row>
+                                    </form-item>
+                                </i-col>
+                            </row>
+                        </i-form>
+                    </p>
+                </card>
+                <br>
+                <card dis-hover>
+                    <i-form :label-width="140">
+                        <row>
+                            <i-col offset="4">
+                                <i-button type="success" @click="submit">保存</i-button>
+                                <i-button type="primary" @click="apply(4)">归档</i-button>
+                                <i-button @click="back">返回</i-button>
+                            </i-col>
+                        </row>
+                    </i-form>
+                </card>
+            </i-col>
+
+        </row>
+        <input th:value="${id}" id="projectId" style="display:none"></input>
+    </div>
+    <script src="js/factoring/afterLoan.js"></script>
+</div>
+</html>

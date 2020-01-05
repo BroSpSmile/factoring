@@ -13,13 +13,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum AuditType {
                        /**  */
-                       TUNEUP(1, "TUNEUP", "保理尽调审核"),
+                       TUNEUP(1, "TUNEUP", "保理业务审核"),
 
                        /**  */
                        DRAWUP(2, "DRAWUP", "保理合同审核"),
 
                        /**  */
-                       LOAN(3, "LOAN", "保理放款审核"),
+                       LOAN(3, "LOAN", "保理业务审核"),
 
                        /**  */
                        FILE(4, "FILE", "保理归档审核"),

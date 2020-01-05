@@ -73,8 +73,8 @@
                                 <i-option v-for="item in users" :value="parseInt(item.value)">{{item.text}}</i-option>
                             </i-select>
                         </form-item>
-                        <form-item label="项目成员B角" prop="detail.memberB.id">
-                            <i-select class="inputw" v-model="addForm.detail.memberB.id" clearable>
+                        <form-item label="项目成员B角" prop="detail.memberBArr">
+                            <i-select class="inputw" multiple v-model="addForm.detail.memberBArr" clearable>
                                 <i-option v-for="item in users" :value="parseInt(item.value)">{{item.text}}</i-option>
                             </i-select>
                         </form-item>
@@ -140,8 +140,9 @@
                                           :formatter="formatter" :parser="parser"
                                           v-model="addForm.detail.registeredCapital"></input-number>&nbsp;元
                         </form-item>
-                        <form-item label="董事长" prop="detail.chairman">
-                            <i-input placeholder="输入董事长" class="inputw" v-model="addForm.detail.chairman"></i-input>
+                        <form-item label="注册时间" prop="detail.registerTime">
+                            <i-input placeholder="输入注册时间" class="inputw"
+                                     v-model="addForm.detail.registerTime"></i-input>
                         </form-item>
                         <form-item label="所属地" prop="detail.location">
                             <i-input placeholder="输入所属地" class="inputw" v-model="addForm.detail.location"></i-input>

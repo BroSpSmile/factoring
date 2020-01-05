@@ -13,12 +13,6 @@ var vue = new Vue({
                 model: "RECOURSE_RIGHT"
 
             },
-            factoringInstallments: [{
-                amount: 0,
-                installmentDate: new Date(),
-                type: "FACTORING",
-                kind: "FACTORING"
-            }],
             assignee: 0,
             receivable: 0,
             dropAmount: 0,
@@ -27,7 +21,8 @@ var vue = new Vue({
             invoicing: "false",
             paied: "false"
         },
-        showGetBack:true,
+        fileList: [],
+        skFileList: [],
         showLater: false,
         items: [],
         itemTypes: [],
@@ -106,15 +101,6 @@ var vue = new Vue({
                             _self.items.push(item);
                         }
                     }
-                    for (let i in _self.detail.factoringInstallments) {
-                        if (_self.detail.factoringInstallments[i].amount == 0 && i == _self.detail.factoringInstallments.length - 1) {
-                            _self.detail.factoringInstallments[i].later = true;
-                            _self.showLater = true;
-                        } else {
-                            _self.detail.factoringInstallments[i].later = false;
-                        }
-                    }
-                    console.log(_self.items);
                 }, function (error) {
                     console.error(error);
                 })
@@ -135,58 +121,25 @@ var vue = new Vue({
 
         /** 添加保理费分期 */
         add: function () {
-            for (let index in this.detail.factoringInstallments) {
-                this.detail.factoringInstallments[index].later = false;
-            }
-            this.detail.factoringInstallments.push({
+            this.detail.returnInstallments.push({
                 amount: 0,
-                installmentDate: new Date(),
                 type: "FACTORING",
                 kind: "FACTORING"
             });
-            this.computeFee();
         },
 
         /**
          * 移除
          */
         remove: function (index) {
-            this.detail.factoringInstallments.splice(index, 1);
-            this.computeFee();
-            for (let i in this.detail.factoringInstallments) {
-                this.showLater = false;
-                if (this.detail.factoringInstallments[i].later) {
-                    this.showLater = true;
-                    break;
-                }
-            }
-
+            this.detail.returnInstallments.splice(index, 1);
         },
 
-        /**
-         * 后补
-         */
-        changeInstallment: function (installment) {
-            installment.amount = 0;
-            if (installment.later) {
-                this.showLater = true;
-                installment.installmentDate = null;
-            } else {
-                this.showLater = false;
-                installment.installmentDate = new Date();
-            }
-            this.computeFee();
-        },
 
-        /** 计算保理费分期 */
-        computeFee: function () {
-            var total = 0;
-            for (let index in this.detail.factoringInstallments) {
-                if (!this.detail.factoringInstallments[index].later) {
-                    total += this.detail.factoringInstallments[index].amount;
-                }
-            }
-            this.detail.totalFactoringFee = total;
+        difDay: function (date1, date2) {
+            var diff = Math.abs(date1.getTime() - date2.getTime())
+            var result = parseInt(diff / (1000 * 60 * 60 * 24));
+            return result;
         },
 
         /**  */
@@ -207,62 +160,53 @@ var vue = new Vue({
          */
         commit: function () {
             let self = this;
-            if(!this.detail.project.items){
-                this.detail.project.items = [];
-            }
+            this.detail.project.items = [];
             for (let index in this.fileList) {
                 let item = {
-                    itemType: "PROJECT",
+                    itemType: "POST_INVESTMENT",
                     itemName: this.fileList[index].name,
                     itemValue: this.fileList[index].response.data.fileId
                 }
                 this.detail.project.items.push(item);
             }
-            this.$Spin.show();
-            if (!this.detail.id) {
-                this.$http.post("/factoring", this.detail).then(function (response) {
-                    this.$Spin.hide();
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content: "保存成功",
-                            onClose: function () {
-                                self.close();
-                            }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function (error) {
-                    this.$Spin.hide();
-                    self.$Message.error(error.data.message);
-                });
-            } else {
-                this.$http.put("/factoring", this.detail).then(function (response) {
-                    this.$Spin.hide();
-                    if (response.data.success) {
-                        self.$Message.info({
-                            content: "保存成功",
-                            onClose: function () {
-                                self.close();
-                            }
-                        });
-                    } else {
-                        self.$Message.error(response.data.errorMessage);
-                    }
-                }, function (error) {
-                    this.$Spin.hide();
-                    self.$Message.error(error.data.message);
-                });
+            for (let index in this.skFileList) {
+                let item = {
+                    itemType: "COLLECTION",
+                    itemName: this.skFileList[index].name,
+                    itemValue: this.skFileList[index].response.data.fileId
+                }
+                this.detail.project.items.push(item);
             }
+            // console.log(this.detail);
+            // return false;
+            this.$Spin.show();
+            this.$http.put("/factoring", this.detail).then(function (response) {
+                this.$Spin.hide();
+                if (response.data.success) {
+                    self.$Message.info({
+                        content: "保存成功",
+                        onClose: function () {
+                            self.close();
+                        }
+                    });
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                this.$Spin.hide();
+                self.$Message.error(error.data.message);
+            });
 
         },
 
         /**
          * 提交申请
          */
-        apply: function () {
+        apply: function (step) {
+            let self = this;
+            this.detail.project.step = step;
             this.$Spin.show();
-            this.$http.post("/apply", this.detail.project).then(function (response) {
+            this.$http.post("/factoringStatus", this.detail.project).then(function (response) {
                 this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
@@ -280,66 +224,6 @@ var vue = new Vue({
             });
         },
 
-        /**
-         * 提交申请
-         */
-        returnBack: function () {
-            this.$Spin.show();
-            let self = this;
-            this.$http.post("/factoringStatus/back", this.detail.project).then(function (response) {
-                this.$Spin.hide();
-                if (response.data.success) {
-                    self.$Message.info({
-                        content: "提交成功",
-                        onClose: function () {
-                            self.close();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                this.$Spin.hide();
-                self.$Message.error(error.data.message);
-            });
-        },
-
-        /**
-         * 提交申请
-         */
-        getBack: function () {
-            this.$Spin.show();
-            let self = this;
-            this.$http.post("/factoringStatus/back", this.detail.project).then(function (response) {
-                this.$Spin.hide();
-                if (response.data.success) {
-                    self.$Message.info({
-                        content: "提交成功",
-                        onClose: function () {
-                            self.close();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                this.$Spin.hide();
-                self.$Message.error(error.data.message);
-            });
-        },
-
-        /**
-         * 提交申请
-         */
-        checkBack: function () {
-            let self = this;
-            this.$http.post("/factoringStatus/check", this.detail.project).then(function (response) {
-                self.showGetBack = response.data.success;
-            }, function (error) {
-                this.$Spin.hide();
-                self.$Message.error(error.data.message);
-            });
-        },
 
         comRate: function () {
             this.detail.returnRate = ((this.detail.dropAmount / this.detail.assignee) * 100).toFixed(2);
@@ -391,6 +275,65 @@ var vue = new Vue({
         uploadSuccess: function (response, file, fileList) {
             this.fileList = fileList;
         },
+
+        /**
+         * 文件上传成功
+         */
+        uploadInstallmentSuccess: function (response, file, fileList) {
+            let id = response.data.id;
+            let installment = this.detail.returnInstallments[id];
+            installment.items = [];
+            for (let index in fileList) {
+                let item = {
+                    installmentId: installment.id,
+                    //itemType 未使用
+                    itemType: "",
+                    itemName: fileList[index].name,
+                    itemValue: fileList[index].response.data.fileId
+                };
+                installment.items.push(item);
+            }
+        },
+
+        removeInstallmentFile: function (file, fileList) {
+            this.fileList = fileList;
+            let fileId = file.response.data.fileId;
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+
+        },
+
+        /**
+         * 文件上传成功
+         */
+        uploadSKSuccess: function (response, file, fileList) {
+            this.skFileList = fileList;
+        },
+
+        removeSKFile: function (file, fileList) {
+            this.skFileList = fileList;
+            let fileId = file.response.data.fileId;
+            let self = this;
+            this.$http.delete("/file/" + fileId).then(function (response) {
+                if (response.data.success) {
+                    self.$Message.info("删除成功");
+                } else {
+                    self.$Message.error(response.data.errorMessage);
+                }
+            }, function (error) {
+                self.$Message.error(error.data.errorMessage);
+            })
+
+        },
+
 
         /**
          * 文件上传失败

@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
-import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.fund.FundItemService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 支付打款
@@ -58,8 +56,7 @@ public class PaymentController extends BaseController {
     @ResponseBody
     public BaseResult save(HttpServletRequest request, @RequestBody List<ProjectItem> items, @PathVariable FundStatus status) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        User user = getUserByToken(request);
-        return fundItemService.saveAndAudit(status, items, AuditType.PAYMENT, user);
+        return fundItemService.save(FundStatus.FUND_LOAN, items);
     }
 
 }

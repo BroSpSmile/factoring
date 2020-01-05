@@ -108,15 +108,15 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
     public BaseResult saveInstallments(Project project, InstallmentType installmentType) {
         FactoringDetail detail = Optional.of(project.getDetail()).orElseThrow(() -> new RuntimeException("保存分期信息失败，获取项目详情败!"));
 
-        //放款操作中
-        if (project.getStep() == Step.LOANEN.getIndex()) {
-            processEngine.changeStatus(project, StepStatus.PROCESSING);
-        }
+//        //放款操作中
+//        if (project.getStep() == Step.LOANEN.getIndex()) {
+//            processEngine.changeStatus(project, StepStatus.PROCESSING);
+//        }
 
         //回款操作中
-        if (project.getStep() == Step.END.getIndex()) {
-            processEngine.changeStatus(project, StepStatus.PROCESSING);
-        }
+        //        if (project.getStep() == Step.END.getIndex()) {
+        //            processEngine.changeStatus(project, StepStatus.PROCESSING);
+        //        }
 
         List<Installment> installments = null;
         if (installmentType == InstallmentType.LOAN) {
@@ -288,19 +288,19 @@ public class FinanceServiceImpl extends AbstractService implements FinanceServic
         }
 
         //放款操作
-        if (project.getStep() == Step.LOANEN.getIndex()) {
-            if (totalLoanAmount >= detail.getReceivable()) {
-                //放款完成，更新step表,更新项目表
-                processEngine.next(project, false);
-            }
-        }
-
-        //回款操作
-        if (project.getStep() == Step.BACK.getIndex()) {
-            if (totalReturnAmount >= totalLoanAmount && isAllPaied) {
-                //回款完成，更新step表,更新项目表
-                processEngine.next(project, false);
-            }
-        }
+        //        if (project.getStep() == Step.LOANEN.getIndex()) {
+        //            if (totalLoanAmount >= detail.getReceivable()) {
+        //                //放款完成，更新step表,更新项目表
+        //                processEngine.next(project, false);
+        //            }
+        //        }
+        //
+        //        //回款操作
+        //        if (project.getStep() == Step.BACK.getIndex()) {
+        //            if (totalReturnAmount >= totalLoanAmount && isAllPaied) {
+        //                //回款完成，更新step表,更新项目表
+        //                processEngine.next(project, false);
+        //            }
+        //        }
     }
 }

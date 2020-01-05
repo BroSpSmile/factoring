@@ -44,8 +44,10 @@ public class CompanyListener extends AbstractListener {
         if (null != target.getMemberA()) {
             users.add(userInfoService.getUserById(target.getMemberA().getId()));
         }
-        if (null != target.getMemberB()) {
-            users.add(userInfoService.getUserById(target.getMemberB().getId()));
+        if (null != target.getMemberBs() && !target.getMemberBs().isEmpty()) {
+            for (User user : target.getMemberBs()) {
+                users.add(userInfoService.getUserById(user.getId()));
+            }
         }
         this.sendNotice(users, target, event.getDef());
         this.sendText(users, target, event.getDef());

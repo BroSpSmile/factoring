@@ -36,8 +36,14 @@ public class Installment implements Serializable {
     /** 分期金额 */
     private double                  amount;
 
+    /** 实际回款金额 */
+    private double                  realAmount;
+
     /** 分期时间 */
     private Date                    installmentDate;
+
+    /** 实际回款时间 */
+    private Date                    realInstallmentDate;
 
     /** 是否已支付 */
     private boolean                 paied;
@@ -50,6 +56,9 @@ public class Installment implements Serializable {
 
     /** 分期凭证附件 */
     private InstallmentItem         item;
+
+    /** 分期凭证附件 */
+    private List<InstallmentItem>   items;
 
     /** 
      * @see java.lang.Object#toString()
@@ -230,5 +239,59 @@ public class Installment implements Serializable {
 
     public boolean isInvoiced() {
         return invoiced;
+    }
+
+    /**
+     * Getter method for property <tt>realAmount</tt>.
+     *
+     * @return property value of realAmount
+     */
+    public double getRealAmount() {
+        return realAmount;
+    }
+
+    /**
+     * Setter method for property <tt>realAmount</tt>.
+     *
+     * @param realAmount value to be assigned to property  realAmount
+     */
+    public void setRealAmount(double realAmount) {
+        this.realAmount = realAmount;
+    }
+
+    /**
+     * Getter method for property <tt>realInstallmentDate</tt>.
+     *
+     * @return property value of realInstallmentDate
+     */
+    public Date getRealInstallmentDate() {
+        return realInstallmentDate;
+    }
+
+    /**
+     * Setter method for property <tt>realInstallmentDate</tt>.
+     *
+     * @param realInstallmentDate value to be assigned to property  realInstallmentDate
+     */
+    public void setRealInstallmentDate(Date realInstallmentDate) {
+        this.realInstallmentDate = realInstallmentDate;
+    }
+
+    /**
+     * Getter method for property <tt>items</tt>.
+     *
+     * @return property value of items
+     */
+    public List<InstallmentItem> getItems() {
+        return items;
+    }
+
+    /**
+     * Setter method for property <tt>items</tt>.
+     *
+     * @param items value to be assigned to property  items
+     */
+    public void setItems(List<InstallmentItem> items) {
+        this.items = items;
     }
 }

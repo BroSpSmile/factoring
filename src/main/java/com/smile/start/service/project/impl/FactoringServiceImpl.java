@@ -57,7 +57,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         BaseResult result = projectService.initProject(detail.getProject());
         if (result.isSuccess()) {
             factoringDetailDao.insert(detail);
-            result = updateInstallments(detail, detail.getFactoringInstallments());
+            //result = updateInstallments(detail, detail.getFactoringInstallments());
         }
         return result;
     }
@@ -71,7 +71,12 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
         BaseResult result = projectService.updateProject(detail.getProject());
         if (result.isSuccess()) {
             factoringDetailDao.update(detail);
-            result = updateInstallments(detail, detail.getFactoringInstallments());
+            if (!CollectionUtils.isEmpty(detail.getReturnInstallments())) {
+                result = updateInstallments(detail, detail.getReturnInstallments());
+            }
+            if (!CollectionUtils.isEmpty(detail.getFactoringInstallments())) {
+                result = updateInstallments(detail, detail.getFactoringInstallments());
+            }
         }
         return result;
     }
@@ -166,6 +171,7 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
             for (Installment installment : installments) {
                 InstallmentItem installmentItem = installmentDao.getInstallmentItem(installment);
                 installment.setItem(installmentItem);
+                installment.setItems(installmentDao.getInstallmentItems(installment));
                 installment.setDetailList(installmentDao.getInstallmentDetail(installment.getId()));
                 for (InstallmentDetail installmentDetail : installment.getDetailList()) {
                     installmentDetail.setItem(installmentDao.getInstallmentDetailItem(installmentDetail));
@@ -192,6 +198,13 @@ public class FactoringServiceImpl extends AbstractService implements FactoringSe
             for (Installment item : installments) {
                 item.setDetail(detail);
                 installmentDao.insert(item);
+                if (!CollectionUtils.isEmpty(item.getItems())) {
+                    for (InstallmentItem attr : item.getItems()) {
+                        attr.setInstallmentId(item.getId());
+                        installmentDao.insertInstallmentItem(attr);
+                    }
+                }
+
             }
         }
         return new BaseResult();

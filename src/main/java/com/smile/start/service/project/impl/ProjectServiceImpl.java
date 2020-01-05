@@ -79,14 +79,20 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     @Override
     @Transactional
     public BaseResult initProject(Project project) {
-        project.setProjectId(idGenService.genId(project.getKind()));
-        project.setStep(-1);
+        // project.setProjectId(idGenService.genId(project.getKind()));
+        project.setStep(0);
         project.setKind(ProjectKind.FACTORING);
         project.setProgress(Progress.INIT);
         long effect = projectDao.insert(project);
         LoggerUtils.info(logger, "新增项目影响行effect={}", effect);
         BaseResult result = toResult(effect);
-        processEngine.next(project, false);
+        if (!CollectionUtils.isEmpty(project.getItems())) {
+            for (ProjectItem item : project.getItems()) {
+                item.setProjectId(project.getId());
+                projectItemDao.insert(item);
+            }
+        }
+        //processEngine.next(project, false);
         return result;
     }
 
@@ -116,6 +122,12 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
             result.setErrorCode("VP00011002");
             result.setErrorMessage("新增项目失败,请重试!");
         }
+        if (!CollectionUtils.isEmpty(project.getItems())) {
+            for (ProjectItem item : project.getItems()) {
+                item.setProjectId(project.getId());
+                projectItemDao.insert(item);
+            }
+        }
         return result;
     }
 
@@ -127,17 +139,19 @@ public class ProjectServiceImpl extends AbstractService implements ProjectServic
     public BaseResult turnover(Project project) {
         Project local = projectDao.get(project.getId());
         if (project.getStep() >= local.getStep()) {//判断是否后补进度
-            project.setStep(project.getStep() + 1);
+            project.setStep(project.getStep());
             int effect = projectDao.update(project);
             LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
         } else {
-            project.setStep(project.getStep() + 1);
+            project.setStep(project.getStep());
+            int effect = projectDao.update(project);
+            LoggerUtils.info(logger, "修改项目影响行effect={}", effect);
         }
-        if (!CollectionUtils.isEmpty(project.getItems())) {
-            for (ProjectItem item : project.getItems()) {
-                projectItemDao.insert(item);
-            }
-        }
+        //        if (!CollectionUtils.isEmpty(project.getItems())) {
+        //            for (ProjectItem item : project.getItems()) {
+        //                projectItemDao.insert(item);
+        //            }
+        //        }
         return new BaseResult();
     }
 

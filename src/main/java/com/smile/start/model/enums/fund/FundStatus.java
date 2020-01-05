@@ -7,12 +7,12 @@ package com.smile.start.model.enums.fund;
 /**
  * 
  * @author smile.jing
- * @version $Id: FundStatus.java, v 0.1 2019年8月10日 下午9:16:07 smile.jing Exp $
+ * @version $Id: EnumItem.java, v 0.1 2019年8月10日 下午9:16:07 smile.jing Exp $
  */
 public enum FundStatus {
                         /** 项目终止 */
                         STOP(-1, "STOP", "项目终止"),
-                        /** 初步接触 */
+                        /** 暂停 */
                         SUSPEND(0, "SUSPEND", "暂停"),
                         /** 初步接触 */
                         INITIAL_CONTACT(1, "INITIAL_CONTACT", "初步接触"),
@@ -38,20 +38,18 @@ public enum FundStatus {
                         CONTRACT_AUDIT(13, "CONTRACT_AUDIT", "合同审核"),
                         /** 付款通知 */
                         PAYMENT(14, "PAYMENT", "付款通知"),
-                        /** 付款审核 */
-                        PAYMENT_AUDIT(15, "PAYMENT_AUDIT", "付款审核"),
                         /** 支付打款 */
-                        FUND_LOAN(16, "FUND_LOAN", "支付打款"),
-                        /** 验资/信息变更 */
-                        INFO_CHANGE(17, "INFO_CHANGE", "验资/信息变更"),
+                        FUND_LOAN(15, "FUND_LOAN", "支付打款"),
+                        /** 验资/信息变更 
+                        INFO_CHANGE(16, "INFO_CHANGE", "验资/信息变更"),*/
                         /** 项目归档 */
-                        FILE(18, "FILE", "项目归档"),
+                        FILE(16, "FILE", "项目归档"),
                         /** 项目归档 */
-                        FILE_AUDIT(19, "FILE_AUDIT", "归档审核"),
+                        FILE_AUDIT(17, "FILE_AUDIT", "归档审核"),
                         /** 投后管理 */
-                        POST_INVESTMENT(20, "POST_INVESTMENT", "投后管理"),
+                        POST_INVESTMENT(18, "POST_INVESTMENT", "投后管理"),
                         /** 项目退出 */
-                        OUT(21, "OUT", "项目退出"),;
+                        OUT(19, "OUT", "项目退出"),;
 
     FundStatus(int index, String code, String desc) {
         this.index = index;

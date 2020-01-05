@@ -13,12 +13,6 @@ var vue = new Vue({
                 model: "RECOURSE_RIGHT"
 
             },
-            factoringInstallments: [{
-                amount: 0,
-                installmentDate: new Date(),
-                type: "FACTORING",
-                kind: "FACTORING"
-            }],
             assignee: 0,
             receivable: 0,
             dropAmount: 0,
@@ -27,7 +21,6 @@ var vue = new Vue({
             invoicing: "false",
             paied: "false"
         },
-        showGetBack:true,
         showLater: false,
         items: [],
         itemTypes: [],
@@ -106,15 +99,14 @@ var vue = new Vue({
                             _self.items.push(item);
                         }
                     }
-                    for (let i in _self.detail.factoringInstallments) {
-                        if (_self.detail.factoringInstallments[i].amount == 0 && i == _self.detail.factoringInstallments.length - 1) {
-                            _self.detail.factoringInstallments[i].later = true;
-                            _self.showLater = true;
-                        } else {
-                            _self.detail.factoringInstallments[i].later = false;
-                        }
+                    if(_self.detail.returnInstallments.length == 0){
+                        _self.detail.returnInstallments.push({
+                            amount: 0,
+                            type: "RETURN",
+                            kind: "FACTORING"
+                        });
                     }
-                    console.log(_self.items);
+                    console.log(_self.detail);
                 }, function (error) {
                     console.error(error);
                 })
@@ -135,58 +127,43 @@ var vue = new Vue({
 
         /** 添加保理费分期 */
         add: function () {
-            for (let index in this.detail.factoringInstallments) {
-                this.detail.factoringInstallments[index].later = false;
-            }
-            this.detail.factoringInstallments.push({
+            this.detail.returnInstallments.push({
                 amount: 0,
-                installmentDate: new Date(),
-                type: "FACTORING",
+                type: "RETURN",
                 kind: "FACTORING"
             });
-            this.computeFee();
         },
 
         /**
          * 移除
          */
         remove: function (index) {
-            this.detail.factoringInstallments.splice(index, 1);
-            this.computeFee();
-            for (let i in this.detail.factoringInstallments) {
-                this.showLater = false;
-                if (this.detail.factoringInstallments[i].later) {
-                    this.showLater = true;
-                    break;
-                }
-            }
-
+            this.detail.returnInstallments.splice(index, 1);
         },
 
-        /**
-         * 后补
-         */
-        changeInstallment: function (installment) {
-            installment.amount = 0;
-            if (installment.later) {
-                this.showLater = true;
-                installment.installmentDate = null;
-            } else {
-                this.showLater = false;
-                installment.installmentDate = new Date();
-            }
-            this.computeFee();
-        },
+
 
         /** 计算保理费分期 */
-        computeFee: function () {
-            var total = 0;
-            for (let index in this.detail.factoringInstallments) {
-                if (!this.detail.factoringInstallments[index].later) {
-                    total += this.detail.factoringInstallments[index].amount;
-                }
+        computeFee: function (installment,index) {
+            if(index==0){
+                let day = this.difDay(installment.installmentDate,this.detail.loanDay)
+                console.log(day);
+                let rate = this.detail.dropAmount*((day+1)/360)*this.detail.yearRate;
+                console.log(rate);
+                installment.amount = rate.toFixed(2);
+            }else{
+                let day = this.difDay(installment.installmentDate,this.detail.returnInstallments[index-1].installmentDate);
+                console.log(day);
+                let rate = this.detail.dropAmount*(day/360)*this.detail.yearRate;
+                console.log(rate);
+                installment.amount = rate.toFixed(2);
             }
-            this.detail.totalFactoringFee = total;
+        },
+
+        difDay:function(date1,date2){
+            var diff = Math.abs(date1.getTime() - date2.getTime())
+            var result = parseInt(diff / (1000 * 60 * 60 * 24));
+            return result;
         },
 
         /**  */
@@ -207,12 +184,10 @@ var vue = new Vue({
          */
         commit: function () {
             let self = this;
-            if(!this.detail.project.items){
-                this.detail.project.items = [];
-            }
+            this.detail.project.items = [];
             for (let index in this.fileList) {
                 let item = {
-                    itemType: "PROJECT",
+                    itemType: "LOAN",
                     itemName: this.fileList[index].name,
                     itemValue: this.fileList[index].response.data.fileId
                 }
@@ -260,9 +235,11 @@ var vue = new Vue({
         /**
          * 提交申请
          */
-        apply: function () {
+        apply: function (step) {
+            let self = this;
             this.$Spin.show();
-            this.$http.post("/apply", this.detail.project).then(function (response) {
+            this.detail.project.step = step;
+            this.$http.post("/factoringStatus", this.detail.project).then(function (response) {
                 this.$Spin.hide();
                 if (response.data.success) {
                     self.$Message.info({
@@ -281,11 +258,11 @@ var vue = new Vue({
         },
 
         /**
-         * 提交申请
+         * 转回
          */
         returnBack: function () {
-            this.$Spin.show();
             let self = this;
+            this.$Spin.show();
             this.$http.post("/factoringStatus/back", this.detail.project).then(function (response) {
                 this.$Spin.hide();
                 if (response.data.success) {
@@ -298,43 +275,6 @@ var vue = new Vue({
                 } else {
                     self.$Message.error(response.data.errorMessage);
                 }
-            }, function (error) {
-                this.$Spin.hide();
-                self.$Message.error(error.data.message);
-            });
-        },
-
-        /**
-         * 提交申请
-         */
-        getBack: function () {
-            this.$Spin.show();
-            let self = this;
-            this.$http.post("/factoringStatus/back", this.detail.project).then(function (response) {
-                this.$Spin.hide();
-                if (response.data.success) {
-                    self.$Message.info({
-                        content: "提交成功",
-                        onClose: function () {
-                            self.close();
-                        }
-                    });
-                } else {
-                    self.$Message.error(response.data.errorMessage);
-                }
-            }, function (error) {
-                this.$Spin.hide();
-                self.$Message.error(error.data.message);
-            });
-        },
-
-        /**
-         * 提交申请
-         */
-        checkBack: function () {
-            let self = this;
-            this.$http.post("/factoringStatus/check", this.detail.project).then(function (response) {
-                self.showGetBack = response.data.success;
             }, function (error) {
                 this.$Spin.hide();
                 self.$Message.error(error.data.message);

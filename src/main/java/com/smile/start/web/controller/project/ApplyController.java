@@ -4,27 +4,27 @@
  */
 package com.smile.start.web.controller.project;
 
+import java.util.Collections;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
-import com.smile.start.model.enums.Step;
+import com.smile.start.model.enums.audit.AuditType;
+import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
+import com.smile.start.service.audit.AuditService;
 import com.smile.start.service.engine.ProcessEngine;
+import com.smile.start.service.project.ProjectService;
 import com.smile.start.service.project.TuneupService;
+import com.smile.start.web.controller.BaseController;
 
 /**
  * 尽调申请
@@ -37,15 +37,22 @@ public class ApplyController extends BaseController {
 
     /** 项目服务 */
     @Resource
-    private TuneupService tuneupService;
+    private TuneupService  tuneupService;
+
+    /** 审核服务 */
+    @Resource
+    private AuditService   auditService;
 
     /** 流程引擎 */
     @Resource
     private ProcessEngine  processEngine;
-    
+
+    /** 项目服务 */
+    @Resource
+    private ProjectService projectService;
+
     /**
      * 页面跳转
-     * @param id
      * @return
      */
     @GetMapping
@@ -66,10 +73,16 @@ public class ApplyController extends BaseController {
     public BaseResult apply(HttpServletRequest request, @RequestBody Project project) {
         User user = getUserByToken(request);
         project.setUser(user);
-        LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(project));
-        return tuneupService.tuneupApply(project);
+        project.setItems(Collections.emptyList());
+        Audit audit = auditService.getAuditByProjectFlowAndType(project.getId(), AuditType.TUNEUP.name());
+        if (null != audit && audit.getStep() == -1) {
+            return projectService.updateProject(project);
+        } else {
+            LoggerUtils.info(logger, "尽调申请project={}", FastJsonUtils.toJSONString(project));
+            return tuneupService.tuneupApply(project);
+        }
     }
-    
+
     /**
      * 提出申请
      * @param project
@@ -78,7 +91,7 @@ public class ApplyController extends BaseController {
     @PutMapping
     @ResponseBody
     public BaseResult skip(HttpServletRequest request, @RequestBody Project project) {
-        project.setStep(Step.TUNEUP.getIndex());
+        //project.setStep(Step.TUNEUP.getIndex());
         return processEngine.skip(project);
     }
 }
