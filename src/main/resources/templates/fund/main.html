@@ -82,14 +82,42 @@
                             <i-input placeholder="输入项目来源" class="inputw"
                                      v-model="addForm.detail.projectChannel"></i-input>
                         </form-item>
-                        <form-item label="投资金额" prop="detail.investment">
+                        <form-item label="项目地域" prop="detail.projectChannel">
+                            <radio-group v-model="boundType">
+                                <radio label="INBOUND">区内</radio>
+                                <radio label="OUTBOUND">区外</radio>
+                            </radio-group>
+                        </form-item>
+                        <form-item>
+                            <i-input placeholder="输入项目地域" class="inputw" v-if="boundType == 'OUTBOUND'"
+                                     v-model="addForm.detail.bound"></i-input>
+                            <i-select v-model="addForm.detail.bound" class="inputw" v-if="boundType == 'INBOUND'"
+                                      clearable>
+                                <i-option v-for="item in inbounds" :value="item.text">{{item.text}}</i-option>
+                            </i-select>
+                        </form-item>
+                        <form-item label="认缴出资" prop="detail.investment">
                             <input-number placeholder="输入投资金额" :max="100000000000" :min="0" class="inputw"
                                           :formatter="formatter" :parser="parser"
                                           v-model="addForm.detail.investment"></input-number>&nbsp;元
                         </form-item>
+                        <form-item label="实缴出资" prop="detail.realInvestment">
+                            <input-number placeholder="输入投资金额" :max="100000000000" :min="0" class="inputw"
+                                          :formatter="formatter" :parser="parser"
+                                          v-model="addForm.detail.realInvestment"></input-number>&nbsp;元
+                        </form-item>
                         <form-item label="投资主体" prop="detail.investmentPart">
                             <i-input placeholder="输入投资主体" class="inputw"
                                      v-model="addForm.detail.investmentPart"></i-input>
+                        </form-item>
+                        <form-item label="每股价格" prop="detail.sharePrice">
+                            <input-number placeholder="每股价格" :max="100000000000" :min="0" class="inputw"
+                                          :formatter="formatter" :parser="parser"
+                                          v-model="addForm.detail.sharePrice"></input-number>&nbsp;元
+                        </form-item>
+                        <form-item label="股份数量" prop="detail.shareNum">
+                            <input-number placeholder="股份数量" :max="1000000000" :min="0" class="inputw"
+                                          v-model="addForm.detail.shareNum"></input-number>&nbsp;万股
                         </form-item>
                         <form-item label="投后持股比例" prop="detail.shareHodingRate">
                             <input-number placeholder="输入投后持股比例" :max="100" :min="0" class="inputw"
@@ -139,6 +167,11 @@
                             <input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw"
                                           :formatter="formatter" :parser="parser"
                                           v-model="addForm.detail.registeredCapital"></input-number>&nbsp;元
+                        </form-item>
+                        <form-item label="实收资本" prop="detail.paidCapital">
+                            <input-number placeholder="输入投前估值" :max="100000000000" :min="0" class="inputw"
+                                          :formatter="formatter" :parser="parser"
+                                          v-model="addForm.detail.paidCapital"></input-number>&nbsp;元
                         </form-item>
                         <form-item label="注册时间" prop="detail.registerTime">
                             <i-input placeholder="输入注册时间" class="inputw"

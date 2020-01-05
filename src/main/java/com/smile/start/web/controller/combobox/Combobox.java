@@ -22,6 +22,7 @@ import com.smile.start.model.enums.*;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.fund.InBound;
 import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectModel;
@@ -225,6 +226,18 @@ public class Combobox extends BaseController {
     @RequestMapping("/itemTypes")
     public List<Item> getItemType() {
         ProjectItemType[] enums = ProjectItemType.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 获取附件种类
+     * @return
+     */
+    @RequestMapping("/inbound")
+    public List<Item> getInBound() {
+        InBound[] enums = InBound.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;

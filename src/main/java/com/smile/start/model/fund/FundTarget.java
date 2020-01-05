@@ -46,14 +46,29 @@ public class FundTarget implements Serializable {
     /** B角Str */
     private String            memberBStr;
 
+    /** 投资区域 */
+    private String            bound;
+
+    /** 出资公司 */
+    private String            investmentComp;
+
     /** 投资金额 */
     private Double            investment;
+
+    /** 实缴出资 */
+    private Double            realInvestment;
 
     /** 投资主体 */
     private String            investmentPart;
 
     /** 持股占比 */
     private String            shareHodingRate;
+
+    /** 股价 */
+    private Double            sharePrice;
+
+    /** 股份数(万股) */
+    private Double            shareNum;
 
     /** 投前估值 */
     private Double            preVal;
@@ -78,6 +93,9 @@ public class FundTarget implements Serializable {
 
     /** 注册资本 */
     private Double            registeredCapital;
+
+    /** 实收资本 */
+    private Double            paidCapital;
 
     /** 注册时间 */
     private String            registerTime;
@@ -666,5 +684,113 @@ public class FundTarget implements Serializable {
      */
     public void setMemberBStr(String memberBStr) {
         this.memberBStr = memberBStr;
+    }
+
+    /**
+     * Getter method for property <tt>bound</tt>.
+     *
+     * @return property value of bound
+     */
+    public String getBound() {
+        return bound;
+    }
+
+    /**
+     * Setter method for property <tt>bound</tt>.
+     *
+     * @param bound value to be assigned to property  bound
+     */
+    public void setBound(String bound) {
+        this.bound = bound;
+    }
+
+    /**
+     * Getter method for property <tt>investmentComp</tt>.
+     *
+     * @return property value of investmentComp
+     */
+    public String getInvestmentComp() {
+        return investmentComp;
+    }
+
+    /**
+     * Setter method for property <tt>investmentComp</tt>.
+     *
+     * @param investmentComp value to be assigned to property  investmentComp
+     */
+    public void setInvestmentComp(String investmentComp) {
+        this.investmentComp = investmentComp;
+    }
+
+    /**
+     * Getter method for property <tt>realInvestment</tt>.
+     *
+     * @return property value of realInvestment
+     */
+    public Double getRealInvestment() {
+        return realInvestment;
+    }
+
+    /**
+     * Setter method for property <tt>realInvestment</tt>.
+     *
+     * @param realInvestment value to be assigned to property  realInvestment
+     */
+    public void setRealInvestment(Double realInvestment) {
+        this.realInvestment = realInvestment;
+    }
+
+    /**
+     * Getter method for property <tt>sharePrice</tt>.
+     *
+     * @return property value of sharePrice
+     */
+    public Double getSharePrice() {
+        return sharePrice;
+    }
+
+    /**
+     * Setter method for property <tt>sharePrice</tt>.
+     *
+     * @param sharePrice value to be assigned to property  sharePrice
+     */
+    public void setSharePrice(Double sharePrice) {
+        this.sharePrice = sharePrice;
+    }
+
+    /**
+     * Getter method for property <tt>shareNum</tt>.
+     *
+     * @return property value of shareNum
+     */
+    public Double getShareNum() {
+        return shareNum;
+    }
+
+    /**
+     * Setter method for property <tt>shareNum</tt>.
+     *
+     * @param shareNum value to be assigned to property  shareNum
+     */
+    public void setShareNum(Double shareNum) {
+        this.shareNum = shareNum;
+    }
+
+    /**
+     * Getter method for property <tt>paidCapital</tt>.
+     *
+     * @return property value of paidCapital
+     */
+    public Double getPaidCapital() {
+        return paidCapital;
+    }
+
+    /**
+     * Setter method for property <tt>paidCapital</tt>.
+     *
+     * @param paidCapital value to be assigned to property  paidCapital
+     */
+    public void setPaidCapital(Double paidCapital) {
+        this.paidCapital = paidCapital;
     }
 }

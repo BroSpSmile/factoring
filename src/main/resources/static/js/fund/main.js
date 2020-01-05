@@ -9,9 +9,10 @@ var vue = new Vue({
     data: {
         fundStatus: [],
         modal1: false,
-        modal2:false,
+        modal2: false,
+        boundType: "INBOUND",
         users: [],
-        itemTypes:[],
+        itemTypes: [],
         queryParam: {
             condition: {},
             pageNum: 1,
@@ -22,9 +23,9 @@ var vue = new Vue({
             id: 0,
             detail: {
                 investment: 0,
-                shareHodingRate:0,
-                preVal:0,
-                postVal:0,
+                shareHodingRate: 0,
+                preVal: 0,
+                postVal: 0,
                 memberA: {},
                 memberB: {},
                 registeredCapital: ''
@@ -33,12 +34,13 @@ var vue = new Vue({
         formInline: {
             detail: {}
         },
+        inbounds: [],
         items: [],
-        webItems:[{
-            itemKind:"WEB",
-            itemType:"PROJECT",
-            itemName:"",
-            itemValue:""
+        webItems: [{
+            itemKind: "WEB",
+            itemType: "PROJECT",
+            itemName: "",
+            itemValue: ""
         }],
         tableColumns: [],
         pageInfo: {},
@@ -86,9 +88,9 @@ var vue = new Vue({
         /**
          * 翻译
          */
-        toTypeName:function(value){
-            for(let index in vue.itemTypes){
-                if(vue.itemTypes[index].value == value){
+        toTypeName: function (value) {
+            for (let index in vue.itemTypes) {
+                if (vue.itemTypes[index].value == value) {
                     return vue.itemTypes[index].text;
                 }
             }
@@ -155,8 +157,8 @@ var vue = new Vue({
                     }
                     if (param.row.detail.memberBs != null) {
                         let users = param.row.detail.memberBs;
-                        for(let i in users){
-                            name += "," +users[i].username;
+                        for (let i in users) {
+                            name += "," + users[i].username;
                         }
                     }
                     return h('span', name);
@@ -229,7 +231,7 @@ var vue = new Vue({
                                 }
                             }
                         }, '编辑') : h('span'),
-                        param.row.detail.projectStep == 'INITIAL_CONTACT' || param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY'|| param.row.detail.projectStep == 'APPROVAL'|| param.row.detail.projectStep == 'INITIAL_TUNING'|| param.row.detail.projectStep == 'DEEP_TUNING' ? h('Button', {
+                        param.row.detail.projectStep == 'INITIAL_CONTACT' || param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY' || param.row.detail.projectStep == 'APPROVAL' || param.row.detail.projectStep == 'INITIAL_TUNING' || param.row.detail.projectStep == 'DEEP_TUNING' ? h('Button', {
                             props: {
                                 size: "small",
                                 type: "primary",
@@ -347,11 +349,16 @@ var vue = new Vue({
         /**
          * 初始化附件类型
          */
-        initItemTypes:function(){
+        initItemTypes: function () {
             let _self = this;
-            this.$http.get("/combo/itemTypes").then(function(response){
+            this.$http.get("/combo/itemTypes").then(function (response) {
                 _self.itemTypes = response.data;
-            },function(error){
+            }, function (error) {
+                console.error(error);
+            });
+            this.$http.get("/combo/inbound").then(function (response) {
+                _self.inbounds = response.data;
+            }, function (error) {
                 console.error(error);
             });
         },
@@ -371,10 +378,10 @@ var vue = new Vue({
             this.fileList = [];
             this.getItems(project.id);
             this.webItems = [{
-                itemKind:"WEB",
-                itemType:"PROJECT",
-                itemName:"",
-                itemValue:""
+                itemKind: "WEB",
+                itemType: "PROJECT",
+                itemName: "",
+                itemValue: ""
             }];
             console.log(this.addForm);
             this.modal1 = true;
@@ -389,17 +396,17 @@ var vue = new Vue({
             this.items = [];
             this.$http.post("/project/items/" + id).then(function (response) {
                 let items = response.data;
-                for(let index in items){
+                for (let index in items) {
                     let has = false;
-                    for(let j in _self.items){
-                        if(_self.items[j].key == items[index].itemType){
+                    for (let j in _self.items) {
+                        if (_self.items[j].key == items[index].itemType) {
                             _self.items[j].value.push(items[index]);
                             has = true;
                             break;
                         }
                     }
-                    if(!has){
-                        let item = {key:items[index].itemType,value:[]};
+                    if (!has) {
+                        let item = {key: items[index].itemType, value: []};
                         item.value.push(items[index]);
                         _self.items.push(item);
                     }
@@ -505,7 +512,7 @@ var vue = new Vue({
                 self.queryParam.condition.endDate = self.queryParam.condition.stateDate[1];
                 self.queryParam.condition.stateDate = self.queryParam.condition.stateDate[0];
             }
-            window.open("/fund/download?query="+encodeURI(JSON.stringify(this.queryParam)));
+            window.open("/fund/download?query=" + encodeURI(JSON.stringify(this.queryParam)));
         },
 
         /** 分页查询 */
@@ -541,9 +548,9 @@ var vue = new Vue({
             this.addForm = {
                 detail: {
                     investment: 0,
-                    shareHodingRate:0,
-                    preVal:0,
-                    postVal:0,
+                    shareHodingRate: 0,
+                    preVal: 0,
+                    postVal: 0,
                     memberA: {},
                     memberB: {},
                     registeredCapital: 0
@@ -552,10 +559,10 @@ var vue = new Vue({
             };
             this.items = [];
             this.webItems = [{
-                itemKind:"WEB",
-                itemType:"PROJECT",
-                itemName:"",
-                itemValue:""
+                itemKind: "WEB",
+                itemType: "PROJECT",
+                itemName: "",
+                itemValue: ""
             }];
             this.fileList = [];
             this.modal1 = true;
@@ -568,7 +575,7 @@ var vue = new Vue({
             let _self = this;
             this.$http.get("/fund/company/" + this.addForm.detail.companyFullName).then(function (response) {
                 let company = response.data;
-                if(company){
+                if (company) {
                     _self.addForm.detail.companyFullName = company.name;
                     _self.addForm.detail.controllerOwner = company.legalPersonName;
                     _self.addForm.detail.registeredCapital = company.regCapital;
@@ -610,7 +617,7 @@ var vue = new Vue({
          * 项目退出
          */
         projectOut: function () {
-            let _self =this;
+            let _self = this;
             this.addForm.detail.projectStep = "OUT";
 
             this.$http.put("/fund", _self.addForm).then(function (response) {
@@ -645,12 +652,12 @@ var vue = new Vue({
                 }
                 this.addForm.items.push(item);
             }
-            for(let index in this.webItems){
+            for (let index in this.webItems) {
                 this.addForm.items.push(this.webItems[index]);
             }
             this.addForm.detail.memberBs = [];
-            for(let index in this.addForm.detail.memberBArr){
-                this.addForm.detail.memberBs.push({id:this.addForm.detail.memberBArr[index]});
+            for (let index in this.addForm.detail.memberBArr) {
+                this.addForm.detail.memberBs.push({id: this.addForm.detail.memberBArr[index]});
             }
 
             if (!this.addForm.projectId) {
@@ -747,34 +754,34 @@ var vue = new Vue({
         },
 
         /** 添加 */
-        add:function(){
+        add: function () {
             this.webItems.push({
-                itemKind:"WEB",
-                itemType:"PROJECT",
-                itemName:"",
-                itemValue:""
+                itemKind: "WEB",
+                itemType: "PROJECT",
+                itemName: "",
+                itemValue: ""
             });
         },
 
         /**
          * 下载文件
          */
-        downloadItem:function(item){
-            window.open("/file?fileId="+item.itemValue+"&fileName="+encodeURI(item.itemName));
+        downloadItem: function (item) {
+            window.open("/file?fileId=" + item.itemValue + "&fileName=" + encodeURI(item.itemName));
         },
 
         /**
          * 打开文件
          */
-        openItem:function(item){
+        openItem: function (item) {
             window.open(item.itemValue);
         },
 
         /**
          * 移除
          */
-        remove:function(index){
-            this.webItems.splice(index,1);
+        remove: function (index) {
+            this.webItems.splice(index, 1);
         },
     }
 });
