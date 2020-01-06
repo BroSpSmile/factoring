@@ -51,7 +51,7 @@ public interface ProjectStepDao {
      * @param step
      * @return
      */
-    @Select("select * from project_step where project_id = #{projectId} and step = #{step}")
+    @Select("select * from project_step where project_id = #{projectId} and step = #{step} limit 1")
     StepRecord getStep(Long projectId, Step step);
 
     /**

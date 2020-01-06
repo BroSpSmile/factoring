@@ -13,16 +13,20 @@
                             <span>{{project.projectName}}</span>
                         </form-item>
                         <form-item label="合同附件:" v-if="items.length!=0">
-                            <row v-for="item in items">
-                                <i-col span="12">
-                                    <span>
-                                        <i-button type="dashed" icon="ios-cloud-download-outline" size="small"
-                                                  @click="downloadItem(item)">
+                           <span v-for="item in items">
+                                        <Tag size="small" v-if="item.itemKind == 'DOC' "
+                                             @click.native="downloadItem(item)" type="border" closable
+                                             color="primary"
+                                             @on-close="deleteFile(item)">
                                             {{item.itemName}}
-                                        </i-button> &nbsp;
+                                        </Tag> &nbsp;
+                                        <Tag size="small" v-if="item.itemKind == 'WEB' "
+                                             @click.native="openItem(item)" type="border" closable
+                                             color="success"
+                                             @on-close="deleteFile(item)">
+                                            {{item.itemName}}
+                                        </Tag> &nbsp;
                                     </span>
-                                </i-col>
-                            </row>
                         </form-item>
                         <form-item label="上传合同附件:">
                             <Upload action="/file/upload" :on-success="uploadSuccess" :on-error="uploadError"

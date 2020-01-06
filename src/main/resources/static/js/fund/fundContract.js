@@ -26,6 +26,7 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/project/"+id).then(function(response){
 				_self.project = response.data;
+				_self.getFundTarget(_self.project.projectId);
 			},function(error){
 				console.error(error);
 			})
@@ -68,7 +69,7 @@ var vue = new Vue({
 			for(let index in this.fileList){
 				let item={
 						projectId:this.project.id,
-						itemType:"CONTRACT_SIGN",
+						itemType:this.fund.projectStep,
 						itemName:this.fileList[index].name,
 						itemValue:this.fileList[index].response.data.fileId
 				}
@@ -80,6 +81,7 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
+			console.log();
 			if(this.fund.projectStep == 'CONTRACT_SIGN'){
 				this.$http.post("/fundContract",JSON.stringify(items)).then(function(response){
 					this.$Spin.hide();
@@ -224,6 +226,20 @@ var vue = new Vue({
 				itemName:"",
 				itemValue:""
 			});
+		},
+
+		deleteFile: function (item) {
+			let self = this;
+			this.$http.delete("/attch", item).then(function (response) {
+				if (response.data.success) {
+					self.$Message.info("删除成功");
+					self.getProject(self.project.id);
+				} else {
+					self.$Message.error(response.data.errorMessage);
+				}
+			}, function (error) {
+				self.$Message.error(error.data.errorMessage);
+			})
 		},
 
 		/**

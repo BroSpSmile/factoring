@@ -48,6 +48,9 @@ public enum ProjectItemType {
                              /** 合同文件 */
                              CONTRACT_SIGN("CONTRACT_SIGN", "合同文件"),
 
+                             /** 盖章合同文件 */
+                             CONTRACT_SIGNED("CONTRACT_SIGNED", "盖章合同文件"),
+
                              /** 付款通知书 */
                              PAYMENT("PAYMENT", "付款文件"),
 

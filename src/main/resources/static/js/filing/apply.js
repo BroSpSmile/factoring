@@ -34,16 +34,18 @@ var vue = new Vue({
          */
         getCategoryDesc : function(value){
             if(value === 1) {
-                return "债权人";
+                return "立项材料";
             } else if(value === 2) {
-                return "债务人";
+                return "尽调报告";
             } else if(value === 3) {
-                return "内部决策";
+                return "风控意见材料";
             } else if(value === 4) {
-                return "签署文件";
+                return "投决会材料";
             } else if(value === 5) {
-                return "出款依据";
+                return "协议签署及打款材料";
             } else if(value === 6) {
+                return "三方尽调材料";
+            }else if(value === 7) {
                 return "其他";
             }
             return "";

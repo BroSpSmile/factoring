@@ -36,12 +36,13 @@
                                 <i-col span="4">
                                     <i-select v-model="item.category" v-if="isEdit || item.type === 'add'"
                                               style="width:180px">
-                                        <i-option :value="1">债权人</i-option>
-                                        <i-option :value="2">债务人</i-option>
-                                        <i-option :value="3">内部决策</i-option>
-                                        <i-option :value="4">签署文件</i-option>
-                                        <i-option :value="5">出款依据</i-option>
-                                        <i-option :value="6">其他</i-option>
+                                        <i-option :value="1">立项材料</i-option>
+                                        <i-option :value="2">尽调报告</i-option>
+                                        <i-option :value="3">风控意见材料</i-option>
+                                        <i-option :value="4">投决会材料</i-option>
+                                        <i-option :value="5">协议签署及打款材料</i-option>
+                                        <i-option :value="6">三方尽调材料</i-option>
+                                        <i-option :value="7">其他</i-option>
                                     </i-select>
                                     <span v-if="!isEdit && item.type !== 'add'">{{item.category|getCategoryDesc}}</span>
                                 </i-col>

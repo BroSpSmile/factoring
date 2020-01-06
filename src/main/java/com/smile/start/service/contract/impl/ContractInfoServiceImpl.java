@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.slf4j.Logger;
@@ -524,7 +523,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     private void upload(File file, String fileName, Long projectId, ProjectItemType projectItemType) {
         if (file.exists()) {
-            projectItemDao.deleteItems(projectId, ProjectItemType.FILE);
             final FileInfo upload = fileService.upload(file, fileName);
             ProjectItem projectItem = new ProjectItem();
             projectItem.setAttachType(ContractTemplateEnum.STANDARD.getValue());
@@ -1105,9 +1103,27 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         List<ContractSignList> transferList = contractSignListDao.findByProjectId(projectId);
         Project project = projectService.getProject(projectId);
         FactoringDetail factoringDetail = factoringService.get(projectId);
-        List<ContractSignList> collect = transferList.stream().sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
+        List<ContractSignList> collect = transferList.stream().filter(e -> {
+            if (e.getCategory() != 6) {
+                return true;
+            }
+            return false;
+        }).sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
 
-        String fileName = "移交清单" + project.getProjectId() + ".docx";
+        List<ContractSignList> collect2 = transferList.stream().filter(e -> {
+            if (e.getCategory() == 6) {
+                return true;
+            }
+            return false;
+        }).sorted(Comparator.comparing(ContractSignList::getCategory)).collect(Collectors.toList());
+        projectItemDao.deleteItems(projectId, ProjectItemType.FILE);
+        createFile(projectId, "归档", project, factoringDetail, collect);
+        createFile(projectId, "行政", project, factoringDetail, collect2);
+    }
+
+    private void createFile(Long projectId, String name, Project project, FactoringDetail factoringDetail, List<ContractSignList> collect) throws IOException {
+
+        String fileName = "移交清单" + project.getProjectId() + name + ".docx";
         File transferFile = new File(fileName);
         logger.info("transferFilePath : {}", transferFile.getAbsolutePath());
 
@@ -1124,14 +1140,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         titleParagraph.setAlignment(ParagraphAlignment.CENTER);
 
         XWPFRun titleParagraphRun = titleParagraph.createRun();
-        titleParagraphRun.setText("苏州市相城融金商业保理有限公司 移交清册");
+        titleParagraphRun.setText("金控集团直投部归档材料移交清册（直投项目）");
         titleParagraphRun.setColor("000000");
         titleParagraphRun.setFontSize(16);
 
         //段落
         XWPFParagraph firstParagraph = document.createParagraph();
         //设置段落居中
-        firstParagraph.setAlignment(ParagraphAlignment.CENTER);
+        firstParagraph.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun run = firstParagraph.createRun();
         run.setText(buildSubtitle(project, factoringDetail));
         run.setColor("000000");
@@ -1160,11 +1176,11 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             comTableRowTwo.getCell(2).setText(signList.getSignListName());
             //原件
             if (signList.getIsOriginalCopy() == 1) {
-                comTableRowTwo.getCell(3).setText(String.format("%d份/各%d页", signList.getCopies(), signList.getPageCount()));
+                comTableRowTwo.getCell(3).setText(String.format("%d/%d页", signList.getCopies(), signList.getPageCount()));
                 comTableRowTwo.getCell(4).setText("--");
             } else {
                 comTableRowTwo.getCell(3).setText("--");
-                comTableRowTwo.getCell(4).setText(String.format("%d份/各%d页", signList.getCopies(), signList.getPageCount()));
+                comTableRowTwo.getCell(4).setText(String.format("%d/%d页", signList.getCopies(), signList.getPageCount()));
             }
             comTableRowTwo.getCell(5).setText(signList.getRemark());
         }
@@ -1178,23 +1194,17 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         transferDateParagraph.setAlignment(ParagraphAlignment.LEFT);
         transferDateParagraph.setIndentationLeft(567 * 10);
 
-        XWPFRun transferDateParagraphRun = transferDateParagraph.createRun();
-        transferDateParagraphRun.setText("移交日期：" + DateUtil.format(new Date(), DateUtil.spotFormat));
-        transferDateParagraphRun.setColor("000000");
-        transferDateParagraphRun.setFontSize(12);
-        transferDateParagraphRun.addBreak();
-
         XWPFRun transferUserParagraphRun = transferDateParagraph.createRun();
         transferUserParagraphRun.setText("移交人：" + LoginHandler.getLoginUser().getUsername());
         transferUserParagraphRun.setColor("000000");
         transferUserParagraphRun.setFontSize(12);
         transferUserParagraphRun.addBreak();
 
-        XWPFRun transferReviewerParagraphRun = transferDateParagraph.createRun();
-        transferReviewerParagraphRun.setText("复核人：");
-        transferReviewerParagraphRun.setColor("000000");
-        transferReviewerParagraphRun.setFontSize(12);
-        transferReviewerParagraphRun.addBreak();
+        XWPFRun transferRiskParagraphRun = transferDateParagraph.createRun();
+        transferRiskParagraphRun.setText("风控：");
+        transferRiskParagraphRun.setColor("000000");
+        transferRiskParagraphRun.setFontSize(12);
+        transferRiskParagraphRun.addBreak();
 
         XWPFRun transferReceiveParagraphRun = transferDateParagraph.createRun();
         transferReceiveParagraphRun.setText("接收人：");
@@ -1202,15 +1212,15 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         transferReceiveParagraphRun.setFontSize(12);
         transferReceiveParagraphRun.addBreak();
 
-        XWPFRun transferRiskParagraphRun = transferDateParagraph.createRun();
-        transferRiskParagraphRun.setText("风控：");
-        transferRiskParagraphRun.setColor("000000");
-        transferRiskParagraphRun.setFontSize(12);
+        XWPFRun transferDateParagraphRun = transferDateParagraph.createRun();
+        transferDateParagraphRun.setText("移交日期：" + DateUtil.format(new Date(), DateUtil.spotFormat));
+        transferDateParagraphRun.setColor("000000");
+        transferDateParagraphRun.setFontSize(12);
+        transferDateParagraphRun.addBreak();
 
         document.write(out);
         out.close();
         upload(transferFile, fileName, projectId, ProjectKind.FACTORING.equals(project.getKind()) ? ProjectItemType.FILE : ProjectItemType.FUND_FILE);
-        //        transferFile.delete();
     }
 
     /**
@@ -1282,7 +1292,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             DecimalFormat df = new DecimalFormat("#");
             return String.format("%s：%s%S万", project.getProjectId(), factoringDetail.getCreditor(), df.format(factoringDetail.getAssignee()));
         } else {
-            return StringUtils.EMPTY;
+            return "项目名称:" + project.getProjectName();
         }
     }
 

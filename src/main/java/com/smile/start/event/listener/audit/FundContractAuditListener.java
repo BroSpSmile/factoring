@@ -45,7 +45,7 @@ public class FundContractAuditListener implements AuditListener {
             if (audit.getStep() == -1) {
                 BaseProject<FundTarget> project = ProjectMapper.mapper(audit.getProject(), FundTarget.class);
                 FundTarget target = new FundTarget();
-                target.setProjectStep(FundStatus.PAYMENT);
+                target.setProjectStep(FundStatus.CONTRACT_SIGNED);
                 project.setDetail(target);
                 fundService.modifyTarget(project);
             }
