@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.smile.start.commons.FastJsonUtils;
 import com.smile.start.commons.LoggerUtils;
-import com.smile.start.web.controller.BaseController;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.project.ProjectItem;
 import com.smile.start.service.fund.FundItemService;
+import com.smile.start.web.controller.BaseController;
 
 /**
- * 初步接触
+ * 保密协议
  * @author smile.jing
  * @version $Id: InitialContactController.java, v 0.1 2019年8月26日 下午9:11:30 smile.jing Exp $
  */
@@ -56,6 +56,6 @@ public class InitialContactController extends BaseController {
     @ResponseBody
     public BaseResult save(@RequestBody List<ProjectItem> items) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        return fundItemService.save(FundStatus.SIGN_CONFIDENTIALITY, items);
+        return fundItemService.save(FundStatus.INITIAL_TUNING, items);
     }
 }

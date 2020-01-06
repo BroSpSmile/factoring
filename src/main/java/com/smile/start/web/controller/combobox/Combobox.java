@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
+import com.smile.start.model.enums.fund.FundType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -238,6 +239,18 @@ public class Combobox extends BaseController {
     @RequestMapping("/inbound")
     public List<Item> getInBound() {
         InBound[] enums = InBound.values();
+        List<Item> items = Lists.newArrayListWithCapacity(enums.length);
+        Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
+        return items;
+    }
+
+    /**
+     * 获取附件种类
+     * @return
+     */
+    @RequestMapping("/fundType")
+    public List<Item> getFundType() {
+        FundType[] enums = FundType.values();
         List<Item> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).forEach(e -> items.add(new Item(e.getCode(), e.getDesc())));
         return items;

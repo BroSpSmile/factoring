@@ -18,53 +18,50 @@ public class FundExcelInfo {
     /** 项目ID */
     private String projectId;
 
-    /** 项目名称 */
-    private String projectName;
-
-    /** 项目成员 */
-    private String members;
-
-    /** 项目进度 */
-    private String projectStep;
-
     /** 公司简称 */
     private String companySortName;
 
-    /** 公司全称 */
-    private String companyFullName;
-
-    /** 实际控制人 */
-    private String controllerOwner;
+    /** 项目类型 */
+    private String projecType;
 
     /** 注册资本 */
     private String registeredCapital;
 
-    /** 注册时间 */
-    private String registerTime;
+    /** 实收资本 */
+    private Double paidCapital;
+
+    /** 公司地址 */
+    private String address;
+
+    /** 出资公司 */
+    private String investmentComp;
 
     /** 投资金额 */
     private String investment;
 
-    /** 投资主体 */
-    private String investmentPart;
+    /** 实缴出资 */
+    private String realInvestment;
 
     /** 持股占比 */
     private String shareHodingRate;
 
-    /** 投前估值 */
-    private String preVal;
+    /** 主营业务 */
+    private String mainBusiness;
 
-    /** 投后估值 */
-    private String postVal;
+    /** 实际控制人 */
+    private String controllerOwner;
+
+    /** 注册时间 */
+    private String registerTime;
 
     /** 投资时间 */
     private Date   investemntTime;
 
-    /** 项目来源 */
-    private String projectChannel;
+    /** 股价 */
+    private String sharePrice;
 
-    /** 创建时间 */
-    private Date   createTime;
+    /** 股份数(万股) */
+    private String shareNum;
 
     /**
      * Getter method for property <tt>projectId</tt>.
@@ -82,60 +79,6 @@ public class FundExcelInfo {
      */
     public void setProjectId(String projectId) {
         this.projectId = projectId;
-    }
-
-    /**
-     * Getter method for property <tt>projectName</tt>.
-     *
-     * @return property value of projectName
-     */
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /**
-     * Setter method for property <tt>projectName</tt>.
-     *
-     * @param projectName value to be assigned to property  projectName
-     */
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /**
-     * Getter method for property <tt>members</tt>.
-     *
-     * @return property value of members
-     */
-    public String getMembers() {
-        return members;
-    }
-
-    /**
-     * Setter method for property <tt>members</tt>.
-     *
-     * @param members value to be assigned to property  members
-     */
-    public void setMembers(String members) {
-        this.members = members;
-    }
-
-    /**
-     * Getter method for property <tt>projectStep</tt>.
-     *
-     * @return property value of projectStep
-     */
-    public String getProjectStep() {
-        return projectStep;
-    }
-
-    /**
-     * Setter method for property <tt>projectStep</tt>.
-     *
-     * @param projectStep value to be assigned to property  projectStep
-     */
-    public void setProjectStep(String projectStep) {
-        this.projectStep = projectStep;
     }
 
     /**
@@ -157,39 +100,21 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>companyFullName</tt>.
+     * Getter method for property <tt>projecType</tt>.
      *
-     * @return property value of companyFullName
+     * @return property value of projecType
      */
-    public String getCompanyFullName() {
-        return companyFullName;
+    public String getProjecType() {
+        return projecType;
     }
 
     /**
-     * Setter method for property <tt>companyFullName</tt>.
+     * Setter method for property <tt>projecType</tt>.
      *
-     * @param companyFullName value to be assigned to property  companyFullName
+     * @param projecType value to be assigned to property  projecType
      */
-    public void setCompanyFullName(String companyFullName) {
-        this.companyFullName = companyFullName;
-    }
-
-    /**
-     * Getter method for property <tt>controllerOwner</tt>.
-     *
-     * @return property value of controllerOwner
-     */
-    public String getControllerOwner() {
-        return controllerOwner;
-    }
-
-    /**
-     * Setter method for property <tt>controllerOwner</tt>.
-     *
-     * @param controllerOwner value to be assigned to property  controllerOwner
-     */
-    public void setControllerOwner(String controllerOwner) {
-        this.controllerOwner = controllerOwner;
+    public void setProjecType(String projecType) {
+        this.projecType = projecType;
     }
 
     /**
@@ -211,21 +136,57 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>registerTime</tt>.
+     * Getter method for property <tt>paidCapital</tt>.
      *
-     * @return property value of registerTime
+     * @return property value of paidCapital
      */
-    public String getRegisterTime() {
-        return registerTime;
+    public Double getPaidCapital() {
+        return paidCapital;
     }
 
     /**
-     * Setter method for property <tt>registerTime</tt>.
+     * Setter method for property <tt>paidCapital</tt>.
      *
-     * @param registerTime value to be assigned to property  registerTime
+     * @param paidCapital value to be assigned to property  paidCapital
      */
-    public void setRegisterTime(String registerTime) {
-        this.registerTime = registerTime;
+    public void setPaidCapital(Double paidCapital) {
+        this.paidCapital = paidCapital;
+    }
+
+    /**
+     * Getter method for property <tt>address</tt>.
+     *
+     * @return property value of address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Setter method for property <tt>address</tt>.
+     *
+     * @param address value to be assigned to property  address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Getter method for property <tt>investmentComp</tt>.
+     *
+     * @return property value of investmentComp
+     */
+    public String getInvestmentComp() {
+        return investmentComp;
+    }
+
+    /**
+     * Setter method for property <tt>investmentComp</tt>.
+     *
+     * @param investmentComp value to be assigned to property  investmentComp
+     */
+    public void setInvestmentComp(String investmentComp) {
+        this.investmentComp = investmentComp;
     }
 
     /**
@@ -247,21 +208,21 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>investmentPart</tt>.
+     * Getter method for property <tt>realInvestment</tt>.
      *
-     * @return property value of investmentPart
+     * @return property value of realInvestment
      */
-    public String getInvestmentPart() {
-        return investmentPart;
+    public String getRealInvestment() {
+        return realInvestment;
     }
 
     /**
-     * Setter method for property <tt>investmentPart</tt>.
+     * Setter method for property <tt>realInvestment</tt>.
      *
-     * @param investmentPart value to be assigned to property  investmentPart
+     * @param realInvestment value to be assigned to property  realInvestment
      */
-    public void setInvestmentPart(String investmentPart) {
-        this.investmentPart = investmentPart;
+    public void setRealInvestment(String realInvestment) {
+        this.realInvestment = realInvestment;
     }
 
     /**
@@ -283,39 +244,57 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>preVal</tt>.
+     * Getter method for property <tt>mainBusiness</tt>.
      *
-     * @return property value of preVal
+     * @return property value of mainBusiness
      */
-    public String getPreVal() {
-        return preVal;
+    public String getMainBusiness() {
+        return mainBusiness;
     }
 
     /**
-     * Setter method for property <tt>preVal</tt>.
+     * Setter method for property <tt>mainBusiness</tt>.
      *
-     * @param preVal value to be assigned to property  preVal
+     * @param mainBusiness value to be assigned to property  mainBusiness
      */
-    public void setPreVal(String preVal) {
-        this.preVal = preVal;
+    public void setMainBusiness(String mainBusiness) {
+        this.mainBusiness = mainBusiness;
     }
 
     /**
-     * Getter method for property <tt>postVal</tt>.
+     * Getter method for property <tt>controllerOwner</tt>.
      *
-     * @return property value of postVal
+     * @return property value of controllerOwner
      */
-    public String getPostVal() {
-        return postVal;
+    public String getControllerOwner() {
+        return controllerOwner;
     }
 
     /**
-     * Setter method for property <tt>postVal</tt>.
+     * Setter method for property <tt>controllerOwner</tt>.
      *
-     * @param postVal value to be assigned to property  postVal
+     * @param controllerOwner value to be assigned to property  controllerOwner
      */
-    public void setPostVal(String postVal) {
-        this.postVal = postVal;
+    public void setControllerOwner(String controllerOwner) {
+        this.controllerOwner = controllerOwner;
+    }
+
+    /**
+     * Getter method for property <tt>registerTime</tt>.
+     *
+     * @return property value of registerTime
+     */
+    public String getRegisterTime() {
+        return registerTime;
+    }
+
+    /**
+     * Setter method for property <tt>registerTime</tt>.
+     *
+     * @param registerTime value to be assigned to property  registerTime
+     */
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
     }
 
     /**
@@ -337,38 +316,38 @@ public class FundExcelInfo {
     }
 
     /**
-     * Getter method for property <tt>projectChannel</tt>.
+     * Getter method for property <tt>sharePrice</tt>.
      *
-     * @return property value of projectChannel
+     * @return property value of sharePrice
      */
-    public String getProjectChannel() {
-        return projectChannel;
+    public String getSharePrice() {
+        return sharePrice;
     }
 
     /**
-     * Setter method for property <tt>projectChannel</tt>.
+     * Setter method for property <tt>sharePrice</tt>.
      *
-     * @param projectChannel value to be assigned to property  projectChannel
+     * @param sharePrice value to be assigned to property  sharePrice
      */
-    public void setProjectChannel(String projectChannel) {
-        this.projectChannel = projectChannel;
+    public void setSharePrice(String sharePrice) {
+        this.sharePrice = sharePrice;
     }
 
     /**
-     * Getter method for property <tt>createTime</tt>.
+     * Getter method for property <tt>shareNum</tt>.
      *
-     * @return property value of createTime
+     * @return property value of shareNum
      */
-    public Date getCreateTime() {
-        return createTime;
+    public String getShareNum() {
+        return shareNum;
     }
 
     /**
-     * Setter method for property <tt>createTime</tt>.
+     * Setter method for property <tt>shareNum</tt>.
      *
-     * @param createTime value to be assigned to property  createTime
+     * @param shareNum value to be assigned to property  shareNum
      */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setShareNum(String shareNum) {
+        this.shareNum = shareNum;
     }
 }

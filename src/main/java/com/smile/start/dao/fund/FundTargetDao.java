@@ -29,10 +29,10 @@ public interface FundTargetDao {
      */
     @Insert("insert into fund_project (project_id,project_name,project_step,industry,location,main_business,member_a,member_b,investment,"
             + "investment_part,share_hoding_rate,pre_val,post_val,investemnt_time,company_sort_name,company_full_name,"
-            + "controller_owner,registered_capital,register_time,address,project_channel,create_time,real_investment,share_price,share_num,investment_comp,bound,paid_capital) "
+            + "controller_owner,registered_capital,register_time,address,project_channel,create_time,real_investment,share_price,share_num,investment_comp,bound,paid_capital,fund_type) "
             + "values (#{projectId},#{projectName},#{projectStep},#{industry},#{location},#{mainBusiness},#{memberA.id},#{memberBStr},#{investment},"
             + "#{investmentPart},#{shareHodingRate},#{preVal},#{postVal},#{investemntTime},#{companySortName},#{companyFullName},"
-            + "#{controllerOwner},#{registeredCapital},#{registerTime},#{address},#{projectChannel},current_timestamp,#{realInvestment},#{sharePrice},#{shareNum},#{investmentComp},#{bound},#{paidCapital})")
+            + "#{controllerOwner},#{registeredCapital},#{registerTime},#{address},#{projectChannel},current_timestamp,#{realInvestment},#{sharePrice},#{shareNum},#{investmentComp},#{bound},#{paidCapital},#{fundType})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(FundTarget target);
 
@@ -56,7 +56,7 @@ public interface FundTargetDao {
             + "<if test = 'realInvestment!=null'>,real_investment = #{realInvestment}</if>" + "<if test = 'sharePrice!=null'>,share_price = #{sharePrice}</if>"
             + "<if test = 'shareNum!=null'>,share_num = #{shareNum}</if>" + "<if test = 'investmentComp!=null and \"\"!=investmentComp'>,investment_comp = #{investmentComp}</if>"
             + "<if test = 'bound!=null and \"\"!=bound'>,bound = #{bound}</if>" + "<if test = 'paidCapital!=null'>,paid_capital = #{paidCapital}</if>"
-            + "<if test = 'registeredCapital!=null'>,registered_capital = #{registeredCapital}</if>"
+            + "<if test = 'registeredCapital!=null'>,registered_capital = #{registeredCapital}</if>" + "<if test = 'fundType!=null'>,fund_type = #{fundType}</if>"
             + "<if test = 'registerTime!=null and \"\"!=registerTime'>,register_time = #{registerTime}</if>"
             + "<if test = 'address!=null and \"\"!=address'>,address = #{address}</if>" + "<if test = 'outType!=null'>,out_type = #{outType}</if>"
             + "<if test = 'projectChannel!=null and \"\"!=projectChannel'>,project_channel = #{projectChannel}</if>" + "where id = #{id}" + "</script>")
@@ -129,11 +129,11 @@ public interface FundTargetDao {
                                         @Result(column = "investment", property = "detail.investment"), @Result(column = "investment_part", property = "detail.investmentPart"),
                                         @Result(column = "registered_capital", property = "detail.registeredCapital"), @Result(column = "bound", property = "detail.bound"),
                                         @Result(column = "investment_comp", property = "detail.investmentComp"), @Result(column = "paid_capital", property = "detail.paidCapital"),
-                                        @Result(column = "share_hoding_rate", property = "detail.shareHodingRate") })
+                                        @Result(column = "share_hoding_rate", property = "detail.shareHodingRate"), @Result(column = "fund_type", property = "detail.fundType") })
     @Select("<script>" + "select p.*,f.id fid,f.project_id fpid,f.address,f.register_time,f.company_full_name,f.company_sort_name,"
             + "f.controller_owner,f.industry,f.investemnt_time,f.location,f.main_business,f.member_a,f.member_b,f.post_val,"
             + "f.pre_val,f.project_channel,f.project_step,f.registered_capital,f.share_hoding_rate,f.investment,f.investment_part,"
-            + "f.paid_capital,f.bound,f.share_price,f.share_num,f.real_investment,f.investment_comp "
+            + "f.paid_capital,f.bound,f.share_price,f.share_num,f.real_investment,f.investment_comp,f.fund_type "
             + "from factoring_project p inner join fund_project f on p.project_id = f.project_id " + "where 1 = 1"
             + "<if test = 'projectId!=null and \"\"!=projectId'>and p.project_id = #{projectId}</if>"
             + "<if test = 'projectName!=null and \"\"!=projectName'>and p.project_name = #{projectName}</if>"

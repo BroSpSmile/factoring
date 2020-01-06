@@ -23,20 +23,26 @@ import com.google.common.collect.Maps;
 import com.smile.start.commons.LoggerUtils;
 import com.smile.start.dao.BaseProjectDao;
 import com.smile.start.dao.InstallmentDao;
+import com.smile.start.dao.fund.FundOpinionDao;
 import com.smile.start.dao.fund.FundTargetDao;
+import com.smile.start.dao.project.ProjectStepDao;
 import com.smile.start.event.CompanyEvent;
 import com.smile.start.integration.tianyan.CompanyClient;
 import com.smile.start.integration.tianyan.model.CompanyInfo;
 import com.smile.start.integration.tianyan.model.TianyanResult;
+import com.smile.start.mapper.ProjectMapper;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
+import com.smile.start.model.enums.Step;
+import com.smile.start.model.enums.StepStatus;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.fund.FundStatus;
 import com.smile.start.model.enums.project.ProjectItemType;
 import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.fund.FundInfos;
+import com.smile.start.model.fund.FundOpinion;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.*;
@@ -80,6 +86,14 @@ public class FundServiceImpl extends AbstractService implements FundService {
     /** 用户信息服务 */
     @Resource
     private UserInfoService    userInfo;
+
+    /** 项目步骤DAO */
+    @Resource
+    private ProjectStepDao     projectStepDao;
+
+    /** fundOpinionDao */
+    @Resource
+    private FundOpinionDao     fundOpinionDao;
 
     private DecimalFormat      df = new DecimalFormat("#.00");
 
@@ -151,6 +165,49 @@ public class FundServiceImpl extends AbstractService implements FundService {
     }
 
     /**
+     * 暂停项目
+     *
+     * @param project 项目
+     * @return
+     */
+    @Override
+    public BaseResult suspend(BaseProject<FundTarget> project) {
+        FundTarget target = project.getDetail();
+        //处理暂停 重启项目
+        if (null != target) {
+            StepRecord record = new StepRecord();
+            record.setProject(ProjectMapper.mapper(project));
+            Audit audit = new Audit();
+            audit.setId(Long.valueOf(target.getProjectStep().getIndex()));
+            record.setAudit(audit);
+            record.setStep(Step.APPROVAL);
+            record.setStatus(StepStatus.BEGIN);
+            record.setRemark(project.getRemark());
+            projectStepDao.insert(record);
+        }
+        target.setProjectStep(FundStatus.SUSPEND);
+        return this.modifyTarget(project);
+    }
+
+    /**
+     * 重启项目
+     *
+     * @param project 项目
+     * @return
+     */
+    @Override
+    public BaseResult restart(BaseProject<FundTarget> project) {
+        StepRecord record = projectStepDao.getLastStep(project.getId());
+        if (record == null) {
+            return new BaseResult();
+        }
+        FundStatus status = FundStatus.getByIndex(record.getAudit().getId().intValue());
+        FundTarget target = project.getDetail();
+        target.setProjectStep(status);
+        return this.modifyTarget(target);
+    }
+
+    /**
      * 更新直投标的
      *
      * @param target
@@ -161,6 +218,23 @@ public class FundServiceImpl extends AbstractService implements FundService {
         int effect = fundTargetDao.updateTarget(target);
         LoggerUtils.info(logger, "修改直投标的:{}结果={}", target.getProjectId(), target.toString());
         return toResult(effect);
+    }
+
+    /**
+     * 保存项目初步意见表
+     *
+     * @param opinion
+     * @return
+     */
+    @Override
+    public BaseResult save(FundOpinion opinion) {
+        if (opinion.getId() != null) {
+            int effect = fundOpinionDao.update(opinion);
+            return toResult(effect);
+        } else {
+            long effect = fundOpinionDao.insert(opinion);
+            return toResult(effect);
+        }
     }
 
     /**

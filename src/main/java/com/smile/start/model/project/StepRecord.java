@@ -35,6 +35,9 @@ public class StepRecord implements Serializable {
     /** 审核记录 */
     private Audit             audit;
 
+    /** 备注 */
+    private String            remark;
+
     /** 创建时间 */
     private Date              createTime;
 
@@ -177,4 +180,21 @@ public class StepRecord implements Serializable {
         this.audit = audit;
     }
 
+    /**
+     * Getter method for property <tt>remark</tt>.
+     *
+     * @return property value of remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * Setter method for property <tt>remark</tt>.
+     *
+     * @param remark value to be assigned to property  remark
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

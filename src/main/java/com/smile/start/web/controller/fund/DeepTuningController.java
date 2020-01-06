@@ -58,6 +58,6 @@ public class DeepTuningController extends BaseController {
     @ResponseBody
     public BaseResult save(@RequestBody List<ProjectItem> items) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
-        return fundItemService.save(FundStatus.PARTMENT_AUDIT, items);
+        return fundItemService.save(FundStatus.DEEP_TUNING, items);
     }
 }

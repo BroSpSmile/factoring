@@ -55,6 +55,9 @@ public class Meeting implements Serializable {
     /** 关联项目 */
     private List<Project>     projects;
 
+    /** 会议材料 */
+    private String            material;
+
     /** 会议纪要 */
     private String            minutes;
 
@@ -344,4 +347,21 @@ public class Meeting implements Serializable {
         this.minutesKind = minutesKind;
     }
 
+    /**
+     * Getter method for property <tt>material</tt>.
+     *
+     * @return property value of material
+     */
+    public String getMaterial() {
+        return material;
+    }
+
+    /**
+     * Setter method for property <tt>material</tt>.
+     *
+     * @param material value to be assigned to property  material
+     */
+    public void setMaterial(String material) {
+        this.material = material;
+    }
 }

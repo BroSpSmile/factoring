@@ -24,7 +24,7 @@ public interface ProjectStepDao {
      * @param record
      * @return
      */
-    @Insert("insert into project_step (project_id,step,status,create_time) values(#{project.id},#{step},#{status},#{createTime})")
+    @Insert("insert into project_step (project_id,step,status,audit_id,remark,create_time) values(#{project.id},#{step},#{status},#{audit.id},#{remark},#{createTime})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(StepRecord record);
 
@@ -34,7 +34,7 @@ public interface ProjectStepDao {
      * @return
      */
     @Update("<script>" + "update project_step set step = #{step},status=#{status}" + "<if test='audit!=null'>, audit_id = #{audit.id}</if>,"
-            + "modify_time = #{modifyTime} where id = #{id}" + "</script>")
+            + "<if test='remark!=null and remark!=\"\"'>, remark = #{remark}</if>," + "modify_time = #{modifyTime} where id = #{id}" + "</script>")
     int update(StepRecord record);
 
     /**
@@ -53,6 +53,16 @@ public interface ProjectStepDao {
      */
     @Select("select * from project_step where project_id = #{projectId} and step = #{step}")
     StepRecord getStep(Long projectId, Step step);
+
+    /**
+     *
+     * @param projectId
+     * @return
+     */
+    @Results(id = "getLastStepMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "project_id", property = "project.id"),
+                                              @Result(column = "audit_id", property = "audit.id") })
+    @Select("select * from project_step where project_id = #{projectId} order by id desc limit 1")
+    StepRecord getLastStep(Long projectId);
 
     /**
      * 

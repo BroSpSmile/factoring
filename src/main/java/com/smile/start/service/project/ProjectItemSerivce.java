@@ -48,7 +48,7 @@ public interface ProjectItemSerivce {
     /**
      * 根据状态删除附件
      *
-     * @param target
+     * @param project
      * @param type
      * @return
      */

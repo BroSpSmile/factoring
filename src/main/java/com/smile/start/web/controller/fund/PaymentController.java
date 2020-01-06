@@ -52,9 +52,9 @@ public class PaymentController extends BaseController {
      * @param items
      * @return
      */
-    @PostMapping("/{status}")
+    @PostMapping
     @ResponseBody
-    public BaseResult save(HttpServletRequest request, @RequestBody List<ProjectItem> items, @PathVariable FundStatus status) {
+    public BaseResult save(HttpServletRequest request, @RequestBody List<ProjectItem> items) {
         LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
         return fundItemService.save(FundStatus.FUND_LOAN, items);
     }

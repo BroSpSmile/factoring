@@ -9,12 +9,7 @@ var vue = new Vue({
 	data : {
 		project:{},
 		fileList:[],
-		webItems:[{
-			itemKind:"WEB",
-			itemType:"DEEP_TUNING",
-			itemName:"",
-			itemValue:""
-		}]
+		webItems:[]
 	},
 	created : function() {
 		let id = document.getElementById("fundId").value;
@@ -36,7 +31,7 @@ var vue = new Vue({
 		/**
 		 * 提交深入尽调协议
 		 */
-		commit:function(){
+		save:function(){
 			if((this.fileList === undefined || this.fileList.length == 0)&&!this.webItems[0].itemValue){
 				this.$Message.error("请上传尽调文件");
 				return false;
@@ -52,8 +47,10 @@ var vue = new Vue({
 				items.push(item);
 			}
 			for(let index in this.webItems){
-				this.webItems[index].projectId = this.project.id;
-				items.push(this.webItems[index]);
+				if(this.webItems[index].itemValue){
+					this.webItems[index].projectId = this.project.id;
+					items.push(this.webItems[index]);
+				}
 			}
 			this.$Spin.show();
 			let self = this;
@@ -63,6 +60,26 @@ var vue = new Vue({
 					self.$Message.info({
 						content : "上传深入尽调附件成功"
 					});
+					self.getProject(self.project.id);
+				} else {
+					self.$Message.error(response.data.errorMessage);
+				}
+			},function(error){
+				this.$Spin.hide();
+				self.$Message.error(error);
+			})
+		},
+
+		commit:function(){
+			this.$Spin.show();
+			let self = this;
+			this.$http.post("/fundstatus/PARTMENT_AUDIT",this.project).then(function(response){
+				this.$Spin.hide();
+				if (response.data.success) {
+					self.$Message.info({
+						content : "上传深入尽调附件成功"
+					});
+					self.getProject(self.project.id);
 				} else {
 					self.$Message.error(response.data.errorMessage);
 				}
@@ -108,7 +125,16 @@ var vue = new Vue({
 		downloadItem:function(item){
 			window.open("/file?fileId="+item.itemValue+"&fileName="+item.itemName);
 		},
-		
+
+
+		/**
+		 * 打开文件
+		 */
+		openItem: function (item) {
+			window.open(item.itemValue);
+		},
+
+
 		/**
 		 * 删除附件
 		 */
@@ -139,6 +165,20 @@ var vue = new Vue({
 				itemName:"",
 				itemValue:""
 			});
+		},
+
+		deleteFile: function (item) {
+			let self = this;
+			this.$http.delete("/attch", item).then(function (response) {
+				if (response.data.success) {
+					self.$Message.info("删除成功");
+					self.getProject(self.project.id);
+				} else {
+					self.$Message.error(response.data.errorMessage);
+				}
+			}, function (error) {
+				self.$Message.error(error.data.errorMessage);
+			})
 		},
 
 		/**

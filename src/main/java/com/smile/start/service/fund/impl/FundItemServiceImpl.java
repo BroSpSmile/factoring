@@ -72,12 +72,14 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
             target.setProjectStep(status);
             project.setDetail(target);
             result = fundService.modifyTarget(project);
-        }
-        if (result.isSuccess()) {
-            for (ProjectItem item : items) {
-                result = this.save(item);
+            if (result.isSuccess()) {
+                //projectItemService.delete(project, item.getItemType());
+                for (ProjectItem i : items) {
+                    result = this.save(i);
+                }
             }
         }
+
         return result;
     }
 

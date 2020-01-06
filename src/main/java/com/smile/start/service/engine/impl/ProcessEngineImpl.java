@@ -18,6 +18,7 @@ import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.Step;
 import com.smile.start.model.enums.StepStatus;
+import com.smile.start.model.enums.project.ProjectKind;
 import com.smile.start.model.project.Audit;
 import com.smile.start.model.project.Project;
 import com.smile.start.model.project.StepRecord;
@@ -183,7 +184,7 @@ public class ProcessEngineImpl extends AbstractService implements ProcessEngine 
     @Transactional
     public SingleResult<StepRecord> changeStatus(Project project, StepStatus status, Audit audit) {
         StepRecord record = stepDao.getStep(project.getId(), Step.getStep(project.getStep()));
-        if (record != null) {
+        if (record != null && ProjectKind.FACTORING.equals(project.getKind())) {
             if (null != audit) {
                 record.setAudit(audit);
             }

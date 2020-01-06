@@ -13,6 +13,7 @@ import com.smile.start.model.base.PageRequest;
 import com.smile.start.model.base.SingleResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.fund.FundInfos;
+import com.smile.start.model.fund.FundOpinion;
 import com.smile.start.model.fund.FundProject;
 import com.smile.start.model.fund.FundTarget;
 import com.smile.start.model.project.Audit;
@@ -44,11 +45,34 @@ public interface FundService {
     BaseResult modifyTarget(BaseProject<FundTarget> project);
 
     /**
+     * 暂停项目
+     *
+     * @param project 项目
+     * @return
+     */
+    BaseResult suspend(BaseProject<FundTarget> project);
+
+    /**
+     * 重启项目
+     *
+     * @param project 项目
+     * @return
+     */
+    BaseResult restart(BaseProject<FundTarget> project);
+
+    /**
      * 更新直投标的
      * @param target
      * @return
      */
     BaseResult modifyTarget(FundTarget target);
+
+    /**
+     * 保存项目初步意见表
+     * @param opinion
+     * @return
+     */
+    BaseResult save(FundOpinion opinion);
 
     /**
      * 分页查询直投标的信息

@@ -8,14 +8,10 @@ var vue = new Vue({
 	el : '#fundContract',
 	data : {
 		project:{},
+		fund:{},
 		fileList:[],
 		items:[],
-		webItems:[{
-			itemKind:"WEB",
-			itemType:"CONTRACT_SIGN",
-			itemName:"",
-			itemValue:""
-		}]
+		webItems:[]
 	},
 	created : function() {
 		let id = document.getElementById("fundId").value;
@@ -30,6 +26,18 @@ var vue = new Vue({
 			let _self = this;
 			this.$http.get("/project/"+id).then(function(response){
 				_self.project = response.data;
+			},function(error){
+				console.error(error);
+			})
+		},
+
+		/**
+		 *
+		 */
+		getFundTarget:function(id){
+			let _self = this;
+			this.$http.get("/fund/"+id).then(function(response){
+				_self.fund = response.data;
 			},function(error){
 				console.error(error);
 			})
@@ -72,21 +80,40 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
-			this.$http.post("/fundContract",JSON.stringify(items)).then(function(response){
-				this.$Spin.hide();
-				if (response.data.success) {
-					self.$Message.info({
-						content : "上传合同成功"
-					});
-					self.fileList = [];
-					self.getItems(self.project.id);
-				} else {
-					self.$Message.error(response.data.errorMessage);
-				}
-			},function(error){
-				this.$Spin.hide();
-				self.$Message.error(error);
-			})
+			if(this.fund.projectStep == 'CONTRACT_SIGN'){
+				this.$http.post("/fundContract",JSON.stringify(items)).then(function(response){
+					this.$Spin.hide();
+					if (response.data.success) {
+						self.$Message.info({
+							content : "上传合同成功"
+						});
+						self.fileList = [];
+						self.getItems(self.project.id);
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				},function(error){
+					this.$Spin.hide();
+					self.$Message.error(error);
+				})
+			}else{
+				this.$http.post("/fundContract/signed",JSON.stringify(items)).then(function(response){
+					this.$Spin.hide();
+					if (response.data.success) {
+						self.$Message.info({
+							content : "上传合同成功"
+						});
+						self.fileList = [];
+						self.getItems(self.project.id);
+					} else {
+						self.$Message.error(response.data.errorMessage);
+					}
+				},function(error){
+					this.$Spin.hide();
+					self.$Message.error(error);
+				})
+			}
+
 		},
 
 

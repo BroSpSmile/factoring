@@ -67,7 +67,11 @@
                                 </form-item>
                             </i-col>
                         </row>
-
+                        <form-item label="项目类型" prop="detail.fundType">
+                            <i-select class="inputw" v-model="addForm.detail.fundType" clearable>
+                                <i-option v-for="item in fundTypes" :value="item.value">{{item.text}}</i-option>
+                            </i-select>
+                        </form-item>
                         <form-item label="项目成员A角" prop="detail.memberA.id">
                             <i-select class="inputw" v-model="addForm.detail.memberA.id" clearable>
                                 <i-option v-for="item in users" :value="parseInt(item.value)">{{item.text}}</i-option>
@@ -273,6 +277,23 @@
                 </div>
                 <div slot="footer">
                     <i-button type="info" size="large" long @click="projectOut">退出</i-button>
+                </div>
+            </modal>
+            <modal v-model="modal3" width="360">
+                <p slot="header" style="color:#2b85e4;text-align:center">
+                    <Icon type="ios-information-circle"></Icon>
+                    <span>项目暂停</span>
+                </p>
+                <div style="text-align:center">
+                    <i-form>
+                        <form-item label="暂停缘由:">
+                            <i-input placeholder="请求输入暂停缘由" class="inputw" v-model="remark">
+                            </i-input>
+                        </form-item>
+                    </i-form>
+                </div>
+                <div slot="footer">
+                    <i-button type="info" size="large" long @click="suspend">暂停</i-button>
                 </div>
             </modal>
             <div slot="footer">

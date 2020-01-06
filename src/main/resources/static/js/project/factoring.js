@@ -19,6 +19,7 @@ var vue = new Vue({
                 type: "FACTORING",
                 kind: "FACTORING"
             }],
+            returnRate:0,
             assignee: 0,
             receivable: 0,
             dropAmount: 0,

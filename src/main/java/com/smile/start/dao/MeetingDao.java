@@ -24,7 +24,7 @@ public interface MeetingDao {
      * @param meeting
      * @return
      */
-    @Insert("insert meeting (kind,theme,begin_time,end_time,status,place,content,remind,originator,participant) values(#{kind},#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{originator.id},#{participantNoList})")
+    @Insert("insert meeting (kind,theme,begin_time,end_time,status,place,content,remind,material,originator,participant) values(#{kind},#{theme},#{beginTime},#{endTime},#{status},#{place},#{content},#{remind},#{material},#{originator.id},#{participantNoList})")
     @SelectKey(statement = "select last_insert_id()", keyProperty = "id", before = false, resultType = long.class)
     long insert(Meeting meeting);
 
@@ -33,7 +33,7 @@ public interface MeetingDao {
      * @param meeting
      * @return
      */
-    @Update("update meeting set kind=#{kind}, theme=#{theme},begin_time=#{beginTime},end_time=#{endTime},status=#{status},place=#{place},content=#{content},remind=#{remind},originator=#{originator.id},participant=#{participantNoList} where id=#{id}")
+    @Update("update meeting set kind=#{kind}, theme=#{theme},begin_time=#{beginTime},material=#{material},end_time=#{endTime},status=#{status},place=#{place},content=#{content},remind=#{remind},originator=#{originator.id},participant=#{participantNoList} where id=#{id}")
     int update(MeetingExt meeting);
 
     /**

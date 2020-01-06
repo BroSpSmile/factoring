@@ -11,6 +11,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.smile.start.model.auth.User;
 import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.fund.FundType;
 import com.smile.start.model.enums.fund.OutTypes;
 import com.smile.start.model.project.Installment;
 
@@ -33,6 +34,9 @@ public class FundTarget implements Serializable {
 
     /** 项目名称 */
     private String            projectName;
+
+    /** 项目类型 */
+    private FundType          fundType;
 
     /** 项目进度 */
     private FundStatus        projectStep;
@@ -792,5 +796,23 @@ public class FundTarget implements Serializable {
      */
     public void setPaidCapital(Double paidCapital) {
         this.paidCapital = paidCapital;
+    }
+
+    /**
+     * Getter method for property <tt>fundType</tt>.
+     *
+     * @return property value of fundType
+     */
+    public FundType getFundType() {
+        return fundType;
+    }
+
+    /**
+     * Setter method for property <tt>fundType</tt>.
+     *
+     * @param fundType value to be assigned to property  fundType
+     */
+    public void setFundType(FundType fundType) {
+        this.fundType = fundType;
     }
 }

@@ -57,7 +57,7 @@ var vue = new Vue({
 			}
 			this.$Spin.show();
 			let self = this;
-			this.$http.post("/initialTuning/"+this.project.status,JSON.stringify(items)).then(function(response){
+			this.$http.post("/initialTuning/APPROVAL",JSON.stringify(items)).then(function(response){
 				this.$Spin.hide();
 				if (response.data.success) {
 					self.$Message.info({

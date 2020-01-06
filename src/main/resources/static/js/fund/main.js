@@ -7,11 +7,15 @@ common.openName = ['1'];
 var vue = new Vue({
     el: '#fund',
     data: {
+        remark: "",
         fundStatus: [],
         modal1: false,
         modal2: false,
+        modal3: false,
+        susProject: {},
         boundType: "INBOUND",
         users: [],
+        fundTypes: [],
         itemTypes: [],
         queryParam: {
             condition: {},
@@ -231,7 +235,7 @@ var vue = new Vue({
                                 }
                             }
                         }, '编辑') : h('span'),
-                        param.row.detail.projectStep == 'INITIAL_CONTACT' || param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY' || param.row.detail.projectStep == 'APPROVAL' || param.row.detail.projectStep == 'INITIAL_TUNING' || param.row.detail.projectStep == 'DEEP_TUNING' ? h('Button', {
+                        param.row.detail.projectStep == 'INITIAL_CONTACT' || param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY' || param.row.detail.projectStep == 'APPROVAL' || param.row.detail.projectStep == 'INITIAL_TUNING' || param.row.detail.projectStep == 'DEEP_TUNING' || param.row.detail.projectStep == 'INITIAL_OPINION' ? h('Button', {
                             props: {
                                 size: "small",
                                 type: "primary",
@@ -240,7 +244,8 @@ var vue = new Vue({
                             },
                             on: {
                                 click: () => {
-                                    //this.toMenu(param.row, "项目编辑");
+                                    this.modal3 = true;
+                                    this.susProject = param.row;
                                 }
                             }
                         }, '暂停') : h('span'),
@@ -253,25 +258,32 @@ var vue = new Vue({
                             },
                             on: {
                                 click: () => {
-                                    //this.toMenu(param.row, "项目编辑");
+                                    this.restart(param.row);
                                 }
                             }
                         }, '重启') : h('span'),
                         param.row.detail.projectStep == 'INITIAL_CONTACT' ? h('Button', {
                             props: {size: 'small', type: "info", ghost: true}, on: {
                                 click: () => {
+                                    this.toNewTab("fundOpinion", '初步意见', param.row.id);
+                                }
+                            }
+                        }, '初步意见') : h('span'),
+                        param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY' ? h('Button', {
+                            props: {size: 'small', type: "info", ghost: true}, on: {
+                                click: () => {
                                     this.toNewTab("initContact", '签署保密协议', param.row.id);
                                 }
                             }
                         }, '签署保密协议') : h('span'),
-                        param.row.detail.projectStep == 'SIGN_CONFIDENTIALITY' ? h('Button', {
+                        param.row.detail.projectStep == 'INITIAL_TUNING' ? h('Button', {
                             props: {size: 'small', type: "info", ghost: true}, on: {
                                 click: () => {
                                     this.toNewTab("initialTuning", "初步尽调", param.row.id);
                                 }
                             }
                         }, '初步尽调') : h('span'),
-                        param.row.detail.projectStep == 'INITIAL_TUNING' ? h('Button', {
+                        param.row.detail.projectStep == 'APPROVAL' ? h('Button', {
                             props: {size: 'small', type: "info", ghost: true}, on: {
                                 click: () => {
                                     this.toNewTab("meeting", "项目立项", param.row.id);
@@ -313,6 +325,13 @@ var vue = new Vue({
                                 }
                             }
                         }, '合同上传') : h('span'),
+                        param.row.detail.projectStep == 'CONTRACT_SIGNED' ? h('Button', {
+                            props: {size: 'small', type: "info", ghost: true}, on: {
+                                click: () => {
+                                    this.toNewTab("fundContract", "盖章合同上传", param.row.id);
+                                }
+                            }
+                        }, '盖章合同上传') : h('span'),
                         param.row.detail.projectStep == 'PAYMENT' ? h('Button', {
                             props: {size: 'small', type: "info", ghost: true}, on: {
                                 click: () => {
@@ -436,6 +455,48 @@ var vue = new Vue({
         },
 
 
+        suspend: function () {
+            let _self = this;
+            this.susProject.remark = this.remark;
+            this.$http.post("/fund/suspend", JSON.stringify(this.susProject)).then(function (response) {
+                let result = response.data;
+                if (result.success) {
+                    _self.$Message.info("暂停成功");
+                    _self.modal3 = false;
+                    _self.search();
+                } else {
+                    _self.$Message.error(result.errorMessage);
+                }
+
+            }, function (error) {
+                console.error(error);
+            });
+        },
+
+        restart: function (project) {
+            let _self = this;
+            this.$Modal.confirm({
+                title: "是否重新启动项目",
+                onOk: function (event) {
+                    this.$http.post("/fund/restart", JSON.stringify(project)).then(function (response) {
+                        let result = response.data;
+                        if (result.success) {
+                            _self.$Message.info("项目重启成功");
+                            _self.search();
+                        } else {
+                            _self.$Message.error(result.errorMessage);
+                        }
+                    }, function (error) {
+                        console.error(error);
+                    });
+                },
+                onCancel: function (event) {
+
+                }
+            });
+
+        },
+
         /**
          * 提交审核
          * @param project
@@ -449,6 +510,7 @@ var vue = new Vue({
                         let result = response.data;
                         if (result.success) {
                             _self.$Message.info("提交审核成功");
+                            _self.search();
                         } else {
                             _self.$Message.error(result.errorMessage);
                         }
@@ -483,6 +545,10 @@ var vue = new Vue({
             });
             this.$http.get("/combo/users").then(function (response) {
                 _self.users = response.data;
+            }, function (error) {
+            });
+            this.$http.get("/combo/fundType").then(function (response) {
+                _self.fundTypes = response.data;
             }, function (error) {
             });
         },
@@ -653,7 +719,9 @@ var vue = new Vue({
                 this.addForm.items.push(item);
             }
             for (let index in this.webItems) {
-                this.addForm.items.push(this.webItems[index]);
+                if (this.webItems[index].itemValue) {
+                    this.addForm.items.push(this.webItems[index]);
+                }
             }
             this.addForm.detail.memberBs = [];
             for (let index in this.addForm.detail.memberBArr) {

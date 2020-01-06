@@ -69,6 +69,18 @@ public class FundContractController extends BaseController {
     }
 
     /**
+     * 保存上传附件
+     * @param items
+     * @return
+     */
+    @PostMapping("signed")
+    @ResponseBody
+    public BaseResult saveSigned(@RequestBody List<ProjectItem> items) {
+        LoggerUtils.info(logger, "请求参数:{}", FastJsonUtils.toJSONString(items));
+        return fundItemService.save(FundStatus.PAYMENT, items);
+    }
+
+    /**
      * 提交审核
      * @param request 
      * @param project

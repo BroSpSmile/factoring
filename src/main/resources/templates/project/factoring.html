@@ -115,8 +115,8 @@
                                 <row>
                                 <i-col span="8">
                                     <form-item label="本次投放金额" prop="dropAmount">
-                                        <input-number placeholder="请输入本次投放金额" min="0" :max="100000000000" :step="0.01"
-                                                      :formatter="formatter" :parser="parser"
+                                        <input-number placeholder="请输入本次投放金额" min="0" max="100000000000" :step="0.01"
+                                                      :formatter="formatter" :parser="parser" active-change="false"
                                                       class="select-width-140" @on-blur="comRate"
                                                       v-model="detail.dropAmount"></input-number>&nbsp;(元)
                                     </form-item>
@@ -197,7 +197,7 @@
                                         </i-col>
                                         <i-col span="6">
                                             <form-item label="实际回款金额" prop="">
-                                                <input-number min="0" :max="100000000000"
+                                                <input-number min="0" max="100000000000" active-change="false"
                                                               :formatter="formatter" :parser="parser"
                                                               class="select-width-120"
                                                               v-model="installment.realAmount"

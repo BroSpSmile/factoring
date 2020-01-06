@@ -8,9 +8,6 @@ import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
-import com.smile.start.model.auth.User;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.Lists;
 import com.smile.start.model.fund.FundExcelInfo;
 import com.smile.start.model.fund.FundProject;
@@ -33,34 +30,25 @@ public class FundMapper {
     public static final FundExcelInfo mapper(FundProject fundProject) {
         FundExcelInfo info = new FundExcelInfo();
         info.setProjectId(fundProject.getProjectId());
-        info.setProjectName(fundProject.getProjectName());
-        info.setCreateTime(fundProject.getCreateTime());
         info.setRegisterTime(fundProject.getDetail().getRegisterTime());
-        info.setCompanyFullName(fundProject.getDetail().getCompanyFullName());
         info.setCompanySortName(fundProject.getDetail().getCompanySortName());
         info.setControllerOwner(fundProject.getDetail().getControllerOwner());
         info.setInvestemntTime(fundProject.getDetail().getInvestemntTime());
         info.setInvestment(format.format(fundProject.getDetail().getInvestment()));
-        info.setInvestmentPart(fundProject.getDetail().getInvestmentPart());
-        info.setPostVal(format.format(fundProject.getDetail().getPostVal()));
-        info.setPreVal(format.format(fundProject.getDetail().getPreVal()));
-        info.setProjectChannel(fundProject.getDetail().getProjectChannel());
-        info.setProjectStep(fundProject.getDetail().getProjectStep().getDesc());
         info.setRegisteredCapital(format.format(fundProject.getDetail().getRegisteredCapital()));
         info.setShareHodingRate(fundProject.getDetail().getShareHodingRate() + "%");
-        if (null != fundProject.getDetail().getMemberA() && StringUtils.isNotBlank(fundProject.getDetail().getMemberA().getUsername())) {
-            info.setMembers(fundProject.getDetail().getMemberA().getUsername());
+        info.setRegisteredCapital(format.format(fundProject.getDetail().getRegisteredCapital()));
+        info.setAddress(fundProject.getDetail().getAddress());
+        info.setInvestmentComp(fundProject.getDetail().getInvestmentComp());
+        if (null != fundProject.getDetail().getRealInvestment()) {
+            info.setRealInvestment(format.format(fundProject.getDetail().getRealInvestment()));
         }
-
-        if (null != fundProject.getDetail().getMemberBs() && !fundProject.getDetail().getMemberBs().isEmpty()) {
-            for (User user : fundProject.getDetail().getMemberBs()) {
-                if (StringUtils.isNotBlank(info.getMembers())) {
-                    info.setMembers(info.getMembers() + user.getUsername());
-                } else {
-                    info.setMembers(user.getUsername());
-                }
-            }
-
+        info.setMainBusiness(fundProject.getDetail().getMainBusiness());
+        if (null != fundProject.getDetail().getSharePrice()) {
+            info.setSharePrice(format.format(fundProject.getDetail().getSharePrice()));
+        }
+        if (null != fundProject.getDetail().getShareNum()) {
+            info.setShareNum(format.format(fundProject.getDetail().getShareNum()));
         }
         return info;
     }

@@ -41,6 +41,9 @@ public class BaseProject<T> {
     /** 创建时间 */
     private Date              createTime;
 
+    /** 备注 */
+    private String            remark;
+
     /** 项目明细 */
     private T                 detail;
 
@@ -198,4 +201,21 @@ public class BaseProject<T> {
         this.detail = detail;
     }
 
+    /**
+     * Getter method for property <tt>remark</tt>.
+     *
+     * @return property value of remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * Setter method for property <tt>remark</tt>.
+     *
+     * @param remark value to be assigned to property  remark
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

@@ -46,7 +46,7 @@ import com.smile.start.web.controller.BaseController;
 @Controller
 @RequestMapping("/fund")
 public class FundController extends BaseController {
-    private String[]    header = { "项目编号", "项目名称", "项目成员", "项目进度", "公司简称", "公司全称", "实际控制人", "注册资本", "董事长", "投资金额", "投资主体", "持股占比", "投前估值", "投后估值", "投资时间", "项目来源", "创建时间" };
+    private String[]    header = { "项目编号", "公司名称", "项目类型", "注册资本", "实收资本", "注册地址", "子基金管理公司", "认缴出资", "实缴出资", "占股", "经营范围", "法定代表人", "成立日期", "投出日期", "每股价格(元)", "股份数(万股)" };
 
     /**
      * 直投服务
@@ -94,6 +94,32 @@ public class FundController extends BaseController {
     public BaseResult modifyTarget(@RequestBody BaseProject<FundTarget> project) {
         LoggerUtils.info(logger, "更新投资标的={}", project.toString());
         return fundService.modifyTarget(project);
+    }
+
+    /**
+     * 暂停项目
+     *
+     * @param project
+     * @return
+     */
+    @PostMapping("suspend")
+    @ResponseBody
+    public BaseResult suspend(@RequestBody BaseProject<FundTarget> project) {
+        LoggerUtils.info(logger, "更新投资标的={}", project.toString());
+        return fundService.suspend(project);
+    }
+
+    /**
+     * 重启
+     *
+     * @param project
+     * @return
+     */
+    @PostMapping("restart")
+    @ResponseBody
+    public BaseResult restart(@RequestBody BaseProject<FundTarget> project) {
+        LoggerUtils.info(logger, "更新投资标的={}", project.toString());
+        return fundService.restart(project);
     }
 
     /**

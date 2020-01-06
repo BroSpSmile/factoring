@@ -10,15 +10,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-import com.smile.start.model.auth.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.smile.start.commons.ErrorMessageEnum;
 import com.smile.start.exception.ServiceException;
 import com.smile.start.exception.error.ServiceErrorFactory;
+import com.smile.start.model.auth.User;
 import com.smile.start.model.base.BaseResult;
 import com.smile.start.model.base.SingleResult;
 
@@ -157,6 +157,9 @@ public abstract class AbstractService {
 
     protected String toStr(List<User> users) {
         String userStr = StringUtils.EMPTY;
+        if (null == users) {
+            return userStr;
+        }
         for (User user : users) {
             userStr += "," + user.getId();
         }
