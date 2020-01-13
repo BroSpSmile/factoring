@@ -186,7 +186,7 @@ var vue = new Vue({
                     self.$Message.info({
                         content: "保存成功",
                         onClose: function () {
-                            self.close();
+                            self.getProject();
                         }
                     });
                 } else {
@@ -212,7 +212,7 @@ var vue = new Vue({
                     self.$Message.info({
                         content: "提交成功",
                         onClose: function () {
-                            self.close();
+                            self.getProject();
                         }
                     });
                 } else {
@@ -234,8 +234,16 @@ var vue = new Vue({
          */
         formatter: function (value) {
             value = value + '';
-            var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
-            return '￥' + intSum;
+            //处理小数部分
+            if (value.indexOf(".") != -1) {
+                let values = value.split(".");
+                let intSum = values[0].replace(/\B(?=(?:\d{3})+$)/g, ',');
+                let floatSum = values[1];
+                return '￥' + intSum +"."+ floatSum;
+            } else {
+                var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
+                return '￥' + intSum;
+            }
         },
 
         /**
@@ -243,7 +251,7 @@ var vue = new Vue({
          */
         parser: function (value) {
             value = "" + value;
-            return value.replace(/￥s?|(,*)/g, '')
+            return value.replace(/￥s?|(,*)/g, '');
         },
 
         close: function () {

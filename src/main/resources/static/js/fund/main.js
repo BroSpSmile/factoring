@@ -867,13 +867,21 @@ var vue = new Vue({
          */
         formatter: function (value) {
             value = value + '';
-            var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
-            return '￥' + intSum;
+            //处理小数部分
+            if (value.indexOf(".") != -1) {
+                let values = value.split(".");
+                let intSum = values[0].replace(/\B(?=(?:\d{3})+$)/g, ',');
+                let floatSum = values[1];
+                return '￥' + intSum +"."+ floatSum;
+            } else {
+                var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
+                return '￥' + intSum;
+            }
         },
 
         parser: function (value) {
             value = "" + value;
-            return value.replace(/￥s?|(,*)/g, '')
+            return value.replace(/￥s?|(,*)/g, '');
         },
 
         /** 添加 */

@@ -99,7 +99,7 @@ var vue = new Vue({
                             _self.items.push(item);
                         }
                     }
-                    if(_self.detail.returnInstallments.length == 0){
+                    if (_self.detail.returnInstallments.length == 0) {
                         _self.detail.returnInstallments.push({
                             amount: 0,
                             type: "RETURN",
@@ -142,25 +142,24 @@ var vue = new Vue({
         },
 
 
-
         /** 计算保理费分期 */
-        computeFee: function (installment,index) {
-            if(index==0){
-                let day = this.difDay(installment.installmentDate,this.detail.loanDay)
+        computeFee: function (installment, index) {
+            if (index == 0) {
+                let day = this.difDay(installment.installmentDate, this.detail.loanDay)
                 console.log(day);
-                let rate = this.detail.dropAmount*((day+1)/360)*this.detail.yearRate;
+                let rate = this.detail.dropAmount * ((day + 1) / 360) * this.detail.yearRate;
                 console.log(rate);
                 installment.amount = rate.toFixed(2);
-            }else{
-                let day = this.difDay(installment.installmentDate,this.detail.returnInstallments[index-1].installmentDate);
+            } else {
+                let day = this.difDay(installment.installmentDate, this.detail.returnInstallments[index - 1].installmentDate);
                 console.log(day);
-                let rate = this.detail.dropAmount*(day/360)*this.detail.yearRate;
+                let rate = this.detail.dropAmount * (day / 360) * this.detail.yearRate;
                 console.log(rate);
                 installment.amount = rate.toFixed(2);
             }
         },
 
-        difDay:function(date1,date2){
+        difDay: function (date1, date2) {
             var diff = Math.abs(date1.getTime() - date2.getTime())
             var result = parseInt(diff / (1000 * 60 * 60 * 24));
             return result;
@@ -201,7 +200,7 @@ var vue = new Vue({
                         self.$Message.info({
                             content: "保存成功",
                             onClose: function () {
-                                self.close();
+                                self.getProject();
                             }
                         });
                     } else {
@@ -218,7 +217,7 @@ var vue = new Vue({
                         self.$Message.info({
                             content: "保存成功",
                             onClose: function () {
-                                self.close();
+                                self.getProject();
                             }
                         });
                     } else {
@@ -290,8 +289,16 @@ var vue = new Vue({
          */
         formatter: function (value) {
             value = value + '';
-            var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
-            return '￥' + intSum;
+            //处理小数部分
+            if (value.indexOf(".") != -1) {
+                let values = value.split(".");
+                let intSum = values[0].replace(/\B(?=(?:\d{3})+$)/g, ',');
+                let floatSum = values[1];
+                return '￥' + intSum +"."+ floatSum;
+            } else {
+                var intSum = value.replace(/\B(?=(?:\d{3})+$)/g, ',');
+                return '￥' + intSum;
+            }
         },
 
         /**
@@ -299,7 +306,7 @@ var vue = new Vue({
          */
         parser: function (value) {
             value = "" + value;
-            return value.replace(/￥s?|(,*)/g, '')
+            return value.replace(/￥s?|(,*)/g, '');
         },
 
         close: function () {
