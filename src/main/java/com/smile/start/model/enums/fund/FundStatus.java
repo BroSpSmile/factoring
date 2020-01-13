@@ -37,23 +37,23 @@ public enum FundStatus {
                         /** 合同签署 */
                         CONTRACT_SIGN(11, "CONTRACT_SIGN", "合同签署"),
                         /** 合同审核 */
-                        CONTRACT_AUDIT(13, "CONTRACT_AUDIT", "合同审核"),
+                        CONTRACT_AUDIT(12, "CONTRACT_AUDIT", "合同审核"),
                         /** 盖章合同上传 */
-                        CONTRACT_SIGNED(14, "CONTRACT_SIGNED", "盖章合同上传"),
+                        CONTRACT_SIGNED(13, "CONTRACT_SIGNED", "盖章合同上传"),
                         /** 付款通知 */
-                        PAYMENT(15, "PAYMENT", "付款通知"),
+                        PAYMENT(14, "PAYMENT", "付款通知"),
                         /** 支付打款 */
-                        FUND_LOAN(16, "FUND_LOAN", "支付打款"),
+                        FUND_LOAN(15, "FUND_LOAN", "支付打款"),
                         /** 验资/信息变更 
                         INFO_CHANGE(16, "INFO_CHANGE", "验资/信息变更"),*/
                         /** 项目归档 */
-                        FILE(17, "FILE", "项目归档"),
+                        FILE(16, "FILE", "项目归档"),
                         /** 项目归档 */
-                        FILE_AUDIT(18, "FILE_AUDIT", "归档审核"),
+                        FILE_AUDIT(17, "FILE_AUDIT", "归档审核"),
                         /** 投后管理 */
-                        POST_INVESTMENT(19, "POST_INVESTMENT", "投后管理"),
+                        POST_INVESTMENT(18, "POST_INVESTMENT", "投后管理"),
                         /** 项目退出 */
-                        OUT(20, "OUT", "项目退出"),;
+                        OUT(19, "OUT", "项目退出"),;
 
     FundStatus(int index, String code, String desc) {
         this.index = index;

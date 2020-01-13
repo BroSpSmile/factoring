@@ -23,6 +23,8 @@ var vue = new Vue({
             pageSize: 10
         },
         formTitle: "项目编辑",
+        fundSteps: [],
+        stepCurrent: 1,
         addForm: {
             id: 0,
             detail: {
@@ -402,7 +404,9 @@ var vue = new Vue({
                 itemName: "",
                 itemValue: ""
             }];
-            console.log(this.addForm);
+            this.getSteps(project.detail.investment,project.detail.projectStep);
+
+         //   console.log(this.addForm);
             this.modal1 = true;
         },
 
@@ -435,6 +439,57 @@ var vue = new Vue({
             })
         },
 
+        /**
+         * 获取步骤
+         * @param investment
+         */
+        getSteps: function (investment,step) {
+            let _self = this;
+            this.$http.get("/combo/fundStatus/" + investment).then(function (response) {
+                _self.fundSteps = response.data;
+                _self.stepCurrent = -1;
+                for (let index in this.fundSteps) {
+                    if (_self.fundSteps[index].code == step) {
+                        if(investment<=15000000.00){
+                            _self.stepCurrent = _self.fundSteps[index].index -3 ;
+                        }else if(investment>15000000.00&&investment<=50000000.00){
+                            _self.stepCurrent = _self.fundSteps[index].index -2 ;
+                        }else{
+                            _self.stepCurrent = _self.fundSteps[index].index -1 ;
+                        }
+
+                    }
+                }
+                console.log(_self.stepCurrent);
+            }, function (error) {
+                console.error(error);
+            });
+        },
+
+        toEdit:function(current){
+            if(current == 'INITIAL_OPINION'){
+                this.toNewTab("fundOpinion", '初步意见', this.addForm.id);
+            }
+            if(current == 'SIGN_CONFIDENTIALITY'){
+                this.toNewTab("initContact", '保密协议', this.addForm.id);
+            }
+            if(current == 'INITIAL_TUNING'){
+                this.toNewTab("initialTuning", '初步尽调', this.addForm.id);
+            }
+            if(current == 'DEEP_TUNING'){
+                this.toNewTab("deepTuning", '深入尽调', this.addForm.id);
+            }
+            if(current == 'CONTRACT_SIGN'){
+                this.toNewTab("fundContract", '合同上传', this.addForm.id);
+            }
+            if(current == 'CONTRACT_SIGNED'){
+                this.toNewTab("fundContract", '盖章合同上传', this.addForm.id);
+            }
+            if(current == 'PAYMENT'){
+                this.toNewTab("payment", '付款凭证', this.addForm.id);
+            }
+
+        },
         /**
          * 打开新标签
          */

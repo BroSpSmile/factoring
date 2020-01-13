@@ -50,6 +50,17 @@
 
         <modal v-model="modal1" :title="formTitle" mask-closable="false" fullscreen="true">
             <div id="modalForm">
+                <row>
+                    <Steps :current="stepCurrent">
+                        <Step v-for="step in fundSteps" :title="step.desc">
+                            <Tag @click.native="toEdit(step.code)"
+                                 size="small" type="border"
+                                 v-if="(step.index>1&& step.index<5)||(step.index==6)||(step.index==11)||(step.index==13)||(step.index==14)"
+                                 color="info">编辑
+                            </Tag>
+                        </Step>
+                    </Steps>
+                </row>
                 <i-form ref="entityDataForm" :model="addForm" :rules="validata" :label-width="120" inline>
                     <card dis-hover title="项目信息">
                         <row>

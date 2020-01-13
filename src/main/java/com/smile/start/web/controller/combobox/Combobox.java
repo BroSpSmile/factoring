@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
-import com.smile.start.model.enums.fund.FundType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +22,7 @@ import com.smile.start.model.enums.*;
 import com.smile.start.model.enums.audit.AuditResult;
 import com.smile.start.model.enums.audit.AuditType;
 import com.smile.start.model.enums.fund.FundStatus;
+import com.smile.start.model.enums.fund.FundType;
 import com.smile.start.model.enums.fund.InBound;
 import com.smile.start.model.enums.project.Progress;
 import com.smile.start.model.enums.project.ProjectItemType;
@@ -209,6 +209,9 @@ public class Combobox extends BaseController {
         FundStatus[] enums = FundStatus.values();
         List<EnumItem> items = Lists.newArrayListWithCapacity(enums.length);
         Stream.of(enums).filter(e -> e.getIndex() > 0).filter(e -> {
+            if (e.getIndex() == -1) {
+                return false;
+            }
             if (investment < 50000000.00d && e.getIndex() == 10) {
                 return false;
             }
