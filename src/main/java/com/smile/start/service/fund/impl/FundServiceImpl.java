@@ -265,6 +265,18 @@ public class FundServiceImpl extends AbstractService implements FundService {
     }
 
     /**
+     * 根据项目ID查询标的
+     *
+     * @param projectId 项目ID
+     * @return
+     */
+    @Override
+    public FundTarget getTarget(Long projectId) {
+        Long id = fundTargetDao.getFundId(projectId);
+        return fundTargetDao.get(id);
+    }
+
+    /**
      * @see com.smile.start.service.fund.FundService#getTarget(java.lang.String)
      */
     @Override

@@ -450,9 +450,9 @@ var vue = new Vue({
                 _self.stepCurrent = -1;
                 for (let index in this.fundSteps) {
                     if (_self.fundSteps[index].code == step) {
-                        if(investment<=15000000.00){
+                        if(investment<=15000000.00 &&  _self.fundSteps[index].index>9){
                             _self.stepCurrent = _self.fundSteps[index].index -3 ;
-                        }else if(investment>15000000.00&&investment<=50000000.00){
+                        }else if(investment>15000000.00&&investment<=50000000.00 & _self.fundSteps[index].index>9){
                             _self.stepCurrent = _self.fundSteps[index].index -2 ;
                         }else{
                             _self.stepCurrent = _self.fundSteps[index].index -1 ;

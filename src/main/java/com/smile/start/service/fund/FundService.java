@@ -95,6 +95,14 @@ public interface FundService {
      * @param projectId 项目ID
      * @return
      */
+    FundTarget getTarget(Long projectId);
+
+    /**
+     * 根据项目ID查询标的
+     *
+     * @param projectId 项目ID
+     * @return
+     */
     FundTarget getTarget(String projectId);
 
     /**

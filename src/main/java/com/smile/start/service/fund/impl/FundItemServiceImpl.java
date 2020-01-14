@@ -69,7 +69,12 @@ public class FundItemServiceImpl extends AbstractService implements FundItemServ
             BaseProject<FundTarget> project = new BaseProject<FundTarget>();
             FundTarget target = new FundTarget();
             project.setId(item.getProjectId());
-            target.setProjectStep(status);
+            FundTarget local = fundService.getTarget(item.getProjectId());
+            if (local.getProjectStep().getIndex() > status.getIndex()) {
+                target.setProjectStep(local.getProjectStep());
+            } else {
+                target.setProjectStep(status);
+            }
             project.setDetail(target);
             result = fundService.modifyTarget(project);
             if (result.isSuccess()) {

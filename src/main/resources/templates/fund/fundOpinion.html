@@ -129,7 +129,9 @@
                         <row type="flex">
                             <i-col span="8" offset="8">
                                 <i-button type="success" @click="save">保存</i-button>
-                                <i-button type="primary" @click="commit" v-if="opinion.id" style="margin-left: 8px">提交
+                                <i-button type="primary" @click="commit"
+                                          v-if="(opinion.id) && target.projectStep == 'INITIAL_CONTACT' "
+                                          style="margin-left: 8px">提交
                                 </i-button>
                             </i-col>
                         </row>

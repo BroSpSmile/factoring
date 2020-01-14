@@ -97,8 +97,8 @@ public interface FundTargetDao {
      * @param id
      * @return
      */
-    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "operator", property = "operator.id"),
-                                      @Result(column = "member_a", property = "memberA.id"), @Result(column = "member_b", property = "memberBStr") })
+    @Results(id = "getMap", value = { @Result(id = true, column = "id", property = "id"), @Result(column = "member_a", property = "memberA.id"),
+                                      @Result(column = "member_b", property = "memberBStr") })
     @Select("select * from fund_project where id = #{id} limit 1")
     FundTarget get(Long id);
 

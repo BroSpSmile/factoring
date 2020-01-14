@@ -52,11 +52,11 @@
             <div id="modalForm">
                 <row>
                     <Steps :current="stepCurrent">
-                        <Step v-for="step in fundSteps" :title="step.desc">
+                        <Step v-for="(step,index) in fundSteps" :title="step.desc">
                             <Tag @click.native="toEdit(step.code)"
                                  size="small" type="border"
-                                 v-if="(step.index>1&& step.index<5)||(step.index==6)||(step.index==11)||(step.index==13)||(step.index==14)"
-                                 color="info">编辑
+                                 v-if="(index < stepCurrent) && ((step.index> 1&& step.index<5)||(step.index==6)||(step.index==11)||(step.index==13)||(step.index==14))"
+                                 color="primary">查看
                             </Tag>
                         </Step>
                     </Steps>
